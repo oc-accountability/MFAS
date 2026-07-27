@@ -200,6 +200,44 @@
       "label": "Nonprofit partnership funding",
       "unit": "USD",
       "category": "Spending"
+    },
+    "county_property_tax_rate": {
+      "label": "Orange County property tax rate",
+      "unit": "cents_per_100_valuation",
+      "category": "Taxes",
+      "description": "Charged on top of the town rate. Cents per $100 of assessed value."
+    },
+    "county_property_tax_rate_prior": {
+      "label": "Orange County property tax rate, prior year",
+      "unit": "cents_per_100_valuation",
+      "category": "Taxes"
+    },
+    "county_tax_rate_increase_cents": {
+      "label": "Orange County tax rate increase",
+      "unit": "cents_per_100_valuation",
+      "category": "Taxes"
+    },
+    "county_revenue_per_cent_of_tax_rate": {
+      "label": "Revenue raised by one cent of the county tax rate",
+      "unit": "USD",
+      "category": "Taxes",
+      "description": "The county's own conversion factor; its tax base is far larger than the town's."
+    },
+    "county_tax_increase_on_500k_home": {
+      "label": "County increase on a $500,000 home",
+      "unit": "USD",
+      "category": "Taxes",
+      "description": "The county's own worked example, used to cross-check the rate."
+    },
+    "county_new_general_fund_revenue": {
+      "label": "County new General Fund revenue",
+      "unit": "USD",
+      "category": "Budget totals"
+    },
+    "county_new_general_fund_expenses": {
+      "label": "County new General Fund expenses",
+      "unit": "USD",
+      "category": "Budget totals"
     }
   }
 }

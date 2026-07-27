@@ -117,6 +117,23 @@ etl/s90_build.py            merge, validate, emit the site payload  ← fails th
 unregistered metric, has a null value, or was read by a method not fit to publish. A missing number
 rendered as `0` on a chart is a lie, so the pipeline will not produce one.
 
+## Both halves of the bill
+
+For a Hillsborough household the **county** rate is the larger one, and a site showing only the town
+was showing less than half the picture:
+
+| | Rate (cents per $100) | One cent raises |
+|---|---|---|
+| Town of Hillsborough | 51.30 | $240,000 |
+| **Orange County** | **67.58** (up 3.75) | $3,374,390 |
+| Combined | **118.88** | — |
+
+On a $400,000 home that is **$4,755 a year**, not $2,052. Fire district taxes vary by district and
+are *not* included, so this is "town + county", explicitly not "your entire tax bill".
+
+All 24 Orange County documents are **digital text**, so none of the character-recognition handling
+the town's scanned reports require applies to them.
+
 ## What the data currently covers
 
 - **~3,600 account-level observations** across **30 departments** and 182 accounts — SALARIES,

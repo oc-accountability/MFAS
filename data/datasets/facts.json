@@ -3,9 +3,10 @@
   "merged_from": [
     "facts_xlsx.json",
     "facts_budget.json",
-    "facts_household.json"
+    "facts_household.json",
+    "facts_county.json"
   ],
-  "count": 76,
+  "count": 83,
   "facts": [
     {
       "jurisdiction": "Town of Hillsborough, NC",
@@ -969,6 +970,95 @@
       "source_detail": "stated in prose: …set the FY27 funding level at $110,000…",
       "extraction": "digital-text",
       "note": "Town funding for nonprofit partners, set after a public hearing."
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2027,
+      "metric": "county_property_tax_rate",
+      "value": 67.58,
+      "unit": "cents_per_100_valuation",
+      "basis": "recommended",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …from 63.83 cents to 67.58 cents per $100 of assessed value…",
+      "extraction": "digital-text",
+      "note": "The countywide rate. A Hillsborough household pays this IN ADDITION to the town rate."
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2026,
+      "metric": "county_property_tax_rate_prior",
+      "value": 63.83,
+      "unit": "cents_per_100_valuation",
+      "basis": "adopted",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …from 63.83 cents to 67.58 cents per $100 of assessed value…",
+      "extraction": "digital-text",
+      "note": "The prior year's countywide rate."
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2027,
+      "metric": "county_tax_rate_increase_cents",
+      "value": 3.75,
+      "unit": "cents_per_100_valuation",
+      "basis": "recommended",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …Countywide tax rate increases by 3.75 cents per $100…",
+      "extraction": "digital-text",
+      "note": "The recommended increase over the prior year."
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2027,
+      "metric": "county_revenue_per_cent_of_tax_rate",
+      "value": 3374390.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …each one cent on the tax rate generates $3,374,390…",
+      "extraction": "stated",
+      "note": "The county's own conversion factor — what one cent raises countywide. Compare with the town's $240,000: the county's tax base is far larger."
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2027,
+      "metric": "county_tax_increase_on_500k_home",
+      "value": 187.5,
+      "unit": "USD",
+      "basis": "recommended",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …on a home valued at $500,000 is $187.50 per year…",
+      "extraction": "digital-text",
+      "note": "The county's own worked example of the increase, useful as a cross-check."
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2027,
+      "metric": "county_new_general_fund_revenue",
+      "value": 6439315.0,
+      "unit": "USD",
+      "basis": "recommended",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …new General Fund Revenue totaled $6,439,315…",
+      "extraction": "digital-text"
+    },
+    {
+      "jurisdiction": "Orange County, NC",
+      "fiscal_year": 2027,
+      "metric": "county_new_general_fund_expenses",
+      "value": 19093276.0,
+      "unit": "USD",
+      "basis": "recommended",
+      "source_doc": "fy202627-managers-messager",
+      "source_page": 11,
+      "source_detail": "stated in prose: …New General Fund expenses totaled $19,093,276,…",
+      "extraction": "digital-text"
     }
   ]
 }

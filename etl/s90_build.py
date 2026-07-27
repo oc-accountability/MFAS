@@ -117,9 +117,36 @@ METRICS = {
         description="The town's own worked example, useful as a cross-check on the calculator."),
     "nonprofit_partnership_funding": dict(
         label="Nonprofit partnership funding", unit="USD", category="Spending"),
+
+    # ---- Orange County (stage 80) -------------------------------------------
+    # A Hillsborough household pays the county rate IN ADDITION to the town rate,
+    # and the county rate is the larger of the two.
+    "county_property_tax_rate": dict(
+        label="Orange County property tax rate", unit="cents_per_100_valuation",
+        category="Taxes",
+        description="Charged on top of the town rate. Cents per $100 of assessed value."),
+    "county_property_tax_rate_prior": dict(
+        label="Orange County property tax rate, prior year",
+        unit="cents_per_100_valuation", category="Taxes"),
+    "county_tax_rate_increase_cents": dict(
+        label="Orange County tax rate increase", unit="cents_per_100_valuation",
+        category="Taxes"),
+    "county_revenue_per_cent_of_tax_rate": dict(
+        label="Revenue raised by one cent of the county tax rate", unit="USD",
+        category="Taxes",
+        description="The county's own conversion factor; its tax base is far larger "
+                    "than the town's."),
+    "county_tax_increase_on_500k_home": dict(
+        label="County increase on a $500,000 home", unit="USD", category="Taxes",
+        description="The county's own worked example, used to cross-check the rate."),
+    "county_new_general_fund_revenue": dict(
+        label="County new General Fund revenue", unit="USD", category="Budget totals"),
+    "county_new_general_fund_expenses": dict(
+        label="County new General Fund expenses", unit="USD", category="Budget totals"),
 }
 
-STAGE_FACT_FILES = ["facts_xlsx.json", "facts_budget.json", "facts_household.json"]
+STAGE_FACT_FILES = ["facts_xlsx.json", "facts_budget.json", "facts_household.json",
+                    "facts_county.json"]
 
 
 def main() -> None:

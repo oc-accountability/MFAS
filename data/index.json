@@ -1,6 +1,7 @@
 {
   "project": "Orange County Efficiency & Accountability Initiative",
   "jurisdictions": [
+    "Orange County, NC",
     "Town of Hillsborough, NC"
   ],
   "fiscal_year_range": [
@@ -8,10 +9,10 @@
     2029
   ],
   "counts": {
-    "facts": 76,
-    "metrics": 35,
-    "documents": 30,
-    "documents_with_trustworthy_text": 16,
+    "facts": 83,
+    "metrics": 42,
+    "documents": 54,
+    "documents_with_trustworthy_text": 40,
     "documents_scanned_needing_transcription": 10,
     "multi_document_comparisons": 12,
     "line_item_observations": 3636,

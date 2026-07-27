@@ -24,6 +24,7 @@ etl:
 	$(PY) etl/s60_audited.py
 	$(PY) etl/s70_ocr.py        # slow; resumable, cached under build/ocr
 	$(PY) etl/s75_ocr_statements.py
+	$(PY) etl/s80_county.py
 	$(PY) etl/s90_build.py
 
 test:

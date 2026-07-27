@@ -516,18 +516,33 @@ function annualTax() {
   const rate = val('property_tax_rate');
   return rate == null ? null : state.homeValue / 100 * (rate / 100);
 }
+/** Orange County's share — LARGER than the town's, and paid on top of it. */
+function countyTax() {
+  const rate = val('county_property_tax_rate');
+  return rate == null ? null : state.homeValue / 100 * (rate / 100);
+}
+function totalPropertyTax() {
+  const t = annualTax(), c = countyTax();
+  if (t == null) return null;
+  return c == null ? t : t + c;
+}
 
 function renderYou(host) {
   const rateF = one('property_tax_rate');
   if (!rateF) return;
   const perCentF = one('revenue_per_cent_of_tax_rate');
 
-  const sec = section('you', '01', 'What the town costs you',
+  const cRate = one('county_property_tax_rate');
+  const sec = section('you', '01', 'What your property tax actually costs you',
     `Start by telling us what your home is assessed at. Everything below then uses your figure
      instead of a generic one, and this page will remember it next time.
      <br><br>
-     This is the <strong>town's</strong> share only. Your full property tax bill also includes
-     Orange County and any special district, which are not in this dataset.`);
+     ${cRate
+       ? `This now covers <strong>both</strong> bills a Hillsborough household pays: the town's
+          ${cents(rateF.value)} cents per $100 <em>and</em> Orange County's
+          ${cents(cRate.value)} cents. The county's is the larger of the two, which is easy to miss.
+          It does <strong>not</strong> include fire district taxes, which vary by district.`
+       : `This is the <strong>town's</strong> share only.`}`);
 
   if (state.returning) {
     const w = document.createElement('div');
@@ -574,7 +589,7 @@ function renderYou(host) {
           can greet you with your own figures next time.</span></p>
       </div>
       <div class="readout">
-        <p class="cap">Your town property tax, per year</p>
+        <p class="cap">Your property tax, per year${cRate ? ' — town and county combined' : ''}</p>
         <div class="hero-figure" id="heroV">—</div>
         <p class="hero-sub" id="heroN"></p>
         <ul class="rows" id="bd"></ul>
@@ -596,17 +611,28 @@ function renderYou(host) {
   function draw(animate) {
     state.homeValue = Math.max(0, +num.value || 0);
     const annual = annualTax();
+    const county = countyTax();
+    const total = totalPropertyTax();
     const oneCent = state.homeValue / 100 * 0.01;
     const u = utilMonthly();
 
-    setFigure($('#heroV', sec), annual, animate);
-    $('#heroN', sec).innerHTML =
-      `That is <strong>${usd(annual / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
-       ${cents(rateF.value)} cents per $100 of value. Source: ${cite(rateF)}.`;
+    setFigure($('#heroV', sec), total, animate);
+    $('#heroN', sec).innerHTML = county != null
+      ? `That is <strong>${usd(total / 12)} a month</strong> — ${usd(annual)} to the town at
+         ${cents(rateF.value)} cents per $100, plus ${usd(county)} to Orange County at
+         ${cents(cRate.value)} cents. Sources: ${cite(rateF)} and ${cite(cRate)}.`
+      : `That is <strong>${usd(annual / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
+         ${cents(rateF.value)} cents per $100 of value. Source: ${cite(rateF)}.`;
 
     const rows = [];
-    rows.push(['Your town property tax', `<small>FY${rateF.fiscal_year} — the rate did not change</small>`,
+    rows.push(['Town of Hillsborough', `<small>FY${rateF.fiscal_year} — the town rate did not change</small>`,
       usd(annual) + ' / yr']);
+    if (county != null) {
+      const inc = val('county_tax_rate_increase_cents');
+      rows.push(['Orange County',
+        `<small>FY${cRate.fiscal_year}${inc ? ` — the county rate rose ${cents(inc)} cents` : ''}</small>`,
+        usd(county) + ' / yr']);
+    }
     if (u.water != null) rows.push(['Your water bill goes up by',
       `<small>${state.useLevel === 'avg' ? '4,000' : '2,000'} gal/month, ${
         state.location === 'intown' ? 'in town' : 'out of town'}</small>`,
@@ -623,15 +649,25 @@ function renderYou(host) {
 
     let html = rows.map(([k, sub, v]) =>
       `<li><span class="k">${k}${sub}</span><span class="v">${v}</span></li>`).join('');
-    if (u.total > 0) {
+    const cInc = val('county_tax_rate_increase_cents');
+    const addedTax = cInc ? state.homeValue / 100 * (cInc / 100) : 0;
+    const addedAll = addedTax + u.total * 12;
+    if (addedAll > 0) {
       html += `<li class="total"><span class="k">So next year costs you about</span>
-        <span class="v">+${usd(u.total * 12)} more</span></li>`;
+        <span class="v">+${usd(addedAll)} more</span></li>`;
     }
     $('#bd', sec).innerHTML = html;
 
     const box = $('#calloutBox', sec);
     const wr = val('water_rate_increase_pct'), sr = val('sewer_rate_increase_pct');
-    if (u.total > 0 && wr && sr) {
+    if (cInc && u.total > 0 && wr) {
+      box.className = 'callout warn';
+      box.innerHTML = `<strong>The town's rate held steady — the rest of your bill did not.</strong>
+        Orange County's rate rose ${cents(cInc)} cents, which adds
+        <strong>${usd(addedTax)} a year</strong> for a home like yours, and water and sewer each
+        rise ${pctPlain(wr)}, adding about ${usd2(u.total)} a month. "No town tax increase" is true
+        and is not the same as "your bill is flat".`;
+    } else if (u.total > 0 && wr && sr) {
       box.className = 'callout warn';
       box.innerHTML = `<strong>Your property tax rate did not go up — but your bill still does.</strong>
         Water and sewer rates each rise ${pctPlain(wr)} in FY2027, which adds about
@@ -645,9 +681,11 @@ function renderYou(host) {
     // snapshot
     const s = $('#snapshot', sec);
     s.innerHTML = `<h3>Your snapshot</h3>
-      <div class="big">${usd(annual)}<span style="font-size:var(--t-md);font-weight:500;
-        letter-spacing:0;margin-left:.35em">to the town this year</span></div>
-      <p class="cap">Plus about ${usd(u.total * 12)} more over the year as water and sewer rates rise.
+      <div class="big">${usd(total)}<span style="font-size:var(--t-md);font-weight:500;
+        letter-spacing:0;margin-left:.35em">in property tax this year</span></div>
+      <p class="cap">${county != null
+        ? `${usd(annual)} to the town, ${usd(county)} to Orange County. `
+        : ''}Plus about ${usd(u.total * 12)} more over the year as water and sewer rates rise.
         Based on a home assessed at ${usd(state.homeValue)},
         ${state.location === 'intown' ? 'inside' : 'outside'} town limits.</p>
       <div class="acts">
@@ -662,7 +700,9 @@ function renderYou(host) {
       const text = `Town of Hillsborough — my share, FY${rateF.fiscal_year}\n` +
         `Home assessed at ${usd(state.homeValue)} (${state.location === 'intown'
           ? 'in town' : 'out of town'})\n` +
-        `Town property tax: ${usd(annual)}/yr (${usd(annual / 12)}/mo)\n` +
+        `Town property tax: ${usd(annual)}/yr\n` +
+        (county != null ? `Orange County property tax: ${usd(county)}/yr\n` +
+          `Total property tax: ${usd(total)}/yr (${usd(total / 12)}/mo)\n` : '') +
         `Water/sewer increase: +${usd2(u.total)}/mo (about ${usd(u.total * 12)}/yr)\n` +
         `Tax rate: ${cents(rateF.value)} cents per $100 — unchanged for FY${rateF.fiscal_year}\n` +
         `Source: ${(docsById().get(rateF.source_doc) || {}).filename || rateF.source_doc}`;
