@@ -1,10 +1,10 @@
 {
   "generated_by": "etl/s00_manifest.py",
   "summary": {
-    "unique_documents": 54,
-    "duplicate_copies_in_archive": 9,
-    "total_bytes": 843347654,
-    "pdf_digital_text": 40,
+    "unique_documents": 66,
+    "duplicate_copies_in_archive": 35,
+    "total_bytes": 877025802,
+    "pdf_digital_text": 43,
     "pdf_scanned_ocr": 10,
     "oversize_for_github": [
       "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf"
@@ -51,6 +51,7 @@
       "filename": "FY26 Budget Message.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY26 Budget Message.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY26 Budget Message.pdf",
         "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY26 Budget Message (1).pdf"
       ],
       "format": "pdf",
@@ -74,6 +75,7 @@
       "filename": "FY26 Budget and Financial Plan Adopted.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY26 Budget and Financial Plan Adopted.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY26 Budget and Financial Plan Adopted.pdf",
         "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY26 Budget and Financial Plan Adopted (1).pdf"
       ],
       "format": "pdf",
@@ -96,7 +98,9 @@
       "id": "fy26-recommended-budget-and-financial-plan",
       "filename": "FY26 Recommended Budget and Financial Plan.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY26 Recommended Budget and Financial Plan.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY26 Recommended Budget and Financial Plan.pdf"
+      ],
       "format": "pdf",
       "bytes": 32247863,
       "sha256": "2efdb212759e171b42c4c398bcba81be0366491a1cbe55c6b3a33b679c25e859",
@@ -117,7 +121,9 @@
       "id": "fy27-budget-message",
       "filename": "FY27 Budget Message.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY27 Budget Message.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY27 Budget Message.pdf"
+      ],
       "format": "pdf",
       "bytes": 536809,
       "sha256": "bea2836db7541b06e9c40e1ea322d4bfb117548df51b172fec6948b9bd8d4610",
@@ -138,7 +144,9 @@
       "id": "fy27-budget-and-financial-plan-recommended",
       "filename": "FY27 Budget and Financial Plan Recommended.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/FY27 Budget and Financial Plan Recommended.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY27 Budget and Financial Plan Recommended.pdf"
+      ],
       "format": "pdf",
       "bytes": 7776223,
       "sha256": "9e6747e1ce1448b872dd3ae42b171de072415d18036b5e3022ccfbaba5aed9a6",
@@ -160,6 +168,8 @@
       "filename": "Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Strategic Plan Fiscal Year 202426 .pdf",
         "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
         "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Strategic Plan Fiscal Year 202426 .pdf"
       ],
@@ -185,6 +195,7 @@
       "filename": "Fiscal Year 2025 Budget Message.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Fiscal Year 2025 Budget Message.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Fiscal Year 2025 Budget Message.pdf",
         "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Fiscal Year 2025 Budget Message (1).pdf"
       ],
       "format": "pdf",
@@ -207,7 +218,9 @@
       "id": "fiscal-year-2025-financial-report",
       "filename": "Fiscal Year 2025 Financial Report.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Fiscal Year 2025 Financial Report.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Fiscal Year 2025 Financial Report.pdf"
+      ],
       "format": "pdf",
       "bytes": 2509390,
       "sha256": "8b60dad6367d4d3b31df552ed637d3a250deb6f9c6a5d5af729812ea22f490b7",
@@ -228,7 +241,9 @@
       "id": "fiscal-year-2025-managers-recommended-budget-and-financial-work-plan",
       "filename": "Fiscal Year 2025 Managers Recommended Budget and Financial Work Plan.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Fiscal Year 2025 Managers Recommended Budget and Financial Work Plan.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Fiscal Year 2025 Managers Recommended Budget and Financial Work Plan.pdf"
+      ],
       "format": "pdf",
       "bytes": 14347727,
       "sha256": "1e6ac56bed6a61197e61aa664961f9ea7952932d1f89c7cc469afb973cb9da94",
@@ -250,6 +265,7 @@
       "filename": "Hillsborough_RateOptions_22326 1.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Hillsborough_RateOptions_22326 1.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Hillsborough_RateOptions_22326 1.pdf",
         "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Hillsborough_RateOptions_22326 1.pdf"
       ],
       "format": "pdf",
@@ -273,6 +289,7 @@
       "filename": "ITEM-Attachment-003-f0fc06314ce6427399e71e8d4d799c09.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/ITEM-Attachment-003-f0fc06314ce6427399e71e8d4d799c09.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/ITEM-Attachment-003-f0fc06314ce6427399e71e8d4d799c09.pdf",
         "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/ITEM-Attachment-003-f0fc06314ce6427399e71e8d4d799c09.pdf"
       ],
       "format": "pdf",
@@ -295,7 +312,9 @@
       "id": "organizational-chart-of-town-services-and-administration-20230106",
       "filename": "Organizational Chart of Town Services and Administration 20230106.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Organizational Chart of Town Services and Administration 20230106.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Organizational Chart of Town Services and Administration 20230106.pdf"
+      ],
       "format": "pdf",
       "bytes": 204792,
       "sha256": "0ea1fa2f88125d044112ae0ed123b5f464b6d9559e0ce579053010ca07d03ede",
@@ -316,7 +335,9 @@
       "id": "recommended-fy27budgetataglanceflyer",
       "filename": "Recommended FY27BudgetAtAGlanceFlyer.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Recommended FY27BudgetAtAGlanceFlyer.pdf",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Recommended FY27BudgetAtAGlanceFlyer.pdf"
+      ],
       "format": "pdf",
       "bytes": 1882279,
       "sha256": "b1aef110d4229f1d8afca6e20e318ec4de51b929d9ab71d59b78a4ecca71aa38",
@@ -338,6 +359,7 @@
       "filename": "Stormwater Presentation 202404.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Stormwater Presentation 202404.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Stormwater Presentation 202404.pdf",
         "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Stormwater Presentation 202404.pdf"
       ],
       "format": "pdf",
@@ -361,6 +383,7 @@
       "filename": "Water and Sewer Utility Rate Study 20240531.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/02 Research & Documents/Hillsborough Budget/Water and Sewer Utility Rate Study 20240531.pdf",
       "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Water and Sewer Utility Rate Study 20240531.pdf",
         "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Water and Sewer Utility Rate Study 20240531.pdf"
       ],
       "format": "pdf",
@@ -380,16 +403,39 @@
       "values_extractable": true
     },
     {
+      "id": "affordable-housing-fy18-fy29-in-pdf",
+      "filename": "Affordable Housing (FY18-FY29) in pdf.pdf",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Affordable Housing (FY18-FY29) in pdf.pdf",
+      "duplicate_paths": [],
+      "format": "pdf",
+      "bytes": 66132,
+      "sha256": "7846cdb939c763c1de379d1f71892057a621ea6721705b6ac3cc9def781999b6",
+      "category": "financial-report",
+      "fiscal_year": 2018,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "pages": 1,
+      "text_layer": "digital",
+      "embedded_fonts": 5,
+      "total_fonts": 5,
+      "full_page_images": 0,
+      "sampled_pages": 1,
+      "chars_per_page": 7148,
+      "values_extractable": true
+    },
+    {
       "id": "annual-comprehensive-financial-report-year-ended-june-30-2018",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf"
+      ],
       "format": "pdf",
       "bytes": 5380359,
       "sha256": "578ef6226a5a9065970b91c12a194df34e0a2af1b31b8724fc3b1eebb677aae7",
       "category": "financial-report",
       "fiscal_year": 2018,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 175,
       "text_layer": "scan",
@@ -404,14 +450,16 @@
     {
       "id": "annual-comprehensive-financial-report-year-ended-june-30-2019",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf"
+      ],
       "format": "pdf",
       "bytes": 106353011,
       "sha256": "846b43a917b02dd134f41f06789c47f03c1e9467553aa99b056eabcbb377e36e",
       "category": "financial-report",
       "fiscal_year": 2019,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 181,
       "text_layer": "scan",
@@ -426,14 +474,16 @@
     {
       "id": "annual-comprehensive-financial-report-year-ended-june-30-2020",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf"
+      ],
       "format": "pdf",
       "bytes": 103002449,
       "sha256": "b9a958bcede6b1aa442ee344ca52748c8e7f75d11cabc4b6f2a11bdbae3d2dbe",
       "category": "financial-report",
       "fiscal_year": 2020,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 163,
       "text_layer": "scan",
@@ -448,14 +498,16 @@
     {
       "id": "annual-comprehensive-financial-report-year-ended-june-30-2021",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf"
+      ],
       "format": "pdf",
       "bytes": 81298975,
       "sha256": "974877e4eaf280e8c07cb61245beed686ce2bd0f33d99c78dcb9ceec1d5a16d6",
       "category": "financial-report",
       "fiscal_year": 2021,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 127,
       "text_layer": "scan",
@@ -470,14 +522,16 @@
     {
       "id": "annual-financial-report-year-ended-june-30-2022",
       "filename": "Annual Financial Report_ Year Ended June 30, 2022.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2022.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Financial Report_ Year Ended June 30, 2022.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2022.pdf"
+      ],
       "format": "pdf",
       "bytes": 67574491,
       "sha256": "fa78d495e724b13638ea91aa2673e9128ed1045623653b56ac55d7c4f60640a8",
       "category": "financial-report",
       "fiscal_year": 2022,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 130,
       "text_layer": "scan",
@@ -492,14 +546,16 @@
     {
       "id": "annual-financial-report-year-ended-june-30-2023",
       "filename": "Annual Financial Report_ Year Ended June 30, 2023.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2023.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Financial Report_ Year Ended June 30, 2023.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2023.pdf"
+      ],
       "format": "pdf",
       "bytes": 72314408,
       "sha256": "b3413df16b3a701b619e73d0fc425df5693ea5639933450b15d931ca20b4a6fb",
       "category": "financial-report",
       "fiscal_year": 2023,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 141,
       "text_layer": "scan",
@@ -514,14 +570,16 @@
     {
       "id": "annual-financial-report-year-ended-june-30-2024",
       "filename": "Annual Financial Report_ Year Ended June 30, 2024.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2024.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Financial Report_ Year Ended June 30, 2024.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2024.pdf"
+      ],
       "format": "pdf",
       "bytes": 67667635,
       "sha256": "dd2892d97a2e9ab83e37d1c1438874597d06183500057e47e07b649c88359b47",
       "category": "financial-report",
       "fiscal_year": 2024,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 139,
       "text_layer": "scan",
@@ -536,14 +594,16 @@
     {
       "id": "annual-financial-report-year-ended-june-30-2025",
       "filename": "Annual Financial Report_ Year Ended June 30, 2025.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2025.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Annual Financial Report_ Year Ended June 30, 2025.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Annual Financial Report_ Year Ended June 30, 2025.pdf"
+      ],
       "format": "pdf",
       "bytes": 63463532,
       "sha256": "8a18342afb8bd4a429e557d9f0d8a03dbbb43a61d5e55dc19f33df8df32622e2",
       "category": "financial-report",
       "fiscal_year": 2025,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 131,
       "text_layer": "scan",
@@ -556,16 +616,42 @@
       "extraction_warning": "Scanned pages with an unreliable OCR text layer. Digits are transposed by the embedded text (e.g. 4,610,003 reads as 460,100,3). Values must be transcribed from the rendered page image, never parsed from this file's text."
     },
     {
+      "id": "comprehensive-annual-financial-report-fy18",
+      "filename": "Comprehensive Annual Financial Report (FY18).pdf",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Comprehensive Annual Financial Report (FY18).pdf",
+      "duplicate_paths": [
+        "_nested_redatarequest/Comprehensive Annual Financial Report (FY18).pdf"
+      ],
+      "format": "pdf",
+      "bytes": 5187638,
+      "sha256": "c05c734930d3101b12f5c956c89f6a5c67148b6a453e0c072970d46248c216ef",
+      "category": "financial-report",
+      "fiscal_year": 2018,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "pages": 175,
+      "text_layer": "scan",
+      "embedded_fonts": 0,
+      "total_fonts": 0,
+      "full_page_images": 6,
+      "sampled_pages": 6,
+      "chars_per_page": 0,
+      "values_extractable": false,
+      "extraction_warning": "Scanned pages with an unreliable OCR text layer. Digits are transposed by the embedded text (e.g. 4,610,003 reads as 460,100,3). Values must be transcribed from the rendered page image, never parsed from this file's text."
+    },
+    {
       "id": "comprehensive-sustainability-plan-community-visioning-survey-summary-20230530",
       "filename": "Comprehensive Sustainability Plan Community Visioning Survey Summary 20230530.pdf",
-      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Comprehensive Sustainability Plan Community Visioning Survey Summary 20230530.pdf",
-      "duplicate_paths": [],
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Comprehensive Sustainability Plan Community Visioning Survey Summary 20230530.pdf",
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/Comprehensive Sustainability Plan Community Visioning Survey Summary 20230530.pdf"
+      ],
       "format": "pdf",
       "bytes": 3717211,
       "sha256": "57fda6b9e4a80a364f093aac55bbd0807eb6aaac750842a9661ca827a39b80e5",
       "category": "financial-report",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "pages": 22,
       "text_layer": "digital",
@@ -574,6 +660,27 @@
       "full_page_images": 1,
       "sampled_pages": 6,
       "chars_per_page": 1153,
+      "values_extractable": true
+    },
+    {
+      "id": "fy26-budget-ordinance",
+      "filename": "FY26 Budget Ordinance.pdf",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY26 Budget Ordinance.pdf",
+      "duplicate_paths": [],
+      "format": "pdf",
+      "bytes": 1339325,
+      "sha256": "fbfbdcff2347705b1c3561e3c6601aa00a2bc8181b2d7c2d91cabe53e90138ec",
+      "category": "financial-report",
+      "fiscal_year": 2026,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "pages": 3,
+      "text_layer": "digital",
+      "embedded_fonts": 5,
+      "total_fonts": 5,
+      "full_page_images": 0,
+      "sampled_pages": 3,
+      "chars_per_page": 1480,
       "values_extractable": true
     },
     {
@@ -630,6 +737,27 @@
       "full_page_images": 0,
       "sampled_pages": 6,
       "chars_per_page": 1859,
+      "values_extractable": true
+    },
+    {
+      "id": "appendix-a-county-profile-data-element-pdf",
+      "filename": "Appendix A_ County Profile (Data) Element (PDF).pdf",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06b Budget & Fin. Analysis - OC/Appendix A_ County Profile (Data) Element (PDF).pdf",
+      "duplicate_paths": [],
+      "format": "pdf",
+      "bytes": 31608333,
+      "sha256": "1de901e83a325591eed8114a7fe54e9ebb5fa954a3414e2af8d79810c7e1eddd",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "pages": 100,
+      "text_layer": "digital",
+      "embedded_fonts": 137,
+      "total_fonts": 139,
+      "full_page_images": 0,
+      "sampled_pages": 6,
+      "chars_per_page": 1086,
       "values_extractable": true
     },
     {
@@ -1109,26 +1237,130 @@
       "values_extractable": true
     },
     {
-      "id": "comprehensive-annual-financial-report-fy18",
-      "filename": "Comprehensive Annual Financial Report (FY18).pdf",
-      "archive_path": "_nested_redatarequest/Comprehensive Annual Financial Report (FY18).pdf",
+      "id": "oc-design",
+      "filename": "OC Design.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/OC Design.xlsx",
       "duplicate_paths": [],
-      "format": "pdf",
-      "bytes": 5187638,
-      "sha256": "c05c734930d3101b12f5c956c89f6a5c67148b6a453e0c072970d46248c216ef",
+      "format": "xlsx",
+      "bytes": 12397,
+      "sha256": "f66c9479c9ee950467a6e50cb72d530a711a1b6e2bd4fd88e5e920a246bab1d7",
       "category": "other",
-      "fiscal_year": 2018,
-      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
       "official_url": null,
-      "pages": 175,
-      "text_layer": "scan",
-      "embedded_fonts": 0,
-      "total_fonts": 0,
-      "full_page_images": 6,
-      "sampled_pages": 6,
-      "chars_per_page": 0,
-      "values_extractable": false,
-      "extraction_warning": "Scanned pages with an unreliable OCR text layer. Digits are transposed by the embedded text (e.g. 4,610,003 reads as 460,100,3). Values must be transcribed from the rendered page image, never parsed from this file's text."
+      "values_extractable": true
+    },
+    {
+      "id": "orange-county-municipal-finance-database-v1-0",
+      "filename": "Orange_County_Municipal_Finance_Database_v1.0.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Finance_Database_v1.0.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 57333,
+      "sha256": "d819f7eab876f57d592f069055eff499261b876b54d937743e2cdbbf53711712",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "orange-county-municipal-finance-database-v1-1",
+      "filename": "Orange_County_Municipal_Finance_Database_v1.1.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Finance_Database_v1.1.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 67896,
+      "sha256": "359a2e63e4d0faead6e7234c3e040c0e47316a5384d2a29edf9ee973028f8586",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "orange-county-municipal-financial-data-warehouse-v1-2",
+      "filename": "Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 95789,
+      "sha256": "8ca50c7d1d9b59ae10b8b8a4090d5b8b661999b91b5e39766cd04daadeeb344d",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "orange-county-municipal-financial-data-warehouse-v2-0",
+      "filename": "Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 112197,
+      "sha256": "d1c0019c2745468a7ebcd46bc376b119377c5b60c4a4cf50a8bf4549ab8fae62",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "orange-county-municipal-financial-information-system-v2-2-foundation",
+      "filename": "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 215919,
+      "sha256": "600ff180a3e058b3767beb24b7e083d5ae034f6b2551d18155a6d6790fb03c19",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "architecture-design-specification",
+      "filename": "Architecture & Design Specification.docx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/MFAS/Architecture & Design Specification.docx",
+      "duplicate_paths": [],
+      "format": "docx",
+      "bytes": 30896,
+      "sha256": "cffc8ba7be2578fa754fd6d506f2e6eafe6e8af1522a5787a730c7097903f57f",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": false
+    },
+    {
+      "id": "mfas-architecture-notebook",
+      "filename": "MFAS Architecture Notebook.docx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/MFAS/MFAS Architecture Notebook.docx",
+      "duplicate_paths": [],
+      "format": "docx",
+      "bytes": 35023,
+      "sha256": "545f29f4d95ffec5d6619a53069b6935d063e483360e4e125dc82de68bce4201",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": false
+    },
+    {
+      "id": "mfas-conceptual-architecture",
+      "filename": "MFAS Conceptual Architecture.docx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/MFAS/MFAS Conceptual Architecture.docx",
+      "duplicate_paths": [],
+      "format": "docx",
+      "bytes": 36908,
+      "sha256": "7fc6ceb2b9492b20684a0731c6c65e9aaba5c4c7fd2a15243d46d45a481caae8",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": false
     },
     {
       "id": "sales-tax-information",

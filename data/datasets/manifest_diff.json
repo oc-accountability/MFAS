@@ -1,0 +1,22 @@
+{
+  "generated_by": "etl/diff_manifest.py",
+  "note": "Filenames lie; hashes do not. A document amended in place keeps its name while its contents move underneath every figure quoted from it.",
+  "added": [
+    "Affordable Housing (FY18-FY29) in pdf.pdf",
+    "Appendix A_ County Profile (Data) Element (PDF).pdf",
+    "Architecture & Design Specification.docx",
+    "FY26 Budget Ordinance.pdf",
+    "MFAS Architecture Notebook.docx",
+    "MFAS Conceptual Architecture.docx",
+    "OC Design.xlsx",
+    "Orange_County_Municipal_Finance_Database_v1.0.xlsx",
+    "Orange_County_Municipal_Finance_Database_v1.1.xlsx",
+    "Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
+    "Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
+    "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx"
+  ],
+  "removed": [],
+  "changed": [],
+  "unchanged_count": 54,
+  "published_figures_at_risk": {}
+}
