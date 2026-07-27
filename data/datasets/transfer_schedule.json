@@ -1,0 +1,1377 @@
+{
+  "generated_by": "etl/s89_transfers.py",
+  "requested_by": "Amy — a schedule with the transfer columns going across, showing the value transferred to the General Fund, to Debt Service, and to other funds, including any other cross-fund transfers.",
+  "reads": "the OUTGOING side only — see the limitation below",
+  "limitation": "The line-item appendix records transfers inside each fund's EXPENDITURE section, so this shows money leaving a fund and where it was sent. The matching incoming side sits in the receiving fund's revenues, which the appendix does not itemise the same way, so this schedule is not a proof that both sides balance. Destinations that the account name does not identify are reported as Unidentified rather than allocated to a guess.",
+  "fund_number_key": {
+    "60": "General Capital Improvements Fund",
+    "61": "Stormwater Capital Improvements Fund",
+    "69": "Utility Capital Improvements Fund",
+    "78": "Committed Funds (reserves)"
+  },
+  "summary": {
+    "transfer_rows": 76,
+    "schedules": 5,
+    "unidentified_destinations": 9,
+    "source_funds": [
+      "General Fund",
+      "Stormwater Fund",
+      "Water & Sewer Fund"
+    ],
+    "destination_funds": [
+      "Committed Funds (reserves)",
+      "General Capital Improvements Fund",
+      "General Capital Projects Fund",
+      "General Capital Reserve Fund",
+      "Stormwater Capital Improvements Fund",
+      "Utility Capital Improvements Fund",
+      "Unidentified"
+    ]
+  },
+  "schedules": [
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "destinations": [
+        "Committed Funds (reserves)",
+        "General Capital Improvements Fund",
+        "General Capital Projects Fund",
+        "General Capital Reserve Fund",
+        "Stormwater Capital Improvements Fund",
+        "Utility Capital Improvements Fund",
+        "Unidentified"
+      ],
+      "rows": [
+        {
+          "from_fund": "General Fund",
+          "to": {
+            "Committed Funds (reserves)": 802957.0,
+            "General Capital Improvements Fund": 383000.0,
+            "General Capital Projects Fund": 300000.0,
+            "General Capital Reserve Fund": 67352.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 1553309.0
+        },
+        {
+          "from_fund": "Stormwater Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 75000.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 75000.0
+        },
+        {
+          "from_fund": "Water & Sewer Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 636231.0,
+            "Unidentified": 2688896.0
+          },
+          "total_out": 3325127.0
+        }
+      ],
+      "total_received_by_destination": {
+        "Committed Funds (reserves)": 802957.0,
+        "General Capital Improvements Fund": 383000.0,
+        "General Capital Projects Fund": 300000.0,
+        "General Capital Reserve Fund": 67352.0,
+        "Stormwater Capital Improvements Fund": 75000.0,
+        "Utility Capital Improvements Fund": 636231.0,
+        "Unidentified": 2688896.0
+      },
+      "total_transferred": 4953436.0
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "destinations": [
+        "Committed Funds (reserves)",
+        "General Capital Improvements Fund",
+        "General Capital Projects Fund",
+        "General Capital Reserve Fund",
+        "Stormwater Capital Improvements Fund",
+        "Utility Capital Improvements Fund",
+        "Unidentified"
+      ],
+      "rows": [
+        {
+          "from_fund": "General Fund",
+          "to": {
+            "Committed Funds (reserves)": 1259603.0,
+            "General Capital Improvements Fund": 383000.0,
+            "General Capital Projects Fund": 300000.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 250000.0
+          },
+          "total_out": 2192603.0
+        },
+        {
+          "from_fund": "Stormwater Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 145000.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 145000.0
+        },
+        {
+          "from_fund": "Water & Sewer Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 1155600.0,
+            "Unidentified": 711539.0
+          },
+          "total_out": 1867139.0
+        }
+      ],
+      "total_received_by_destination": {
+        "Committed Funds (reserves)": 1259603.0,
+        "General Capital Improvements Fund": 383000.0,
+        "General Capital Projects Fund": 300000.0,
+        "General Capital Reserve Fund": 0.0,
+        "Stormwater Capital Improvements Fund": 145000.0,
+        "Utility Capital Improvements Fund": 1155600.0,
+        "Unidentified": 961539.0
+      },
+      "total_transferred": 4204742.0
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "destinations": [
+        "Committed Funds (reserves)",
+        "General Capital Improvements Fund",
+        "General Capital Projects Fund",
+        "General Capital Reserve Fund",
+        "Stormwater Capital Improvements Fund",
+        "Utility Capital Improvements Fund",
+        "Unidentified"
+      ],
+      "rows": [
+        {
+          "from_fund": "General Fund",
+          "to": {
+            "Committed Funds (reserves)": 568826.0,
+            "General Capital Improvements Fund": 363000.0,
+            "General Capital Projects Fund": 300000.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 300000.0
+          },
+          "total_out": 1531826.0
+        },
+        {
+          "from_fund": "Stormwater Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 100000.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 100000.0
+        },
+        {
+          "from_fund": "Water & Sewer Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 195540.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 195540.0
+        }
+      ],
+      "total_received_by_destination": {
+        "Committed Funds (reserves)": 568826.0,
+        "General Capital Improvements Fund": 363000.0,
+        "General Capital Projects Fund": 300000.0,
+        "General Capital Reserve Fund": 0.0,
+        "Stormwater Capital Improvements Fund": 100000.0,
+        "Utility Capital Improvements Fund": 195540.0,
+        "Unidentified": 300000.0
+      },
+      "total_transferred": 1827366.0
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "destinations": [
+        "Committed Funds (reserves)",
+        "General Capital Improvements Fund",
+        "General Capital Projects Fund",
+        "General Capital Reserve Fund",
+        "Stormwater Capital Improvements Fund",
+        "Utility Capital Improvements Fund",
+        "Unidentified"
+      ],
+      "rows": [
+        {
+          "from_fund": "General Fund",
+          "to": {
+            "Committed Funds (reserves)": 943826.0,
+            "General Capital Improvements Fund": 333000.0,
+            "General Capital Projects Fund": 300000.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 315000.0
+          },
+          "total_out": 1891826.0
+        },
+        {
+          "from_fund": "Stormwater Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 75000.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 75000.0
+        },
+        {
+          "from_fund": "Water & Sewer Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 100000.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 100000.0
+        }
+      ],
+      "total_received_by_destination": {
+        "Committed Funds (reserves)": 943826.0,
+        "General Capital Improvements Fund": 333000.0,
+        "General Capital Projects Fund": 300000.0,
+        "General Capital Reserve Fund": 0.0,
+        "Stormwater Capital Improvements Fund": 75000.0,
+        "Utility Capital Improvements Fund": 100000.0,
+        "Unidentified": 315000.0
+      },
+      "total_transferred": 2066826.0
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "destinations": [
+        "Committed Funds (reserves)",
+        "General Capital Improvements Fund",
+        "General Capital Projects Fund",
+        "General Capital Reserve Fund",
+        "Stormwater Capital Improvements Fund",
+        "Utility Capital Improvements Fund",
+        "Unidentified"
+      ],
+      "rows": [
+        {
+          "from_fund": "General Fund",
+          "to": {
+            "Committed Funds (reserves)": 1068826.0,
+            "General Capital Improvements Fund": 458000.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 330000.0
+          },
+          "total_out": 1856826.0
+        },
+        {
+          "from_fund": "Stormwater Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 75000.0,
+            "Utility Capital Improvements Fund": 0.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 75000.0
+        },
+        {
+          "from_fund": "Water & Sewer Fund",
+          "to": {
+            "Committed Funds (reserves)": 0.0,
+            "General Capital Improvements Fund": 0.0,
+            "General Capital Projects Fund": 0.0,
+            "General Capital Reserve Fund": 0.0,
+            "Stormwater Capital Improvements Fund": 0.0,
+            "Utility Capital Improvements Fund": 470000.0,
+            "Unidentified": 0.0
+          },
+          "total_out": 470000.0
+        }
+      ],
+      "total_received_by_destination": {
+        "Committed Funds (reserves)": 1068826.0,
+        "General Capital Improvements Fund": 458000.0,
+        "General Capital Projects Fund": 0.0,
+        "General Capital Reserve Fund": 0.0,
+        "Stormwater Capital Improvements Fund": 75000.0,
+        "Utility Capital Improvements Fund": 470000.0,
+        "Unidentified": 330000.0
+      },
+      "total_transferred": 2401826.0
+    }
+  ],
+  "unidentified": [
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 250000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 300000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 315000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 330000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 2688896.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 711539.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 0.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 0.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 0.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    }
+  ],
+  "detail": [
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Information Technology",
+      "amount": 50000.0,
+      "source_page": 252,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Information Technology",
+      "amount": 50000.0,
+      "source_page": 252,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Information Technology",
+      "amount": 0.0,
+      "source_page": 252,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Information Technology",
+      "amount": 0.0,
+      "source_page": 252,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Information Technology",
+      "amount": 0.0,
+      "source_page": 252,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Public Space",
+      "amount": 333000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Public Space",
+      "amount": 333000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Public Space",
+      "amount": 363000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Public Space",
+      "amount": 333000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Improvements Fund",
+      "resolved_by": "fund number 60 in the account name",
+      "account": "TRANSFER TO FUND 60 - GENERAL",
+      "department": "Public Space",
+      "amount": 458000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "CAPITAL IMPROVEMENTS TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Public Space",
+      "amount": 340000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "CAPITAL IMPROVEMENTS TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Public Space",
+      "amount": 899603.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "CAPITAL IMPROVEMENTS TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Public Space",
+      "amount": 340000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "CAPITAL IMPROVEMENTS TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Public Space",
+      "amount": 340000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "CAPITAL IMPROVEMENTS TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Public Space",
+      "amount": 340000.0,
+      "source_page": 254,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Projects Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CAPITAL",
+      "department": "Fire Protection",
+      "amount": 300000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Projects Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CAPITAL",
+      "department": "Fire Protection",
+      "amount": 300000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Projects Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CAPITAL",
+      "department": "Fire Protection",
+      "amount": 300000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Projects Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CAPITAL",
+      "department": "Fire Protection",
+      "amount": 300000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Projects Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CAPITAL",
+      "department": "Fire Protection",
+      "amount": 0.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "IMPROVEMENT FUND TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Fire Protection",
+      "amount": 0.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "IMPROVEMENT FUND TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Fire Protection",
+      "amount": 100000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "IMPROVEMENT FUND TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Fire Protection",
+      "amount": 200000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "IMPROVEMENT FUND TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Fire Protection",
+      "amount": 300000.0,
+      "source_page": 256,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 250000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 300000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 315000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Police",
+      "amount": 330000.0,
+      "source_page": 257,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Solid Waste",
+      "amount": 335000.0,
+      "source_page": 261,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Solid Waste",
+      "amount": 275000.0,
+      "source_page": 261,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Solid Waste",
+      "amount": 0.0,
+      "source_page": 261,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Solid Waste",
+      "amount": 275000.0,
+      "source_page": 261,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Solid Waste",
+      "amount": 300000.0,
+      "source_page": 261,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Reserve Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CRF",
+      "department": "Streets",
+      "amount": 67352.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Reserve Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CRF",
+      "department": "Streets",
+      "amount": 0.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Reserve Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CRF",
+      "department": "Streets",
+      "amount": 0.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Reserve Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CRF",
+      "department": "Streets",
+      "amount": 0.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "General Capital Reserve Fund",
+      "resolved_by": "named in the account",
+      "account": "TRANSFER TO GENERAL CRF",
+      "department": "Streets",
+      "amount": 0.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Streets",
+      "amount": 13648.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Streets",
+      "amount": 85000.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Streets",
+      "amount": 85000.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Streets",
+      "amount": 85000.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Streets",
+      "amount": 85000.0,
+      "source_page": 262,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Special Appropriations",
+      "amount": 114309.0,
+      "source_page": 263,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Special Appropriations",
+      "amount": 0.0,
+      "source_page": 263,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Special Appropriations",
+      "amount": 43826.0,
+      "source_page": 263,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Special Appropriations",
+      "amount": 43826.0,
+      "source_page": 263,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "General Fund",
+      "to_fund": "Committed Funds (reserves)",
+      "resolved_by": "fund number 78 in the account name",
+      "account": "TRANSFER TO FUND 78 - COMMITTED",
+      "department": "Special Appropriations",
+      "amount": 43826.0,
+      "source_page": 263,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "Stormwater Fund",
+      "to_fund": "Stormwater Capital Improvements Fund",
+      "resolved_by": "fund number 61 in the account name",
+      "account": "TRANSFER TO FUND 61 - STORMWATER",
+      "department": "Stormwater",
+      "amount": 75000.0,
+      "source_page": 265,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Stormwater Fund",
+      "to_fund": "Stormwater Capital Improvements Fund",
+      "resolved_by": "fund number 61 in the account name",
+      "account": "TRANSFER TO FUND 61 - STORMWATER",
+      "department": "Stormwater",
+      "amount": 145000.0,
+      "source_page": 265,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Stormwater Fund",
+      "to_fund": "Stormwater Capital Improvements Fund",
+      "resolved_by": "fund number 61 in the account name",
+      "account": "TRANSFER TO FUND 61 - STORMWATER",
+      "department": "Stormwater",
+      "amount": 100000.0,
+      "source_page": 265,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Stormwater Fund",
+      "to_fund": "Stormwater Capital Improvements Fund",
+      "resolved_by": "fund number 61 in the account name",
+      "account": "TRANSFER TO FUND 61 - STORMWATER",
+      "department": "Stormwater",
+      "amount": 75000.0,
+      "source_page": 265,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Stormwater Fund",
+      "to_fund": "Stormwater Capital Improvements Fund",
+      "resolved_by": "fund number 61 in the account name",
+      "account": "TRANSFER TO FUND 61 - STORMWATER",
+      "department": "Stormwater",
+      "amount": 75000.0,
+      "source_page": 265,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 2688896.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 711539.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 0.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 0.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Unidentified",
+      "resolved_by": "the account name does not say where it went",
+      "account": "Interfund Transfers",
+      "department": "Administration of Enterprise",
+      "amount": 0.0,
+      "source_page": 266,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Treatment Plant",
+      "amount": 615600.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Treatment Plant",
+      "amount": 0.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Treatment Plant",
+      "amount": 0.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Treatment Plant",
+      "amount": 0.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "West Fork Eno Reservoir",
+      "amount": 0.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "West Fork Eno Reservoir",
+      "amount": 195540.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "West Fork Eno Reservoir",
+      "amount": 0.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "West Fork Eno Reservoir",
+      "amount": 0.0,
+      "source_page": 269,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Distribution",
+      "amount": 417991.0,
+      "source_page": 270,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Distribution",
+      "amount": 95000.0,
+      "source_page": 270,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Distribution",
+      "amount": 0.0,
+      "source_page": 270,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Distribution",
+      "amount": 100000.0,
+      "source_page": 270,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Water Distribution",
+      "amount": 470000.0,
+      "source_page": 270,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "actual",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Wastewater Collection",
+      "amount": 218240.0,
+      "source_page": 272,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "estimate",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Wastewater Collection",
+      "amount": 445000.0,
+      "source_page": 272,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "budget",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Wastewater Collection",
+      "amount": 0.0,
+      "source_page": 272,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2028,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Wastewater Collection",
+      "amount": 0.0,
+      "source_page": 272,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    },
+    {
+      "fiscal_year": 2029,
+      "basis": "projected",
+      "from_fund": "Water & Sewer Fund",
+      "to_fund": "Utility Capital Improvements Fund",
+      "resolved_by": "fund number 69 in the account name",
+      "account": "TRANSFER TO FUND 69 - UTILITY",
+      "department": "Wastewater Collection",
+      "amount": 0.0,
+      "source_page": 272,
+      "source_doc": "fy27-budget-and-financial-plan-recommended"
+    }
+  ]
+}

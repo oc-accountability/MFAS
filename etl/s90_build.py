@@ -282,6 +282,8 @@ def main() -> None:
             "warehouse_county": "datasets/warehouse_county.json",
             # conformance against the MFAS seven-dimension grain contract
             "mfas": "datasets/mfas_conformance.json",
+            # cross-fund transfer schedule (requested by Amy)
+            "transfers": "datasets/transfer_schedule.json",
         },
     })
 

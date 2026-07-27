@@ -27,6 +27,7 @@ etl:
 	$(PY) etl/s80_county.py
 	$(PY) etl/s85_warehouse.py
 	$(PY) etl/s88_mfas_dimensions.py
+	$(PY) etl/s89_transfers.py
 	$(PY) etl/s90_build.py
 
 test:

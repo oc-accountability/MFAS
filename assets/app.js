@@ -873,6 +873,36 @@ function renderPaysFor(host) {
     }
   }
 
+  // Cross-fund transfers: where money moves between the town's own funds.
+  const tf = state.data.transfers;
+  if (tf && tf.schedules) {
+    const cur = tf.schedules.find(x => x.fiscal_year === 2027 && x.basis === 'budget');
+    if (cur) {
+      sec.appendChild(disclosure('See money moved between the town’s own funds', inner => {
+        const dests = cur.destinations.filter(d =>
+          cur.rows.some(r => r.to[d])) ;
+        inner.innerHTML = `
+          <p class="sub" style="font-size:var(--t-sm);color:var(--text-secondary);margin:0 0 var(--s4)">
+            Funds do not operate in isolation — each year the town moves money from its operating
+            funds into its capital funds and reserves. Read one fund alone and these look like
+            unexplained gaps; laid out together they show what is being set aside to build things
+            later. FY2027 budget.
+          </p>
+          <div class="tablewrap"><table>
+            <caption>Transfers out of each fund, and where they went. Reads the outgoing side
+              only — see the note below.</caption>
+            <thead><tr><th>From</th>${dests.map(d =>
+              `<th class="num">${esc(d)}</th>`).join('')}<th class="num">Total out</th></tr></thead>
+            <tbody>${cur.rows.map(r => `<tr><td>${esc(r.from_fund)}</td>${
+              dests.map(d => `<td class="num">${r.to[d] ? usd(r.to[d]) : '—'}</td>`).join('')
+            }<td class="num" style="font-weight:650">${usd(r.total_out)}</td></tr>`).join('')}
+            </tbody></table></div>
+          <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
+            ${esc(tf.limitation)}</span></p>`;
+      }));
+    }
+  }
+
   // The real answer to "where does it go" is the account-level detail. Behind a
   // disclosure so the ~790 KB dataset is only fetched if the reader wants it.
   sec.appendChild(disclosure('Break it down department by department', async inner => {
@@ -1634,7 +1664,7 @@ async function boot() {
     loadHome();
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
-                   'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas'];
+                   'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas', 'transfers'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

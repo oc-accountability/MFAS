@@ -11,8 +11,8 @@
   "counts": {
     "facts": 83,
     "metrics": 42,
-    "documents": 66,
-    "documents_with_trustworthy_text": 43,
+    "documents": 70,
+    "documents_with_trustworthy_text": 46,
     "documents_scanned_needing_transcription": 10,
     "multi_document_comparisons": 12,
     "line_item_observations": 3636,
@@ -36,6 +36,7 @@
     "ocr_statements": "datasets/ocr_statements.json",
     "ocr_manifest": "datasets/ocr_manifest.json",
     "warehouse_county": "datasets/warehouse_county.json",
-    "mfas": "datasets/mfas_conformance.json"
+    "mfas": "datasets/mfas_conformance.json",
+    "transfers": "datasets/transfer_schedule.json"
   }
 }
