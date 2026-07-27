@@ -6,6 +6,10 @@ the reader's browser.
 
 Built for the **Orange County Efficiency & Accountability Initiative**.
 
+**Live site: https://oc-accountability.github.io/hoa-funds/**
+*(To turn this on: Settings → Pages → Source "Deploy from a branch", Branch `main`, folder `/ (root)`.
+No build step and no workflow needed — the site is plain static files at the repo root.)*
+
 **Every number carries the document and page it came from.** Nothing is presented as a finding
 unless it can be traced, and figures that are somebody's claim rather than an audited total are
 labelled as claims.
