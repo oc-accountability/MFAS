@@ -6,9 +6,13 @@ the reader's browser.
 
 Built for the **Orange County Efficiency & Accountability Initiative**.
 
-**Live site: https://oc-accountability.github.io/hoa-funds/**
-*(To turn this on: Settings → Pages → Source "Deploy from a branch", Branch `main`, folder `/ (root)`.
-No build step and no workflow needed — the site is plain static files at the repo root.)*
+## → Just want to look at it? **https://oc-accountability.github.io/hoa-funds/**
+
+That is the live site. Nothing to install, nothing to run. **This repository *is* that website** —
+GitHub Pages serves `index.html`, `assets/` and `data/` straight from the `main` branch, so a push
+updates the live page about a minute later.
+
+Everything below is for *changing* the project, not for viewing it.
 
 **Every number carries the document and page it came from.** Nothing is presented as a finding
 unless it can be traced, and figures that are somebody's claim rather than an audited total are
@@ -18,29 +22,42 @@ labelled as claims.
 
 ## What is here
 
-| Path | What it is |
-|---|---|
-| `index.html`, `assets/` | The public site. Static, no build step, no dependencies. |
-| `data/` | The published dataset — a small star schema of JSON. |
-| `etl/` | The pipeline that produces `data/` from the source documents. |
-| `docs/` | Provenance, data dictionary, and extraction notes. |
-| `tests/` | Integrity gates, including one that stops source PDFs being committed. |
-| `sources/` | The source documents. **Not committed** — see below. |
+| Path | Served to visitors? | What it is |
+|---|---|---|
+| `index.html`, `assets/` | **yes** | The site itself. Static, no build step, no dependencies. |
+| `data/` | **yes** | The published dataset the page fetches at load time. |
+| `etl/` | no | The pipeline that produces `data/` from the source documents. |
+| `tests/` | no | Integrity gates, including the one that blocks figures read from a scan. |
+| `docs/` | no | Provenance, data dictionary, extraction notes. |
+| `AGENTS.md` | no | Briefing for an AI coding agent working here. |
+| `sources/` | no | The source documents. **Not committed** — see below. |
 
-## Quick start
+The four "no" rows are the toolchain that keeps the published figures honest. Deleting them would
+leave today's page working and make every future number unverifiable.
+
+## Working on it locally
+
+You only need this to change something. Three things cannot happen on GitHub:
+
+- **`make etl`** rebuilds `data/` from the source PDFs, and those are deliberately not in the repo
+  (726 MB, two files over GitHub's 100 MB limit). Only a machine with `sources/` populated can
+  regenerate the figures.
+- **`make test`** catches a bad figure *before* it is public. This site is about named public
+  officials; a wrong number should never reach the live page.
+- **`make serve`** lets you see a change before everyone else does. Pushing to `main` publishes
+  immediately, mistakes included.
 
 ```bash
-python3 -m venv .venv && ./.venv/bin/pip install -r etl/requirements.txt
+make venv       # once: creates .venv and installs etl/requirements.txt
 
-# rebuild the dataset from the source documents (needs sources/ populated)
-make etl
-
-# check the published data is internally consistent
-make test
-
-# serve the site — opening index.html from disk will not work, the browser blocks the fetch
+make etl        # rebuild data/ from sources/   (needs the archive unpacked there)
+make test       # 16 integrity gates — must pass before you commit
 make serve      # then open http://127.0.0.1:8771/
 ```
+
+⚠️ **Do not open `index.html` by double-clicking it.** Browsers block `fetch()` on `file://` URLs, so
+the data never loads and you get an empty page that looks broken. Use `make serve`, or just visit the
+live site.
 
 ## Read this before touching the ETL
 
