@@ -549,10 +549,10 @@
       "unit": "percent",
       "basis": "recommended",
       "source_doc": "fy27-budget-message",
-      "source_page": 1,
-      "source_detail": "stated in prose: …7.5% increase over FY26 rate…",
+      "source_page": 4,
+      "source_detail": "stated in prose: …Water Rates\nA 7.5% increase is recommended…",
       "extraction": "digital-text",
-      "note": "Applies to water; sewer matches."
+      "note": "Recommended for each of the next three years."
     },
     {
       "jurisdiction": "Town of Hillsborough, NC",

@@ -2,9 +2,10 @@
   "generated_by": "etl/s90_build.py",
   "merged_from": [
     "facts_xlsx.json",
-    "facts_budget.json"
+    "facts_budget.json",
+    "facts_household.json"
   ],
-  "count": 62,
+  "count": 76,
   "facts": [
     {
       "jurisdiction": "Town of Hillsborough, NC",
@@ -708,10 +709,10 @@
       "unit": "percent",
       "basis": "recommended",
       "source_doc": "fy27-budget-message",
-      "source_page": 1,
-      "source_detail": "stated in prose: …7.5% increase over FY26 rate…",
+      "source_page": 4,
+      "source_detail": "stated in prose: …Water Rates\nA 7.5% increase is recommended…",
       "extraction": "digital-text",
-      "note": "Applies to water; sewer matches."
+      "note": "Recommended for each of the next three years."
     },
     {
       "jurisdiction": "Town of Hillsborough, NC",
@@ -786,6 +787,188 @@
       "source_detail": "stated in prose: …equivalent of about 18.12 cents on the tax rate…",
       "extraction": "digital-text",
       "note": "The pipeline of major capital projects expressed as tax-rate cents."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "water_bill_increase_monthly_intown_avg",
+      "value": 3.72,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — In-Town Rates, Water, 4,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 4,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "water_bill_increase_monthly_intown_min",
+      "value": 1.86,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — In-Town Rates, Water, 2,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 2,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "sewer_bill_increase_monthly_intown_avg",
+      "value": 5.24,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — In-Town Rates, Sewer, 4,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 4,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "sewer_bill_increase_monthly_intown_min",
+      "value": 2.62,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — In-Town Rates, Sewer, 2,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 2,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "water_bill_increase_monthly_outoftown_avg",
+      "value": 7.24,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — Out-of-Town Rates, Water, 4,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 4,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "water_bill_increase_monthly_outoftown_min",
+      "value": 3.62,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — Out-of-Town Rates, Water, 2,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 2,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "sewer_bill_increase_monthly_outoftown_avg",
+      "value": 10.2,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — Out-of-Town Rates, Sewer, 4,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 4,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "sewer_bill_increase_monthly_outoftown_min",
+      "value": 5.1,
+      "unit": "USD_per_month",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "Rate Impact — Out-of-Town Rates, Sewer, 2,000 gal/month",
+      "extraction": "digital-text",
+      "note": "The town's own stated monthly increase from FY2026 to FY2027, not a figure we computed. The property tax rate is unchanged this year, so for most households this utility increase is the actual change in what they pay the town. Assumes 2,000 gallons per month."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "sewer_rate_increase_pct",
+      "value": 7.5,
+      "unit": "percent",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 4,
+      "source_detail": "stated in prose: …Sewer Rates\nA 7.5% increase is recommended…",
+      "extraction": "digital-text",
+      "note": "Recommended for each of the next three years. Matches the water increase."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "stormwater_fee_increase_per_eru",
+      "value": 15.0,
+      "unit": "USD",
+      "basis": "recommended",
+      "source_doc": "fy27-budget-message",
+      "source_page": 1,
+      "source_detail": "stated in prose: …$15 per ERU* increase over FY26 fee…",
+      "extraction": "digital-text",
+      "note": "Per Equivalent Residential Unit. The budget message does not state whether this is a monthly or annual figure, so no annual household total is derived from it here."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "affordable_housing_tax_rate_equivalent_cents",
+      "value": 2.0,
+      "unit": "cents_per_100_valuation",
+      "basis": "stated",
+      "source_doc": "fy27-budget-message",
+      "source_page": 3,
+      "source_detail": "stated in prose: …until meeting the equivalent of 2 cents on the property tax rate…",
+      "extraction": "stated",
+      "note": "The board agreed in FY2024 to raise affordable-housing spending annually until it reaches this share of the tax rate."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "salary_benefit_tax_rate_equivalent_cents",
+      "value": 2.6,
+      "unit": "cents_per_100_valuation",
+      "basis": "stated",
+      "source_doc": "fy27-budget-message",
+      "source_page": 2,
+      "source_detail": "stated in prose: …which is equivalent to approximately 2.6 cents on the tax rate…",
+      "extraction": "stated",
+      "note": "The FY2027 salary and benefit increase, expressed as tax-rate cents."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2029,
+      "metric": "fy29_scenario_increase_on_400k_home",
+      "value": 440.0,
+      "unit": "USD",
+      "basis": "projected",
+      "source_doc": "fy27-budget-message",
+      "source_page": 1,
+      "source_detail": "stated in prose: …about a $440 annual increase on a $400,000 home…",
+      "extraction": "digital-text",
+      "note": "The town's own worked example for the FY2029 deficit scenario. Useful as a cross-check on the household calculator: at 51.3 cents a $400,000 home pays about $2,052, and each cent adds $40, so $440 implies roughly an 11-cent increase — consistent with the text's 'over 10 cents'."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "nonprofit_partnership_funding",
+      "value": 110000.0,
+      "unit": "USD",
+      "basis": "adopted",
+      "source_doc": "fy27-budget-message",
+      "source_page": 3,
+      "source_detail": "stated in prose: …set the FY27 funding level at $110,000…",
+      "extraction": "digital-text",
+      "note": "Town funding for nonprofit partners, set after a public hearing."
     }
   ]
 }

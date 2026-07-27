@@ -19,6 +19,7 @@ etl:
 	$(PY) etl/s00_manifest.py
 	$(PY) etl/s20_xlsx.py
 	$(PY) etl/s30_budget_messages.py
+	$(PY) etl/s40_household_impact.py
 	$(PY) etl/s90_build.py
 
 test:

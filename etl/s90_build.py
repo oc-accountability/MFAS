@@ -83,9 +83,43 @@ METRICS = {
                     "revaluation. The gap above it is the effective increase."),
     "affordable_housing_allocation": dict(
         label="Affordable housing allocation", unit="USD", category="Housing"),
+
+    # ---- household impact (stage 40) ----------------------------------------
+    # Dimensions (in-town vs out-of-town, average vs minimum consumption) are in the
+    # metric name because the Fact schema is intentionally flat.
+    **{f"{util}_bill_increase_monthly_{loc}_{lvl}": dict(
+        label=(f"{util.capitalize()} bill increase, "
+               f"{'in-town' if loc == 'intown' else 'out-of-town'}, "
+               f"{'average' if lvl == 'avg' else 'minimum'} use"),
+        unit="USD_per_month", category="Your household",
+        description=("The town's own stated monthly increase from FY2026 to FY2027. "
+                     "Average use is 4,000 gallons/month, minimum is 2,000."))
+       for util in ("water", "sewer") for loc in ("intown", "outoftown")
+       for lvl in ("avg", "min")},
+
+    "sewer_rate_increase_pct": dict(
+        label="Sewer rate increase", unit="percent", category="Utilities"),
+    "stormwater_fee_increase_per_eru": dict(
+        label="Stormwater fee increase per ERU", unit="USD", category="Utilities",
+        description="Per Equivalent Residential Unit. The source does not state whether this "
+                    "is monthly or annual, so no annual total is derived from it."),
+    "affordable_housing_tax_rate_equivalent_cents": dict(
+        label="Affordable housing target, as tax-rate cents",
+        unit="cents_per_100_valuation", category="Housing",
+        description="The board agreed in FY2024 to raise housing spending annually until it "
+                    "reaches this share of the tax rate."),
+    "salary_benefit_tax_rate_equivalent_cents": dict(
+        label="Salary and benefit increase, as tax-rate cents",
+        unit="cents_per_100_valuation", category="Spending"),
+    "fy29_scenario_increase_on_400k_home": dict(
+        label="FY2029 scenario: annual increase on a $400,000 home", unit="USD",
+        category="Taxes",
+        description="The town's own worked example, useful as a cross-check on the calculator."),
+    "nonprofit_partnership_funding": dict(
+        label="Nonprofit partnership funding", unit="USD", category="Spending"),
 }
 
-STAGE_FACT_FILES = ["facts_xlsx.json", "facts_budget.json"]
+STAGE_FACT_FILES = ["facts_xlsx.json", "facts_budget.json", "facts_household.json"]
 
 
 def main() -> None:
@@ -189,6 +223,8 @@ def main() -> None:
             "projections": "datasets/projections.json",
             "requests": "datasets/requests.json",
             "issues": "datasets/issues.json",
+            # carries civic_participation, which is text and must never be charted
+            "household": "datasets/facts_household.json",
         },
     })
 

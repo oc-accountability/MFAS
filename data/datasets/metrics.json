@@ -119,6 +119,87 @@
       "label": "Affordable housing allocation",
       "unit": "USD",
       "category": "Housing"
+    },
+    "water_bill_increase_monthly_intown_avg": {
+      "label": "Water bill increase, in-town, average use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "water_bill_increase_monthly_intown_min": {
+      "label": "Water bill increase, in-town, minimum use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "water_bill_increase_monthly_outoftown_avg": {
+      "label": "Water bill increase, out-of-town, average use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "water_bill_increase_monthly_outoftown_min": {
+      "label": "Water bill increase, out-of-town, minimum use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "sewer_bill_increase_monthly_intown_avg": {
+      "label": "Sewer bill increase, in-town, average use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "sewer_bill_increase_monthly_intown_min": {
+      "label": "Sewer bill increase, in-town, minimum use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "sewer_bill_increase_monthly_outoftown_avg": {
+      "label": "Sewer bill increase, out-of-town, average use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "sewer_bill_increase_monthly_outoftown_min": {
+      "label": "Sewer bill increase, out-of-town, minimum use",
+      "unit": "USD_per_month",
+      "category": "Your household",
+      "description": "The town's own stated monthly increase from FY2026 to FY2027. Average use is 4,000 gallons/month, minimum is 2,000."
+    },
+    "sewer_rate_increase_pct": {
+      "label": "Sewer rate increase",
+      "unit": "percent",
+      "category": "Utilities"
+    },
+    "stormwater_fee_increase_per_eru": {
+      "label": "Stormwater fee increase per ERU",
+      "unit": "USD",
+      "category": "Utilities",
+      "description": "Per Equivalent Residential Unit. The source does not state whether this is monthly or annual, so no annual total is derived from it."
+    },
+    "affordable_housing_tax_rate_equivalent_cents": {
+      "label": "Affordable housing target, as tax-rate cents",
+      "unit": "cents_per_100_valuation",
+      "category": "Housing",
+      "description": "The board agreed in FY2024 to raise housing spending annually until it reaches this share of the tax rate."
+    },
+    "salary_benefit_tax_rate_equivalent_cents": {
+      "label": "Salary and benefit increase, as tax-rate cents",
+      "unit": "cents_per_100_valuation",
+      "category": "Spending"
+    },
+    "fy29_scenario_increase_on_400k_home": {
+      "label": "FY2029 scenario: annual increase on a $400,000 home",
+      "unit": "USD",
+      "category": "Taxes",
+      "description": "The town's own worked example, useful as a cross-check on the calculator."
+    },
+    "nonprofit_partnership_funding": {
+      "label": "Nonprofit partnership funding",
+      "unit": "USD",
+      "category": "Spending"
     }
   }
 }

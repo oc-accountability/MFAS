@@ -178,9 +178,14 @@ SCALARS = [
      "capital_projects_tax_rate_equivalent_cents", "cents_per_100_valuation", "projected",
      r"increases of approximately ([\d.]+) cents will be needed to pay for the fire station",
      "For the fire station, Ridgewalk Greenway and train station projects."),
+    # Anchored on the page-4 prose. The front-page summary box is two-column, so there
+    # "Water Rate" / "Sewer Rate" and their values extract onto non-adjacent lines with
+    # prose between them — matching the bare "N% increase over FY26 rate" there would
+    # pick whichever happened to come first and could pair sewer's number with water.
     ("fy27-budget-message", "FY27 Budget Message.pdf", 2027,
      "water_rate_increase_pct", "percent", "recommended",
-     r"([\d.]+)%\s*increase over FY26 rate", "Applies to water; sewer matches."),
+     r"Water Rates\s*\n?\s*A ([\d.]+)% increase is recommended",
+     "Recommended for each of the next three years."),
 
     # ---------------- FY2026 budget message ----------------
     ("fy26-budget-message", "FY26 Budget Message.pdf", 2026,
