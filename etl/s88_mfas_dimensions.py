@@ -87,13 +87,17 @@ def main() -> None:
             "note": "Present on every row and reconciled to published fund totals.",
         },
         "Project": {
-            "status": "MISSING as a dimension",
-            "maps_to": "—",
-            "note": ("Capital projects exist in this project as named facts (Ridgewalk, Dam "
-                     "Repair, the fire station) but not as a dimension that a spending row can "
-                     "point at. Her Fire Station #3 worked example is exactly this: a decision "
-                     "whose costs land across several accounts and years. Without a Project "
-                     "dimension those costs cannot be gathered back together."),
+            "status": "available",
+            "maps_to": "project_id in datasets/projects.json (see etl/s94_projects.py)",
+            "note": ("Added at Amy's decision — \"I do want Project to be a real dimension\". "
+                     "This was the one dimension of her seven that the data could not fill; the "
+                     "town's capital plan publishes a register of every project with its fund, "
+                     "department, priority rank, cost by account by year, funding sources and "
+                     "stated operating budget impact, each reconciled to its own printed totals. "
+                     "Her Fire Station #3 example is now answerable: a decision's cost can be "
+                     "gathered across every account and year it touches. Not yet joined row by "
+                     "row to the line-item appendix, which records capital spending by account "
+                     "within a department rather than by project."),
         },
         "Activity": {
             "status": "partial",
@@ -170,8 +174,9 @@ def main() -> None:
             "totals": headline,
         },
         "what_would_close_the_gaps": [
-            "Project: add a project identifier to capital rows so a decision's cost can be "
-            "gathered across accounts and years — this is what her Fire Station #3 example needs.",
+            "Project: CLOSED 2026-07-27 (etl/s94_projects.py) — 27 projects with cost by account "
+            "by year, funding sources and stated operating impact. Remaining work is joining the "
+            "register to individual line-item rows, which the appendix does not label by project.",
             "Activity: distinguish what the money does from who spends it; department is a proxy.",
             "Organization: split Organization from Government before adding school districts, "
             "authorities or fire districts.",

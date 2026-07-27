@@ -1460,6 +1460,83 @@ function renderHealth(host) {
 }
 
 /* ==================== 04 — what's coming ==================== */
+/**
+ * The capital projects the town plans, one decision at a time.
+ *
+ * This is what Amy's Project dimension is for. A resident cannot see a decision by
+ * reading a spending category — "Capital, $1.07M" says nothing about what was decided.
+ * A project has a name, a reason, a cost across years, a way of being paid for, and
+ * sometimes an ongoing cost it leaves behind. Each is shown with the page it came from.
+ */
+function projectsBlock(sec) {
+  const d = state.data.projects;
+  if (!d || !d.projects || !d.projects.length) return;
+  const s = d.summary;
+
+  const h = document.createElement('p');
+  h.className = 'answer';
+  h.innerHTML = `The town has <span class="fig">${d.projects.length}</span> capital projects
+    planned, together worth <span class="fig">${compact(s.total_planned_cost)}</span> across
+    FY2027&ndash;FY2033. <span class="soft">Each one below is a decision, with what it costs, how
+    it gets paid for, and the page it came from. Capital plans change; these are the town's
+    current figures, not commitments.</span>`;
+  sec.appendChild(h);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'proj-list';
+  const sorted = [...d.projects].sort((a, b) =>
+    (b.total_planned_cost || 0) - (a.total_planned_cost || 0));
+
+  for (const p of sorted) {
+    const det = document.createElement('details');
+    det.className = 'proj';
+    const debt = p.funding_by_source.some(f => /DEBT/i.test(f.source));
+    const unnamed = p.funding_by_source.some(f => f.unnamed_in_source);
+    const q = p.operating_budget_impact_quantified;
+    const tags = [];
+    if (debt) tags.push('<span class="tag tag-debt">Borrowing</span>');
+    if (p.creates_recurring_cost) tags.push('<span class="tag tag-ongoing">Ongoing cost</span>');
+    // Worth a resident's attention: the town's document leaves this funding unlabelled.
+    if (unnamed) tags.push('<span class="tag tag-gap">Funding not named</span>');
+
+    det.innerHTML = `
+      <summary>
+        <span class="proj-main">
+          <span class="proj-name">${esc(p.project_name)}</span>
+          <span class="proj-meta">${esc(p.department || '')} &middot; ${esc(p.fund || '')}
+            &middot; priority ${p.priority_rank ?? '—'}</span>
+        </span>
+        <span class="proj-right">
+          <span class="proj-cost">${compact(p.total_planned_cost || 0)}</span>
+          ${tags.join('')}
+        </span>
+      </summary>
+      <div class="proj-body">
+        ${p.description ? `<p>${esc(p.description)}</p>` : ''}
+        ${p.justification ? `<p class="soft"><strong>Why:</strong> ${esc(p.justification)}</p>` : ''}
+        <ul class="rows">
+          ${p.funding_by_source.filter(f => f.amounts.some(v => v))
+            .map(f => `<li><span class="k">${esc(f.source)}</span>
+              <span class="v">${compact(f.amounts.reduce((a, b) => a + b, 0))}</span></li>`).join('')}
+        </ul>
+        ${q ? `<p class="soft">The town states a FY2027&ndash;29 budget impact of
+            <strong>${compact(q.total)}</strong>${q.recurring_portion
+              ? `, of which <strong>${compact(q.recurring_portion)}</strong> keeps recurring
+                 afterwards — ${esc(Object.keys(q.by_kind)
+                   .filter(k => /debt|maintenance/.test(k)).join(' and '))}`
+              : ', all of it further one-time spending rather than an ongoing obligation'}.</p>`
+          : p.operating_budget_impact
+            ? `<p class="soft">${esc(p.operating_budget_impact)}</p>` : ''}
+        <p class="src">Source: ${cite({ source_doc: p.source_doc,
+                                        source_page: p.source_pages[0] })}
+          ${flagButton(`Capital project: ${p.project_name}`,
+                       `${p.source_doc} p.${p.source_pages[0]}`).outerHTML}</p>
+      </div>`;
+    wrap.appendChild(det);
+  }
+  sec.appendChild(wrap);
+}
+
 function renderComing(host) {
   const sec = section('coming', '04', 'What’s coming for you', '');
   const need = one('tax_rate_increase_needed_cents');
@@ -1537,7 +1614,92 @@ function renderComing(host) {
       if (c) inner.appendChild(c);
     }));
   }
+  tradeoffBlock(sec);
+  projectsBlock(sec);
   host.appendChild(sec);
+}
+
+/**
+ * What was asked for, what was funded, and what was not.
+ *
+ * Amy's point, and it is the right one: a budget document answers "what did we fund?"
+ * and a site that only totals approved spending adopts that framing without noticing.
+ * The question a resident actually has is what the choice cost — what was given up.
+ *
+ * Hillsborough publishes both sides, so nothing here is inferred: the town's own
+ * Funded and Unfunded lists, and its own stated consequence of declining each request.
+ */
+/** Trim to the last sentence that fits, so an excerpt never ends mid-word. */
+function clip(s, n) {
+  if (!s || s.length <= n) return s || '';
+  const cut = s.slice(0, n);
+  const stop = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
+  return stop > n * 0.5 ? cut.slice(0, stop + 1) : cut.slice(0, cut.lastIndexOf(' ')) + '…';
+}
+
+function tradeoffBlock(sec) {
+  const d = state.data.tradeoffs;
+  if (!d || !d.declined) return;
+  const s = d.summary;
+  const rt = s.declined_in_resident_terms || {};
+  const oneCent = state.homeValue / 100 * 0.01;
+  // The town's published figure is for a $400,000 home; scale it to the reader's.
+  const onYours = rt.cents_on_the_tax_rate ? oneCent * rt.cents_on_the_tax_rate : null;
+
+  const h = document.createElement('div');
+  h.className = 'card tradeoff';
+  h.innerHTML = `
+    <h3>What didn’t get funded</h3>
+    <p>Departments asked for <span class="fig">${usd(s.fy2027_total_asked)}</span> of new
+      spending next year. The town funded <span class="fig">${usd(s.fy2027_funded)}</span> of it
+      and <strong>declined ${usd(s.fy2027_declined)}</strong> &mdash;
+      <span class="fig">${s.requests_declined}</span> requests.</p>
+    ${rt.cents_on_the_tax_rate ? `<p class="soft">Funding all of it would have taken about
+      <strong>${cents(rt.cents_on_the_tax_rate)} cents</strong> on the tax rate${onYours
+        ? `, or about <strong>${usd(onYours)} a year</strong> on a home like yours` : ''}.
+      ${esc(rt.basis || '')}</p>` : ''}
+    <ul class="rows" id="declinedRows"></ul>
+    <p class="note"><span class="ic" aria-hidden="true">✓</span>
+      <span>These are the town's own Funded and Unfunded lists, and its own words on what
+      declining each request would mean. This page does not judge the decisions.
+      ${esc(d.caveats[0])}</span></p>`;
+  const ul = h.querySelector('#declinedRows');
+  for (const r of d.declined) {
+    const li = document.createElement('li');
+    // Three distinct cases, and conflating them would put a false claim on the page:
+    // the town stated a consequence; the town's form states none; or no form was found.
+    // Only the middle one is a statement about the town.
+    const consequence = r.impact_if_not_funded
+      ? `${esc(clip(r.impact_if_not_funded, 210))}${
+          r.justification_match_basis && r.justification_match_basis !== 'exact name'
+            ? ` <em>(${esc(r.justification_match_basis)})</em>` : ''}`
+      : r.justification_matched
+        ? 'The town’s form for this request states no consequence.'
+        : 'No justification form was found for this request, so the town may have stated '
+          + 'a consequence this page has not located.';
+    li.innerHTML = `<span class="k">${esc(r.request)}<small>${consequence}</small></span>
+      <span class="v">${usd(r.fy2027 || 0)}<small>${r.total_three_year !== r.fy2027
+        ? usd(r.total_three_year) + ' over three years' : 'one year only'}</small></span>`;
+    ul.appendChild(li);
+  }
+  sec.appendChild(h);
+
+  // The clearest tradeoff in the document: one request the town says could be funded
+  // only by cutting another. Worth surfacing on its own — it is the concept made real.
+  const named = d.justification_forms.filter(f => f.states_a_fundable_alternative);
+  if (named.length) {
+    const box = document.createElement('div');
+    box.className = 'card tradeoff-named';
+    box.innerHTML = `
+      <h3>A trade the town spelled out</h3>
+      ${named.map(f => `<p>On <strong>${esc(f.request)}</strong>, the town writes that the
+        request <em>&ldquo;could be funded by reducing the allocation&rdquo;</em> to the very
+        programme it sits inside. ${f.description
+          ? `<span class="soft">${esc(clip(f.description, 340))}</span>` : ''}</p>
+        <p class="src">Source: ${cite({ source_doc: f.source_doc,
+                                        source_page: f.source_page })}</p>`).join('')}`;
+    sec.appendChild(box);
+  }
 }
 
 /* ==================== 05 — speak up ==================== */
@@ -1760,7 +1922,7 @@ async function boot() {
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
                    'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas',
-                   'transfers', 'utility', 'cost_of_ownership'];
+                   'transfers', 'utility', 'cost_of_ownership', 'projects', 'tradeoffs'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

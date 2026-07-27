@@ -103,9 +103,30 @@ Each step writes a file the next one reads. You can run any of them alone.
 | `s70`, `s75` | Reads the scanned town reports by character recognition, then verifies |
 | `s80` | Orange County's tax rate and headline figures |
 | **`s85`** | **Imports and re-verifies your workbook** |
+| `s88` | Measures the data against your seven MFAS dimensions, and adds the recurring-vs-one-time dimension |
+| `s89` | The cross-fund transfer schedule you asked for |
+| `s92` | Both governments' tax rates, FY2013-FY2027, cross-checked across five county annual reports |
+| `s93` | The water and sewer block-rate structure, so a resident can enter their own usage |
+| **`s94`** | **Project as a real dimension — the 27-project capital register** |
 | `s90` | Assembles everything the website loads, and refuses to build if anything is inconsistent |
 
-`make etl` runs them all. `make test` runs 28 checks. `make serve` shows the site locally.
+`make etl` runs them all. `make test` runs 47 checks. `make serve` shows the site locally.
+
+### Two errors these steps found in the source documents
+
+Both are in published government documents, and both are worth raising:
+
+1. **The county's annual report has a decimal-point error.** Its Table 6 prints the Orange County
+   tax rate as `$0.086290` for 2025 — 8.6 cents per $100 — beside Hillsborough at 60.7 cents, which
+   inverts who taxes residents most. Table 5, one page earlier in the same report, prints `0.8629`.
+   Multiplying Table 6's county column by ten reproduces Table 5 exactly for all ten years, in all
+   five editions held. Table 6's own "Total direct rate" row inherits the error. Nothing is silently
+   corrected — county rates are taken from Table 5, and the contradiction is recorded as a finding.
+
+2. **The town does not name the funding source for its largest capital project.** Where the funding
+   label belongs, the document prints the spreadsheet placeholder `Empty Values` — on the $11.9M
+   Passenger Rail station and three smaller projects, $15.7M unlabelled in total. The amounts are
+   real and reconcile, so they are published, but shown as "Not named in the town's document".
 
 ---
 
@@ -179,7 +200,25 @@ rows; the household calculator; every figure carrying a document and page.
 
 **Partial:** the county is currently represented on the site only by its tax rate and its General
 Fund totals, though your workbook holds much more. The town's 2019, 2021 and 2023 audited columns
-are missing where the arithmetic did not verify.
+are missing where the arithmetic did not verify. On the total cost of ownership, both tax rates now
+run FY2013-FY2027 and the current water/sewer/stormwater rates are exact at any consumption, but
+**utility rates before FY2026 are not in the archive** (the rate studies held are slide decks), and
+**the county sales tax for schools has no source yet** — so no figure is published for it.
+
+A caution that matters more than it looks: the site applies a fixed $400,000 home to compare years
+on rate alone, and says plainly that this is **not a bill history**. FY2018, FY2025 and FY2026 were
+revaluation years, when rates fall because assessed values rise — so a constant home value shows the
+bill dropping when a real home's bill may have risen. A true bill history needs parcel-level assessed
+values, which the archive does not contain.
+
+**Newly closed:** Project was the one of your seven dimensions the data could not fill. `s94` now
+reads the town's capital register — 27 projects, $72.6M, each reconciled to its own printed totals —
+so a single decision's cost can be gathered across every account and year it touches. Eleven
+projects quantify their operating impact, which makes your Change Events idea measurable: five
+create $1.63M of continuing cost. Debt service, maintenance and utilities are counted as recurring;
+follow-on capital and transfers are not, and they are reported separately rather than summed.
+What remains is joining the register to individual line-item rows, which the town's appendix does
+not label by project.
 
 **Not started:** advance notice of meetings and hearings — the ability to tell residents *before* a
 decision rather than after. That is the single most useful thing this could become, and it needs a

@@ -39,6 +39,8 @@
     "mfas": "datasets/mfas_conformance.json",
     "transfers": "datasets/transfer_schedule.json",
     "utility": "datasets/utility_rates.json",
-    "cost_of_ownership": "datasets/total_cost_of_ownership.json"
+    "cost_of_ownership": "datasets/total_cost_of_ownership.json",
+    "projects": "datasets/projects.json",
+    "tradeoffs": "datasets/tradeoffs.json"
   }
 }

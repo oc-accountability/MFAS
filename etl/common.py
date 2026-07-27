@@ -1,4 +1,4 @@
-"""Shared helpers for the hoa-funds ETL.
+"""Shared helpers for the MFAS (Municipal Financial Analysis System) ETL.
 
 Design rule that everything here exists to enforce: **no number reaches the
 website without provenance.** Every observation carries the document it came

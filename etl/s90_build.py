@@ -288,6 +288,10 @@ def main() -> None:
             "utility": "datasets/utility_rates.json",
             # tax rate history for both governments, corroborated across ACFR editions
             "cost_of_ownership": "datasets/total_cost_of_ownership.json",
+            # Project as a real dimension (Amy's decision) — the capital project register
+            "projects": "datasets/projects.json",
+            # what was funded, what was declined, and the town's stated consequence
+            "tradeoffs": "datasets/tradeoffs.json",
         },
     })
 

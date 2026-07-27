@@ -781,3 +781,65 @@ details.more > .inner { margin-top: var(--s5); }
   .nav, .tabtoggle, .icon-btn, input[type="range"], .seg { display: none !important; }
   body { background: #fff; color: #000; }
 }
+
+/* ===================== capital projects (Project dimension) ===================== */
+/* One row per decision, expandable. <details> so it works with no JS and stays
+ * keyboard-navigable and screen-reader-announced for free. */
+.proj-list { margin-top: var(--s5); border: 1px solid var(--hairline); border-radius: var(--r-md);
+             overflow: hidden; background: var(--surface-1); }
+.proj + .proj { border-top: 1px solid var(--hairline); }
+.proj > summary {
+  display: flex; gap: var(--s3); align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; padding: var(--s4) var(--s5); cursor: pointer; list-style: none;
+  transition: background .14s;
+}
+.proj > summary::-webkit-details-marker { display: none; }
+.proj > summary:hover { background: var(--page-2); }
+.proj > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.proj[open] > summary { background: var(--page-2); }
+.proj-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 260px; }
+.proj-name { font: 600 var(--t-sm)/1.35 var(--sans); color: var(--text-primary); }
+/* A chevron that also communicates open/closed without relying on colour. */
+.proj-name::before {
+  content: '▸'; display: inline-block; width: 1em; color: var(--text-muted);
+  transition: transform .14s;
+}
+.proj[open] .proj-name::before { transform: rotate(90deg); }
+.proj-meta { font-size: var(--t-2xs); color: var(--text-muted); padding-left: 1em; }
+.proj-right { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; }
+.proj-cost { font: 700 var(--t-sm)/1 var(--sans); font-variant-numeric: tabular-nums;
+             color: var(--text-primary); }
+.tag {
+  font: 600 var(--t-2xs)/1 var(--sans); padding: 4px 8px; border-radius: 999px;
+  border: 1px solid var(--hairline-firm); color: var(--text-secondary);
+  white-space: nowrap;
+}
+/* Text labels, never colour alone — the words carry the meaning. */
+.tag-debt { border-color: var(--series-3-line, var(--hairline-firm)); }
+.tag-ongoing { border-color: var(--warn-line, var(--hairline-firm)); }
+.proj-body { padding: 0 var(--s5) var(--s5); }
+.proj-body > p { margin: 0 0 var(--s3); font-size: var(--t-xs); line-height: 1.6; }
+.proj-body .rows { margin: 0 0 var(--s3); }
+.proj-body .src { font-size: var(--t-2xs); color: var(--text-muted); }
+@media (max-width: 560px) {
+  .proj > summary { padding: var(--s4); }
+  .proj-body { padding: 0 var(--s4) var(--s4); }
+}
+.tag-gap { border-color: var(--serious); color: var(--text-primary); }
+
+/* ---- tradeoffs: what was asked, funded, declined ---- */
+.tradeoff, .tradeoff-named { margin-top: var(--s5); }
+.tradeoff h3, .tradeoff-named h3 {
+  margin: 0 0 var(--s3); font-size: var(--t-base); font-weight: 650;
+  color: var(--text-primary);
+}
+.tradeoff > p, .tradeoff-named > p { margin: 0 0 var(--s3); font-size: var(--t-sm); line-height: 1.65; }
+.tradeoff .rows { margin: var(--s4) 0 var(--s3); }
+/* The consequence text is long; let it wrap under the request name rather than
+   fighting the amount for the same line. */
+.tradeoff .rows .k small { display: block; margin-top: 3px; color: var(--text-muted);
+                           font-size: var(--t-2xs); line-height: 1.5; max-width: 62ch; }
+.tradeoff .rows .v small { display: block; font-weight: 400; color: var(--text-muted);
+                           font-size: var(--t-2xs); margin-top: 2px; }
+.tradeoff-named { border-left: 3px solid var(--warning); }
+.tradeoff-named .src { font-size: var(--t-2xs); color: var(--text-muted); margin: 0; }

@@ -460,3 +460,168 @@ def test_water_use_is_a_number_the_reader_controls():
     assert "state.gallons" in app, "water use is no longer a numeric state value"
     assert "galNum" in app and "galSel" in app, "the custom-entry control is missing"
     assert "blockBill" in app, "the bill is no longer computed from the rate structure"
+
+
+# ---------------------------------------------------------------------------
+# Project as a real dimension (s94) — Amy's decision
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def projects():
+    return load("projects.json")
+
+
+def test_every_published_project_reconciles_to_its_printed_totals(projects):
+    """Each project's tables print an AMOUNT row; the account rows must sum to it in
+    every year column. Checked per column, so one bad column cannot hide inside a
+    correct grand total."""
+    assert projects["summary"]["projects_published"] > 0, "no projects were published"
+    for p in projects["projects"]:
+        assert p["reconciliation"], f"{p['project_name']}: no reconciliation was performed"
+        for c in p["reconciliation"]:
+            assert c["reconciles"], (p["project_name"], c)
+
+
+def test_a_project_that_does_not_reconcile_is_never_published(projects):
+    for p in projects["projects"]:
+        assert p["published"] is True, p["project_name"]
+    for w in projects["withheld"]:
+        assert any(not c["reconciles"] for c in w["reconciliation"]), w
+
+
+def test_every_project_carries_the_dimensions_that_make_it_useful(projects):
+    """A project the reader cannot place in a fund, a department or a year is not a
+    dimension — it is a label."""
+    seen = set()
+    for p in projects["projects"]:
+        assert p["project_id"] and p["project_id"] not in seen, f"duplicate id: {p['project_id']}"
+        seen.add(p["project_id"])
+        assert p["fund"], p["project_name"]
+        assert p["department"], p["project_name"]
+        assert p["plan_window"], p["project_name"]
+        assert p["source_pages"], p["project_name"]
+        assert p["total_planned_cost"] is not None, p["project_name"]
+
+
+def test_follow_on_capital_is_never_counted_as_recurring_cost(projects):
+    """The town's Operating Budget Impact tables mix debt service with follow-on
+    capital and transfers. Only debt service recurs; summing all three would overstate
+    the ongoing commitment a capital decision creates."""
+    for p in projects["projects"]:
+        q = p.get("operating_budget_impact_quantified")
+        if not q:
+            assert p["creates_recurring_cost"] is False, p["project_name"]
+            continue
+        debt = sum(sum(r["amounts"]) for r in q["rows"] if r["recurring"])
+        assert abs(q["recurring_portion"] - debt) < 1.0, (p["project_name"], q)
+        assert p["creates_recurring_cost"] is (debt != 0), p["project_name"]
+        if q["total"] is not None:
+            assert q["recurring_portion"] <= q["total"] + 1.0, (p["project_name"], q)
+
+
+def test_the_project_dimension_is_reported_as_filled(projects):
+    """s88 measures this data against Amy's seven dimensions. Project was the one it
+    could not fill; once s94 exists, s88 must not still report it missing."""
+    mfas = load("mfas_conformance.json")
+    assert mfas["dimension_coverage"]["Project"]["status"] == "available", (
+        "s88 still reports Project as missing after s94 added it")
+    assert mfas["summary"]["missing"] == 0, mfas["summary"]
+
+
+def test_project_extraction_reported_no_problems(projects):
+    assert projects["problems"] == [], projects["problems"]
+
+
+def test_unnamed_funding_is_reported_not_disguised(projects):
+    """The town's document prints "Empty Values" where a funding source label belongs,
+    including for the whole of its largest project. The money is real and reconciles,
+    so it is published — but the placeholder must never reach a reader as if it were
+    the name of a funding source."""
+    findings = projects.get("data_quality_findings", [])
+    assert findings, "the unnamed-funding finding is missing"
+    blob = json.dumps(projects["projects"])
+    assert "Empty Values" not in blob, (
+        "the source placeholder leaked into published project data")
+    for p in projects["projects"]:
+        for f in p["funding_by_source"]:
+            assert "unnamed_in_source" in f, (p["project_name"], f)
+            if f["unnamed_in_source"]:
+                assert f["source"] == "Not named in the town's document", f
+
+
+def test_recurring_cost_counts_maintenance_as_well_as_debt(projects):
+    """Maintenance and utilities on a new asset recur exactly as debt service does.
+    Counting only debt service understated the tail a capital decision leaves behind."""
+    for p in projects["projects"]:
+        q = p.get("operating_budget_impact_quantified")
+        if not q:
+            continue
+        for r in q["rows"]:
+            assert r["kind"] in {"debt service", "maintenance and utilities",
+                                 "transfer to a capital fund", "further capital spending"}, r
+            assert r["recurring"] is (r["kind"] in {"debt service",
+                                                    "maintenance and utilities"}), r
+
+
+# ---------------------------------------------------------------------------
+# Tradeoffs — what was funded, what was declined (s95)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def tradeoffs():
+    return load("tradeoffs.json")
+
+
+def test_request_lists_reconcile_to_their_printed_totals(tradeoffs):
+    for lst in tradeoffs["request_lists"]:
+        assert lst["reconciles"], (lst["fund"], lst["status"], lst["source_page"])
+
+
+def test_declined_requests_are_not_double_counted(tradeoffs):
+    """Each list is announced twice in the document — a bare banner and a caption naming
+    the fund. Matching both counted every request twice and doubled the declined total."""
+    names = [r["request"] for r in tradeoffs["declined"]]
+    assert len(names) == len(set(names)), f"duplicated declined requests: {names}"
+    fy27 = round(sum(r["fy2027"] or 0 for r in tradeoffs["declined"]), 2)
+    assert abs(fy27 - tradeoffs["summary"]["fy2027_declined"]) < 1.0
+    for lst in tradeoffs["request_lists"]:
+        got = [i["request"] for i in lst["items"]]
+        assert len(got) == len(set(got)), (lst["fund"], lst["status"], got)
+
+
+def test_a_missing_form_is_never_reported_as_the_town_saying_nothing(tradeoffs):
+    """Two different claims: the town's form states no consequence, versus no form was
+    found. Conflating them puts a false statement about the town on the page."""
+    for r in tradeoffs["declined"] + tradeoffs["funded"]:
+        assert "justification_matched" in r, r["request"]
+        assert r["justification_match_basis"], r["request"]
+        if r["justification_matched"]:
+            assert r["justification_match_basis"] != "no form found", r
+        else:
+            assert not r.get("impact_if_not_funded"), (
+                "an unmatched request must not carry a consequence: " + r["request"])
+    app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "No justification form was found" in app, (
+        "the site no longer distinguishes a missing form from a silent one")
+
+
+def test_declined_total_is_translated_using_the_towns_own_yield(tradeoffs):
+    """Cents on the tax rate must come from the town's published revenue per cent, not
+    an estimate, or the headline overstates what residents gave up."""
+    rt = tradeoffs["summary"]["declined_in_resident_terms"]
+    if "cents_on_the_tax_rate" not in rt:
+        pytest.skip("no published revenue-per-cent figure available")
+    per_cent = next(f["value"] for f in load("facts.json")["facts"]
+                    if f["metric"] == "revenue_per_cent_of_tax_rate")
+    # The stored value is rounded to three decimals on purpose; compare at that grain.
+    assert abs(rt["cents_on_the_tax_rate"] - rt["dollars"] / per_cent) < 1e-3, rt
+    assert "one cent" in rt["basis"].lower()
+
+
+def test_tradeoff_caveats_state_what_this_cannot_show(tradeoffs):
+    """A request never submitted leaves no trace, and these are recommendations rather
+    than final decisions. Both must travel with the data."""
+    blob = " ".join(tradeoffs["caveats"]).lower()
+    assert "never" in blob and "submitted" in blob
+    assert "recommend" in blob or "board" in blob
+    assert tradeoffs["problems"] == [], tradeoffs["problems"]

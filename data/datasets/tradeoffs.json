@@ -1,0 +1,3167 @@
+{
+  "generated_by": "etl/s95_tradeoffs.py",
+  "requested_by": "Amy — \"what I really want to show is what the tradeoffs are in the spending... what is this cost, and what didn't get funded?\"",
+  "source_doc": "FY27 Budget and Financial Plan Recommended.pdf",
+  "why_this_is_possible": "A budget document is built to show what was funded; what was declined usually leaves no trace. Hillsborough publishes both — Funded and Unfunded Noteworthy Requests per fund, and a Budget Justification Form per request carrying a section headed 'Alternatives & Operational Impact if Not Funded'. So the tradeoff is the town's own statement, not this site's opinion.",
+  "method": "Every list is reconciled to its own printed AMOUNT row before publication. Request-list entries are joined to their justification form by name. Nothing here ranks or second-guesses the decisions.",
+  "summary": {
+    "requests_funded": 58,
+    "requests_declined": 4,
+    "fy2027_funded": 3350298.0,
+    "fy2027_declined": 282500.0,
+    "fy2027_total_asked": 3632798.0,
+    "share_of_asks_funded_pct": 92.2,
+    "declined_in_resident_terms": {
+      "dollars": 282500.0,
+      "cents_on_the_tax_rate": 1.177,
+      "per_year_on_a_400k_home": 47.08,
+      "basis": "The town states one cent on its tax rate raises $240,000 across the whole town."
+    },
+    "three_year_declined": 1155500.0,
+    "forms_read": 50,
+    "forms_stating_impact_if_not_funded": 38,
+    "forms_naming_a_fundable_alternative": 1
+  },
+  "years": [
+    2027,
+    2028,
+    2029
+  ],
+  "declined": [
+    {
+      "request": "Fire Station at North Churton Street Ramp-Up Expansion",
+      "unnamed_in_source": false,
+      "amounts": [
+        125000.0,
+        250000.0,
+        370000.0
+      ],
+      "fy2027": 125000.0,
+      "total_three_year": 745000.0,
+      "fund": "General Fund",
+      "source_page": 23,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "Fire Station at N. Churton Street Ramp-Up",
+      "justification_page": 71,
+      "department": "Fire Protection",
+      "priority_rank": 2,
+      "description": "Build capacity within the operating budget over several years to ensure sufficient funds are available to meet debt service requires for the N. Churton Street Fire Station.",
+      "impact_if_not_funded": "If the ramp-up isn't funded, a tax rate increase may be needed to service the debt, or other expenses or programs would need to be cut.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Tax Collection Fee Increase",
+      "unnamed_in_source": false,
+      "amounts": [
+        120000.0,
+        123000.0,
+        125000.0
+      ],
+      "fy2027": 120000.0,
+      "total_three_year": 368000.0,
+      "fund": "General Fund",
+      "source_page": 23,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Tax Collection Fee Increase",
+      "justification_page": 27,
+      "department": "Accounting",
+      "priority_rank": 1,
+      "description": "Orange County bills and collects property taxes on behalf of the three municipalities with the county, Chapel Hill, Carrboro and Hillsborough. For this service, the county charges a collection fee of 0.5% of collected taxes. They have done a fee study and determined that the average fee to municipalities is 1.5% across their peer group, including neighboring Durham County.",
+      "impact_if_not_funded": null,
+      "strategic_plan_link": null,
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Generator for Community Center",
+      "unnamed_in_source": false,
+      "amounts": [
+        35000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 35000.0,
+      "total_three_year": 35000.0,
+      "fund": "General Fund",
+      "source_page": 23,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Generator for Community Center",
+      "justification_page": 38,
+      "department": "Facility Management",
+      "priority_rank": 6,
+      "description": "The Town is replacing the emergency generator and transfer switch located at the Police Department. Although the generator has come to the end of its replacement schedule, there is some usable life left in the unit. This request is to relocate the generator to the Dorothy Johnson Community Center to serve as a backup generator in the event of power loss. This could give The Town the ability to have an emergency shelter to offer residents if one is needed. There would be an additional ongoing cost of yearly maintenance and possible repairs.",
+      "impact_if_not_funded": "If not funded, the generator could be sold, and the sale of the generator could help support the Community Center funding or just return to available funds for the town. We would not be adding a service for the community at a reduced cost than we would if this request involved purchasing all new equipment.",
+      "strategic_plan_link": "This request could be a part of Objective 1 - Ensure that people are safe and feel safe throughout town. Objective 2.1- Complete refresh of the Emergency Operations Plan Objective 2.4 - Establish Emergency Operations Centers This request could also represent the Values of the Strategic Plan Public Service - We are responsible stewards of community tax dollars put to use for the public good. This could be achieved by repurposing the use of the generator that is already paid for and being put to use in a way that is not as taxing as a full-time backup generator, while adding a valuable public service.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Community Home Trust - Funding Expansion Request",
+      "unnamed_in_source": false,
+      "amounts": [
+        2500.0,
+        2500.0,
+        2500.0
+      ],
+      "fy2027": 2500.0,
+      "total_three_year": 7500.0,
+      "fund": "General Fund",
+      "source_page": 23,
+      "justification_matched": true,
+      "justification_match_basis": "discussed within the form for \"Affordable Housing\"",
+      "justification_form": "Affordable Housing",
+      "justification_page": 98,
+      "department": "Special Appropriations",
+      "priority_rank": null,
+      "description": "The FY27 budget allocates $320,000 toward affordable housing efforts. Investments beyond the $320,000 are funded via housing reserve funds, which have accumulated from unspent prior year affordable housing contributions. Additional Funding Requests: Community Home Trust has requested a funding increase of $2,500 in FY27. This request is currently unfunded. This request could be funded by reducing the allocation to affordable housing creation and preservation.",
+      "impact_if_not_funded": null,
+      "strategic_plan_link": "Economic Vitality – Objective 4 – Preservation of Naturally Occurring Affordable Housing Initiative 4.3 – Financially support existing efforts to preserve affordable housing or support housing stability with locally identified funding.",
+      "states_a_fundable_alternative": true
+    }
+  ],
+  "funded": [
+    {
+      "request": "Garbage Truck Replacements",
+      "unnamed_in_source": false,
+      "amounts": [
+        422010.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 422010.0,
+      "total_three_year": 422010.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Ridgewalk Greenway - North Segment",
+      "unnamed_in_source": false,
+      "amounts": [
+        333000.0,
+        333000.0,
+        333000.0
+      ],
+      "fy2027": 333000.0,
+      "total_three_year": 999000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Fire Station at North Churton Street",
+      "unnamed_in_source": false,
+      "amounts": [
+        300000.0,
+        300000.0,
+        685026.0
+      ],
+      "fy2027": 300000.0,
+      "total_three_year": 1285026.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "Fire Station at N. Churton Street Ramp-Up",
+      "justification_page": 71,
+      "department": "Fire Protection",
+      "priority_rank": 2,
+      "description": "Build capacity within the operating budget over several years to ensure sufficient funds are available to meet debt service requires for the N. Churton Street Fire Station.",
+      "impact_if_not_funded": "If the ramp-up isn't funded, a tax rate increase may be needed to service the debt, or other expenses or programs would need to be cut.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Process Controls Relocation to SCADA",
+      "unnamed_in_source": false,
+      "amounts": [
+        300000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 300000.0,
+      "total_three_year": 300000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Sewer Jetter/Flush Truck",
+      "unnamed_in_source": false,
+      "amounts": [
+        222010.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 222010.0,
+      "total_three_year": 222010.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Dam Repairs at West Fork Eno Reservoir",
+      "unnamed_in_source": false,
+      "amounts": [
+        195540.0,
+        164967.0,
+        329933.0
+      ],
+      "fy2027": 195540.0,
+      "total_three_year": 690440.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Physical Security Upgrades",
+      "unnamed_in_source": false,
+      "amounts": [
+        120000.0,
+        120000.0,
+        120000.0
+      ],
+      "fy2027": 120000.0,
+      "total_three_year": 360000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Physical Security Upgrades",
+      "justification_page": 53,
+      "department": null,
+      "priority_rank": null,
+      "description": "Add new security measures (cameras, alarms, access control, re-keying) to facilities that currently do not have them. It’s an installation and deployment project to bring all sites up to a baseline level of security. This includes: Installing cameras for surveillance at high value locations, entrances not currently covered Deploying burglar alarms and monitoring solutions in areas that are not currently covered Implementing door access control systems in areas not currently covered This request is in tandem with the standardization work done by the Physical Security Group and would implement solutions determined to fit that groups framework.",
+      "impact_if_not_funded": "Physical security is not currently implemented at key locations in the town, causing gaps in safety and security. New systems could be implemented that increase both of those areas, and failure to fund this work means that we cannot increase our confidence that employees and assets are protected.",
+      "strategic_plan_link": "Focus Area 4: Community Safety - Objective 1 - Ensure that all people are safe and feel safe throughout town. Focus Area 4: Community Safety - Objective 2 - Reinforce resiliency in town operations by implementing emergency preparedness strategies Focus Area 5: Service Excellence - Objective 1 - Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency Focus Area 5: Service Excellence - Objective 2 - Provide Quality municipal services through operational excellence and a culture of innovation",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Fire Vehicle Replacement Fund",
+      "unnamed_in_source": false,
+      "amounts": [
+        100000.0,
+        200000.0,
+        300000.0
+      ],
+      "fy2027": 100000.0,
+      "total_three_year": 600000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Physical Security Standardization",
+      "unnamed_in_source": false,
+      "amounts": [
+        100000.0,
+        100000.0,
+        0.0
+      ],
+      "fy2027": 100000.0,
+      "total_three_year": 200000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Physical Security Standardization",
+      "justification_page": 52,
+      "department": null,
+      "priority_rank": null,
+      "description": "Standardize existing security systems. The purpose is to unify and centralize the management of existing security systems across sites per recommendations by the Physical Security working group. It’s about consolidation, alignment, and consistency for ease of use, oversight, and speed during disaster scenarios. This includes: Consolidating cameras, alarms, and access control systems under a unified platform Centralizing budgeting, purchasing, and approvals for security-related items Establishing consistent processes and policies for security management",
+      "impact_if_not_funded": "Physical security is not currently standardized, and each building has its own systems (or lack thereof) causing strains to emergency response, and confusion during issues/security problems. PD cannot get into certain buildings without being let in, which is a problem during security issues. We do not have control of our building security envelope, so we cannot be sure that we have control of our resources or the safety and security for our employees. If not funded, we will continue having a scattershot approach to entry and exit to our buildings, unclear documentation for our keys, and blind spots for coverage on our security cameras for high value areas.",
+      "strategic_plan_link": "Focus Area 4: Community Safety - Objective 1 - Ensure that all people are safe and feel safe throughout town. Focus Area 4: Community Safety - Objective 2 - Reinforce resiliency in town operations by implementing emergency preparedness strategies Focus Area 5: Service Excellence - Objective 1 - Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Focus Area 5: Service Excellence - Objective 2 - Provide Quality municipal services through operational excellence and a culture of innovation",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Truck #210 Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        92010.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 92010.0,
+      "total_three_year": 92010.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Truck #210 Replacement",
+      "justification_page": 115,
+      "department": "Wastewater Collection",
+      "priority_rank": 2,
+      "description": "Replace Truck #210 with a new Ford F-350.",
+      "impact_if_not_funded": "Continue to drive existing trucks, potentially experiencing increased downtime and more costly repairs.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Generator and Automatic Transfer Switch Replacement at Town Hall Main House",
+      "unnamed_in_source": false,
+      "amounts": [
+        85000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 85000.0,
+      "total_three_year": 85000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "Generator and ATS Switch Replacement at Town Hall",
+      "justification_page": 39,
+      "department": "Facility Management",
+      "priority_rank": 1,
+      "description": "Replace the generator and ATS Switch at the Town Hall Main House as it has come to the end of its lifecycle. The current ATS is working, but is showing signs of wear.",
+      "impact_if_not_funded": "Decreased reliability and increased maintenance cost moving forward.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Solids Storage Mixing Pump Rebuild",
+      "unnamed_in_source": false,
+      "amounts": [
+        82000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 82000.0,
+      "total_three_year": 82000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Solids Storage Mixing Pump Rebuild",
+      "justification_page": 120,
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 3,
+      "description": "The solids storage mixing pump runs 24/7/365. This pump is critical to plant operations and does not have a backup. The 10- year service/rebuild came due in FY25. While planning to perform the maintenance, staff discovered that access to the internal parts of the pump must be done by the manufacturer in their repair shop. The service/rebuild completed by the manufacturer was expected to take three to six months. Due to the extended time needed for the service/rebuild, a new pump was purchased in FY26. Currently, there is no backup for this critical pump. Staff would like to have the old pump rebuilt in FY27. Doing this will provide a back-up pump for the event of an unexpected pump failure, eliminating the extreme equipment downtime and maintaining normal plant operations.",
+      "impact_if_not_funded": "If we need to send the new pump back to the manufacture to be repaired, the excessive time needed for the repairs will result in greatly reduced sludge quality, and a significant amount of overtime pay needed to keep the plant operating within permit limits. Additionally, staff moral will be impacted due to the increased workload. Having a spare pump will eliminate these issues.",
+      "strategic_plan_link": "Objective 1 Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Police In-Car Camera Replacements",
+      "unnamed_in_source": false,
+      "amounts": [
+        75901.0,
+        72325.0,
+        72325.0
+      ],
+      "fy2027": 75901.0,
+      "total_three_year": 220551.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "In-Car Camera Replacements",
+      "justification_page": 78,
+      "department": "Police",
+      "priority_rank": 1,
+      "description": "Our current system is starting to show its age, and we are starting to have issues with maintenance and cameras failing and having to be repaired. In addition, the quality of our video is behind the current technology. We put some additional money into doing some improvements on the system several years ago but are now reaching the point that we have to consider replacement. Replacing the system will be a major expense, and the contract with Axon is spread over 5 fiscal years. In-car cameras are a critical accountability, transparency, and evidence-gathering tool. They document officer interactions, traffic stops, pursuits, and critical incidents, protecting both the public and the department. Aging systems are increasingly unreliable, experience frequent failures, and may not meet current evidentiary standards. Replacing these systems ensures consistent recording, secure data storage, and compatibility with existing body-worn camera and records systems. The total 5-year contract will be $348,357.79 before tax ($365,199.35 with tax). It will be paid over the 5-year timeframe ($71,943.47 in year one and $69,103.58 in year 2-5). This not only provides critical equipment to our patrol officers and fleet vehicles, but it also standardizes our system, with body worn cameras and fleet cameras being on the same contract/upgrade timeline. In addition, we will be moving from a la carte storage to unlimited storage. We are currently using over 6 TBs of storage more than what we are allocated. Buying a la carte storage to the level we need (15TBS) would cost around $73,000 while unlimited is only $33,000.",
+      "impact_if_not_funded": "We can continue to defer this but may encounter problems and failures of our systems. The limitations of our current systems present themselves frequently when delays occur with sending video footage to the DA's office or in our ability to maintain oversight of our police operations. There is no operationally acceptable alternative to a reliable in-car camera system. Failure to replace this equipment poses significant legal, operational, and reputational risks.",
+      "strategic_plan_link": "This request strongly advances Community Safety by promoting transparency, accountability, and public trust in police operations. Reliable in-car cameras support accurate documentation of incidents and reinforce fair and professional policing. The request also aligns with Service Excellence, specifically the goal of maintaining and protecting critical infrastructure and assets. Modern camera systems improve reliability, reduce risk, and ensure consistent service delivery while supporting legal compliance and evidentiary standards.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Elizabeth Brady Road Culvert Rehabilitation",
+      "unnamed_in_source": false,
+      "amounts": [
+        75000.0,
+        50000.0,
+        50000.0
+      ],
+      "fy2027": 75000.0,
+      "total_three_year": 175000.0,
+      "fund": "Stormwater Fund",
+      "source_page": 138,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Additional Step Screen",
+      "unnamed_in_source": false,
+      "amounts": [
+        64540.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 64540.0,
+      "total_three_year": 64540.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Truck #192 Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        62010.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 62010.0,
+      "total_three_year": 62010.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Truck #192 Replacement",
+      "justification_page": 124,
+      "department": "Water Distribution",
+      "priority_rank": 1,
+      "description": "Replace 2008 Toyota Tacoma with an F-150 pick-up truck with a service body.",
+      "impact_if_not_funded": "Continue to drive current vehicle, potentially experiencing increased downtown and most costly repairs.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Community Services Department Re-Organization",
+      "unnamed_in_source": false,
+      "amounts": [
+        60423.0,
+        77435.0,
+        83478.0
+      ],
+      "fy2027": 60423.0,
+      "total_three_year": 221336.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Community Services Department Re-Organization",
+      "justification_page": 61,
+      "department": "Public Space",
+      "priority_rank": 4,
+      "description": "There is a high level of coordination needed between the activities of Public Works, Public Space & Sustainability, and Stormwater & Environmental Services, so it is proposed to combine those divisions into a single department named “Community Services and Sustainability”. By combining resources, in those three divisions and distributing management-level tasks to other staff, the previous public works manager position can be replaced with two lower- level positions in order to address other departmental and organizational needs at a lower cost compared to adding the necessary personnel through expansion. The identified needs for the near-term future of the department include additional public works staff to keep up with workload and community growth, and a dedicated transportation resource to focus on regional coordination, competitive funding opportunities, and project management. The other department created in the reorganization would consist of Planning and Economic Development and Engineering Services and be named “Planning & Development Services”. The separation of the departments creates additional bandwidth for focus on affordable housing and delivery of upcoming projects. The goals of the proposed reorganization include the following: Add operational staff to public works, add dedicated transportation resource, provide advancement opportunities for public works staff, address shifting priorities and increased demand on public works staff, increase alignment of time and energy on advancing and delivering town priority projects, retain high-level focus and accountability for sustainability and affordable housing goals, and minimize cost impacts.",
+      "impact_if_not_funded": "If not approved, no changes to departments would be made.",
+      "strategic_plan_link": "Service Excellence, Objective 1: Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Radio Encryption",
+      "unnamed_in_source": false,
+      "amounts": [
+        55000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 55000.0,
+      "total_three_year": 55000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Radio Encryption",
+      "justification_page": 80,
+      "department": "Police",
+      "priority_rank": 3,
+      "description": "Implement full encryption capabilities across all Hillsborough Police Department radios. This includes enabling encryption on 42 Motorola radios (approximately $900 per unit) and 23 Kenwood radios (approximately $600 per unit), ensuring compatibility with the North Carolina VIPER system and neighboring Orange County agencies. This request follows a notice from Orange County Public Safety Communications Division Chief Chris Ward requesting all neighboring agencies look into encrypting their radio communication. While radio traffic has historically been accessible via public scanners, advancements in software-defined radio (SDR) technology combined with artificial intelligence tools now allow for real-time monitoring, transcription, indexing, and long-term storage of radio communications. This creates a heightened risk that sensitive law enforcement information (such as names, addresses, and operational details) could be captured, analyzed, and potentially exploited, such as in a database where private info could be easily searchable. Orange County Emergency Services has indicated a strong preference for county-wide encryption implementation, and several neighboring jurisdictions have already begun or completed this transition. To maintain interoperability and secure communications, Hillsborough Police Department must align with this county-wide initiative. While no official timeline has been given, they have requested all agencies encrypt their radios within the next year. We have contacted other agencies to confirm they are also encrypting their communication.",
+      "impact_if_not_funded": "If this request is not funded, the Hillsborough Police Department will continue to operate using unencrypted radio communications, which presents several risks and limitations. First, unencrypted communications remain vulnerable to monitoring and recording through increasingly accessible SDR and AI technologies. This could expose sensitive law enforcement information, potentially compromising investigations, officer safety, and victim privacy. Second, failure to implement encryption may limit interoperability with other Orange County agencies as they transition to encrypted communications. This could create communication barriers during joint operations, mutual aid responses, and critical incidents, ultimately reducing operational effectiveness. While partial encryption (such as encrypting one divisions radios at a time; CID - FY27, Patrol - FY28, etc.) is an alternative, it does not fully address the broader operational and interoperability concerns identified by Orange County Emergency Services. The cost for implementation will likely only continue to increase, meaning it would likely be more affordable and frankly easier to transition all radios at once. Also, this helps alleviate any concerns around compatibility between internal divisions. Maintaining the current system is the lowest-cost option in the short-term but carries increasing long-term operational and security risks.",
+      "strategic_plan_link": "This request directly supports the Strategic Plan, particularly within the Community Safety focus area. Ensuring secure and reliable communication systems is a fundamental component of effective law enforcement operations and officer safety. Encryption of radio communications enhances operational security by protecting sensitive information from unauthorized access. This supports the department’s priority of safeguarding both officers and the community, while also strengthening coordinated responses with partner agencies across Orange County. Additionally, aligning with county and regional communication standards ensures continued interoperability, which is essential for multi- agency incidents and emergency response.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Filter Influent Actuators Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        49000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 49000.0,
+      "total_three_year": 49000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Filter Influent Actuators Replacement",
+      "justification_page": 129,
+      "department": null,
+      "priority_rank": null,
+      "description": "A filter influent actuator allows or disallows water from the sedimentation basins to enter the filter. A metal shaft attaches a mechanically operated valve to the automated valve actuator. The three influent actuators are due to be rebuilt. However, the actuators are so old that they are now obsolete and cannot be rebuilt. New modern actuators are needed. The metal shafts are very worn and rusted. They all need to be replaced. Staff would like to have all three actuators replaced and new metal shafts installed in FY27.",
+      "impact_if_not_funded": "Routine maintenance is necessary to ensure proper operation of automatically controlled equipment. We can no longer do the necessary maintenance on the actuators because of their age. Replacement is our only option. Additionally, we have had shafts with similar damage break without warning. That caused additional costs due to it needing emergency repair. Replacing the shafts before they break would be more cost effective.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Electrical System Evaluation",
+      "unnamed_in_source": false,
+      "amounts": [
+        45000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 45000.0,
+      "total_three_year": 45000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Electrical System Evaluation",
+      "justification_page": 128,
+      "department": null,
+      "priority_rank": null,
+      "description": "This project is to help us prepare a scope and schedule for a future electrical upgrade project. Much of the electrical equipment at the water treatment plant has been in service since the early 1970s. Staff would like to have an engineer evaluate the electrical system to identify what equipment needs to be replaced and do a high-level look at possible options of the type of future equipment needed and the best locations to put the new equipment.",
+      "impact_if_not_funded": "Much of the electrical system in the water plant is prone to failure, expensive to repair, and dangerous to work on. A reliable electrical system is key in sustaining continuous and uninterrupted service to our water customers. Postponing the evaluation will only delay the needed system update.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Provide quality municipal services through operational excellence and a culture of innovation.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Pumping Station Generator Replacements",
+      "unnamed_in_source": false,
+      "amounts": [
+        45000.0,
+        45000.0,
+        45000.0
+      ],
+      "fy2027": 45000.0,
+      "total_three_year": 135000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Code Enforcement Abatement",
+      "unnamed_in_source": false,
+      "amounts": [
+        35000.0,
+        35000.0,
+        35000.0
+      ],
+      "fy2027": 35000.0,
+      "total_three_year": 105000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Code Enforcement Abatement",
+      "justification_page": 57,
+      "department": "Planning",
+      "priority_rank": 1,
+      "description": "In FY24, the town invested in hiring a third-party code enforcement contractor that has made a lot of progress in code enforcement cases by getting residents/property owners to do abatements themselves and correct zoning and code enforcement issues. Unfortunately, there are a handful of cases where the property owners can't or won't be able to do the abatements. In FY25, approximately $20K that was not utilized in FY24 for code enforcement, was re-assigned in FY25 to do abatement work. Abatement funds are needed to have a contractor mow tall grass, clear junk piles, and in some cases, tear down or remove the remains of abandoned and dilapidated houses or accessory structures that are no longer occupied.",
+      "impact_if_not_funded": "If abatement is not continued to be prioritized, it will be hard to keep the momentum going on code enforcement efforts and keep the folks that can self- abate motivated to do so.",
+      "strategic_plan_link": "Keeping the town clear of noxious growth, junk accumulation, and dilapidated and un-utilized housing and structures contributes to the best health, safety, and welfare outcomes for our citizens.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Picnic Shelter at Cates Creek Park",
+      "unnamed_in_source": false,
+      "amounts": [
+        35000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 35000.0,
+      "total_three_year": 35000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Picnic Shelter at Cates Creek Park",
+      "justification_page": 62,
+      "department": "Public Space",
+      "priority_rank": 1,
+      "description": "Add a covered picnic shelter over the existing concrete slab at Cates Creek Park near the playground and restroom building. The structure will provide relief for visitors from extreme heat and provide shelter during other weather events, allowing the park to be more accessible and equitable throughout the year.",
+      "impact_if_not_funded": "This item is a priority recommendation but can be scheduled as funding allows.",
+      "strategic_plan_link": "This is a priority listed in the Cates Creek Park Master Plan and helps accomplish the following strategic action in the Comprehensive Sustainability Plan: Implement recommendations of parks master plans that advance accessibility, sustainability, safety and equity in public spaces.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Picnic Shelter at Riverwalk Entrance",
+      "unnamed_in_source": false,
+      "amounts": [
+        35000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 35000.0,
+      "total_three_year": 35000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Picnic Shelter at Riverwalk Entrance",
+      "justification_page": 63,
+      "department": null,
+      "priority_rank": null,
+      "description": "Add a covered picnic shelter over the picnic tables at the Nash and Kollock Street entrance to Riverwalk. The structure will provide relief to visitors from extreme heat and shelter from weather events, allowing the area to be more accessible and equitable throughout the year.",
+      "impact_if_not_funded": "This item is a priority recommendation but can be scheduled as funding allows.",
+      "strategic_plan_link": "This is a priority in the Riverwalk Master Plan and helps accomplish the following strategic action in the Comprehensive Sustainability Plan: Implement recommendations of parks master plans that advance accessibility, sustainability, safety, and equity in public spaces. Estimated cost is $35,000 but Tourism will support the project with a contribution of $12,000.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Motor Control Center Replacement at Water Treatment Plant",
+      "unnamed_in_source": false,
+      "amounts": [
+        35000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 35000.0,
+      "total_three_year": 35000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "Motor Control Center Replacement",
+      "justification_page": 130,
+      "department": null,
+      "priority_rank": null,
+      "description": "The existing main motor control center (MCC) located in the basement of the Water Treatment Plant was originally installed in the 1970s. The metal structure is failing from rust, and the now obsolete equipment is very difficult to replace and extremely dangerous to work on. Staff would like to replace the MCC with new modern technology. A new MCC will provide the water plant with more reliability, efficiency and a safer working environment.",
+      "impact_if_not_funded": "Last year, one of the large breakers failed. We were very lucky to have been able to locate one that was rebuilt. If another breaker fails, we may not be so lucky. Additionally, working on that replacement was very scary. The existing panel does not meet modern OSHA regulations for safety. If we do not replace the MCC, the town will not realize the benefits of improved efficiently and staff safety.",
+      "strategic_plan_link": "Service Excellence Objective 1: Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "HVAC Unit Replacements at Police Department",
+      "unnamed_in_source": false,
+      "amounts": [
+        30000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 30000.0,
+      "total_three_year": 30000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "HVAC Unit Replacements",
+      "justification_page": 40,
+      "department": "Facility Management",
+      "priority_rank": 2,
+      "description": "Replace HVAC units at the police department that have come to the end of their lifecycle on the replacement schedule.",
+      "impact_if_not_funded": "If not funded, we could leave as-is and run the risk of increased downtime/decreased reliability, and increased maintenance costs. A service call from our contracted HVAC company averages $600.00 per call. We had 28 calls for service due to HVAC issues last fiscal year. That is down from 47 calls two years ago. This reduction is due to supported request to replace aged units in past budget years.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Sidewalk at Rainey Avenue",
+      "unnamed_in_source": false,
+      "amounts": [
+        30000.0,
+        0.0,
+        125000.0
+      ],
+      "fy2027": 30000.0,
+      "total_three_year": 155000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Pump Start Equipment Replacements",
+      "unnamed_in_source": false,
+      "amounts": [
+        27000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 27000.0,
+      "total_three_year": 27000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Pump Start Equipment Replacements",
+      "justification_page": 131,
+      "department": null,
+      "priority_rank": null,
+      "description": "In FY26, one of the backwash blower’s starter failed. The starter was 1970s style and was so antiquated that finding parts to fix it was nearly impossible. The electrician indicated that it would likely cost the same or less to simply install a new soft start with modern technology and the repair would take significantly less time. The new soft start was installed for slightly over $8,000. As of now, there are still three antiquated starters in use. Staff would like to replace the antiquated electrical equipment with modern soft start technology.",
+      "impact_if_not_funded": "Modern soft start technology is much better at protecting the equipment motors and preventing extreme high pressure in the water line. Additionally, the new soft start technology is more reliable and much safer to work on or around. None of these benefits would be realized by continuing to use the old technology. When the starter failed in FY26, the blower was not available for approximately two weeks. If the other blower had failed during that time, the water plant would not have been able to produce potable water. Having reliable equipment and access to replacement parts that are readily available is critical to making sure service to our customers remains uninterrupted.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Printer Standardization",
+      "unnamed_in_source": false,
+      "amounts": [
+        24154.0,
+        33754.0,
+        43354.0
+      ],
+      "fy2027": 24154.0,
+      "total_three_year": 101262.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Printer Standardization",
+      "justification_page": 54,
+      "department": null,
+      "priority_rank": null,
+      "description": "We currently have Multifunction devices at a few sites, but this request would expand that to include future buildings and renovations as well as outfit other buildings that need centralized printing. FY 27 - Adron Thompson, Hwy 86 FY 28 - Additional 2 Locations FY 29 - Additional 2 Locations This would also be the place where we would centralize all printing for the town of Hillsborough. I believe that we may be spending a fair amount on one-off printers and printer ink. Though IT generally isn't concerned with office supplies, printer ink often is as expensive or more so than just purchasing a new printer. Centralizing the purchase of one-off printers and their ink will allow us to standardize those who need to retain one-off printers, bulk purchase devices and ink, and provide a better understanding of town wide costs.",
+      "impact_if_not_funded": null,
+      "strategic_plan_link": null,
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Wayfinding Kiosks in West Hillsborough",
+      "unnamed_in_source": false,
+      "amounts": [
+        24000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 24000.0,
+      "total_three_year": 24000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Wayfinding Kiosks in West Hillsborough",
+      "justification_page": 66,
+      "department": null,
+      "priority_rank": null,
+      "description": "Add two wayfinding kiosks in West Hillsborough. The proposed locations include South Nash Street near the West End business district and at the Calvin Street greenway entrance to Riverwalk. Increasingly, visitors are entering town and Riverwalk from the West Hillsborough area and currently there are no kiosks in this part of town. The kiosks will have a town and trail map on one side and a corkboard to display town event and calendar information to the public on the other side. The kiosks will match the existing wayfinding kiosks located in downtown Hillsborough. This initiative is intended to expand on the popular wayfinding system to provide public information to visitors in West Hillsborough. The display of town events and calendar information out in public view helps to reach audiences that do not have access to social media or town news releases. The corkboard also provides an opportunity to post safety and emergency information. The estimated cost for each kiosk is $12,000 for a total cost of $24,000 but Tourism will support the project with a contribution of $9,000 each, and a total of $18,000.",
+      "impact_if_not_funded": "This item can be scheduled as funding allows.",
+      "strategic_plan_link": "This request follows a recommendation in the Riverwalk Master Plan to: Add a wayfinding sign and kiosk at the Calvin Street greenway entrance. It also helps accomplish the following strategic actions in the Comprehensive Sustainability Plan: Continue to develop and implement wayfinding and interpretive signage programs and maintain and publish the community events calendar.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Picnic Tables at Cates Creek Park",
+      "unnamed_in_source": false,
+      "amounts": [
+        22000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 22000.0,
+      "total_three_year": 22000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (80% of words shared)",
+      "justification_form": "Picnic Shelter at Cates Creek Park",
+      "justification_page": 62,
+      "department": "Public Space",
+      "priority_rank": 1,
+      "description": "Add a covered picnic shelter over the existing concrete slab at Cates Creek Park near the playground and restroom building. The structure will provide relief for visitors from extreme heat and provide shelter during other weather events, allowing the park to be more accessible and equitable throughout the year.",
+      "impact_if_not_funded": "This item is a priority recommendation but can be scheduled as funding allows.",
+      "strategic_plan_link": "This is a priority listed in the Cates Creek Park Master Plan and helps accomplish the following strategic action in the Comprehensive Sustainability Plan: Implement recommendations of parks master plans that advance accessibility, sustainability, safety and equity in public spaces.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Paint Exterior of Wastewater Treatment Plant",
+      "unnamed_in_source": false,
+      "amounts": [
+        20000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 20000.0,
+      "total_three_year": 20000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Paint Exterior of Wastewater Treatment Plant",
+      "justification_page": 41,
+      "department": "Facility Management",
+      "priority_rank": 4,
+      "description": "Paint the exterior of the Wastewater Plant. There are areas of rust, faded and peeling paint on doors, window frames, and exposed steel beams on the exterior of the building.",
+      "impact_if_not_funded": "If not funded and delayed, the rust will increase, which will increase painting costs when issues are addressed at a later budget year.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Renovate Third Floor of Administration Building",
+      "unnamed_in_source": false,
+      "amounts": [
+        20000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 20000.0,
+      "total_three_year": 20000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Renovate Third Floor of Administration Building",
+      "justification_page": 43,
+      "department": "Facility Management",
+      "priority_rank": 7,
+      "description": "The Administration Building has limited office space available, with two communication employees sharing an office and the communication manager in a small office with no exterior window, which previously served as a small conference space. The third floor of the building has two rooms that are being used for storage. Staff looked into the usability of those spaces and determined that both spaces could be used as offices with some minor upgrades to the space. This request is for funding to paint, replace the carpeting, do the necessary electrical work and make some IT configurations to accommodate office use. The two employees sharing an office would move to the third floor offices and the communications manager would move into the larger space. The small office would be left as a flex office, for remote employees to use when on-site. With how limited the town is with office space, this is a very affordable option to gain two extra offices without having to do major renovations or build a new space.",
+      "impact_if_not_funded": "If this request is not funded, employees could continue using their existing space, which is limited. This becomes especially limited when we have interns or temporary employees. Another option would be to just do the necessary work to use the space as an office, but not replace the carpeting, which is potentially original to the building and to forgo the painting.",
+      "strategic_plan_link": "Our ability to do our jobs effectively ties back to having the necessary equipment and work space.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Paint Interior of Administration Building",
+      "unnamed_in_source": false,
+      "amounts": [
+        17500.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 17500.0,
+      "total_three_year": 17500.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Paint Interior of Administration Building",
+      "justification_page": 42,
+      "department": "Facility Management",
+      "priority_rank": 5,
+      "description": "Fresh coat of interior paint for the first and second floors of the Administration Building (offices, hallways, meeting room, bathrooms, stairwells, all walls and ceilings). I suggest some color/accent walls/town logo (maybe the town colors) in the meeting room or common areas for a more pleasing look/ feel for visitors and occupants.",
+      "impact_if_not_funded": "Alternatives, if not funded, could be to paint/freshen-up the common area walls only (meeting room, hallways, stairways, and bathrooms for about half the total amount requested. If not funded this year, the ability to do a fresh-up type project increases in price, closer to the cost of a total paint job.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Rifle Plates",
+      "unnamed_in_source": false,
+      "amounts": [
+        15000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 15000.0,
+      "total_three_year": 15000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Veteran's Memorial",
+      "unnamed_in_source": false,
+      "amounts": [
+        15000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 15000.0,
+      "total_three_year": 15000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Chlorine Meter Replacements",
+      "unnamed_in_source": false,
+      "amounts": [
+        14500.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 14500.0,
+      "total_three_year": 14500.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Chlorine Meter Replacements",
+      "justification_page": 127,
+      "department": null,
+      "priority_rank": null,
+      "description": "The water plant uses multiple Chlorine meters. They run 24/7 and are used to make sure the water is disinfected properly before leaving the water plant. Three of those meters are amperometric Chlorine analyzers that are reagentless, which means they do not use reagents to react with the Chlorine and change the color of the sample. These reagentless meters have proven to be less reliable, accurate and much more maintenance intensive. The reagent- based meters now in operation substantially outperform the reagentless meters. Staff would like to replace the three reagentless Chlorine meters with reagent-based meters.",
+      "impact_if_not_funded": "If we do not replace the reagentless Chlorine meters, staff will continue having issues with the accuracy and reliability of the old meters, which could result in feeding too much or too little Chlorine into our drinking water.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Provide quality municipal services through operational excellence and a culture of innovation.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Ballistic Helmets",
+      "unnamed_in_source": false,
+      "amounts": [
+        12800.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 12800.0,
+      "total_three_year": 12800.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Ballistic Helmets",
+      "justification_page": 75,
+      "department": "Police",
+      "priority_rank": 4,
+      "description": "This request funds ballistic helmets for patrol officers and members of the Emergency Response Team (ERT) to replace expired, poorly fitting protective headgear currently in service. Ballistic helmets are critical during high-risk calls, barricaded subjects, active threat incidents, crowd control, and other critical events, where officers face elevated risks from impact hazards and ballistic threats. Properly fitted helmets significantly reduce the risk of serious injury while improving comfort and stability during extended deployments. The proposed helmets offer a 10-year service lifespan, doubling the typical replacement cycle and providing long-term cost savings through reduced replacement frequency. They are lighter and more ergonomic, improving wearability and increasing the likelihood of consistent use during rapidly evolving incidents. Improved fit and reduced weight also support officer endurance and mobility, which are essential during prolonged or physically demanding operations.",
+      "impact_if_not_funded": "If not funded, officers may lack adequate head protection during critical events. There is no effective substitute that offers comparable protection, increasing injury risk and liability.",
+      "strategic_plan_link": "This request supports Community Safety by protecting officers during high-risk operations and emergency responses. Enhanced protective equipment ensures officers can safely manage volatile situations. It aligns with Service Excellence by reinforcing emergency preparedness and ensuring the department is equipped to respond effectively to critical incidents.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Spare Motors for River Pump Station",
+      "unnamed_in_source": false,
+      "amounts": [
+        10700.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 10700.0,
+      "total_three_year": 10700.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (80% of words shared)",
+      "justification_form": "Spare Motor for River Pump Station",
+      "justification_page": 121,
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 1,
+      "description": "After the tropical storm Chantal, the river wastewater pump station was submerged under the flood water. All the electronics inside the pump station were damaged beyond repair. To help prevent this from happening again, the new equipment controls and instrumentation electronics were installed above the flood water elevation. The only critical electrical equipment installed inside the pump station are the electric motors that power the three pumps. To greatly reduce the downtime caused by a future catastrophic storm event, staff would like to purchase a spare electric motor to keep on hand. The spare motor is expected to cost $10,700. Staff would like to purchase one spare motor in FY27 and then evaluate whether additional spare motors will be needed in the future.",
+      "impact_if_not_funded": "In the event of another catastrophic storm like Chantal, the three motors inside the pump station will be submerged in the flood water. Before being able to put the motors back on-line, they would need to be sent to a motor shop to be baked until no moisture remains inside the pump motors. This would likely take a month or two before the motors would be reinstalled and the pump station up and running again. If we have spare motors on hand, the flooded motors can be pulled and spare motors installed, resulting in a downtime of about two to three days.",
+      "strategic_plan_link": "Service Excellence Objective 1: Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Objective 2: Provide quality municipal services through operational excellence and a culture of innovation.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Community Kiosks",
+      "unnamed_in_source": false,
+      "amounts": [
+        10500.0,
+        10500.0,
+        10500.0
+      ],
+      "fy2027": 10500.0,
+      "total_three_year": 31500.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Community Kiosks",
+      "justification_page": 34,
+      "department": "Communications",
+      "priority_rank": 1,
+      "description": "To enhance emergency communications and provide a digital alternative, the Communications Division would like to work with community partners to build information kiosks in key locations throughout town. A portion of the kiosk could be used by the community partner. Space would be reserved for use by the town to share information, particularly in an emergency. The cost per kiosk would be about $3,500 with additional costs for shipping if ordering a kit. The cost could be less if the kiosks are built and installed in house. This request is to build three in a year ($10,500), with the desire to build additional kiosks in subsequent years. In addition to spreading out the cost, the slow implementation would allow time to determine any changes needed to the kiosks, agreements with partners or type of information shared.",
+      "impact_if_not_funded": "The Communications Division plans to order materials for portable signs in addition to building permanent structures. If this request is not funded, the portable signs using A-frames and weatherproof posters would be used alone. There is a risk with portable signage that they could be removed by the public or knocked over or swept away due to flooding or high winds.",
+      "strategic_plan_link": "This request relates to the focus areas of Community Safety, Service Excellence and Connected Community in the Strategic Plan. It would help fulfill the Community Safety objective of reinforcing resiliency in town operations by implementing emergency preparedness strategies. It also would help fulfill the Service Excellence objective of promoting inclusive community engagement in town services, programs and projects.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Thermostat Upgrades",
+      "unnamed_in_source": false,
+      "amounts": [
+        9000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 9000.0,
+      "total_three_year": 9000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Thermostat Upgrades",
+      "justification_page": 44,
+      "department": "Facilities Management",
+      "priority_rank": 3,
+      "description": "Replace older HVAC thermostats with programmable units for increased energy efficiency during times the facility is unoccupied. This request would replace 6 thermostats and includes parts and labor.",
+      "impact_if_not_funded": "If not funded, older thermostats are less effective in measuring ambient temperatures, thus decreasing efficiency and comfort in the facility.",
+      "strategic_plan_link": "Links to our Energy reduction goals and initiatives.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Cost Allocation Plan",
+      "unnamed_in_source": false,
+      "amounts": [
+        7500.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 7500.0,
+      "total_three_year": 7500.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Cost Allocation Plan",
+      "justification_page": 30,
+      "department": "Administration",
+      "priority_rank": 2,
+      "description": "The town's cost allocation plan was developed many years ago based on simplistic information and was done in-house. This request is to fund a third-party analysis and study of indirect cost sharing paid by the Water and Sewer Fund as well as the Stormwater Fund for central services including the following budget units: Governing Body, Administration, Accounting, Human Resources, Communications, Facilities Management, Safety and Risk Management, Information Technology, Engineering Services, and Fleet Maintenance. By hiring a neutral, professional, and experienced contract partner for this effort, the town will receive a scientific and reliable end-product that will be used for cost allocation budgeting and accounting going forward. This will ensure that all funds are charged appropriately for shared services and avoid undue strain on taxpayers, utility customers, or stormwater customers.",
+      "impact_if_not_funded": "The town currently has a cost allocation structure, but it is old and has not been reevaluated or changed in several years. If not funded, the town's current cost allocations may place undue strain on any of the three operating funds.",
+      "strategic_plan_link": "Service Excellence: Objective 2 - Provide quality municipal services through operational excellence and a culture of innovation. By obtaining a professional and scientific cost allocation report, the town will have internal and external transparency about the method of allocation and ensure that all funds are covering appropriate costs for shared central services.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Handgun Lights",
+      "unnamed_in_source": false,
+      "amounts": [
+        6200.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 6200.0,
+      "total_three_year": 6200.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Handgun Lights",
+      "justification_page": 77,
+      "department": "Police",
+      "priority_rank": 5,
+      "description": "The department’s duty weapon-mounted lights have been in service for approximately 15 years, with only limited replacements during that time. During training and qualification this year, five flashlight failures were documented, indicating the equipment has reached the end of its service life. Replacing these aging lights is necessary to maintain reliability during training and operational use, reduce the risk of equipment failure during critical incidents, and ensure officers are equipped with dependable, department-issued safety equipment.",
+      "impact_if_not_funded": "Without funding, officers must rely on handheld lighting alone, which limits effectiveness and safety. There is no equally effective alternative that provides hands-free illumination during critical incidents.",
+      "strategic_plan_link": "This request directly supports Community Safety by improving officers’ ability to positively identify threats in low-light conditions, reducing risk to both officers and civilians. Proper identification is critical to safe decision-making. The request aligns with Service Excellence by equipping officers with modern safety tools that improve performance and reduce preventable incidents.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Welcome Sign Easement Plat",
+      "unnamed_in_source": false,
+      "amounts": [
+        6000.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 6000.0,
+      "total_three_year": 6000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "name variant (100% of words shared)",
+      "justification_form": "Welcome Sign Easement",
+      "justification_page": 58,
+      "department": "Planning",
+      "priority_rank": 2,
+      "description": "The town has an 'unofficial' Welcome to Hillsborough stone sign with two poles behind it that folks have historically used as a makeshift banner holder, at the corner of S Churton St and Mayo Street. To date, there's been no record found that the town has a sign easement or agreement with the property owner where the sign is location to construct or maintain this sign. This was likely something that was done before formal agreements were standard, however, in order for the town to expend funds to update or improve the sign by refacing it, repairing it if it gets damaged, or improving the banner holder structure, we really should survey the property and get a formal sign easement from the property owner. This BJF is for a requested $6,000 for surveying work to obtain a sign easement. Future projects, once a sign easement is in place, may include improvements to the sign area such as lighting it and/or adding a better banner holder structure so folks can advertise special events in a structured, central location.",
+      "impact_if_not_funded": "If obtaining a sign easement is not eventually prioritized, the town runs the risk of the sign structure being damaged or falling into disrepair and staying that way until the sign easement can be established and then the work is funded. Having a sign easement established would allow the town to do maintenance on the sign structure and repair or improve it if needed.",
+      "strategic_plan_link": "Maintaining signage and installing new signage contributes to placemaking and economic vitality by creating an aesthetically pleasing environment. Additionally, having a central place for event organizers to advertise is helpful for tourism purposes and the tourism program may be interested in cost sharing or fully funding future sign improvements once a legal sign easement is established.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Crime Scene Barriers",
+      "unnamed_in_source": false,
+      "amounts": [
+        2500.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 2500.0,
+      "total_three_year": 2500.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Crime Scene Barriers",
+      "justification_page": 76,
+      "department": "Police",
+      "priority_rank": 7,
+      "description": "This request funds portable crime scene barriers with blackout curtains for use during homicide investigations, aggravated assaults, fatal traffic crashes, and other critical incidents. These barriers allow officers to rapidly establish secure perimeters while shielding sensitive or graphic scenes from public view and media exposure, ensuring investigations are conducted with the highest level of professionalism, discretion, and dignity. The blackout feature is especially important when managing scenes involving fatalities or severe injuries, where visual exposure can be traumatic to families, bystanders, and first responders. Beyond scene security and evidence preservation, these barriers support effective media management and victim advocacy by limiting unauthorized photography, reducing speculation, and protecting victims and their families from unnecessary exposure during some of the most difficult moments of their lives. Their use aligns with the department’s strategic goals related to community trust, professionalism, and compassionate service, reinforcing the expectation that critical incidents",
+      "impact_if_not_funded": "If not funded, officers must rely on temporary or improvised solutions that are less effective and less visible. These alternatives increase the risk of evidence contamination, public exposure to hazards, and operational inefficiencies. There is no adequate substitute that provides the same level of safety and control.",
+      "strategic_plan_link": "This request directly advances Community Safety by enabling officers to safely manage incident scenes, protect the public from hazards, and preserve the integrity of criminal investigations. Effective scene control supports crime prevention and public confidence in police response. The request also aligns with Service Excellence by improving operational efficiency and ensuring reliable, standardized equipment is available for critical incidents.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Speed Box",
+      "unnamed_in_source": false,
+      "amounts": [
+        2500.0,
+        0.0,
+        0.0
+      ],
+      "fy2027": 2500.0,
+      "total_three_year": 2500.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Speed Box",
+      "justification_page": 84,
+      "department": "Police",
+      "priority_rank": 6,
+      "description": "This request is for a new traffic data collection device which will be utilized to monitor speeds, monitor citizen complaints, and collect data on traffic trends in a localized area. The new Stalker Traffic Data Collector 2 is easy to install, is solar powered, and data can be extracted wirelessly or with a flash drive; in some instances, the officer will not even need to exit the vehicle to do this. Although this data collector is not a visual cue, it covertly collects the needed data and analyzes it on user-friendly software. Ultimately, these signs will accomplish traffic safety tasks while reducing the person-hours required to install, recover, and analyze.",
+      "impact_if_not_funded": "If not funded, we can still use the visual sign that displays the motorist speed. While we won't have data for analytics, these visual signs will inform citizens that we are monitoring that area for traffic safety issues. An alternative option is to have Public Works deploy some of their traffic management equipment to help us gather data while the visual sign is in place. While these alternatives exist, they may not be the most cost-effective or efficient in terms of workforce resources.",
+      "strategic_plan_link": "Prioritizes employee safety and leverage technology for ongoing improvements. This forward-thinking mindset is a key value outlined in the town’s strategic plan, alongside our commitment to quality public service. This request advances Community Safety by supporting data-driven traffic enforcement and speed reduction efforts. Reducing speeding improves roadway safety and community well-being. The request aligns with Service Excellence by using data and technology to guide efficient, targeted enforcement strategies.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Parks Play Equipment Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        75000.0,
+        0.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 75000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Passenger Rail Multi-Modal Station",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        0.0,
+        361119.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 361119.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Phone System Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        100000.0,
+        100000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 200000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Phone System Replacement",
+      "justification_page": 51,
+      "department": null,
+      "priority_rank": null,
+      "description": "Replace current phone system which is hosted on a physical server with a cloud-based system. Exploring Ring Central, Microsoft Teams, and others. Current phone system is on premise in a server closet that has limited air conditioning. Police phone system and Town phone system are split, without real need to be (Per vendor, plan was to integrate, but 'lost steam') causing administrative and backend configuration issues. Phones do not currently \"travel\" with the user, so if a user is away from their desk, they may miss calls. Limited functionality. Emergency calls may have issues with location data for remote users. Microsoft Teams phone system could be bundled with existing licenses, cutting down on potential costs. Would work with Microsoft Teams which is already deployed in Town. Users would need basic overview of phone system. New phone system would be cloud hosted, potentially limiting downtime, integrate with other products, and provide additional flexibility for mobile/off-site workplace. Current phone provider does conversions but also getting quotes from other distributors.",
+      "impact_if_not_funded": "Continue to use existing phone systems.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Public Records Request Software",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        12288.0,
+        10788.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 23076.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Public Records Request Software",
+      "justification_page": 31,
+      "department": "Administration",
+      "priority_rank": 1,
+      "description": "NextRequest is a public records software under CivicPlus that allows agencies to receive, track, and fulfill records requests and manage workflows through an online portal.",
+      "impact_if_not_funded": "Challenges with not having a management tool in place: The increase in volume and complexity of requests, highlighting the need for additional support, tools, and automation. The challenge of tracking requests, easily knowing their status, and meeting due dates (especially when multiple departments are involved); things can easily slip through the cracks. The decentralized use of multiple tools and the overall impact to time and workflow; logging, tracking, routing, emailing, file-sharing, redacting, etc. all in different systems. The lack of internal visibility, which can lead to duplication of work or other inefficiencies.",
+      "strategic_plan_link": null,
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Story Walk",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        0.0,
+        12000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 12000.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Story Walk",
+      "justification_page": 65,
+      "department": null,
+      "priority_rank": null,
+      "description": "The Parks and Recreation Board would like to add a story walk to Gold Park. Story walks are comprised of individual framed stands that hold the pages of a book at various locations along a path so that path users can read a book as they go along. The books are geared toward school age children. This proposal includes 16 aluminum framed units, fabricated and installed, in Gold Park and funds for the first year's worth of books switched out quarterly. The books can be switched out at any interval the town prefers. Most story walks exchange books at least quarterly to keep interest from the public. Several companies offer book leasing and maintenance agreements. The Parks and Recreation Board prefers to work with a company that offers bilingual and multicultural stories.",
+      "impact_if_not_funded": null,
+      "strategic_plan_link": "This proposal helps to advance equity and accessibility in a town park, a Public Space and Sustainability Division priority.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Truck #244 Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        51010.0,
+        0.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 51010.0,
+      "fund": "General Fund",
+      "source_page": 22,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Truck #244 Replacement",
+      "justification_page": 89,
+      "department": "Engineering Services",
+      "priority_rank": 1,
+      "description": "Replace 2016 Ford F-150 with a similar vehicle.",
+      "impact_if_not_funded": "Continue to drive existing truck, potentially experiencing increased down time or repair costs.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Cameras at West Fork Eno Reservoir",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        0.0,
+        121000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 121000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Forklift Replacement",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        50000.0,
+        0.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 50000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": true,
+      "justification_match_basis": "exact name",
+      "justification_form": "Forklift Replacement",
+      "justification_page": 119,
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 4,
+      "description": "Replace almost 40 year old forklift. Current forklift if used for installation and removal of large pumps, motors, aerators, grinders and unloading chemicals such as polymer totes that can weight more than one ton.",
+      "impact_if_not_funded": "Continue to repair existing forklift.",
+      "strategic_plan_link": "Taking care of what we have.",
+      "states_a_fundable_alternative": false
+    },
+    {
+      "request": "Hydrant & Valve Project",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        0.0,
+        270000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 270000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Tertiary Filter Flocculators",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        0.0,
+        10000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 10000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Vacuum Excavator",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        0.0,
+        155000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 155000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    },
+    {
+      "request": "Water Distribution System Master Plan Improvements",
+      "unnamed_in_source": false,
+      "amounts": [
+        0.0,
+        100000.0,
+        200000.0
+      ],
+      "fy2027": 0.0,
+      "total_three_year": 300000.0,
+      "fund": "Water and Sewer Fund",
+      "source_page": 104,
+      "justification_matched": false,
+      "justification_match_basis": "no form found"
+    }
+  ],
+  "request_lists": [
+    {
+      "fund": "General Fund",
+      "status": "funded",
+      "source_page": 22,
+      "items": [
+        {
+          "request": "Ballistic Helmets",
+          "unnamed_in_source": false,
+          "amounts": [
+            12800.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 12800.0,
+          "total_three_year": 12800.0
+        },
+        {
+          "request": "Code Enforcement Abatement",
+          "unnamed_in_source": false,
+          "amounts": [
+            35000.0,
+            35000.0,
+            35000.0
+          ],
+          "fy2027": 35000.0,
+          "total_three_year": 105000.0
+        },
+        {
+          "request": "Community Kiosks",
+          "unnamed_in_source": false,
+          "amounts": [
+            10500.0,
+            10500.0,
+            10500.0
+          ],
+          "fy2027": 10500.0,
+          "total_three_year": 31500.0
+        },
+        {
+          "request": "Community Services Department Re-Organization",
+          "unnamed_in_source": false,
+          "amounts": [
+            60423.0,
+            77435.0,
+            83478.0
+          ],
+          "fy2027": 60423.0,
+          "total_three_year": 221336.0
+        },
+        {
+          "request": "Cost Allocation Plan",
+          "unnamed_in_source": false,
+          "amounts": [
+            7500.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 7500.0,
+          "total_three_year": 7500.0
+        },
+        {
+          "request": "Crime Scene Barriers",
+          "unnamed_in_source": false,
+          "amounts": [
+            2500.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 2500.0,
+          "total_three_year": 2500.0
+        },
+        {
+          "request": "Fire Station at North Churton Street",
+          "unnamed_in_source": false,
+          "amounts": [
+            300000.0,
+            300000.0,
+            685026.0
+          ],
+          "fy2027": 300000.0,
+          "total_three_year": 1285026.0
+        },
+        {
+          "request": "Fire Vehicle Replacement Fund",
+          "unnamed_in_source": false,
+          "amounts": [
+            100000.0,
+            200000.0,
+            300000.0
+          ],
+          "fy2027": 100000.0,
+          "total_three_year": 600000.0
+        },
+        {
+          "request": "Garbage Truck Replacements",
+          "unnamed_in_source": false,
+          "amounts": [
+            422010.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 422010.0,
+          "total_three_year": 422010.0
+        },
+        {
+          "request": "Generator and Automatic Transfer Switch Replacement at Town Hall Main House",
+          "unnamed_in_source": false,
+          "amounts": [
+            85000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 85000.0,
+          "total_three_year": 85000.0
+        },
+        {
+          "request": "Handgun Lights",
+          "unnamed_in_source": false,
+          "amounts": [
+            6200.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 6200.0,
+          "total_three_year": 6200.0
+        },
+        {
+          "request": "HVAC Unit Replacements at Police Department",
+          "unnamed_in_source": false,
+          "amounts": [
+            30000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 30000.0,
+          "total_three_year": 30000.0
+        },
+        {
+          "request": "Paint Exterior of Wastewater Treatment Plant",
+          "unnamed_in_source": false,
+          "amounts": [
+            20000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 20000.0,
+          "total_three_year": 20000.0
+        },
+        {
+          "request": "Paint Interior of Administration Building",
+          "unnamed_in_source": false,
+          "amounts": [
+            17500.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 17500.0,
+          "total_three_year": 17500.0
+        },
+        {
+          "request": "Parks Play Equipment Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            75000.0,
+            0.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 75000.0
+        },
+        {
+          "request": "Passenger Rail Multi-Modal Station",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            0.0,
+            361119.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 361119.0
+        },
+        {
+          "request": "Phone System Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            100000.0,
+            100000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 200000.0
+        },
+        {
+          "request": "Physical Security Standardization",
+          "unnamed_in_source": false,
+          "amounts": [
+            100000.0,
+            100000.0,
+            0.0
+          ],
+          "fy2027": 100000.0,
+          "total_three_year": 200000.0
+        },
+        {
+          "request": "Physical Security Upgrades",
+          "unnamed_in_source": false,
+          "amounts": [
+            120000.0,
+            120000.0,
+            120000.0
+          ],
+          "fy2027": 120000.0,
+          "total_three_year": 360000.0
+        },
+        {
+          "request": "Picnic Shelter at Cates Creek Park",
+          "unnamed_in_source": false,
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 35000.0,
+          "total_three_year": 35000.0
+        },
+        {
+          "request": "Picnic Shelter at Riverwalk Entrance",
+          "unnamed_in_source": false,
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 35000.0,
+          "total_three_year": 35000.0
+        },
+        {
+          "request": "Picnic Tables at Cates Creek Park",
+          "unnamed_in_source": false,
+          "amounts": [
+            22000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 22000.0,
+          "total_three_year": 22000.0
+        },
+        {
+          "request": "Police In-Car Camera Replacements",
+          "unnamed_in_source": false,
+          "amounts": [
+            75901.0,
+            72325.0,
+            72325.0
+          ],
+          "fy2027": 75901.0,
+          "total_three_year": 220551.0
+        },
+        {
+          "request": "Printer Standardization",
+          "unnamed_in_source": false,
+          "amounts": [
+            24154.0,
+            33754.0,
+            43354.0
+          ],
+          "fy2027": 24154.0,
+          "total_three_year": 101262.0
+        },
+        {
+          "request": "Public Records Request Software",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            12288.0,
+            10788.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 23076.0
+        },
+        {
+          "request": "Radio Encryption",
+          "unnamed_in_source": false,
+          "amounts": [
+            55000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 55000.0,
+          "total_three_year": 55000.0
+        },
+        {
+          "request": "Renovate Third Floor of Administration Building",
+          "unnamed_in_source": false,
+          "amounts": [
+            20000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 20000.0,
+          "total_three_year": 20000.0
+        },
+        {
+          "request": "Ridgewalk Greenway - North Segment",
+          "unnamed_in_source": false,
+          "amounts": [
+            333000.0,
+            333000.0,
+            333000.0
+          ],
+          "fy2027": 333000.0,
+          "total_three_year": 999000.0
+        },
+        {
+          "request": "Rifle Plates",
+          "unnamed_in_source": false,
+          "amounts": [
+            15000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 15000.0,
+          "total_three_year": 15000.0
+        },
+        {
+          "request": "Sidewalk at Rainey Avenue",
+          "unnamed_in_source": false,
+          "amounts": [
+            30000.0,
+            0.0,
+            125000.0
+          ],
+          "fy2027": 30000.0,
+          "total_three_year": 155000.0
+        },
+        {
+          "request": "Speed Box",
+          "unnamed_in_source": false,
+          "amounts": [
+            2500.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 2500.0,
+          "total_three_year": 2500.0
+        },
+        {
+          "request": "Story Walk",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            0.0,
+            12000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 12000.0
+        },
+        {
+          "request": "Thermostat Upgrades",
+          "unnamed_in_source": false,
+          "amounts": [
+            9000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 9000.0,
+          "total_three_year": 9000.0
+        },
+        {
+          "request": "Truck #244 Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            51010.0,
+            0.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 51010.0
+        },
+        {
+          "request": "Veteran's Memorial",
+          "unnamed_in_source": false,
+          "amounts": [
+            15000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 15000.0,
+          "total_three_year": 15000.0
+        },
+        {
+          "request": "Wayfinding Kiosks in West Hillsborough",
+          "unnamed_in_source": false,
+          "amounts": [
+            24000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 24000.0,
+          "total_three_year": 24000.0
+        },
+        {
+          "request": "Welcome Sign Easement Plat",
+          "unnamed_in_source": false,
+          "amounts": [
+            6000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 6000.0,
+          "total_three_year": 6000.0
+        }
+      ],
+      "printed_total": [
+        2030988.0,
+        1520312.0,
+        2291590.0
+      ],
+      "stated_none": false,
+      "reconciles": true
+    },
+    {
+      "fund": "General Fund",
+      "status": "unfunded",
+      "source_page": 23,
+      "items": [
+        {
+          "request": "Community Home Trust - Funding Expansion Request",
+          "unnamed_in_source": false,
+          "amounts": [
+            2500.0,
+            2500.0,
+            2500.0
+          ],
+          "fy2027": 2500.0,
+          "total_three_year": 7500.0
+        },
+        {
+          "request": "Fire Station at North Churton Street Ramp-Up Expansion",
+          "unnamed_in_source": false,
+          "amounts": [
+            125000.0,
+            250000.0,
+            370000.0
+          ],
+          "fy2027": 125000.0,
+          "total_three_year": 745000.0
+        },
+        {
+          "request": "Generator for Community Center",
+          "unnamed_in_source": false,
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 35000.0,
+          "total_three_year": 35000.0
+        },
+        {
+          "request": "Tax Collection Fee Increase",
+          "unnamed_in_source": false,
+          "amounts": [
+            120000.0,
+            123000.0,
+            125000.0
+          ],
+          "fy2027": 120000.0,
+          "total_three_year": 368000.0
+        }
+      ],
+      "printed_total": [
+        282500.0,
+        375500.0,
+        497500.0
+      ],
+      "stated_none": false,
+      "reconciles": true
+    },
+    {
+      "fund": "Water and Sewer Fund",
+      "status": "funded",
+      "source_page": 104,
+      "items": [
+        {
+          "request": "Additional Step Screen",
+          "unnamed_in_source": false,
+          "amounts": [
+            64540.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 64540.0,
+          "total_three_year": 64540.0
+        },
+        {
+          "request": "Cameras at West Fork Eno Reservoir",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            0.0,
+            121000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 121000.0
+        },
+        {
+          "request": "Chlorine Meter Replacements",
+          "unnamed_in_source": false,
+          "amounts": [
+            14500.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 14500.0,
+          "total_three_year": 14500.0
+        },
+        {
+          "request": "Dam Repairs at West Fork Eno Reservoir",
+          "unnamed_in_source": false,
+          "amounts": [
+            195540.0,
+            164967.0,
+            329933.0
+          ],
+          "fy2027": 195540.0,
+          "total_three_year": 690440.0
+        },
+        {
+          "request": "Electrical System Evaluation",
+          "unnamed_in_source": false,
+          "amounts": [
+            45000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 45000.0,
+          "total_three_year": 45000.0
+        },
+        {
+          "request": "Filter Influent Actuators Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            49000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 49000.0,
+          "total_three_year": 49000.0
+        },
+        {
+          "request": "Forklift Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            50000.0,
+            0.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 50000.0
+        },
+        {
+          "request": "Hydrant & Valve Project",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            0.0,
+            270000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 270000.0
+        },
+        {
+          "request": "Motor Control Center Replacement at Water Treatment Plant",
+          "unnamed_in_source": false,
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 35000.0,
+          "total_three_year": 35000.0
+        },
+        {
+          "request": "Process Controls Relocation to SCADA",
+          "unnamed_in_source": false,
+          "amounts": [
+            300000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 300000.0,
+          "total_three_year": 300000.0
+        },
+        {
+          "request": "Pump Start Equipment Replacements",
+          "unnamed_in_source": false,
+          "amounts": [
+            27000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 27000.0,
+          "total_three_year": 27000.0
+        },
+        {
+          "request": "Pumping Station Generator Replacements",
+          "unnamed_in_source": false,
+          "amounts": [
+            45000.0,
+            45000.0,
+            45000.0
+          ],
+          "fy2027": 45000.0,
+          "total_three_year": 135000.0
+        },
+        {
+          "request": "Sewer Jetter/Flush Truck",
+          "unnamed_in_source": false,
+          "amounts": [
+            222010.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 222010.0,
+          "total_three_year": 222010.0
+        },
+        {
+          "request": "Solids Storage Mixing Pump Rebuild",
+          "unnamed_in_source": false,
+          "amounts": [
+            82000.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 82000.0,
+          "total_three_year": 82000.0
+        },
+        {
+          "request": "Spare Motors for River Pump Station",
+          "unnamed_in_source": false,
+          "amounts": [
+            10700.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 10700.0,
+          "total_three_year": 10700.0
+        },
+        {
+          "request": "Tertiary Filter Flocculators",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            0.0,
+            10000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 10000.0
+        },
+        {
+          "request": "Truck #192 Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            62010.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 62010.0,
+          "total_three_year": 62010.0
+        },
+        {
+          "request": "Truck #210 Replacement",
+          "unnamed_in_source": false,
+          "amounts": [
+            92010.0,
+            0.0,
+            0.0
+          ],
+          "fy2027": 92010.0,
+          "total_three_year": 92010.0
+        },
+        {
+          "request": "Vacuum Excavator",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            0.0,
+            155000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 155000.0
+        },
+        {
+          "request": "Water Distribution System Master Plan Improvements",
+          "unnamed_in_source": false,
+          "amounts": [
+            0.0,
+            100000.0,
+            200000.0
+          ],
+          "fy2027": 0.0,
+          "total_three_year": 300000.0
+        }
+      ],
+      "printed_total": [
+        1244310.0,
+        359967.0,
+        1130933.0
+      ],
+      "stated_none": false,
+      "reconciles": true
+    },
+    {
+      "fund": "Stormwater Fund",
+      "status": "funded",
+      "source_page": 138,
+      "items": [
+        {
+          "request": "Elizabeth Brady Road Culvert Rehabilitation",
+          "unnamed_in_source": false,
+          "amounts": [
+            75000.0,
+            50000.0,
+            50000.0
+          ],
+          "fy2027": 75000.0,
+          "total_three_year": 175000.0
+        }
+      ],
+      "printed_total": [
+        75000.0,
+        50000.0,
+        50000.0
+      ],
+      "stated_none": false,
+      "reconciles": true
+    },
+    {
+      "fund": "Stormwater Fund",
+      "status": "unfunded",
+      "source_page": 138,
+      "items": [],
+      "printed_total": [
+        0.0
+      ],
+      "stated_none": false,
+      "reconciles": true
+    }
+  ],
+  "justification_forms": [
+    {
+      "request": "Tax Collection Fee Increase",
+      "fund": "General Fund",
+      "department": "Accounting",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 27,
+      "description": "Orange County bills and collects property taxes on behalf of the three municipalities with the county, Chapel Hill, Carrboro and Hillsborough. For this service, the county charges a collection fee of 0.5% of collected taxes. They have done a fee study and determined that the average fee to municipalities is 1.5% across their peer group, including neighboring Durham County.",
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Accounting",
+          "amounts": [
+            120000.0,
+            123000.0,
+            125000.0
+          ]
+        }
+      ],
+      "total_requested": 368000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Cost Allocation Plan",
+      "fund": "General Fund",
+      "department": "Administration",
+      "priority_rank": 2,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 30,
+      "description": "The town's cost allocation plan was developed many years ago based on simplistic information and was done in-house. This request is to fund a third-party analysis and study of indirect cost sharing paid by the Water and Sewer Fund as well as the Stormwater Fund for central services including the following budget units: Governing Body, Administration, Accounting, Human Resources, Communications, Facilities Management, Safety and Risk Management, Information Technology, Engineering Services, and Fleet Maintenance. By hiring a neutral, professional, and experienced contract partner for this effort, the town will receive a scientific and reliable end-product that will be used for cost allocation budgeting and accounting going forward. This will ensure that all funds are charged appropriately for shared services and avoid undue strain on taxpayers, utility customers, or stormwater customers.",
+      "strategic_plan_link": "Service Excellence: Objective 2 - Provide quality municipal services through operational excellence and a culture of innovation. By obtaining a professional and scientific cost allocation report, the town will have internal and external transparency about the method of allocation and ensure that all funds are covering appropriate costs for shared central services.",
+      "impact_if_not_funded": "The town currently has a cost allocation structure, but it is old and has not been reevaluated or changed in several years. If not funded, the town's current cost allocations may place undue strain on any of the three operating funds.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Administration",
+          "amounts": [
+            7500.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 7500.0,
+      "reconciles": true
+    },
+    {
+      "request": "Public Records Request Software",
+      "fund": "General Fund",
+      "department": "Administration",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 31,
+      "description": "NextRequest is a public records software under CivicPlus that allows agencies to receive, track, and fulfill records requests and manage workflows through an online portal.",
+      "strategic_plan_link": null,
+      "impact_if_not_funded": "Challenges with not having a management tool in place: The increase in volume and complexity of requests, highlighting the need for additional support, tools, and automation. The challenge of tracking requests, easily knowing their status, and meeting due dates (especially when multiple departments are involved); things can easily slip through the cracks. The decentralized use of multiple tools and the overall impact to time and workflow; logging, tracking, routing, emailing, file-sharing, redacting, etc. all in different systems. The lack of internal visibility, which can lead to duplication of work or other inefficiencies.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Administration",
+          "amounts": [
+            0.0,
+            12288.0,
+            10788.0
+          ]
+        }
+      ],
+      "total_requested": 23076.0,
+      "reconciles": true
+    },
+    {
+      "request": "Community Kiosks",
+      "fund": "General Fund",
+      "department": "Communications",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 34,
+      "description": "To enhance emergency communications and provide a digital alternative, the Communications Division would like to work with community partners to build information kiosks in key locations throughout town. A portion of the kiosk could be used by the community partner. Space would be reserved for use by the town to share information, particularly in an emergency. The cost per kiosk would be about $3,500 with additional costs for shipping if ordering a kit. The cost could be less if the kiosks are built and installed in house. This request is to build three in a year ($10,500), with the desire to build additional kiosks in subsequent years. In addition to spreading out the cost, the slow implementation would allow time to determine any changes needed to the kiosks, agreements with partners or type of information shared.",
+      "strategic_plan_link": "This request relates to the focus areas of Community Safety, Service Excellence and Connected Community in the Strategic Plan. It would help fulfill the Community Safety objective of reinforcing resiliency in town operations by implementing emergency preparedness strategies. It also would help fulfill the Service Excellence objective of promoting inclusive community engagement in town services, programs and projects.",
+      "impact_if_not_funded": "The Communications Division plans to order materials for portable signs in addition to building permanent structures. If this request is not funded, the portable signs using A-frames and weatherproof posters would be used alone. There is a risk with portable signage that they could be removed by the public or knocked over or swept away due to flooding or high winds.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Communications",
+          "amounts": [
+            10500.0,
+            10500.0,
+            10500.0
+          ]
+        }
+      ],
+      "total_requested": 31500.0,
+      "reconciles": true
+    },
+    {
+      "request": "Generator for Community Center",
+      "fund": "General Fund",
+      "department": "Facility Management",
+      "priority_rank": 6,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 38,
+      "description": "The Town is replacing the emergency generator and transfer switch located at the Police Department. Although the generator has come to the end of its replacement schedule, there is some usable life left in the unit. This request is to relocate the generator to the Dorothy Johnson Community Center to serve as a backup generator in the event of power loss. This could give The Town the ability to have an emergency shelter to offer residents if one is needed. There would be an additional ongoing cost of yearly maintenance and possible repairs.",
+      "strategic_plan_link": "This request could be a part of Objective 1 - Ensure that people are safe and feel safe throughout town. Objective 2.1- Complete refresh of the Emergency Operations Plan Objective 2.4 - Establish Emergency Operations Centers This request could also represent the Values of the Strategic Plan Public Service - We are responsible stewards of community tax dollars put to use for the public good. This could be achieved by repurposing the use of the generator that is already paid for and being put to use in a way that is not as taxing as a full-time backup generator, while adding a valuable public service.",
+      "impact_if_not_funded": "If not funded, the generator could be sold, and the sale of the generator could help support the Community Center funding or just return to available funds for the town. We would not be adding a service for the community at a reduced cost than we would if this request involved purchasing all new equipment.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 35000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Generator and ATS Switch Replacement at Town Hall",
+      "fund": "General Fund",
+      "department": "Facility Management",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 39,
+      "description": "Replace the generator and ATS Switch at the Town Hall Main House as it has come to the end of its lifecycle. The current ATS is working, but is showing signs of wear.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "impact_if_not_funded": "Decreased reliability and increased maintenance cost moving forward.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            85000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 85000.0,
+      "reconciles": true
+    },
+    {
+      "request": "HVAC Unit Replacements",
+      "fund": "General Fund",
+      "department": "Facility Management",
+      "priority_rank": 2,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 40,
+      "description": "Replace HVAC units at the police department that have come to the end of their lifecycle on the replacement schedule.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "impact_if_not_funded": "If not funded, we could leave as-is and run the risk of increased downtime/decreased reliability, and increased maintenance costs. A service call from our contracted HVAC company averages $600.00 per call. We had 28 calls for service due to HVAC issues last fiscal year. That is down from 47 calls two years ago. This reduction is due to supported request to replace aged units in past budget years.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            30000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 30000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Paint Exterior of Wastewater Treatment Plant",
+      "fund": "General Fund",
+      "department": "Facility Management",
+      "priority_rank": 4,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 41,
+      "description": "Paint the exterior of the Wastewater Plant. There are areas of rust, faded and peeling paint on doors, window frames, and exposed steel beams on the exterior of the building.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "impact_if_not_funded": "If not funded and delayed, the rust will increase, which will increase painting costs when issues are addressed at a later budget year.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            20000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 20000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Paint Interior of Administration Building",
+      "fund": "General Fund",
+      "department": "Facility Management",
+      "priority_rank": 5,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 42,
+      "description": "Fresh coat of interior paint for the first and second floors of the Administration Building (offices, hallways, meeting room, bathrooms, stairwells, all walls and ceilings). I suggest some color/accent walls/town logo (maybe the town colors) in the meeting room or common areas for a more pleasing look/ feel for visitors and occupants.",
+      "strategic_plan_link": "Supports the departmental goal to maintain town-owned facilities.",
+      "impact_if_not_funded": "Alternatives, if not funded, could be to paint/freshen-up the common area walls only (meeting room, hallways, stairways, and bathrooms for about half the total amount requested. If not funded this year, the ability to do a fresh-up type project increases in price, closer to the cost of a total paint job.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            17500.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 17500.0,
+      "reconciles": true
+    },
+    {
+      "request": "Renovate Third Floor of Administration Building",
+      "fund": "General Fund",
+      "department": "Facility Management",
+      "priority_rank": 7,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 43,
+      "description": "The Administration Building has limited office space available, with two communication employees sharing an office and the communication manager in a small office with no exterior window, which previously served as a small conference space. The third floor of the building has two rooms that are being used for storage. Staff looked into the usability of those spaces and determined that both spaces could be used as offices with some minor upgrades to the space. This request is for funding to paint, replace the carpeting, do the necessary electrical work and make some IT configurations to accommodate office use. The two employees sharing an office would move to the third floor offices and the communications manager would move into the larger space. The small office would be left as a flex office, for remote employees to use when on-site. With how limited the town is with office space, this is a very affordable option to gain two extra offices without having to do major renovations or build a new space.",
+      "strategic_plan_link": "Our ability to do our jobs effectively ties back to having the necessary equipment and work space.",
+      "impact_if_not_funded": "If this request is not funded, employees could continue using their existing space, which is limited. This becomes especially limited when we have interns or temporary employees. Another option would be to just do the necessary work to use the space as an office, but not replace the carpeting, which is potentially original to the building and to forgo the painting.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            20000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 20000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Thermostat Upgrades",
+      "fund": "General Fund",
+      "department": "Facilities Management",
+      "priority_rank": 3,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 44,
+      "description": "Replace older HVAC thermostats with programmable units for increased energy efficiency during times the facility is unoccupied. This request would replace 6 thermostats and includes parts and labor.",
+      "strategic_plan_link": "Links to our Energy reduction goals and initiatives.",
+      "impact_if_not_funded": "If not funded, older thermostats are less effective in measuring ambient temperatures, thus decreasing efficiency and comfort in the facility.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Facilities Management",
+          "amounts": [
+            9000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 9000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Phone System Replacement",
+      "fund": "General Information Technology 2",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 51,
+      "description": "Replace current phone system which is hosted on a physical server with a cloud-based system. Exploring Ring Central, Microsoft Teams, and others. Current phone system is on premise in a server closet that has limited air conditioning. Police phone system and Town phone system are split, without real need to be (Per vendor, plan was to integrate, but 'lost steam') causing administrative and backend configuration issues. Phones do not currently \"travel\" with the user, so if a user is away from their desk, they may miss calls. Limited functionality. Emergency calls may have issues with location data for remote users. Microsoft Teams phone system could be bundled with existing licenses, cutting down on potential costs. Would work with Microsoft Teams which is already deployed in Town. Users would need basic overview of phone system. New phone system would be cloud hosted, potentially limiting downtime, integrate with other products, and provide additional flexibility for mobile/off-site workplace. Current phone provider does conversions but also getting quotes from other distributors.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "impact_if_not_funded": "Continue to use existing phone systems.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Information Technology",
+          "amounts": [
+            0.0,
+            100000.0,
+            100000.0
+          ]
+        }
+      ],
+      "total_requested": 200000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Physical Security Standardization",
+      "fund": "General Information Technology 1",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 52,
+      "description": "Standardize existing security systems. The purpose is to unify and centralize the management of existing security systems across sites per recommendations by the Physical Security working group. It’s about consolidation, alignment, and consistency for ease of use, oversight, and speed during disaster scenarios. This includes: Consolidating cameras, alarms, and access control systems under a unified platform Centralizing budgeting, purchasing, and approvals for security-related items Establishing consistent processes and policies for security management",
+      "strategic_plan_link": "Focus Area 4: Community Safety - Objective 1 - Ensure that all people are safe and feel safe throughout town. Focus Area 4: Community Safety - Objective 2 - Reinforce resiliency in town operations by implementing emergency preparedness strategies Focus Area 5: Service Excellence - Objective 1 - Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Focus Area 5: Service Excellence - Objective 2 - Provide Quality municipal services through operational excellence and a culture of innovation",
+      "impact_if_not_funded": "Physical security is not currently standardized, and each building has its own systems (or lack thereof) causing strains to emergency response, and confusion during issues/security problems. PD cannot get into certain buildings without being let in, which is a problem during security issues. We do not have control of our building security envelope, so we cannot be sure that we have control of our resources or the safety and security for our employees. If not funded, we will continue having a scattershot approach to entry and exit to our buildings, unclear documentation for our keys, and blind spots for coverage on our security cameras for high value areas.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Information Technology",
+          "amounts": [
+            100000.0,
+            100000.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 200000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Physical Security Upgrades",
+      "fund": "General Information Technology 3",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 53,
+      "description": "Add new security measures (cameras, alarms, access control, re-keying) to facilities that currently do not have them. It’s an installation and deployment project to bring all sites up to a baseline level of security. This includes: Installing cameras for surveillance at high value locations, entrances not currently covered Deploying burglar alarms and monitoring solutions in areas that are not currently covered Implementing door access control systems in areas not currently covered This request is in tandem with the standardization work done by the Physical Security Group and would implement solutions determined to fit that groups framework.",
+      "strategic_plan_link": "Focus Area 4: Community Safety - Objective 1 - Ensure that all people are safe and feel safe throughout town. Focus Area 4: Community Safety - Objective 2 - Reinforce resiliency in town operations by implementing emergency preparedness strategies Focus Area 5: Service Excellence - Objective 1 - Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency Focus Area 5: Service Excellence - Objective 2 - Provide Quality municipal services through operational excellence and a culture of innovation",
+      "impact_if_not_funded": "Physical security is not currently implemented at key locations in the town, causing gaps in safety and security. New systems could be implemented that increase both of those areas, and failure to fund this work means that we cannot increase our confidence that employees and assets are protected.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Information Technology",
+          "amounts": [
+            120000.0,
+            120000.0,
+            120000.0
+          ]
+        }
+      ],
+      "total_requested": 360000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Printer Standardization",
+      "fund": "General Information Technology 4",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 54,
+      "description": "We currently have Multifunction devices at a few sites, but this request would expand that to include future buildings and renovations as well as outfit other buildings that need centralized printing. FY 27 - Adron Thompson, Hwy 86 FY 28 - Additional 2 Locations FY 29 - Additional 2 Locations This would also be the place where we would centralize all printing for the town of Hillsborough. I believe that we may be spending a fair amount on one-off printers and printer ink. Though IT generally isn't concerned with office supplies, printer ink often is as expensive or more so than just purchasing a new printer. Centralizing the purchase of one-off printers and their ink will allow us to standardize those who need to retain one-off printers, bulk purchase devices and ink, and provide a better understanding of town wide costs.",
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Information Technology",
+          "amounts": [
+            24154.0,
+            33754.0,
+            43354.0
+          ]
+        }
+      ],
+      "total_requested": 101262.0,
+      "reconciles": true
+    },
+    {
+      "request": "Code Enforcement Abatement",
+      "fund": "General Fund",
+      "department": "Planning",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 57,
+      "description": "In FY24, the town invested in hiring a third-party code enforcement contractor that has made a lot of progress in code enforcement cases by getting residents/property owners to do abatements themselves and correct zoning and code enforcement issues. Unfortunately, there are a handful of cases where the property owners can't or won't be able to do the abatements. In FY25, approximately $20K that was not utilized in FY24 for code enforcement, was re-assigned in FY25 to do abatement work. Abatement funds are needed to have a contractor mow tall grass, clear junk piles, and in some cases, tear down or remove the remains of abandoned and dilapidated houses or accessory structures that are no longer occupied.",
+      "strategic_plan_link": "Keeping the town clear of noxious growth, junk accumulation, and dilapidated and un-utilized housing and structures contributes to the best health, safety, and welfare outcomes for our citizens.",
+      "impact_if_not_funded": "If abatement is not continued to be prioritized, it will be hard to keep the momentum going on code enforcement efforts and keep the folks that can self- abate motivated to do so.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Planning",
+          "amounts": [
+            35000.0,
+            35000.0,
+            35000.0
+          ]
+        }
+      ],
+      "total_requested": 105000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Welcome Sign Easement",
+      "fund": "General Fund",
+      "department": "Planning",
+      "priority_rank": 2,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 58,
+      "description": "The town has an 'unofficial' Welcome to Hillsborough stone sign with two poles behind it that folks have historically used as a makeshift banner holder, at the corner of S Churton St and Mayo Street. To date, there's been no record found that the town has a sign easement or agreement with the property owner where the sign is location to construct or maintain this sign. This was likely something that was done before formal agreements were standard, however, in order for the town to expend funds to update or improve the sign by refacing it, repairing it if it gets damaged, or improving the banner holder structure, we really should survey the property and get a formal sign easement from the property owner. This BJF is for a requested $6,000 for surveying work to obtain a sign easement. Future projects, once a sign easement is in place, may include improvements to the sign area such as lighting it and/or adding a better banner holder structure so folks can advertise special events in a structured, central location.",
+      "strategic_plan_link": "Maintaining signage and installing new signage contributes to placemaking and economic vitality by creating an aesthetically pleasing environment. Additionally, having a central place for event organizers to advertise is helpful for tourism purposes and the tourism program may be interested in cost sharing or fully funding future sign improvements once a legal sign easement is established.",
+      "impact_if_not_funded": "If obtaining a sign easement is not eventually prioritized, the town runs the risk of the sign structure being damaged or falling into disrepair and staying that way until the sign easement can be established and then the work is funded. Having a sign easement established would allow the town to do maintenance on the sign structure and repair or improve it if needed.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Planning",
+          "amounts": [
+            6000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 6000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Community Services Department Re-Organization",
+      "fund": "General Fund",
+      "department": "Public Space",
+      "priority_rank": 4,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 61,
+      "description": "There is a high level of coordination needed between the activities of Public Works, Public Space & Sustainability, and Stormwater & Environmental Services, so it is proposed to combine those divisions into a single department named “Community Services and Sustainability”. By combining resources, in those three divisions and distributing management-level tasks to other staff, the previous public works manager position can be replaced with two lower- level positions in order to address other departmental and organizational needs at a lower cost compared to adding the necessary personnel through expansion. The identified needs for the near-term future of the department include additional public works staff to keep up with workload and community growth, and a dedicated transportation resource to focus on regional coordination, competitive funding opportunities, and project management. The other department created in the reorganization would consist of Planning and Economic Development and Engineering Services and be named “Planning & Development Services”. The separation of the departments creates additional bandwidth for focus on affordable housing and delivery of upcoming projects. The goals of the proposed reorganization include the following: Add operational staff to public works, add dedicated transportation resource, provide advancement opportunities for public works staff, address shifting priorities and increased demand on public works staff, increase alignment of time and energy on advancing and delivering town priority projects, retain high-level focus and accountability for sustainability and affordable housing goals, and minimize cost impacts.",
+      "strategic_plan_link": "Service Excellence, Objective 1: Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "impact_if_not_funded": "If not approved, no changes to departments would be made.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Information Technology",
+          "amounts": [
+            2500.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "division": "Public Space",
+          "amounts": [
+            57923.0,
+            77435.0,
+            83478.0
+          ]
+        }
+      ],
+      "total_requested": 221336.0,
+      "reconciles": true
+    },
+    {
+      "request": "Picnic Shelter at Cates Creek Park",
+      "fund": "General Fund",
+      "department": "Public Space",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 62,
+      "description": "Add a covered picnic shelter over the existing concrete slab at Cates Creek Park near the playground and restroom building. The structure will provide relief for visitors from extreme heat and provide shelter during other weather events, allowing the park to be more accessible and equitable throughout the year.",
+      "strategic_plan_link": "This is a priority listed in the Cates Creek Park Master Plan and helps accomplish the following strategic action in the Comprehensive Sustainability Plan: Implement recommendations of parks master plans that advance accessibility, sustainability, safety and equity in public spaces.",
+      "impact_if_not_funded": "This item is a priority recommendation but can be scheduled as funding allows.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Public Space",
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 35000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Picnic Shelter at Riverwalk Entrance",
+      "fund": "General Public Space 2",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 63,
+      "description": "Add a covered picnic shelter over the picnic tables at the Nash and Kollock Street entrance to Riverwalk. The structure will provide relief to visitors from extreme heat and shelter from weather events, allowing the area to be more accessible and equitable throughout the year.",
+      "strategic_plan_link": "This is a priority in the Riverwalk Master Plan and helps accomplish the following strategic action in the Comprehensive Sustainability Plan: Implement recommendations of parks master plans that advance accessibility, sustainability, safety, and equity in public spaces. Estimated cost is $35,000 but Tourism will support the project with a contribution of $12,000.",
+      "impact_if_not_funded": "This item is a priority recommendation but can be scheduled as funding allows.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Public Space",
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 35000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Story Walk",
+      "fund": "General Public Space 6",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 65,
+      "description": "The Parks and Recreation Board would like to add a story walk to Gold Park. Story walks are comprised of individual framed stands that hold the pages of a book at various locations along a path so that path users can read a book as they go along. The books are geared toward school age children. This proposal includes 16 aluminum framed units, fabricated and installed, in Gold Park and funds for the first year's worth of books switched out quarterly. The books can be switched out at any interval the town prefers. Most story walks exchange books at least quarterly to keep interest from the public. Several companies offer book leasing and maintenance agreements. The Parks and Recreation Board prefers to work with a company that offers bilingual and multicultural stories.",
+      "strategic_plan_link": "This proposal helps to advance equity and accessibility in a town park, a Public Space and Sustainability Division priority.",
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Public Space",
+          "amounts": [
+            0.0,
+            0.0,
+            12000.0
+          ]
+        }
+      ],
+      "total_requested": 12000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Wayfinding Kiosks in West Hillsborough",
+      "fund": "General Public Space 5",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 66,
+      "description": "Add two wayfinding kiosks in West Hillsborough. The proposed locations include South Nash Street near the West End business district and at the Calvin Street greenway entrance to Riverwalk. Increasingly, visitors are entering town and Riverwalk from the West Hillsborough area and currently there are no kiosks in this part of town. The kiosks will have a town and trail map on one side and a corkboard to display town event and calendar information to the public on the other side. The kiosks will match the existing wayfinding kiosks located in downtown Hillsborough. This initiative is intended to expand on the popular wayfinding system to provide public information to visitors in West Hillsborough. The display of town events and calendar information out in public view helps to reach audiences that do not have access to social media or town news releases. The corkboard also provides an opportunity to post safety and emergency information. The estimated cost for each kiosk is $12,000 for a total cost of $24,000 but Tourism will support the project with a contribution of $9,000 each, and a total of $18,000.",
+      "strategic_plan_link": "This request follows a recommendation in the Riverwalk Master Plan to: Add a wayfinding sign and kiosk at the Calvin Street greenway entrance. It also helps accomplish the following strategic actions in the Comprehensive Sustainability Plan: Continue to develop and implement wayfinding and interpretive signage programs and maintain and publish the community events calendar.",
+      "impact_if_not_funded": "This item can be scheduled as funding allows.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Public Space",
+          "amounts": [
+            24000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 24000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Fire Station at N. Churton Street Ramp-Up",
+      "fund": "General Fund",
+      "department": "Fire Protection",
+      "priority_rank": 2,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 71,
+      "description": "Build capacity within the operating budget over several years to ensure sufficient funds are available to meet debt service requires for the N. Churton Street Fire Station.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "impact_if_not_funded": "If the ramp-up isn't funded, a tax rate increase may be needed to service the debt, or other expenses or programs would need to be cut.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Fire Protection",
+          "amounts": [
+            125000.0,
+            250000.0,
+            370000.0
+          ]
+        }
+      ],
+      "total_requested": 745000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Fire Vehicles Ramp-Up",
+      "fund": "General Fund",
+      "department": "Fire Protection",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 72,
+      "description": "Start an annual ramp-up to fund debt service on large fire apparatus replacements, including the engine and ladder trucks. Reserved funds will be used to reduce the amount the town will need to borrow to replace these trucks.",
+      "strategic_plan_link": null,
+      "impact_if_not_funded": "If delayed, a larger annual contribution will be needed to meet the debt service payments.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Fire Protection",
+          "amounts": [
+            100000.0,
+            200000.0,
+            300000.0
+          ]
+        }
+      ],
+      "total_requested": 600000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Ballistic Helmets",
+      "fund": "General Fund",
+      "department": "Police",
+      "priority_rank": 4,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 75,
+      "description": "This request funds ballistic helmets for patrol officers and members of the Emergency Response Team (ERT) to replace expired, poorly fitting protective headgear currently in service. Ballistic helmets are critical during high-risk calls, barricaded subjects, active threat incidents, crowd control, and other critical events, where officers face elevated risks from impact hazards and ballistic threats. Properly fitted helmets significantly reduce the risk of serious injury while improving comfort and stability during extended deployments. The proposed helmets offer a 10-year service lifespan, doubling the typical replacement cycle and providing long-term cost savings through reduced replacement frequency. They are lighter and more ergonomic, improving wearability and increasing the likelihood of consistent use during rapidly evolving incidents. Improved fit and reduced weight also support officer endurance and mobility, which are essential during prolonged or physically demanding operations.",
+      "strategic_plan_link": "This request supports Community Safety by protecting officers during high-risk operations and emergency responses. Enhanced protective equipment ensures officers can safely manage volatile situations. It aligns with Service Excellence by reinforcing emergency preparedness and ensuring the department is equipped to respond effectively to critical incidents.",
+      "impact_if_not_funded": "If not funded, officers may lack adequate head protection during critical events. There is no effective substitute that offers comparable protection, increasing injury risk and liability.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Police",
+          "amounts": [
+            12800.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 12800.0,
+      "reconciles": true
+    },
+    {
+      "request": "Crime Scene Barriers",
+      "fund": "General Fund",
+      "department": "Police",
+      "priority_rank": 7,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 76,
+      "description": "This request funds portable crime scene barriers with blackout curtains for use during homicide investigations, aggravated assaults, fatal traffic crashes, and other critical incidents. These barriers allow officers to rapidly establish secure perimeters while shielding sensitive or graphic scenes from public view and media exposure, ensuring investigations are conducted with the highest level of professionalism, discretion, and dignity. The blackout feature is especially important when managing scenes involving fatalities or severe injuries, where visual exposure can be traumatic to families, bystanders, and first responders. Beyond scene security and evidence preservation, these barriers support effective media management and victim advocacy by limiting unauthorized photography, reducing speculation, and protecting victims and their families from unnecessary exposure during some of the most difficult moments of their lives. Their use aligns with the department’s strategic goals related to community trust, professionalism, and compassionate service, reinforcing the expectation that critical incidents",
+      "strategic_plan_link": "This request directly advances Community Safety by enabling officers to safely manage incident scenes, protect the public from hazards, and preserve the integrity of criminal investigations. Effective scene control supports crime prevention and public confidence in police response. The request also aligns with Service Excellence by improving operational efficiency and ensuring reliable, standardized equipment is available for critical incidents.",
+      "impact_if_not_funded": "If not funded, officers must rely on temporary or improvised solutions that are less effective and less visible. These alternatives increase the risk of evidence contamination, public exposure to hazards, and operational inefficiencies. There is no adequate substitute that provides the same level of safety and control.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Police",
+          "amounts": [
+            2500.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 2500.0,
+      "reconciles": true
+    },
+    {
+      "request": "Handgun Lights",
+      "fund": "General Fund",
+      "department": "Police",
+      "priority_rank": 5,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 77,
+      "description": "The department’s duty weapon-mounted lights have been in service for approximately 15 years, with only limited replacements during that time. During training and qualification this year, five flashlight failures were documented, indicating the equipment has reached the end of its service life. Replacing these aging lights is necessary to maintain reliability during training and operational use, reduce the risk of equipment failure during critical incidents, and ensure officers are equipped with dependable, department-issued safety equipment.",
+      "strategic_plan_link": "This request directly supports Community Safety by improving officers’ ability to positively identify threats in low-light conditions, reducing risk to both officers and civilians. Proper identification is critical to safe decision-making. The request aligns with Service Excellence by equipping officers with modern safety tools that improve performance and reduce preventable incidents.",
+      "impact_if_not_funded": "Without funding, officers must rely on handheld lighting alone, which limits effectiveness and safety. There is no equally effective alternative that provides hands-free illumination during critical incidents.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Police",
+          "amounts": [
+            6200.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 6200.0,
+      "reconciles": true
+    },
+    {
+      "request": "In-Car Camera Replacements",
+      "fund": "General Fund",
+      "department": "Police",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 78,
+      "description": "Our current system is starting to show its age, and we are starting to have issues with maintenance and cameras failing and having to be repaired. In addition, the quality of our video is behind the current technology. We put some additional money into doing some improvements on the system several years ago but are now reaching the point that we have to consider replacement. Replacing the system will be a major expense, and the contract with Axon is spread over 5 fiscal years. In-car cameras are a critical accountability, transparency, and evidence-gathering tool. They document officer interactions, traffic stops, pursuits, and critical incidents, protecting both the public and the department. Aging systems are increasingly unreliable, experience frequent failures, and may not meet current evidentiary standards. Replacing these systems ensures consistent recording, secure data storage, and compatibility with existing body-worn camera and records systems. The total 5-year contract will be $348,357.79 before tax ($365,199.35 with tax). It will be paid over the 5-year timeframe ($71,943.47 in year one and $69,103.58 in year 2-5). This not only provides critical equipment to our patrol officers and fleet vehicles, but it also standardizes our system, with body worn cameras and fleet cameras being on the same contract/upgrade timeline. In addition, we will be moving from a la carte storage to unlimited storage. We are currently using over 6 TBs of storage more than what we are allocated. Buying a la carte storage to the level we need (15TBS) would cost around $73,000 while unlimited is only $33,000.",
+      "strategic_plan_link": "This request strongly advances Community Safety by promoting transparency, accountability, and public trust in police operations. Reliable in-car cameras support accurate documentation of incidents and reinforce fair and professional policing. The request also aligns with Service Excellence, specifically the goal of maintaining and protecting critical infrastructure and assets. Modern camera systems improve reliability, reduce risk, and ensure consistent service delivery while supporting legal compliance and evidentiary standards.",
+      "impact_if_not_funded": "We can continue to defer this but may encounter problems and failures of our systems. The limitations of our current systems present themselves frequently when delays occur with sending video footage to the DA's office or in our ability to maintain oversight of our police operations. There is no operationally acceptable alternative to a reliable in-car camera system. Failure to replace this equipment poses significant legal, operational, and reputational risks.",
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Radio Encryption",
+      "fund": "General Fund",
+      "department": "Police",
+      "priority_rank": 3,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 80,
+      "description": "Implement full encryption capabilities across all Hillsborough Police Department radios. This includes enabling encryption on 42 Motorola radios (approximately $900 per unit) and 23 Kenwood radios (approximately $600 per unit), ensuring compatibility with the North Carolina VIPER system and neighboring Orange County agencies. This request follows a notice from Orange County Public Safety Communications Division Chief Chris Ward requesting all neighboring agencies look into encrypting their radio communication. While radio traffic has historically been accessible via public scanners, advancements in software-defined radio (SDR) technology combined with artificial intelligence tools now allow for real-time monitoring, transcription, indexing, and long-term storage of radio communications. This creates a heightened risk that sensitive law enforcement information (such as names, addresses, and operational details) could be captured, analyzed, and potentially exploited, such as in a database where private info could be easily searchable. Orange County Emergency Services has indicated a strong preference for county-wide encryption implementation, and several neighboring jurisdictions have already begun or completed this transition. To maintain interoperability and secure communications, Hillsborough Police Department must align with this county-wide initiative. While no official timeline has been given, they have requested all agencies encrypt their radios within the next year. We have contacted other agencies to confirm they are also encrypting their communication.",
+      "strategic_plan_link": "This request directly supports the Strategic Plan, particularly within the Community Safety focus area. Ensuring secure and reliable communication systems is a fundamental component of effective law enforcement operations and officer safety. Encryption of radio communications enhances operational security by protecting sensitive information from unauthorized access. This supports the department’s priority of safeguarding both officers and the community, while also strengthening coordinated responses with partner agencies across Orange County. Additionally, aligning with county and regional communication standards ensures continued interoperability, which is essential for multi- agency incidents and emergency response.",
+      "impact_if_not_funded": "If this request is not funded, the Hillsborough Police Department will continue to operate using unencrypted radio communications, which presents several risks and limitations. First, unencrypted communications remain vulnerable to monitoring and recording through increasingly accessible SDR and AI technologies. This could expose sensitive law enforcement information, potentially compromising investigations, officer safety, and victim privacy. Second, failure to implement encryption may limit interoperability with other Orange County agencies as they transition to encrypted communications. This could create communication barriers during joint operations, mutual aid responses, and critical incidents, ultimately reducing operational effectiveness. While partial encryption (such as encrypting one divisions radios at a time; CID - FY27, Patrol - FY28, etc.) is an alternative, it does not fully address the broader operational and interoperability concerns identified by Orange County Emergency Services. The cost for implementation will likely only continue to increase, meaning it would likely be more affordable and frankly easier to transition all radios at once. Also, this helps alleviate any concerns around compatibility between internal divisions. Maintaining the current system is the lowest-cost option in the short-term but carries increasing long-term operational and security risks.",
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Speed Box",
+      "fund": "General Fund",
+      "department": "Police",
+      "priority_rank": 6,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 84,
+      "description": "This request is for a new traffic data collection device which will be utilized to monitor speeds, monitor citizen complaints, and collect data on traffic trends in a localized area. The new Stalker Traffic Data Collector 2 is easy to install, is solar powered, and data can be extracted wirelessly or with a flash drive; in some instances, the officer will not even need to exit the vehicle to do this. Although this data collector is not a visual cue, it covertly collects the needed data and analyzes it on user-friendly software. Ultimately, these signs will accomplish traffic safety tasks while reducing the person-hours required to install, recover, and analyze.",
+      "strategic_plan_link": "Prioritizes employee safety and leverage technology for ongoing improvements. This forward-thinking mindset is a key value outlined in the town’s strategic plan, alongside our commitment to quality public service. This request advances Community Safety by supporting data-driven traffic enforcement and speed reduction efforts. Reducing speeding improves roadway safety and community well-being. The request aligns with Service Excellence by using data and technology to guide efficient, targeted enforcement strategies.",
+      "impact_if_not_funded": "If not funded, we can still use the visual sign that displays the motorist speed. While we won't have data for analytics, these visual signs will inform citizens that we are monitoring that area for traffic safety issues. An alternative option is to have Public Works deploy some of their traffic management equipment to help us gather data while the visual sign is in place. While these alternatives exist, they may not be the most cost-effective or efficient in terms of workforce resources.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Police",
+          "amounts": [
+            2500.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 2500.0,
+      "reconciles": true
+    },
+    {
+      "request": "Truck #244 Replacement",
+      "fund": "General Fund",
+      "department": "Engineering Services",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 89,
+      "description": "Replace 2016 Ford F-150 with a similar vehicle.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "impact_if_not_funded": "Continue to drive existing truck, potentially experiencing increased down time or repair costs.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Engineering Services",
+          "amounts": [
+            0.0,
+            51010.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 51010.0,
+      "reconciles": true
+    },
+    {
+      "request": "Affordable Housing",
+      "fund": "General Fund",
+      "department": "Special Appropriations",
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 98,
+      "description": "The FY27 budget allocates $320,000 toward affordable housing efforts. Investments beyond the $320,000 are funded via housing reserve funds, which have accumulated from unspent prior year affordable housing contributions. Additional Funding Requests: Community Home Trust has requested a funding increase of $2,500 in FY27. This request is currently unfunded. This request could be funded by reducing the allocation to affordable housing creation and preservation.",
+      "strategic_plan_link": "Economic Vitality – Objective 4 – Preservation of Naturally Occurring Affordable Housing Initiative 4.3 – Financially support existing efforts to preserve affordable housing or support housing stability with locally identified funding.",
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": true,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Truck #210 Replacement",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 2,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 115,
+      "description": "Replace Truck #210 with a new Ford F-350.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "impact_if_not_funded": "Continue to drive existing trucks, potentially experiencing increased downtime and more costly repairs.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Wastewater Collection",
+          "amounts": [
+            92010.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 92010.0,
+      "reconciles": true
+    },
+    {
+      "request": "Forklift Replacement",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 4,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 119,
+      "description": "Replace almost 40 year old forklift. Current forklift if used for installation and removal of large pumps, motors, aerators, grinders and unloading chemicals such as polymer totes that can weight more than one ton.",
+      "strategic_plan_link": "Taking care of what we have.",
+      "impact_if_not_funded": "Continue to repair existing forklift.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Wastewater Treatment Plant",
+          "amounts": [
+            0.0,
+            50000.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 50000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Solids Storage Mixing Pump Rebuild",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 3,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 120,
+      "description": "The solids storage mixing pump runs 24/7/365. This pump is critical to plant operations and does not have a backup. The 10- year service/rebuild came due in FY25. While planning to perform the maintenance, staff discovered that access to the internal parts of the pump must be done by the manufacturer in their repair shop. The service/rebuild completed by the manufacturer was expected to take three to six months. Due to the extended time needed for the service/rebuild, a new pump was purchased in FY26. Currently, there is no backup for this critical pump. Staff would like to have the old pump rebuilt in FY27. Doing this will provide a back-up pump for the event of an unexpected pump failure, eliminating the extreme equipment downtime and maintaining normal plant operations.",
+      "strategic_plan_link": "Objective 1 Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "impact_if_not_funded": "If we need to send the new pump back to the manufacture to be repaired, the excessive time needed for the repairs will result in greatly reduced sludge quality, and a significant amount of overtime pay needed to keep the plant operating within permit limits. Additionally, staff moral will be impacted due to the increased workload. Having a spare pump will eliminate these issues.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Wastewater Treatment Plant",
+          "amounts": [
+            82000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 82000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Spare Motor for River Pump Station",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 121,
+      "description": "After the tropical storm Chantal, the river wastewater pump station was submerged under the flood water. All the electronics inside the pump station were damaged beyond repair. To help prevent this from happening again, the new equipment controls and instrumentation electronics were installed above the flood water elevation. The only critical electrical equipment installed inside the pump station are the electric motors that power the three pumps. To greatly reduce the downtime caused by a future catastrophic storm event, staff would like to purchase a spare electric motor to keep on hand. The spare motor is expected to cost $10,700. Staff would like to purchase one spare motor in FY27 and then evaluate whether additional spare motors will be needed in the future.",
+      "strategic_plan_link": "Service Excellence Objective 1: Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Objective 2: Provide quality municipal services through operational excellence and a culture of innovation.",
+      "impact_if_not_funded": "In the event of another catastrophic storm like Chantal, the three motors inside the pump station will be submerged in the flood water. Before being able to put the motors back on-line, they would need to be sent to a motor shop to be baked until no moisture remains inside the pump motors. This would likely take a month or two before the motors would be reinstalled and the pump station up and running again. If we have spare motors on hand, the flooded motors can be pulled and spare motors installed, resulting in a downtime of about two to three days.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Wastewater Treatment Plant",
+          "amounts": [
+            10700.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 10700.0,
+      "reconciles": true
+    },
+    {
+      "request": "Truck #192 Replacement",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Distribution",
+      "priority_rank": 1,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 124,
+      "description": "Replace 2008 Toyota Tacoma with an F-150 pick-up truck with a service body.",
+      "strategic_plan_link": "Taking care of what we've got.",
+      "impact_if_not_funded": "Continue to drive current vehicle, potentially experiencing increased downtown and most costly repairs.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Water Distribution",
+          "amounts": [
+            62010.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 62010.0,
+      "reconciles": true
+    },
+    {
+      "request": "Chlorine Meter Replacements",
+      "fund": "Water and Sewer Water Treatment Plant 5",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 127,
+      "description": "The water plant uses multiple Chlorine meters. They run 24/7 and are used to make sure the water is disinfected properly before leaving the water plant. Three of those meters are amperometric Chlorine analyzers that are reagentless, which means they do not use reagents to react with the Chlorine and change the color of the sample. These reagentless meters have proven to be less reliable, accurate and much more maintenance intensive. The reagent- based meters now in operation substantially outperform the reagentless meters. Staff would like to replace the three reagentless Chlorine meters with reagent-based meters.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Provide quality municipal services through operational excellence and a culture of innovation.",
+      "impact_if_not_funded": "If we do not replace the reagentless Chlorine meters, staff will continue having issues with the accuracy and reliability of the old meters, which could result in feeding too much or too little Chlorine into our drinking water.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Water Treatment Plant",
+          "amounts": [
+            14500.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 14500.0,
+      "reconciles": true
+    },
+    {
+      "request": "Electrical System Evaluation",
+      "fund": "Water and Sewer Water Treatment Plant 3",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 128,
+      "description": "This project is to help us prepare a scope and schedule for a future electrical upgrade project. Much of the electrical equipment at the water treatment plant has been in service since the early 1970s. Staff would like to have an engineer evaluate the electrical system to identify what equipment needs to be replaced and do a high-level look at possible options of the type of future equipment needed and the best locations to put the new equipment.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency. Provide quality municipal services through operational excellence and a culture of innovation.",
+      "impact_if_not_funded": "Much of the electrical system in the water plant is prone to failure, expensive to repair, and dangerous to work on. A reliable electrical system is key in sustaining continuous and uninterrupted service to our water customers. Postponing the evaluation will only delay the needed system update.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Water Treatment Plant",
+          "amounts": [
+            45000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 45000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Filter Influent Actuators Replacement",
+      "fund": "Water and Sewer Water Treatment Plant 4",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 129,
+      "description": "A filter influent actuator allows or disallows water from the sedimentation basins to enter the filter. A metal shaft attaches a mechanically operated valve to the automated valve actuator. The three influent actuators are due to be rebuilt. However, the actuators are so old that they are now obsolete and cannot be rebuilt. New modern actuators are needed. The metal shafts are very worn and rusted. They all need to be replaced. Staff would like to have all three actuators replaced and new metal shafts installed in FY27.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "impact_if_not_funded": "Routine maintenance is necessary to ensure proper operation of automatically controlled equipment. We can no longer do the necessary maintenance on the actuators because of their age. Replacement is our only option. Additionally, we have had shafts with similar damage break without warning. That caused additional costs due to it needing emergency repair. Replacing the shafts before they break would be more cost effective.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Water Treatment Plant",
+          "amounts": [
+            49000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 49000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Motor Control Center Replacement",
+      "fund": "Water and Sewer Water Treatment Plant 1",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 130,
+      "description": "The existing main motor control center (MCC) located in the basement of the Water Treatment Plant was originally installed in the 1970s. The metal structure is failing from rust, and the now obsolete equipment is very difficult to replace and extremely dangerous to work on. Staff would like to replace the MCC with new modern technology. A new MCC will provide the water plant with more reliability, efficiency and a safer working environment.",
+      "strategic_plan_link": "Service Excellence Objective 1: Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "impact_if_not_funded": "Last year, one of the large breakers failed. We were very lucky to have been able to locate one that was rebuilt. If another breaker fails, we may not be so lucky. Additionally, working on that replacement was very scary. The existing panel does not meet modern OSHA regulations for safety. If we do not replace the MCC, the town will not realize the benefits of improved efficiently and staff safety.",
+      "states_a_fundable_alternative": false,
+      "by_division": [
+        {
+          "division": "Water Treatment Plant",
+          "amounts": [
+            35000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "total_requested": 35000.0,
+      "reconciles": true
+    },
+    {
+      "request": "Pump Start Equipment Replacements",
+      "fund": "Water and Sewer Water Treatment Plant 2",
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 131,
+      "description": "In FY26, one of the backwash blower’s starter failed. The starter was 1970s style and was so antiquated that finding parts to fix it was nearly impossible. The electrician indicated that it would likely cost the same or less to simply install a new soft start with modern technology and the repair would take significantly less time. The new soft start was installed for slightly over $8,000. As of now, there are still three antiquated starters in use. Staff would like to replace the antiquated electrical equipment with modern soft start technology.",
+      "strategic_plan_link": "Maintain, protect, and optimize assets and infrastructure to drive reliability, cost effectiveness, and efficiency.",
+      "impact_if_not_funded": "Modern soft start technology is much better at protecting the equipment motors and preventing extreme high pressure in the water line. Additionally, the new soft start technology is more reliable and much safer to work on or around. None of these benefits would be realized by continuing to use the old technology. When the starter failed in FY26, the blower was not available for approximately two weeks. If the other blower had failed during that time, the water plant would not have been able to produce potable water. Having reliable equipment and access to replacement parts that are readily available is critical to making sure service to our customers remains uninterrupted.",
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Disability Awareness Council",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 237,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Exchange Club Park",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 238,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Fairview Community Watch",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 239,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Food, Fitness & Opportunity Research Collaborative (FFORC)",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 240,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Hillsborough Arts Council",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 241,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Orange Congregations in Mission",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 242,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "Orange County Arts Alliance",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 243,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    },
+    {
+      "request": "TABLE",
+      "fund": null,
+      "department": null,
+      "priority_rank": null,
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_page": 244,
+      "description": null,
+      "strategic_plan_link": null,
+      "impact_if_not_funded": null,
+      "states_a_fundable_alternative": false,
+      "by_division": [],
+      "total_requested": null,
+      "reconciles": null
+    }
+  ],
+  "caveats": [
+    "These are the requests the town chose to call noteworthy. A department may never have submitted a request it expected to be refused, and that never appears here.",
+    "'Declined' means not funded in this recommended budget. The board may still add an item before adoption, so these are the manager's recommendations, not final.",
+    "The funded and declined figures are new or incremental requests, not the whole budget. Most spending is continuing operations that no one re-requests each year."
+  ],
+  "problems": []
+}

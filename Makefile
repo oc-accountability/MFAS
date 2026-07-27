@@ -30,6 +30,8 @@ etl:
 	$(PY) etl/s89_transfers.py
 	$(PY) etl/s92_total_cost.py
 	$(PY) etl/s93_utility_rates.py
+	$(PY) etl/s94_projects.py
+	$(PY) etl/s95_tradeoffs.py
 	$(PY) etl/s90_build.py
 
 test:

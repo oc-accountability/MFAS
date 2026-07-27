@@ -1,0 +1,5864 @@
+{
+  "generated_by": "etl/s94_projects.py",
+  "requested_by": "Amy — \"I do want Project to be a real dimension.\" Stage 88 reported Project as the one dimension of her seven that this data could not fill.",
+  "source_doc": "FY27 Budget and Financial Plan Recommended.pdf",
+  "what_this_adds": "A project identifier that a capital spending row can point at, so a single decision's cost can be gathered across every account and year it touches — which is what her Fire Station #3 example needs.",
+  "verification": "Every project is checked against its own printed AMOUNT row, per year column rather than on the grand total, so one bad column cannot hide inside a correct total. Projects that do not reconcile are withheld.",
+  "change_event_link": "A capital project is a one-time expenditure that creates a recurring obligation, which is the Change Event with a long tail her model describes. The town states the operating impact per project in prose, so it is captured rather than inferred.",
+  "summary": {
+    "projects_published": 27,
+    "projects_withheld": 0,
+    "total_planned_cost": 72586637.0,
+    "projects_creating_recurring_cost": 5,
+    "projects_with_any_stated_budget_impact": 11,
+    "recurring_cost_created": 1631559.0,
+    "by_fund": {
+      "General Fund": {
+        "projects": 9,
+        "total_planned_cost": 24699050.0,
+        "create_recurring_cost": 1,
+        "with_stated_budget_impact": 4
+      },
+      "Water and Sewer Fund": {
+        "projects": 16,
+        "total_planned_cost": 45310977.0,
+        "create_recurring_cost": 4,
+        "with_stated_budget_impact": 7
+      },
+      "69 - Water and Sewer Capital Improvements": {
+        "projects": 1,
+        "total_planned_cost": 1965600.0,
+        "create_recurring_cost": 0,
+        "with_stated_budget_impact": 0
+      },
+      "Stormwater Fund": {
+        "projects": 1,
+        "total_planned_cost": 611010.0,
+        "create_recurring_cost": 0,
+        "with_stated_budget_impact": 0
+      }
+    },
+    "distinct_accounts": 14,
+    "distinct_funding_sources": 18
+  },
+  "data_quality_findings": [
+    {
+      "finding": "The town's document prints \"Empty Values\" where a funding source label should be, so the funding for some projects is unnamed. For the Passenger Rail and Multi-Modal Station — the largest project in the plan — the entire amount is unnamed.",
+      "projects": [
+        "Ladder Truck",
+        "Parks Play Equipment Replacement",
+        "Garbage Truck Replacements",
+        "Passenger Rail and Multi-Modal Station"
+      ],
+      "amount_unnamed": 15675030.0,
+      "handling": "The amounts are published because they are real and reconcile; the label is reported as unnamed rather than shown as \"Empty Values\", which would read as a fault in this site rather than in the source.",
+      "worth_raising": true
+    }
+  ],
+  "accounts_used": [
+    "CAPITAL - EQUIPMENT",
+    "CAPITAL - INFRASTRUCTURE",
+    "CAPITAL - VEHICLES",
+    "CONSTRUCTION",
+    "DESIGN",
+    "GASOLINE",
+    "LAND ACQUISITION PROJECTS",
+    "LEGAL",
+    "MAINTENANCE - BUILDINGS",
+    "MAINTENANCE - GROUNDS",
+    "MISC - TAX, TAGS, ETC",
+    "MISCELLANEOUS",
+    "PROFESSIONAL SERVICES",
+    "UTILITIES"
+  ],
+  "funding_sources": [
+    "CAPITAL FACILITIES FEES",
+    "DEBT ISSUANCE PROCEEDS",
+    "DEVELOPERS CONTRIBUTION",
+    "FEDERAL AWARD",
+    "FEMA REIMBURSEMENTS",
+    "GRANT - ASSET INVENTORY AND ASSESSMENT (AIA)",
+    "MISCELLANEOUS",
+    "Not named in the town's document",
+    "OPERATING REVENUE",
+    "PRIOR PROJECT REMAINING BOND PROCEEDS",
+    "PRIOR PROJECT REMAINING FUNDS",
+    "PRIOR PROJECT REMAINING FUNDS - OTHER",
+    "SEWER SYSTEM DEVELOPMENT FEES",
+    "SPECIAL ASSESSMENT DISTRICT REVENUE",
+    "TRANSFER FROM COMMITTED FUNDS",
+    "TRANSFER FROM GENERAL FUND",
+    "TRANSFER FROM WATER AND SEWER FUND",
+    "WATER SYSTEM DEVELOPMENT FEES"
+  ],
+  "projects": [
+    {
+      "project_id": "engine-truck",
+      "project_name": "Engine Truck",
+      "fund": "General Fund",
+      "department": "Fire Protection",
+      "priority_rank": 2,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        147,
+        148
+      ],
+      "description": "Replace the 2015 engine truck used by Orange Rural Fire Department (ORFD).",
+      "justification": "The truck is expected to run for 15 years as a front-line vehicle, followed by an additional 5 years as a backup.",
+      "highlights": "Lead times on trucks can often be extensive and may necessitate ordering earlier than anticipated. The town will monitor lead times as truck nears replacement. The town plans to issue debt in the amount of $800,000 in Fiscal Year 2030 to finance this vehicle.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "CAPITAL - VEHICLES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1300000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "MISC - TAX, TAGS, ETC",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "OPERATING REVENUE",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "TRANSFER FROM COMMITTED FUNDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1300000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 1302010.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 1302010.0,
+          "printed_total": 1302010.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 1302010.0,
+          "printed_total": 1302010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "ladder-truck",
+      "project_name": "Ladder Truck",
+      "fund": "General Fund",
+      "department": "Fire Protection",
+      "priority_rank": 3,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        151,
+        152
+      ],
+      "description": "Replace the 2012 ladder truck used by Orange Rural Fire Department (ORFD).",
+      "justification": "The truck is expected to run for 20 years as a front-line vehicle, followed by an additional 5 years as a backup.",
+      "highlights": "Lead times on trucks can often be extensive and may necessitate ordering earlier than anticipated. The town will monitor lead times as truck nears replacement. The town plans to issue debt in the amount of $2,000,000 in Fiscal Year 2032 to finance this vehicle.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "MISC - TAX, TAGS, ETC",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CAPITAL - VEHICLES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2625000.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "Not named in the town's document",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2627010.0,
+            0.0
+          ],
+          "unnamed_in_source": true
+        }
+      ],
+      "total_planned_cost": 2627010.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 2627010.0,
+          "printed_total": 2627010.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 2627010.0,
+          "printed_total": 2627010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "cates-creek-basketball-courts",
+      "project_name": "Cates Creek Basketball Courts",
+      "fund": "General Fund",
+      "department": "Public Space",
+      "priority_rank": 5,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        153,
+        154
+      ],
+      "description": "Basketball courts at Cates Creek Park.",
+      "justification": "The Parks and Recreation Board adopted an update to the Cates Creek Park Master Plan in August 2024. The update includes a recommendation for the construction of basketball courts on one end of the existing multi-use field. The Parks and Recreation Board recognizes the field is over-sized for the type of play the town allows and, as a result, is underutilized recreation space. There are very few public outdoor basketball courts in Hillsborough and none in town-owned parks. The Parks and Recreation Board has identified basketball courts as a priority for many years, trying to incentivize the construction of courts as part of new developments by increasing the value of points allotted for courts in the Unified Development Ordinance. Recent developments have not included basketball courts as a recreation resource. There is a lack of available basketball courts in town. The addition of the Hillsborough Skate Spot has brought a lot of welcome activity to Cates Creek Park. The skatepark appeals to all ages of skaters but was built with teenagers in mind. Teens are an underserved population in Hillsborough parks. The Cates Creek Park Master Plan recommends additional investment in teen resources. The Parks and Recreation Board believes the addition of basketball courts will further attract teenagers to the park, providing valuable outdoor recreational opportunities for underserved population.",
+      "highlights": "Construction cost estimates are likely to change once design and engineering is completed. There is no specific project timeline identified in the Cates Creek Park Master Plan but it is recommended as a top priority.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            30000.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            300000.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM GENERAL FUND",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            30000.0,
+            0.0,
+            300000.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 330000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 30000.0,
+          "printed_total": 30000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 300000.0,
+          "printed_total": 300000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 30000.0,
+          "printed_total": 30000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 300000.0,
+          "printed_total": 300000.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "parks-play-equipment-replacement",
+      "project_name": "Parks Play Equipment Replacement",
+      "fund": "General Fund",
+      "department": "Public Space",
+      "priority_rank": 4,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        155,
+        156
+      ],
+      "description": "This project includes the design, acquisition, and installation of new play equipment at Murray Street Park, Hillsborough Heights Park, and Turnip Patch Park",
+      "justification": "The Parks and Recreation Board adopted master plans for each of the town's parks. The master plans recommend maintaining the existing playground equipment and park amenities in safe and working order. The play equipment at Murray Street Park, Hillsborough Heights Park, and Turnip Patch Park is more than 15 years old. Though the equipment is being maintained, it is starting to deteriorate and will need to be replaced in the coming years. Also, older equipment does not meet current safety standards. There is no specific project timeline identified in the park's master plans, but equipment needs to be replaced before it presents a safety hazard.",
+      "highlights": "Initial estimates for play equipment: Murray Street Park: $75,000 Hillsborough Heights Park: $40,000 Turnip Patch Park: $125,000",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "CAPITAL - INFRASTRUCTURE",
+            "amounts": [
+              0.0,
+              75000.0,
+              0.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          }
+        ],
+        "printed_total": [
+          0.0,
+          75000.0,
+          0.0
+        ],
+        "total": 75000.0,
+        "by_kind": {
+          "further capital spending": 75000.0
+        },
+        "recurring_portion": 0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CAPITAL - INFRASTRUCTURE",
+          "amounts": [
+            0.0,
+            0.0,
+            75000.0,
+            0.0,
+            40000.0,
+            0.0,
+            125000.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "Not named in the town's document",
+          "amounts": [
+            0.0,
+            0.0,
+            75000.0,
+            0.0,
+            40000.0,
+            0.0,
+            125000.0,
+            0.0
+          ],
+          "unnamed_in_source": true
+        }
+      ],
+      "total_planned_cost": 240000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 75000.0,
+          "printed_total": 75000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 40000.0,
+          "printed_total": 40000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 125000.0,
+          "printed_total": 125000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 75000.0,
+          "printed_total": 75000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 40000.0,
+          "printed_total": 40000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 125000.0,
+          "printed_total": 125000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "rainey-avenue-sidewalk",
+      "project_name": "Rainey Avenue Sidewalk",
+      "fund": "General Fund",
+      "department": "Public Space",
+      "priority_rank": 3,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        157,
+        158
+      ],
+      "description": "Sidewalk along Rainey Avenue between Torain Street and the Dorothy N. Johnson Community Center.",
+      "justification": "This project has been identified in the Comprehensive Sustainability Plan as a connectivity recommendation. It has also been recommended in the Fairview Activate Plan, endorsed by the Fairview Community Watch.",
+      "highlights": "Rainey Avenue is a primary corridor for vehicular and pedestrian traffic in Fairview. There has been increasing activity on this corridor over the past few years, especially since the Dorothy N. Johnson Community Center opened. The roadway is narrow and pedestrians have no place to walk safely. The town has invested in traffic-calming devices (speed humps) along this stretch of road after it was deemed warranted by traffic studies. Fairview Community Watch has requested additional safety measures including a sidewalk along the route. The Comprehensive Sustainability Plan also recommends this pedestrian improvement. This project aligns with the town's Vision Zero and Complete Streets policies. It may be possible to leverage funds from the Orange County Transit Tax for this project because there are existing transit stations in Fairview Community Park and at the community center and this project improves accessibility, connectivity, and safety for transit riders.",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "TRANSFER TO GENERAL CAPITAL IMPROVEMENT FUND",
+            "amounts": [
+              30000.0,
+              0.0,
+              125000.0
+            ],
+            "kind": "transfer to a capital fund",
+            "recurring": false
+          }
+        ],
+        "printed_total": [
+          30000.0,
+          0.0,
+          125000.0
+        ],
+        "total": 155000.0,
+        "by_kind": {
+          "transfer to a capital fund": 155000.0
+        },
+        "recurring_portion": 0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            0.0,
+            30000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            125000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM GENERAL FUND",
+          "amounts": [
+            0.0,
+            30000.0,
+            0.0,
+            125000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 155000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 30000.0,
+          "printed_total": 30000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 125000.0,
+          "printed_total": 125000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 30000.0,
+          "printed_total": 30000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 125000.0,
+          "printed_total": 125000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "ridgewalk-greenway-south-segment",
+      "project_name": "Ridgewalk Greenway - South Segment",
+      "fund": "General Fund",
+      "department": "Public Space",
+      "priority_rank": 2,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        161,
+        162
+      ],
+      "description": "Greenway connecting the Collins Ridge Greenway to Cates Creek Park.",
+      "justification": "The Ridgewalk greenway is included in the Comprehensive Sustainability Plan as a transportation priority. It is a paved, urban, accessible greenway that provides pedestrian and bicycle access between downtown Hillsborough to Cates Creek Park. Ridgewalk may be implemented in phases. The south segment of Ridgewalk connects the Collins Ridge greenway to Cates Creek Park. The alignment is shown as Alternative 4 in the Ridgewalk Feasibility Study Phase II. The conditions of the approval for Collins Ridge require the developer to build and dedicate to the town a segment of greenway and to work with the town to determine the location and specific design details for pedestrian and bicycle connectivity between the parcel south of I-85 and the public rights-of-way, sidewalks, greenways, and trails in Collins Ridge. The Collins Ridge greenway is required to be complete by December 2027. The train station is scheduled for completion in February 2027 but permitting delays may cause the schedule to shift. North Segment: Downtown to Collins Ridge Greenway (via train station site) South Segment: Collins Ridge Greenway to Cates Creek Park",
+      "highlights": "Ridgewalk was identified by the Board of Commissioners as a transportation priority in September 2021 and included as a priority in the Comprehensive Sustainability Plan. Initial feasibility study and schematic design of the greenway system between downtown Hillsborough and Cates Creek Park was completed in FY24. The engineer cost estimates were higher than anticipated, so additional feasibility work was completed in FY25. A Benefits Analysis was also developed. Feasibility Study Phase II shows alternative alignments for the trails which result in cost savings. Benefits Analysis shows great support for the greenway by community groups and members. It is uncertain if Ridgewalk will compete well for funding through the Transportation Improvement Plan. Additional funding options, including grants, will be pursued once the feasibility of the project is determined.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            6000000.0,
+            0.0
+          ]
+        },
+        {
+          "account": "DESIGN",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            800000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            6000000.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "TRANSFER FROM GENERAL FUND",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            800000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 6800000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 800000.0,
+          "printed_total": 800000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 6000000.0,
+          "printed_total": 6000000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 800000.0,
+          "printed_total": 800000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 6000000.0,
+          "printed_total": 6000000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "garbage-truck-replacements",
+      "project_name": "Garbage Truck Replacements",
+      "fund": "General Fund",
+      "department": "Solid Waste",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        163,
+        164
+      ],
+      "description": "Replace garbage trucks on a 7-year replacement cycle.",
+      "justification": "Solid Waste vehicles are replaced on a 7-year replacement cycle to ensure reliability, and reduce downtime and maintenance costs. Replaced trucks move into reserve status for several years before being retired. #229, a 2015 Mack automated garbage truck - The truck is already 9 years old with 56k+ miles, and is now being used as a backup. #437",
+      "highlights": "Truck replacements will be paid for with set-aside funding committed for solid waste vehicles. #229: Order in FY27 #437: Order in FY33",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "CAPITAL - VEHICLES",
+            "amounts": [
+              420000.0,
+              0.0,
+              0.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          },
+          {
+            "account": "MISC - TAX, TAGS, ETC",
+            "amounts": [
+              2010.0,
+              0.0,
+              0.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          }
+        ],
+        "printed_total": [
+          422010.0,
+          0.0,
+          0.0
+        ],
+        "total": 422010.0,
+        "by_kind": {
+          "further capital spending": 422010.0
+        },
+        "recurring_portion": 0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "MISC - TAX, TAGS, ETC",
+          "amounts": [
+            0.0,
+            2010.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0
+          ]
+        },
+        {
+          "account": "CAPITAL - VEHICLES",
+          "amounts": [
+            0.0,
+            420000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            495000.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "Not named in the town's document",
+          "amounts": [
+            0.0,
+            422010.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            497010.0
+          ],
+          "unnamed_in_source": true
+        }
+      ],
+      "total_planned_cost": 919020.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 422010.0,
+          "printed_total": 422010.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 497010.0,
+          "printed_total": 497010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 422010.0,
+          "printed_total": 422010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 497010.0,
+          "printed_total": 497010.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "leaf-truck-replacements",
+      "project_name": "Leaf Truck Replacements",
+      "fund": "General Fund",
+      "department": "Solid Waste",
+      "priority_rank": 3,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        165,
+        166
+      ],
+      "description": "Replace leaf trucks on a 7-year replacement cycle.",
+      "justification": "Solid Waste vehicles are replaced on a 7-year replacement cycle to ensure reliability, and reduce downtime and maintenance costs. Replaced trucks move into reserve status for several years before being retired. #833, a 2022 Freightliner.",
+      "highlights": "The purchase of these trucks will be paid for with set-aside funding committed for solid waste vehicles. #833 - Order in FY32 for delivery in FY33.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "MISC - TAX, TAGS, ETC",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CAPITAL - VEHICLES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            435000.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "OPERATING REVENUE",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "TRANSFER FROM COMMITTED FUNDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            435000.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 437010.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 437010.0,
+          "printed_total": 437010.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 437010.0,
+          "printed_total": 437010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "passenger-rail-and-multi-modal-station",
+      "project_name": "Passenger Rail and Multi-Modal Station",
+      "fund": "General Fund",
+      "department": "Special Appropriations",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        167,
+        168
+      ],
+      "description": "Train station building and parking to facilitate passenger rail service in Hillsborough.",
+      "justification": "The station will include a ticket office and waiting room, as well as a town board meeting room and a few permanent town offices (approximately 18% of the overall building). This facility is largely funded by the state and regional transit partners, excluding the cost of town offices, up-fitting the facility, and any expense that exceeds the allotted allocation. The town will accept long-term maintenance and ownership responsibility for the building. Site improvements will include an access road from Orange Grove Street, two parking lots with a combined 100 parking spaces, some of which could be used as a local transit park-and-ride facility, stormwater treatment and bringing utilities to the site. Regional transit partners will be asked to modify routes to provide connected service from the Hillsborough Circulator, 420 route and other bus service to the train station. Feasibility of pedestrian connectivity to the station from downtown Hillsborough was included in the design of this project, but the construction of those improvements is considered outside the scope of this project and will be requested separately. Station design includes several sustainability initiatives with the goal of eventually providing a net zero building, including a green roof, green stormwater infrastructure, and photo-voltaic rooftop solar arrays. The project also advances the town's sustainability goals by providing a transit connection for regular commuting and travel not currently available to town residents. The station and expected surrounding development will also provide enhanced connectivity and walkability to a new area of town and is expected to serve as a bridge to connect downtown to activity areas south of the river. The creation of a station that serves as a transit hub and public gathering place represents a significant investment in the town's physical and social infrastructure.",
+      "highlights": "The town, NCDOT and Go Triangle have approved an interlocal agreement for the project, committing the state and local tax funding to the project. The project must be completed within 7 years of the funding agreement date, or the town will be expected to reimburse the outside funding to the partners. Project costs will be run through the town's budget and reimbursed later. FY15 - Conceptual station plan was completed FY23 - Station design completed FY24 - Design submitted to NC Railroad for approval FY26 & FY27 - Design FY28 - Construction (spring '28 is earliest possible date) NOTE: Budget does not currently include $600k for solar panels or EV charging infrastructure.",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "DEBT SERVICE - INTEREST",
+            "amounts": [
+              0.0,
+              0.0,
+              169250.0
+            ],
+            "kind": "debt service",
+            "recurring": true
+          },
+          {
+            "account": "DEBT SERVICE - PRINCIPAL",
+            "amounts": [
+              0.0,
+              0.0,
+              156869.0
+            ],
+            "kind": "debt service",
+            "recurring": true
+          },
+          {
+            "account": "MAINTENANCE - BUILDINGS",
+            "amounts": [
+              0.0,
+              0.0,
+              30000.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          },
+          {
+            "account": "MAINTENANCE - GROUNDS",
+            "amounts": [
+              0.0,
+              0.0,
+              2500.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          },
+          {
+            "account": "UTILITIES",
+            "amounts": [
+              0.0,
+              0.0,
+              2500.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          }
+        ],
+        "printed_total": [
+          0.0,
+          0.0,
+          361119.0
+        ],
+        "total": 361119.0,
+        "by_kind": {
+          "debt service": 326119.0,
+          "maintenance and utilities": 35000.0
+        },
+        "recurring_portion": 361119.0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": true,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            9360000.0,
+            0.0,
+            1175000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "DESIGN",
+          "amounts": [
+            891000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "MISCELLANEOUS",
+          "amounts": [
+            145500.0,
+            0.0,
+            100000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "LEGAL",
+          "amounts": [
+            42500.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "UTILITIES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            2500.0,
+            2500.0,
+            2500.0,
+            2500.0,
+            2500.0
+          ]
+        },
+        {
+          "account": "MAINTENANCE - GROUNDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            2500.0,
+            2500.0,
+            2500.0,
+            2500.0,
+            2500.0
+          ]
+        },
+        {
+          "account": "MAINTENANCE - BUILDINGS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            30000.0,
+            30000.0,
+            30000.0,
+            30000.0,
+            30000.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "Not named in the town's document",
+          "amounts": [
+            10439000.0,
+            0.0,
+            1275000.0,
+            35000.0,
+            35000.0,
+            35000.0,
+            35000.0,
+            35000.0
+          ],
+          "unnamed_in_source": true
+        }
+      ],
+      "total_planned_cost": 11889000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 10439000.0,
+          "printed_total": 10439000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 1275000.0,
+          "printed_total": 1275000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 10439000.0,
+          "printed_total": 10439000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 1275000.0,
+          "printed_total": 1275000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 35000.0,
+          "printed_total": 35000.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "bellevue-mill-interceptor-upgrade",
+      "project_name": "Bellevue Mill Interceptor Upgrade",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 8,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        175,
+        176
+      ],
+      "description": "Replace 2,700 linear feet of 8\" sewers with 12\" sewers and 15 manholes, from near the end of Forrest Street southward to Eno Street. Abandon the currently unused branch.",
+      "justification": "This Bellevue Mill interceptor was in existence prior to the town having a wastewater treatment plant, and possibly as early as the 1920s per mill maps. Portions of the are located in brownfield sites, so additional costs will be incurred for extra permitting and to identify and properly dispose of contaminated soils. Hydraulic modeling has shown this interceptor is undersized for 2040 growth scenarios and is significant contributor of inflow/infiltration. Regardless, it is well beyond its useful life and likely contributing to inflow and infiltration in the basin. This interceptor is also paralleled by a 12\" sewer. The parallel 12\" interceptor was constructed to take flow from the Efland force main, which has since been abandoned. CCTV footage collected by Town staff indicates it is possible to reconfigure existing connections to this line to allow its abandonment. Abandonment of this line is recommended in the first phase to reduce inflow/infiltration, the upsizing of this line is proposed only after the Eno Outfall projects are complete (seperate project).",
+      "highlights": "Upgrading this main is required to enable higher density redevelopment and development in the western part of Hillsborough. $1.2M - Construction (FY32) $120k - Construction Administration (FY32)",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "LAND ACQUISITION PROJECTS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20000.0,
+            20000.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20000.0,
+            1320000.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            140000.0,
+            40000.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1320000.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 1500000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 140000.0,
+          "printed_total": 140000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 40000.0,
+          "printed_total": 40000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 1320000.0,
+          "printed_total": 1320000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 140000.0,
+          "printed_total": 140000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 40000.0,
+          "printed_total": 40000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 1320000.0,
+          "printed_total": 1320000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "cates-creek-outfall-upgrade",
+      "project_name": "Cates Creek Outfall Upgrade",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 4,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        177,
+        178
+      ],
+      "description": "Upsize the Cates Creek Outfall to address anticipated demand from current and anticipated growth.",
+      "justification": "The Cates Creek Outfall is 3.4 miles long and was built in two phases. The upper reach, which discharges into the Elizabeth Brady Pumping Station was built in the mid-1990s. The lower portion, which is called Phase 2, was built in the early to mid-2000s when Waterstone began to develop. The entire line is the main pipeline in the Elizabeth Brady sewer basin. Collection system modeling shows in the next ten years that the outfall will need to be monitored and upsized appropriately. While much newer than the River Pumping Station Eno River Interceptors, there is evidence of a wet weather response in the system. This schedule may need to be escalated however due to a recent inquiry about a significant development south of Waterstone Drive that was not accounted for in modeling, as well as the underestimation of demand proposals of sites that were accounted for. The scope and extent of the upsizing is currently unknown, but the proposed development, if it proceeds, would exceed the pipe capacity in some areas. Developers will be expected to cost share in necessary upgrades.",
+      "highlights": "This request relates to the Elizabeth Brady Pumping Station and Force Main project as both will need to be investigated and upsized accordingly, either sooner or later depending on development pacing. If the project is not approved, development will be limited, and sanitary sewer overflows may occur as the system ages and starts to leak more. Funding Timeline: Preliminary Engineering: FY27 - $200k & FY28 - $200k Design/Permitting/Bidding: FY27 - $800k & FY29 - $800k Construction Administration: FY-27 - $1.9 million, FY29 - $400k & FY31 - $320k Construction: FY29 - $4.0M & FY31 - $4.2M ***Project is development driven and must be completed per the budgeted timeline. Developer proffers to be applied directly to design and construction costs. 176",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            120000.0,
+            680000.0,
+            0.0,
+            0.0,
+            0.0,
+            25000.0,
+            775000.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            75000.0,
+            125000.0,
+            0.0,
+            0.0,
+            0.0,
+            200000.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            1900000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4400000.0,
+            100000.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            195000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            517538.0,
+            100000.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4400000.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEVELOPERS CONTRIBUTION",
+          "amounts": [
+            0.0,
+            1708498.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "SPECIAL ASSESSMENT DISTRICT REVENUE",
+          "amounts": [
+            0.0,
+            996502.0,
+            0.0,
+            0.0,
+            0.0,
+            225000.0,
+            257462.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 8400000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 195000.0,
+          "printed_total": 195000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 2705000.0,
+          "printed_total": 2705000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 225000.0,
+          "printed_total": 225000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 5175000.0,
+          "printed_total": 5175000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 100000.0,
+          "printed_total": 100000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 195000.0,
+          "printed_total": 195000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 2705000.0,
+          "printed_total": 2705000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 225000.0,
+          "printed_total": 225000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 5175000.0,
+          "printed_total": 5175000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 100000.0,
+          "printed_total": 100000.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "elizabeth-brady-pump-station-and-force-main-upgrade",
+      "project_name": "Elizabeth Brady Pump Station and Force Main Upgrade",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 3,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        179,
+        180
+      ],
+      "description": "Design, bid and construct a public sanitary sewer pumping station upgrade at the existing Elizabeth Brady Pumping Station site. DEVELOPMENT RELATED - DO NOT MOVE",
+      "justification": "The station upgrades would enable new development in the Elizabeth Brady basin, as well as denser redevelopment of existing sites. The station was rebuilt in 2012 and sized for a quick upgrade of pump capacity, which is currently being implemented. Unfortunately, the level of development discharging to this station is much greater than this quick upgrade option can handle, extending the useful life only a few years at best. A developer is proposing consolidation of two to three existing sanitary sewer pumping stations (Woods Edge Front, Woods Edge Back, and Nazarene) into a new, larger pumping station. The larger pumping station would be sized to handle the three existing station that would be abandoned, as well future buildout within the basin, including the new, proposed development. The new station would likely discharge into the existing Cates Creek interceptor that drains to the Elizabeth Brady station. The new, larger pumping station's operating point is significant when compared to Elizabeth Brady's operating point, and even a phased approach to the buildout of the basin served by the new pumping station would require upgrades at Elizabeth Brady. The developer is working with town staff to provide funding, either with an advance of system development fees or a proffer of future funds, to enable this upgrade to serve the proposed development. The developer would also be required to build the new station and force main that enables the future abandonment of Wood Edge Front, Woods Edge Back, and Nazarene Pumping Stations to town standards with no cost participation by the town. The upgrade to the Elizabeth Brady station will require an upgrade of the existing force main to the wastewater treatment plant to ensure efficient pumping station operations.",
+      "highlights": "This project relates to the Cates Creek interceptor. If the decision is made to control the amount of development discharging to this station, then this project and the related Cates Creek outfall project scope can be minimized.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            750000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            250000.0,
+            800000.0,
+            0.0,
+            3500000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "SEWER SYSTEM DEVELOPMENT FEES",
+          "amounts": [
+            450000.0,
+            800000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "CAPITAL FACILITIES FEES",
+          "amounts": [
+            300000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            250000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            3500000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 5300000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 1000000.0,
+          "printed_total": 1000000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 800000.0,
+          "printed_total": 800000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 3500000.0,
+          "printed_total": 3500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 1000000.0,
+          "printed_total": 1000000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 800000.0,
+          "printed_total": 800000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 3500000.0,
+          "printed_total": 3500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "eno-river-interceptor-upgrade-east",
+      "project_name": "Eno River Interceptor Upgrade - East",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        181,
+        182
+      ],
+      "description": "Replace approximately 1 mile of 18\" and 21\" pipes with at least 30\" and 36\" pipes from the current River Pumping Station location to Churton Street, along with several manholes.",
+      "justification": "The Eno River Interceptors were constructed with the wastewater plant in the mid-70s, thus they are over 40 years old. They are concrete and subject to corrosion from hydrogen sulfide. The original interceptors were installed very shallow – in places less than 4 feet deep, making them susceptible to damage by excavation or directional drilling of communications lines. There is also corrosion from hydrogen sulfide. No significant rehabilitation or replacement of the collection system in this area has ever occurred. Over the years, the interceptor manholes were raised to prevent sanitary sewer overflows due to wet weather surcharging (water other than wastewater entering the system) and because they were not protected from the floodplain and some lining has been performed. The original manholes are constructed of brick material and subject to groundwater intrusion. Hydraulic modeling shows that due to the shallowness and some flat sloped pipes, the pipes are exceeding their capacity during wet weather events and TS Debby verified this concern with multiple sanitary sewer overflows along this portion of pipe. The town has committed and projected growth. These and other similar projects will exacerbate the collection system's hydraulic capacity which is already restricted in wet weather, resulting in sanitary sewer overflows and violations, and possibly even a moratorium on growth until upsizing can occur. To support current needs and future growth through 2040, these pipes need to be upsized. Since these interceptor pipes carry flow from areas that are the focus of growth, the Board has already agreed to defer large projects contributing wastewater into the River pumping station basin due to wet weather concerns as we investigate our most leaky basin, Lawndale, and secure funding for this replacement. These pipes are some of the oldest in town. This project intertwines with the River Pump Station project for which a federal grant award was received.",
+      "highlights": "Further development, as planned for the town, will exacerbate any hydraulically limited sewer pipes and cause overflows that result in noncompliance. This request supports the growth the town has worked hard to attract and approve. The money budgeted is what was submitted for funding to the state revolving fund (but not selected to date) and is reflective of 2040 projected flows. The current construction climate may result in an increase in costs. Much of the pipe need to be upsized to handle the projected 2025 growth. This cannot be deferred much longer. The town currently plans to pursue the State of North Carolina's revolving loan program to finance the $5.2M construction portion of this project. However, the loan program is based upon priority points for various categories. As such, an award is NOT guaranteed. However, recent sanitary sewer overflows in this interceptor will add priority to future applications. 180",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            500000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "LAND ACQUISITION PROJECTS",
+          "amounts": [
+            200000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            50000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            2080000.0,
+            0.0,
+            3120000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "CAPITAL FACILITIES FEES",
+          "amounts": [
+            750000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "SEWER SYSTEM DEVELOPMENT FEES",
+          "amounts": [
+            0.0,
+            2080000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            3120000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 5950000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 750000.0,
+          "printed_total": 750000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 2080000.0,
+          "printed_total": 2080000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 3120000.0,
+          "printed_total": 3120000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 750000.0,
+          "printed_total": 750000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 2080000.0,
+          "printed_total": 2080000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 3120000.0,
+          "printed_total": 3120000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "exchange-club-interceptors",
+      "project_name": "Exchange Club Interceptors",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 2,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        185,
+        186
+      ],
+      "description": "Replace 2,250 linear feet of gravity sewer with 15-inch (2040 committed) or 18-inch diameter (2040 committed + potential flows) between Orange Grove Road and Riverwalk.",
+      "justification": "This gravity sewer was installed in the early 1970s. Recent hydraulic modeling of the collection system revealed a capacity deficiency for existing and proposed growth conditions. There is also some configuration of the mains that may contribute to hydraulic flow restrictions (i.e., there are zig zags that do not provide smooth transitions and allow buildup of corrosive gases). The current brick manholes along this segment are in disrepair. The town has paid to rehabilitate the manholes to keep them from crumbling, leaking or allowing infiltration. This segment of sewers goes through Exchange Club Park and is generally between Orange Grove Road and the Riverwalk.",
+      "highlights": "Upsize this infrastructure with possible realignments to address current and future growth, and to improve its condition.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            170000.0,
+            0.0,
+            0.0,
+            0.0,
+            2500000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "DESIGN",
+          "amounts": [
+            140000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "LAND ACQUISITION PROJECTS",
+          "amounts": [
+            50000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            20000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            360000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "SEWER SYSTEM DEVELOPMENT FEES",
+          "amounts": [
+            20000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2500000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 2880000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 380000.0,
+          "printed_total": 380000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 2500000.0,
+          "printed_total": 2500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 380000.0,
+          "printed_total": 380000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 2500000.0,
+          "printed_total": 2500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "sewer-equalization-basin",
+      "project_name": "Sewer Equalization Basin",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 9,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        187,
+        188
+      ],
+      "description": "Construct a 1,000,000 gallon above-ground concrete storage tank. This tank will receive flow from the sewer system during wet weather events to reduce the total volume of sewage that must be processed by the wastewater treatment plant. The flow discharged into this basin will be drained back into the plant once the wet weather event passes and the flow into the plant drops to more treatable levels.",
+      "justification": "The proposed tank would either be installed adjacent to the existing Elizabeth Brady Pump Station on property already owned by the Town, or at the wastewater treatment plant at a location determined at a later date. A final location for the basin will be established once a master plan for the wastewater treatment plant is complete, the cost estimate provided for this project is associated with a site adjacent to the Elizabeth Brady pump station and is subject to revision if the tank is moved to the wastewater treatment plant site.",
+      "highlights": "N/A",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2200000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2200000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 2200000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 2200000.0,
+          "printed_total": 2200000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 2200000.0,
+          "printed_total": 2200000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "sewer-jetter-flush-truck",
+      "project_name": "Sewer Jetter/Flush Truck",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 7,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        189,
+        190
+      ],
+      "description": "Sewer Jetter/Flush Truck - This truck incorporates a jet machine mounted to the chassis of a single axle truck, providing easy maneuverability for use in sewer line cleaning and flushing, clearing sewer blockages, and pressure washing. This truck would be an upgrade to our trailer mounted jet machine for everyday jetting/cleaning needs.",
+      "justification": "Our current jet machine is a trailer mounted unit that has to be pulled by a larger utility truck in order to be used. It was purchased in 2008 (16 yrs old) and has been a vital asset to provide quality service to our customers in cleaning sewer lines, customers sewer laterals, and keeping the river walk clean by our Public Works Department. With our current machine, not all of our Collections crew staff is able to pull it due to vehicle size needed to tow. Having a truck mounted jet machine would allow all staff to respond to emergencies during and after operating hours, allow for quicker response times since trailer hookup is not needed and its size is more compact than the utility truck and trailer allowing for easier maneuverability around the narrower streets in Hillsborough and tighter sewer outfall easements. Due to the age of our current jet machine and the amount of use it receives, this jet/flush truck would become a dependable and highly utilized piece of equipment with everyday tasks including sewer blockages and sewer line maintenance. Our state permit for the Collections system requires that we clean 10% of our sewer system each year which is growing exponentially. Having this truck would allow our team to operate 2 crews and 2 pieces of equipment to be more efficient with our state mandated cleaning which would free up the rest of the year to focus on other tasks/maintenance.",
+      "highlights": "More compact for easier accessibility and maneuverability around town. A vehicle that every crew member can operate. Decrease trailer related incidents. Provides redundancy to improve sewer line cleaning efficiency and a backup for emergency response situations if a machine is down for repair/maintenance.",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "CAPITAL - VEHICLES",
+            "amounts": [
+              220000.0,
+              0.0,
+              0.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          },
+          {
+            "account": "MISC - TAX, TAGS, ETC",
+            "amounts": [
+              2010.0,
+              0.0,
+              0.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          }
+        ],
+        "printed_total": [
+          222010.0,
+          0.0,
+          0.0
+        ],
+        "total": 222010.0,
+        "by_kind": {
+          "further capital spending": 222010.0
+        },
+        "recurring_portion": 0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CAPITAL - VEHICLES",
+          "amounts": [
+            0.0,
+            220000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "MISC - TAX, TAGS, ETC",
+          "amounts": [
+            0.0,
+            2010.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "OPERATING REVENUE",
+          "amounts": [
+            0.0,
+            222010.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 222010.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 222010.0,
+          "printed_total": 222010.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 222010.0,
+          "printed_total": 222010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "undersized-sewer-main-replacements",
+      "project_name": "Undersized Sewer Main Replacements",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Collection",
+      "priority_rank": 5,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        191,
+        192
+      ],
+      "description": "Replace 4\" & 6\" sewer mains.",
+      "justification": "The town installed or allowed to be installed sewer mains less than the state minimum design criteria of 8\" diameter. Several parcels are served by 4\" and 6\" sewer mains where normally, one residential home or low demand non-residential home has its own dedicated 4\" sewer main. Some of the undersized mains installed were extended without a permit, and have already demonstrated to be clogged and have several sags. These undersized sewer mains cause extra staff time to clean, have multiple sags which holds sewage and debris, cross properties without established easements, and are not serving customers to the level of service the town wants to provide. This project would replace such sewers with a proper design and established right of entry (easement) for future accessibility and maintenance.",
+      "highlights": "Phase I: Mollies Ct., Hill St., and W. Corbin St. Phase II: Lawndale Ave, Sherwood Ave and Waddell St.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "LAND ACQUISITION PROJECTS",
+          "amounts": [
+            0.0,
+            20000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            400000.0,
+            0.0,
+            0.0,
+            500000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "DESIGN",
+          "amounts": [
+            0.0,
+            80000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "CAPITAL FACILITIES FEES",
+          "amounts": [
+            0.0,
+            500000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            500000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 1000000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "tertiary-filter-flocculators",
+      "project_name": "Tertiary Filter Flocculators",
+      "fund": "Water and Sewer Fund",
+      "department": "Wastewater Treatment Plant",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        193,
+        194
+      ],
+      "description": "Install new flocculators ahead of tertiary filtration to maximize the total phosphorous removal needed to meet the Falls Lake Rules and reduce chemical usage.",
+      "justification": "The 2014 Phase 1 Plant Expansion included new tertiary filtration. The structure was designed to have flocculators installed, but the installation was removed from the project to reduce costs. The pedestals and electrical conduit were however installed to provide for future needs. Currently, a chemical called Polyaluminum Chloride (PAC) is used to precipitate Phosphorous out of a dissolved state to a solid form that can be removed by filtration. Currently, PAC is fed to the clarifier, which provides the mixing necessary to activate the chemical. This method currently works well but will be insufficient in the future to meet the removal efficiency needed to meet the Falls Lake Rules. Feeding PAC directly to the filters is also much more efficient. Laboratory testing has shown that with the addition of flocculators, the town should be able to reduce its chemical feed by 28% or more. This equates to chemical savings of approximately $12,600 per year.",
+      "highlights": "This project can be delayed until the current Phosphorous removal efficiency is inadequate to meet permit requirements, which is estimated to be in FY29. However, the town will not realize the cost savings of reduced chemical usage or the reduction in its carbon footprint. The PAC is manufactured and then delivered from out-of-state locations. Flocculation will not only reduce the carbon emissions from the chemical manufacturing process but also the semi- truck deliveries from hundreds of miles away.",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "TRANSFER TO UTILITIES CAPITAL IMPROVEMENT FUND",
+            "amounts": [
+              0.0,
+              0.0,
+              10000.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          }
+        ],
+        "printed_total": [
+          0.0,
+          0.0,
+          10000.0
+        ],
+        "total": 10000.0,
+        "by_kind": {
+          "maintenance and utilities": 10000.0
+        },
+        "recurring_portion": 10000.0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": true,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            10000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            180000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            10000.0,
+            180000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 190000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 10000.0,
+          "printed_total": 10000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 180000.0,
+          "printed_total": 180000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 10000.0,
+          "printed_total": 10000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 180000.0,
+          "printed_total": 180000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "hasell-water-tank-replacement",
+      "project_name": "Hasell Water Tank Replacement",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Distribution",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        197,
+        198
+      ],
+      "description": "Replace Hasell Street Water Tank with a new elevated water tank.",
+      "justification": "The existing Hasell Street Water Tank was constructed in the mid-1930s and it is the oldest tank in the town system. It holds 200,000 gallons and is constructed of riveted steel. It is the controlling tank in the Central Pressure Zone (CPZ), where water is initially pumped from the Water Treatment Plant and then distributed to CPZ customers, as well as to the North Tank in the North Pressure Zone (NPZ) through a pumping station beside the tank. The small volume of the tank makes it difficult to manage water distribution, with customers near the tank experiencing more pressure fluctuations due to the quickly varying water levels of this tank style. Development within the Central Pressure Zone (CPZ) has created additional water volume needs, and an elevated tank will enable use of the entire tank volume. The existing tank is a standpipe, with only about 40 percent usable volume. as the tank cannot drop more than about 30 feet of its 72 feet height. The proposed tank will be the same height, but the design will allow use of the entire tank volume. The new tank size will be a 500,000 gallon tank and located near the same site as the existing tank. If possible, the existing Hassell Pump Station should be replaced with newer equipment as part of this project. An additional $500,000 was included in construction costs to cover this replacement. The existing pumps and motors are out of date, new equipment is needed to ensure parts and spares availability. The exisitng pump building is undersized, leaving limited space to work. New pumps, motors, and buildings are needed to facilitate efficient operations of the pumping station.",
+      "highlights": "The tank structure is sound, and inspections are performed annually, so this project is slated for later in the CIP. Costs are based on the final estimate prepared as part of the AIA grant report. This project is semi-related but not codependent to the US-70 Business Water Main Improvements project as water from Hasell tank must get to the US-70A tank. The costs of this project will be funded by a combination of leftover funds from completed projects, system development fees, and transfers from the Water & Sewer Operating Fund. Funding Timeline FY30 - Design FY31 - Construction ***Project is development driven and must be completed per the budgeted timeline. 196",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "LAND ACQUISITION PROJECTS",
+          "amounts": [
+            100000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "DESIGN",
+          "amounts": [
+            70000.0,
+            0.0,
+            0.0,
+            0.0,
+            370000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            40000.0,
+            0.0,
+            0.0,
+            0.0,
+            25000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5240000.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            95000.0,
+            0.0,
+            0.0,
+            0.0,
+            395000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "PRIOR PROJECT REMAINING FUNDS - OTHER",
+          "amounts": [
+            43522.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "GRANT - ASSET INVENTORY AND ASSESSMENT (AIA)",
+          "amounts": [
+            40000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "PRIOR PROJECT REMAINING BOND PROCEEDS",
+          "amounts": [
+            31478.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5240000.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 5845000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 210000.0,
+          "printed_total": 210000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 395000.0,
+          "printed_total": 395000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 5240000.0,
+          "printed_total": 5240000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 210000.0,
+          "printed_total": 210000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 395000.0,
+          "printed_total": 395000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 5240000.0,
+          "printed_total": 5240000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "hydrant-and-valve-project",
+      "project_name": "Hydrant and Valve Project",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Distribution",
+      "priority_rank": 2,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        199,
+        200
+      ],
+      "description": "Replace old, obsolete fire hydrants and install valves on the hydrant legs where needed. Install new valves and piping where redundancy study recommends.",
+      "justification": "There are currently a large number of fire hydrants in the central pressure zone that were installed without a watch valve on the hydrant leg (valve on the pipe connecting the water main and the hydrant assembly). These cannot be turned off without turning off the water. Some of these hydrants date back to the 1930s and need to be replaced since parts are hard to find and they are sometimes difficult or impossible to disassemble. There are approximately 150 hydrants without watch valves. Additionally, in FY21, a consultant studied how many customers would be out of water if a pipe broke in various locations. The affected customers were prioritized based on the estimated demand of the outage area. This budget would include adding valves where needed to minimize impacts in four groups over the next several years. If the town does not perform this work, it risks having these hydrants not work properly in the event of a fire, which could be catastrophic. Customers would also experience service disruptions or other impacts when ad-hoc repairs or replacements are needed. Additionally, there is an opportunity to reduce the risk of customers being out of service under certain main break scenarios by providing additional valves and piping in the system.",
+      "highlights": "This project has been funded with ARPA-enabled funds up to this point. Future allocations will come from Water & Sewer Operating Fund transfers in future years. This project is underway and is expected to take several years. Future allocations will ensure the project is completed in its entirety.",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "TRANSFER TO UTILITIES CAPITAL IMPROVEMENT FUND",
+            "amounts": [
+              0.0,
+              0.0,
+              270000.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          }
+        ],
+        "printed_total": [
+          0.0,
+          0.0,
+          270000.0
+        ],
+        "total": 270000.0,
+        "by_kind": {
+          "maintenance and utilities": 270000.0
+        },
+        "recurring_portion": 270000.0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": true,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            462647.0,
+            0.0,
+            0.0,
+            270000.0,
+            275000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "DESIGN",
+          "amounts": [
+            15000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            10000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            487647.0,
+            0.0,
+            0.0,
+            270000.0,
+            275000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 1032647.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 487647.0,
+          "printed_total": 487647.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 270000.0,
+          "printed_total": 270000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 275000.0,
+          "printed_total": 275000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 487647.0,
+          "printed_total": 487647.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 270000.0,
+          "printed_total": 270000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 275000.0,
+          "printed_total": 275000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "water-distribution-master-plan-improvements",
+      "project_name": "Water Distribution Master Plan Improvements",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Distribution",
+      "priority_rank": 5,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        201,
+        202
+      ],
+      "description": "Implement the recommendations of the Water Distribution Master Plan.",
+      "justification": "The Town is preparing a Water Distribution System Master Plan using a hydraulic model of the water distribution system. This master plan will provide recommendations on where improvements are needed to provide adequate fire flow to current and future customers, as well as improve drinking water quality and redundancy throughout the distribution system. The Master Plan recommendations may include waterline extensions, replacements, and installation of new appurtenances. The request is a placeholder until specific projects are identified.",
+      "highlights": "The staff recommend implementing the recommendations of the Water Distribution Master Plan once complete.",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "TRANSFER TO UTILITIES CAPITAL IMPROVEMENT",
+            "amounts": [
+              0.0,
+              100000.0,
+              200000.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          }
+        ],
+        "printed_total": [
+          0.0,
+          100000.0,
+          200000.0
+        ],
+        "total": 300000.0,
+        "by_kind": {
+          "maintenance and utilities": 300000.0
+        },
+        "recurring_portion": 300000.0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": true,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            100000.0,
+            200000.0,
+            500000.0,
+            500000.0,
+            500000.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            0.0,
+            0.0,
+            100000.0,
+            200000.0,
+            500000.0,
+            500000.0,
+            500000.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 1800000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 100000.0,
+          "printed_total": 100000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 200000.0,
+          "printed_total": 200000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 100000.0,
+          "printed_total": 100000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 200000.0,
+          "printed_total": 200000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 500000.0,
+          "printed_total": 500000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "us-70a-business-water-improvements",
+      "project_name": "US-70A Business Water Improvements",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Distribution",
+      "priority_rank": 3,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        203,
+        204
+      ],
+      "description": "Replace over 9,000 linear feet of asbestos cement water main along US-70A with 16\" ductile iron water main.",
+      "justification": "The main transmission line along Highway 70-A is only 12 inches in diameter and is made out of asbestos-cement. This pipe is no longer manufactured, is a hazard to repair due to the asbestos content and is more prone to breakage. Ductile iron pipe or plastic pressure pipe is the current standard for water mains. This project will provide long-term stability for this section of the water system. The increase in pipe size was recommended through system modeling to handle more flow to the US-70 tank, prevent the US-70 tank from emptying too much when the Forest Ridge Booster Pump Station is operating, and to better meet the town's needs when we need to transfer water from Durham in an emergency situation. Modeling has confirmed that upsizing from 12\" to 16\" between Churton Street and the US 70-A tank should help with pressure and ability to receive a target flow of 2 MGD from Durham. The report also recommended a new express main from Valley Forge to US 70-A tank, however that is not under consideration at this time. Some sections of this pipeline are the only way to move water along 70-A east of Elizabeth Brady Road. The town has been fortunate to avoid major breaks thus far along this pipeline, due to its age (built in 1973) and the substandard material. If a main break occurs in the area between Hwy 86 and Forest Ridge on US 70-A, water cannot get to the US-70 tank. When the town has to make repairs, it typically has to cut the pipe with a saw, which releases asbestos fibers, thus requiring a respirator. If the town does not perform this work, it risks this line deteriorating further and draining the US-70 Tank. The town can currently receive 1.6 MGD from Durham.",
+      "highlights": "This project is related to the Hasell Street Tank Replacement project to help move water to other parts of the central zone, but the projects are not codependent. Phase I: Replace approximately 4,900 linear feet of 12-inch Asbestos-Cement (AC) water main along Highway 70-A between Highway 86/Elizabeth Brady Road to the Highway 70-A Water Tank with a new 16'' ductile iron water main. Phase II: Replace approximately 4,320 linear feet of 12\" AC water main along Highway 70-A between Churton Street and Highway 86 with a new 16'' ductile iron water main.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            275000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            30000.0,
+            0.0,
+            0.0,
+            20000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "LAND ACQUISITION PROJECTS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            30000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5320000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "WATER SYSTEM DEVELOPMENT FEES",
+          "amounts": [
+            275000.0,
+            0.0,
+            0.0,
+            50000.0,
+            2357131.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "GRANT - ASSET INVENTORY AND ASSESSMENT (AIA)",
+          "amounts": [
+            30000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "CAPITAL FACILITIES FEES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1226443.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1736426.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 5675000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 305000.0,
+          "printed_total": 305000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 50000.0,
+          "printed_total": 50000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 5320000.0,
+          "printed_total": 5320000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 305000.0,
+          "printed_total": 305000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 50000.0,
+          "printed_total": 50000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 5320000.0,
+          "printed_total": 5320000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "vacuum-excavator",
+      "project_name": "Vacuum Excavator",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Distribution",
+      "priority_rank": 4,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        205,
+        206
+      ],
+      "description": "Purchase a Pacific Tek PV500 Vacuum Excavator equipped with the Pacific Tek Valve Exerciser for use by the Water Distribution crew.",
+      "justification": "Pacific Tek Power Vac Vacuum Excavators are manufactured for potholing/“vacuum excavation.” Every Pacific Tek Vacuum Excavator can non-destructively find utility lines and pipelines, clean out catch basins, and work with Pacific Tek Valve Exercisers. To aid in digging, water or air is used under low pressure to loosen up the dirt so that the Vacuum Excavator can vacuum the dirt into the Vacuum Excavator’s debris tank. These units are offered as a skid mounted vacuum or can be built onto a flatbed or trailer. Pacific Tek offers eight basic tank sizes with over 100 different configurations and options, depending on the customer's needs. The larger tanks have a reverse flow option where, at the flip of a lever, flow is reversed in the system which allows you to either pump liquid or slurry out of the tank to a higher place, or, to free up clogging in the pickup hose by having air blow the reverse direction. The specific model we are looking at is the PV500 with the optional PT1000 valve exerciser/valve operator mounted on the trailer. Vacuum Excavating: Vacuum Excavation, also known as \"Potholing\" is the process of using vacuum and sometimes an assisting process such as high pressure water jetting and high velocity air jetting to “suck” a hole in the ground. The hole size can be from 4 to 12 inches in diameter and can be from 1 to 20 feet deep. This process replaces manual or machine digging when there is the possibility of damage to anything in the underground vicinity of the area being uncovered. With the number of utilities being run underground and the use of plastic pipe and conduit instead of heavier steel the risk of damage once a line is found by either a shovel or a backhoe is greatly increased. Vacuum excavation greatly reduces this risk and is referred to as a “non-destructive” digging method. Once on top of a line or cable the vacuum tube simply cannot continue down and the line being sought is safely found. This process is being used by gas companies, water and wastewater utilities, telephone companies, and underground contractors doing work for all of the above. Past interest in the process of vacuum excavation was not what it is today because at the time there were not as many delicate underground utilities such as fiber-optic cable and small plastic lines that we now have. Valve Exercising: Water distribution valves of all sizes are installed underground and mostly kept open so that water is available to everyone on the system. If left unattended those valves will rust, suffer cathodic damage, get stuck in place, become covered in dirt and silt from the street above, get paved over, or even shift with freezing and thawing conditions. The act of valve exercising / valve operating begins with locating the valve. Once located chances are that the valve box will need to be cleaned just to give access to the top of the valve nut. Then, the act of operating the valve to ensure that it will work if necessary completes the task. In the act of operating the valve you sometimes find valves that were supposed to be open were somehow left closed by someone working on the system resulting in lower water pressure or flow. This is another benefit of the program. There are an enormous number of valves in any distribution system and the act of exercising needs to be documented to ensure that all of the valves get attention that need it and that inoperable valves are documented and scheduled for replacement. Doing this project by hand is a chore that requires some muscle and some twisting motion that could leave your valve exerciser / valve operator at risk for lower back pain or injury. That is why most cities and towns have employed valve operating machines to assist with the task. Machines are equipped with revolution counters and torque read-out gauges or meters and some are connected to a computer with a GPS that confirms the location. Those computers capture data about the valve and can have other useful bits of information logged and documented as well. Machines can operate many more valves in a day than a person can manually and they can do it day after day after day.",
+      "highlights": "Purchasing the new Pacific Tek Vacuum Excavator w/Valve Exerciser would help tremendously with routine tasks such as valve/valve box maintenance, valve exercising, hydro excavating smaller service repairs, cleaning out meter boxes, potholing utilities and is a much more maneuverable unit for our crews to operate. The PV500 can be used dry to allow the excavated soil to be re-used as backfill or can be used with the attached water jetting system to \"hydro\" excavate. It will also have a class 2 hydraulic tool circuit kit installed to allow the use of our existing hydraulic tools in conjunction with the unit to complete tasks. The optional PT1000 valve exerciser has the option to add GIS management via the addition of their data logger. 204",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "CAPITAL - EQUIPMENT",
+            "amounts": [
+              0.0,
+              0.0,
+              155000.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          }
+        ],
+        "printed_total": [
+          0.0,
+          0.0,
+          155000.0
+        ],
+        "total": 155000.0,
+        "by_kind": {
+          "further capital spending": 155000.0
+        },
+        "recurring_portion": 0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CAPITAL - EQUIPMENT",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            155000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "OPERATING REVENUE",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            155000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 155000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 155000.0,
+          "printed_total": 155000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 155000.0,
+          "printed_total": 155000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "relocate-process-controls-to-scada",
+      "project_name": "Relocate Process Controls to SCADA",
+      "fund": "Water and Sewer Fund",
+      "department": "Water Treatment Plant",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        209,
+        210
+      ],
+      "description": "Relocate all equipment currently controled and/or monitored through the old main control console into the new control console.",
+      "justification": "In FY26, a new control panel was installed to replace the antiquated old control panel. This year staff would like to relocate all critical chemical pumps, mixers, flocculators, flow meters, and analyzers to the new panel. This will provide monitoring, control, and data acquisition on the SCADA computer. Due to the reliability issues of the old control panel, getting all the water plant equipment onto the new control panel is critical. Failure to make a successful transition in a timely manner could result in the plant not being able to successfully treat the drinking water.",
+      "highlights": "Provides equipment status, control, alarms, and historical data Provides historical data trending Provides automation of processes Increases operations efficiency Reduces the chance of operational errors Greatly increases reliability of processes and monitoring",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "CAPITAL - EQUIPMENT",
+            "amounts": [
+              300000.0,
+              0.0,
+              0.0
+            ],
+            "kind": "further capital spending",
+            "recurring": false
+          }
+        ],
+        "printed_total": [
+          300000.0,
+          0.0,
+          0.0
+        ],
+        "total": 300000.0,
+        "by_kind": {
+          "further capital spending": 300000.0
+        },
+        "recurring_portion": 0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "CAPITAL - EQUIPMENT",
+          "amounts": [
+            0.0,
+            300000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "OPERATING REVENUE",
+          "amounts": [
+            0.0,
+            300000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 300000.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 300000.0,
+          "printed_total": 300000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 300000.0,
+          "printed_total": 300000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "sodium-hypochlorite-conversion",
+      "project_name": "Sodium Hypochlorite Conversion",
+      "fund": "69 - Water and Sewer Capital Improvements",
+      "department": "Water Treatment Plant",
+      "priority_rank": 2,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        211,
+        212
+      ],
+      "description": "The water treatment plant currently utilizes chlorine gas for primary disinfection and to form chloramines for secondary disinfection. Due to the extreme toxic and corrosive nature of chlorine, and the large quantities of chlorine stored at the plant, the USEPA Risk Management Program Rule requires that a hazard assessment be completed. The hazard assessment for the water treatment plant (attached) estimates that in a worst-case scenario, a major chlorine leak at the water plant could be toxic to a population of 13,365. A disinfection process analysis was completed in FY25 (attached). This was a comprehensive review of the existing disinfection system and considerations for conversion from chlorine gas to sodium hypochlorite. Utilizing sodium hypochlorite will eliminate the potential hazards of chlorine gas. This project is for the engineering, management, and construction of new facilities needed to convert our existing chlorine gas feed system to sodium hypochlorite.",
+      "justification": "Chlorine is stored and shipped by the chemical supplier as a liquefied gas under pressure in one-ton cylinders. These are unloaded and stored in a covered outdoor area adjacent to the treatment plant administrative area. There are typically two one-ton cylinders at the water plant. Chlorine gas is highly toxic and corrosive and has been placed in Toxicity Category I (indicating the highest degree of acute toxicity) for oral, dermal, eye and inhalation effects. When chlorine liquid converts to gas, it expands 457 times. Additionally, chlorine gas is 2.5 times heavier than air. In the event of a catastrophic chlorine leak at the water plant, a significant amount of the town will need to be evacuated. However, the Raleigh regional HAZMAT team is the dedicated responder, and it would take some time for them to arrive given the distance. Significant impacts are unlikely to be avoided. The disinfection process analysis included recommendations to improve the safety, accuracy and efficiency of the existing chlorine system. The existing procedures for delivery drivers to unload the cylinders is not in accordance with standard practices. Improvements to the loading dock and cylinder handling devices are needed. Additionally, only having a sliding steel door in front of the cylinders to keep them from public view is a vulnerability. The analysis also included recommendations to convert from a chlorine disinfection process to a sodium hypochlorite disinfection process. Conversion to a sodium hypochlorite disinfection system eliminates the safety concerns of using chlorine gas. This is likely the reason most water treatment facilities now use sodium hypochlorite for disinfection. Additionally, since the demand for chlorine gas is now so low, there is only one chlorine gas supplier in North Carolina. With only one supplier, the cost and availability are of concern. We have received several force majeure notices of shortages and price hikes during and since the COVID-19 pandemic. The Hillsborough water treatment plant has been using chlorine gas for disinfection since the early 1970s and has had no major chlorine leaks. Major chlorine leaks that cause widespread injuries are rare. However, it can and does happen. Since utilizing sodium hypochlorite will eliminate the public health risk, staff is recommending conversion of the disinfection process to sodium hypochlorite.",
+      "highlights": "Conversion to sodium hypochlorite for disinfection: Safety concerns of using chlorine is eliminated Regulations are much less stringent Eliminates the need for a Risk Management Plan ($4,200 per year for compliance management) Eliminates the need for a Hazard Assessment Additional operational costs anticipated to be minimal Chemical costs estimated to increase between $20,000 and $30,000 /year Timeline: Design - February 2026 210",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "PROFESSIONAL SERVICES",
+          "amounts": [
+            375000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            240600.0,
+            1350000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "PRIOR PROJECT REMAINING FUNDS",
+          "amounts": [
+            615600.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "WATER SYSTEM DEVELOPMENT FEES",
+          "amounts": [
+            0.0,
+            350000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "FEDERAL AWARD",
+          "amounts": [
+            0.0,
+            1000000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 1965600.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 615600.0,
+          "printed_total": 615600.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 1350000.0,
+          "printed_total": 1350000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 615600.0,
+          "printed_total": 615600.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 1350000.0,
+          "printed_total": 1350000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "dam-repairs-at-west-fork-eno-reservoir",
+      "project_name": "Dam Repairs at West Fork Eno Reservoir",
+      "fund": "Water and Sewer Fund",
+      "department": "West Fork Eno Reservoir",
+      "priority_rank": 1,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        213,
+        214
+      ],
+      "description": "Investigate and remedy damages to the dam at the West Fork Eno reservoir resulting from Tropical Storm Chantal.",
+      "justification": "As a high hazard dam, the town is required to maintain its integrity. Further investigation is required to determine the extent of damage and identify appropriate remedies. The West Fork on the Eno Reservoir, completed in 2000 and expanded in 2019, is inspected annually by a consultant specializing in dams as required for high hazard dams. The October 2025 inspection revealed damages from Tropical Storm Chantal and also some general maintenance issues that require immediate investigation to determine the exact extent of damages and remedy. The consultant in its inspection report details the recommendations and estimates the extent of the repairs to be around $2,000,000 - $3,000,000. 1) The auxiliary spillway chute, primarily downstream of the overlay installed in the 2019 dam modifications, is in generally fair to poor condition. The high flows through the spillway resulting from Tropical Storm Chantal in July 2025 likely caused the damage to the spillway downstream of the overlay. The observed offsets in the chute spillway slab joints, the water observed entering and exiting the chute slab joints, and the damage that appears to be from lifting of the furthest downstream chutes lab section, indicate that undermining of the slab sections could have occurred. 2) The wet area on the downstream slope of the earth embankment adjacent to the left auxiliary spillway sidewall and the seepage through the left spillway sidewall indicates that the drainage system behind the left spillway sidewall is no longer functional. It is likely that the existing wall drain is clogged, potentially by iron ochre. It is possible that the drain has been clogged but is more evident now with the increased driving head from the Phase 2 reservoir normal pool elevation.",
+      "highlights": "1.The existing drainage system behind the left auxiliary spillway sidewall should be observed via video inspection for obstructions, crushed pipe sections, or other deficiencies. The design for any modifications to the drainage system will need to be submitted to NC Dam Safety for their review and approval prior to construction. 2.The chute spillway downstream of the overlayed section should be further evaluated by a Professional Engineer for undermining and chute slab delamination. Nondestructive evaluation methods can be used to identify potentially undermined areas beneath the slab, delamination within the slab, and areas of concentrated leakage flow below the chute slab. It is recommended to confirm the nondestructive evaluation results with concrete coring for visual inspection of the slab and foundation conditions. If undermining of the chute spillway slab or delamination of the chute slab is confirmed, repairs will be needed that will potentially include re-construction of the chute spillway slab joints, repair to the damage slab sections, and overlaying the existing slab. The design for any repairs to the chute spillway will need to be submitted to NC Dam Safety for their review and approval prior to construction. 3.The damaged Tideflex check valves at the embankment closure section drainage system outlet, and the right control section drainage system outlet should be replaced. 4.The exposed/broken waterstop within the conduit should be repaired. If this joint continues to deteriorate, it could allow for the soil materials in the embankment to wash into the conduit. The other joints in between segments of the conduit and previously grouted cracks should continue to be monitored at least annually. Repair plans for the exposed/broken water stop would need to be submitted to NC Dam Safety for their review and approval prior to construction. 212",
+      "operating_budget_impact": null,
+      "operating_budget_impact_quantified": {
+        "rows": [
+          {
+            "account": "DEBT SERVICE - PRINCIPAL",
+            "amounts": [
+              0.0,
+              101275.0,
+              212678.0
+            ],
+            "kind": "debt service",
+            "recurring": true
+          },
+          {
+            "account": "DEBT SERVICE - INTEREST",
+            "amounts": [
+              0.0,
+              63692.0,
+              117255.0
+            ],
+            "kind": "debt service",
+            "recurring": true
+          },
+          {
+            "account": "TRANSFER TO UTILITIES CAPITAL IMPROVEMENT FUND",
+            "amounts": [
+              195540.0,
+              0.0,
+              0.0
+            ],
+            "kind": "maintenance and utilities",
+            "recurring": true
+          }
+        ],
+        "printed_total": [
+          195540.0,
+          164967.0,
+          329933.0
+        ],
+        "total": 690440.0,
+        "by_kind": {
+          "debt service": 494900.0,
+          "maintenance and utilities": 195540.0
+        },
+        "recurring_portion": 690440.0,
+        "note": "The town states this as the project's FY2027-29 budget impact. Debt service, maintenance and utilities are recurring obligations the project creates; further capital spending and transfers to capital funds are one-time items inside the window. They are reported separately rather than summed."
+      },
+      "creates_recurring_cost": true,
+      "has_stated_budget_impact": true,
+      "expenditures_by_account": [
+        {
+          "account": "DESIGN",
+          "amounts": [
+            115840.0,
+            174830.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "CONSTRUCTION",
+          "amounts": [
+            0.0,
+            2570650.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "FEMA REIMBURSEMENTS",
+          "amounts": [
+            92550.0,
+            56800.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "TRANSFER FROM WATER AND SEWER FUND",
+          "amounts": [
+            23290.0,
+            195540.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            2547660.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 2861320.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 115840.0,
+          "printed_total": 115840.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 2745480.0,
+          "printed_total": 2745480.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 115840.0,
+          "printed_total": 115840.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 2800000.0,
+          "printed_total": 2800000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    },
+    {
+      "project_id": "jetvac-truck",
+      "project_name": "JetVac Truck",
+      "fund": "Stormwater Fund",
+      "department": "Stormwater",
+      "priority_rank": 2,
+      "plan_window": "FY2027-FY2033",
+      "source_doc": "fy27-budget-and-financial-plan-recommended",
+      "source_pages": [
+        219,
+        220
+      ],
+      "description": "JetVac Truck for cleaning stormwater infrastructure such as catch basins and pipes.",
+      "justification": "The town is required to have a stormwater infrastructure maintenance program pursuant to the town's NPDES Phase II MS4 stormwater permit. The JetVac would allow Public Works to clean, collect and dispose of sediment, debris, etc. Currently, the town uses a contractor to do catch basin/pipe cleaning. This approach is workable for now, but having a JetVac truck would improve efficiency in maintaining the town's stormwater infrastructure and allow the town to respond to problems that arise in a more timely manner.",
+      "highlights": "The Water & Sewer Department is considering replacing their JetVac truck with a larger capacity model. If this happens, it is possible that the existing JetVac truck could be utilized by Public Works for stormwater maintenance. A quote has been included for a GapVax 2024 MC1007-3S3X Combination Jet/Vac. Currently the price of the truck is listed in FY27.",
+      "operating_budget_impact": "No FY27-29 operating impact.",
+      "operating_budget_impact_quantified": null,
+      "creates_recurring_cost": false,
+      "has_stated_budget_impact": false,
+      "expenditures_by_account": [
+        {
+          "account": "CAPITAL - VEHICLES",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            605000.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "account": "GASOLINE",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1000.0,
+            1000.0,
+            1000.0,
+            1000.0
+          ]
+        },
+        {
+          "account": "MISC - TAX, TAGS, ETC",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            2010.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "funding_by_source": [
+        {
+          "source": "MISCELLANEOUS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            3010.0,
+            1000.0,
+            1000.0,
+            1000.0
+          ],
+          "unnamed_in_source": false
+        },
+        {
+          "source": "DEBT ISSUANCE PROCEEDS",
+          "amounts": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            605000.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unnamed_in_source": false
+        }
+      ],
+      "total_planned_cost": 611010.0,
+      "reconciliation": [
+        {
+          "table": "expenditures",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 4,
+          "summed": 608010.0,
+          "printed_total": 608010.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 5,
+          "summed": 1000.0,
+          "printed_total": 1000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 6,
+          "summed": 1000.0,
+          "printed_total": 1000.0,
+          "reconciles": true
+        },
+        {
+          "table": "expenditures",
+          "column": 7,
+          "summed": 1000.0,
+          "printed_total": 1000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 0,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 1,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 2,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 3,
+          "summed": 0.0,
+          "printed_total": 0.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 4,
+          "summed": 608010.0,
+          "printed_total": 608010.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 5,
+          "summed": 1000.0,
+          "printed_total": 1000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 6,
+          "summed": 1000.0,
+          "printed_total": 1000.0,
+          "reconciles": true
+        },
+        {
+          "table": "funding",
+          "column": 7,
+          "summed": 1000.0,
+          "printed_total": 1000.0,
+          "reconciles": true
+        }
+      ],
+      "published": true
+    }
+  ],
+  "withheld": [],
+  "problems": []
+}
