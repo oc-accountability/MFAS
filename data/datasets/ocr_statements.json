@@ -1,0 +1,920 @@
+{
+  "generated_by": "etl/s75_ocr_statements.py",
+  "method": "A figure is published only when its column adds up exactly to the total printed beside it on the same page. Character recognition fails by altering a digit, which breaks that sum, so the page checks itself. Columns that do not balance are withheld rather than published with a caveat.",
+  "best_practice": "Replace every scanned PDF with the town's original digital copy. Digital originals are read directly and need none of this verification — that is how the FY2025 audited figures were read.",
+  "documents": [
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "fiscal_year": 2018,
+      "page": 46,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "expenditures",
+          "column_index": 2,
+          "sum": 10176945.0,
+          "printed": 10176945.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 9099238.0,
+          "printed": 9099238.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 9104808.0,
+          "printed": 9104808.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 2,
+          "sum": 10255489.0,
+          "printed": 10255489.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 3,
+          "sum": 1150681.0,
+          "printed": 1150681.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "fiscal_year": 2019,
+      "page": 46,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 9918092.0,
+          "printed": 9918092.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 9319110.0,
+          "printed": 9319110.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 2,
+          "sum": 10079224.0,
+          "printed": 10079224.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 3,
+          "sum": 760114.0,
+          "printed": 760114.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "fiscal_year": 2020,
+      "page": 43,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "expenditures",
+          "column_index": 1,
+          "sum": 11731723.0,
+          "printed": 11731723.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 2,
+          "sum": 10295810.0,
+          "printed": 10295810.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 3,
+          "sum": 1435913.0,
+          "printed": 1435913.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 10252755.0,
+          "printed": 10252755.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 10748675.0,
+          "printed": 10748675.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 2,
+          "sum": 11162292.0,
+          "printed": 11162292.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 3,
+          "sum": 413617.0,
+          "printed": 413617.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "fiscal_year": 2021,
+      "page": 45,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "expenditures",
+          "column_index": 0,
+          "sum": 10497950.0,
+          "printed": 10497950.0,
+          "lines": 8
+        },
+        {
+          "section": "expenditures",
+          "column_index": 1,
+          "sum": 10850527.0,
+          "printed": 10850527.0,
+          "lines": 8
+        },
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 9472400.0,
+          "printed": 9472400.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 9810441.0,
+          "printed": 9810441.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 2,
+          "sum": 11645302.0,
+          "printed": 11645302.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 3,
+          "sum": 1834861.0,
+          "printed": 1834861.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2022",
+      "fiscal_year": 2022,
+      "page": 44,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "expenditures",
+          "column_index": 1,
+          "sum": 13379432.0,
+          "printed": 13379432.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 2,
+          "sum": 11080724.0,
+          "printed": 11080724.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 3,
+          "sum": 2298708.0,
+          "printed": 2298708.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 12027020.0,
+          "printed": 12027020.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 12014414.0,
+          "printed": 12014414.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 2,
+          "sum": 13700724.0,
+          "printed": 13700724.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 3,
+          "sum": 1686310.0,
+          "printed": 1686310.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2023",
+      "fiscal_year": 2023,
+      "page": 49,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "expenditures",
+          "column_index": 1,
+          "sum": 14193995.0,
+          "printed": 14193995.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 2,
+          "sum": 12138059.0,
+          "printed": 12138059.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 3,
+          "sum": 2055936.0,
+          "printed": 2055936.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 13171226.0,
+          "printed": 13171226.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 13077957.0,
+          "printed": 13077957.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2024",
+      "fiscal_year": 2024,
+      "page": 42,
+      "column_roles": {
+        "0": "original_budget",
+        "1": "final_budget",
+        "2": "actual",
+        "3": "variance"
+      },
+      "column_roles_confirmed_by": "the variance column equals actual minus final budget (revenues) or final budget minus actual (expenditures)",
+      "verified_columns": [
+        {
+          "section": "expenditures",
+          "column_index": 0,
+          "sum": 15204279.0,
+          "printed": 15204279.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 1,
+          "sum": 16517199.0,
+          "printed": 16517199.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 2,
+          "sum": 13754719.0,
+          "printed": 13754719.0,
+          "lines": 7
+        },
+        {
+          "section": "expenditures",
+          "column_index": 3,
+          "sum": 2762480.0,
+          "printed": 2762480.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 0,
+          "sum": 14887945.0,
+          "printed": 14887945.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 1,
+          "sum": 15274870.0,
+          "printed": 15274870.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 2,
+          "sum": 16317812.0,
+          "printed": 16317812.0,
+          "lines": 7
+        },
+        {
+          "section": "revenues",
+          "column_index": 3,
+          "sum": 1042942.0,
+          "printed": 1042942.0,
+          "lines": 7
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "document": "fiscal-year-2024-2026-strategic-plan-20230626",
+      "fiscal_year": 2024,
+      "status": "no verifiable statement"
+    }
+  ],
+  "published": [
+    {
+      "fiscal_year": 2018,
+      "section": "expenditures",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 10176945.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2018,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 9099238.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2018,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 9104808.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2018,
+      "section": "revenues",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 10255489.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2018,
+      "section": "revenues",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 1150681.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2019,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 9918092.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2019,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 9319110.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2019,
+      "section": "revenues",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 10079224.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2019,
+      "section": "revenues",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 760114.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "source_page": 46,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "expenditures",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 11731723.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "expenditures",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 10295810.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "expenditures",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 1435913.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 10252755.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 10748675.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "revenues",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 11162292.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2020,
+      "section": "revenues",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 413617.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "source_page": 43,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2021,
+      "section": "expenditures",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 10497950.0,
+      "component_lines": 8,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "source_page": 45,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2021,
+      "section": "expenditures",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 10850527.0,
+      "component_lines": 8,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "source_page": 45,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2021,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 9472400.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "source_page": 45,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2021,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 9810441.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "source_page": 45,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2021,
+      "section": "revenues",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 11645302.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "source_page": 45,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2021,
+      "section": "revenues",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 1834861.0,
+      "component_lines": 7,
+      "source_doc": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "source_page": 45,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "expenditures",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 13379432.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "expenditures",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 11080724.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "expenditures",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 2298708.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 12027020.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 12014414.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "revenues",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 13700724.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2022,
+      "section": "revenues",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 1686310.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2022",
+      "source_page": 44,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2023,
+      "section": "expenditures",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 14193995.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2023",
+      "source_page": 49,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2023,
+      "section": "expenditures",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 12138059.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2023",
+      "source_page": 49,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2023,
+      "section": "expenditures",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 2055936.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2023",
+      "source_page": 49,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2023,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 13171226.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2023",
+      "source_page": 49,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2023,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 13077957.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2023",
+      "source_page": 49,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "expenditures",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 15204279.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "expenditures",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 16517199.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "expenditures",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 13754719.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "expenditures",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 2762480.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "revenues",
+      "column_index": 0,
+      "column_role": "original_budget",
+      "total": 14887945.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "revenues",
+      "column_index": 1,
+      "column_role": "final_budget",
+      "total": 15274870.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "revenues",
+      "column_index": 2,
+      "column_role": "actual",
+      "total": 16317812.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    },
+    {
+      "fiscal_year": 2024,
+      "section": "revenues",
+      "column_index": 3,
+      "column_role": "variance",
+      "total": 1042942.0,
+      "component_lines": 7,
+      "source_doc": "annual-financial-report-year-ended-june-30-2024",
+      "source_page": 42,
+      "extraction": "ocr-arithmetic-verified",
+      "note": "Recovered by character recognition from a scanned page, then verified: the individual lines add up exactly to the total printed on the same page, so a misread digit would have broken the sum."
+    }
+  ],
+  "problems": [
+    "fiscal-year-2024-2026-strategic-plan-20230626: no self-verifying budget-vs-actual page found — nothing published from this document"
+  ]
+}

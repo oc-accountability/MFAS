@@ -275,6 +275,53 @@ def test_audited_comes_from_the_digital_not_the_scanned_report(audited, document
         "the audited figures must come from the digital twin, not the 61 MB scan")
 
 
+# ------------------------------------- figures recovered from scans (stage 75)
+@pytest.fixture(scope="module")
+def ocr_statements():
+    return load("ocr_statements.json")
+
+
+def test_every_ocr_figure_was_proven_by_its_own_page(ocr_statements):
+    """The rule that makes recognised figures publishable at all.
+
+    A figure recovered from a scan is only shown when the individual lines on its
+    page add up exactly to the total printed beside them. Recognition fails by
+    altering a digit, and an altered digit breaks that sum — so this check is
+    what stands between a scan and a wrong number on a public site.
+    """
+    for p in ocr_statements["published"]:
+        assert p["extraction"] == "ocr-arithmetic-verified", p
+        assert p["component_lines"] >= 2, (
+            f"a 'total' derived from {p['component_lines']} line(s) is not a real check: {p}")
+        assert p["source_page"] and p["source_doc"], p
+
+
+def test_ocr_column_roles_are_confirmed_never_assumed(ocr_statements):
+    """Charting the wrong column would be a silent, serious error, so a role is
+    only recorded when the variance column proves the layout arithmetically."""
+    for doc in ocr_statements["documents"]:
+        if doc["status"] != "verified":
+            continue
+        if doc["column_roles"]:
+            assert "variance" in doc["column_roles"].values(), doc
+            assert "NOT confirmed" not in doc["column_roles_confirmed_by"], doc
+    # a published figure may only claim a role if that document confirmed one
+    confirmed = {d["document"] for d in ocr_statements["documents"] if d.get("column_roles")}
+    for p in ocr_statements["published"]:
+        if p.get("column_role"):
+            assert p["source_doc"] in confirmed, p
+
+
+def test_a_digital_original_always_beats_a_scan():
+    """Where the same report exists digitally, the scan must not be used."""
+    man = load("ocr_manifest.json")
+    ocrd = {d["document"] for d in man["documents"]}
+    assert "annual-financial-report-year-ended-june-30-2025" not in ocrd, (
+        "the FY2025 scan was OCR'd even though its digital original is available")
+    assert any("digital original" in s["reason"] for s in man["skipped"])
+    assert "digital" in man["best_practice"].lower()
+
+
 def test_index_counts_are_consistent(facts, documents):
     with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
         idx = json.load(fh)

@@ -31,7 +31,18 @@ TRANSCRIBED = "transcribed"   # a human/vision read of the rendered page image.
 DERIVED = "derived"           # computed by this ETL from other observations.
 STATED = "stated"             # a figure a document asserts in prose.
 
-TRUSTWORTHY = {DIGITAL, TRANSCRIBED, DERIVED, STATED}
+# Recovered by character recognition from a scan, AND proven by the page itself:
+# the individual lines add up exactly to the total printed beside them. Character
+# recognition fails by altering a digit, and an altered digit breaks that sum — so
+# unlike a bare OCR reading, this one cannot be silently wrong. Measured accuracy
+# on these documents was 141/141 figures (etl/ocr_accuracy_probe.py), but the
+# arithmetic check is what makes it publishable, not the measurement.
+#
+# A digital original still beats this and removes the need for it entirely; where
+# one exists it is always used in preference to the scan.
+OCR_VERIFIED = "ocr-arithmetic-verified"
+
+TRUSTWORTHY = {DIGITAL, TRANSCRIBED, DERIVED, STATED, OCR_VERIFIED}
 
 
 @dataclass

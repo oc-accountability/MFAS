@@ -31,6 +31,8 @@
     "household": "datasets/facts_household.json",
     "lineitems": "datasets/lineitems.json",
     "lineitem_validation": "datasets/lineitem_validation.json",
-    "audited": "datasets/audited_general_fund.json"
+    "audited": "datasets/audited_general_fund.json",
+    "ocr_statements": "datasets/ocr_statements.json",
+    "ocr_manifest": "datasets/ocr_manifest.json"
   }
 }

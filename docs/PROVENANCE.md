@@ -42,7 +42,41 @@ purpose:
 | `stated` | a figure a document asserts in prose, or that a named person supplied | yes, labelled |
 | `derived` | computed by this pipeline from other facts | yes, labelled |
 | `transcribed` | a human read it off a rendered page image | yes |
-| `ocr-unverified` | from a scanned page's character-recognition layer | **no — build fails** |
+| `ocr-arithmetic-verified` | recognised from a scan **and** its column adds up exactly to the total printed beside it | yes, labelled |
+| `ocr-unverified` | from a scanned page's character-recognition layer, unchecked | **no — build fails** |
+
+### Why `ocr-arithmetic-verified` is publishable and `ocr-unverified` is not
+
+Character recognition fails by altering a digit. An altered digit breaks the column's arithmetic, so
+a page whose lines sum exactly to its own printed total has checked itself. That is a structural
+guarantee, not an estimate of quality — a figure either survives it or is withheld.
+
+Measured recognition accuracy on these documents is 141/141 figures
+(`etl/ocr_accuracy_probe.py`), but the arithmetic check is what makes a figure publishable, not the
+measurement. Columns that do not balance are withheld entirely rather than published with a caveat,
+because a caveat on a wrong number is still a wrong number.
+
+## Best practice: replace scanned PDFs with the original digital copies
+
+**Every figure recovered by character recognition would be safer read from a digital original.**
+
+A digital PDF carries the characters themselves, so a figure is read rather than recognised, and the
+whole class of recognition risk disappears. A scan is a photograph of a page; anything read from it
+is an inference, however well verified.
+
+This project already prefers digital wherever it can:
+
+- The FY2025 annual report exists in **both** forms. The digital file is used and the 61 MB scan is
+  ignored entirely, so the audited FY2025 figures on the site carry no recognition risk at all.
+- Stage 70 skips any scan that a digital original supersedes, and records why in
+  `ocr_manifest.json`.
+
+**The single most valuable thing anyone could do for the accuracy of this site is to obtain digital
+originals of the remaining annual reports from the town** and drop them into `sources/`. The
+pipeline will prefer them automatically, the recognition step becomes unnecessary for those years,
+and the verification machinery becomes a belt-and-braces check rather than a load-bearing one. It is
+a request worth making of the town directly: publishing digital originals costs them nothing and
+makes their own record easier for residents to check.
 
 `etl/s90_build.py` enforces that last row. It also fails the build if a fact references a
 `source_doc` that is not in the manifest, if a metric is missing from the registry, or if a value is

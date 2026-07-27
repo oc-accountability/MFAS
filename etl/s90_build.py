@@ -248,6 +248,9 @@ def main() -> None:
             "lineitem_validation": "datasets/lineitem_validation.json",
             # audited outcome — small, loaded with the first paint
             "audited": "datasets/audited_general_fund.json",
+            # audited totals recovered from scans, each proven by its own page
+            "ocr_statements": "datasets/ocr_statements.json",
+            "ocr_manifest": "datasets/ocr_manifest.json",
         },
     })
 

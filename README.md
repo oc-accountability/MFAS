@@ -69,7 +69,21 @@ A pipeline built on that text would publish confidently wrong figures about name
 So the manifest classifies every document, the build **refuses** to publish a value marked
 `ocr-unverified`, and none of the 62 figures on the site come from a scanned file.
 
-**But fresh OCR does work, and that was measured rather than assumed.** One report exists in both
+### Best practice: replace scanned PDFs with digital originals
+
+Every figure recovered by character recognition would be safer read from a digital file. A digital
+PDF carries the characters themselves; a scan is a photograph, and anything read from it is an
+inference however carefully verified. **This project always prefers a digital original where one
+exists** — the FY2025 report is in the archive both ways, so the digital file is used and the 61 MB
+scan is skipped entirely.
+
+**Obtaining digital originals of the remaining annual reports from the town is the single most
+valuable thing anyone could do for this site's accuracy.** Drop them into `sources/` and the
+pipeline prefers them automatically; the recognition step becomes unnecessary and the verification
+machinery becomes a belt-and-braces check rather than a load-bearing one. It costs the town nothing
+and makes their own record easier for residents to check.
+
+**Fresh OCR does work, and that was measured rather than assumed.** One report exists in both
 digital and scanned form, so it serves as ground truth: rendering the scan at 300 DPI and running
 `tesseract --psm 6` reproduced **141 of 141 figures exactly, with none invented**
 (`etl/ocr_accuracy_probe.py`). The audited decade is therefore recoverable — that is work not yet
@@ -111,6 +125,11 @@ rendered as `0` on a chart is a lie, so the pipeline will not produce one.
 - **55 of 60** published category totals reconcile against the town's own Financial Summary pages,
   with **FY2027 budget reconciling 12 of 12**. The five disclosed variances are all in prior-year
   columns and are flagged unverified in the data and on the page.
+- **An eight-year audited record, FY2018–FY2025** — what the town actually took in and actually
+  spent each year. FY2025 is read from a digital original; FY2018–FY2024 are recovered from scanned
+  reports by character recognition and then **proven by their own pages**: a figure is published only
+  where the individual lines add up exactly to the total printed beside them. 7 of 8 scanned reports
+  yielded a self-verifying statement; 42 verified column totals.
 - **The audited FY2025 General Fund**, budget vs actual, line by line — the town budgeted
   $16,761,617 and spent $14,109,365, 15.8% under. Read from the *digital* twin of the FY2025 report,
   so no OCR is involved, and it agrees with the budget document's own figures for the same year

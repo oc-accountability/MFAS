@@ -1036,6 +1036,65 @@ function renderHealth(host) {
     }
   }
 
+  // ---- the audited series, spanning digital and recognised sources ----------
+  const ocr = state.data.ocr_statements;
+  if (ocr && ocr.published && ocr.published.length) {
+    const series = new Map();   // fiscal_year -> {revenues, expenditures, how}
+    for (const p of ocr.published) {
+      if (p.column_role !== 'actual' || !p.fiscal_year) continue;
+      const e = series.get(p.fiscal_year) || { fy: p.fiscal_year, how: 'recognised' };
+      e[p.section] = p.total;
+      e.page = p.source_page;
+      e.doc = p.source_doc;
+      series.set(p.fiscal_year, e);
+    }
+    // FY2025 comes from the DIGITAL report — no recognition involved.
+    if (aud && aud.rows) {
+      const r = aud.rows.find(x => x.section === 'revenues' && x.is_total);
+      const x2 = aud.rows.find(x => x.section === 'expenditures' && x.is_total);
+      if (r && x2) series.set(aud.fiscal_year, {
+        fy: aud.fiscal_year, revenues: r.actual, expenditures: x2.actual,
+        how: 'digital', page: aud.source_page, doc: aud.source_doc });
+    }
+    const yrs = [...series.values()].sort((a, b) => a.fy - b.fy);
+    if (yrs.length >= 2) {
+      const p3 = document.createElement('div');
+      p3.className = 'panel panel-pad';
+      p3.style.marginTop = 'var(--s5)';
+      const nDigital = yrs.filter(y => y.how === 'digital').length;
+      p3.innerHTML = `
+        <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+          The audited record, year by year</h3>
+        <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
+          What the town actually took in and actually spent, from its audited annual reports.
+          ${nDigital} of these ${yrs.length} years came from a digital file;
+          the rest were recovered from scanned pages by character recognition and then checked —
+          each figure shown here is the total that its own page's individual lines add up to
+          exactly.
+        </p>
+        <div class="tablewrap"><table>
+          <caption>Audited General Fund actuals. "Read from" shows whether the figures came from a
+            digital document or from a verified reading of a scan.</caption>
+          <thead><tr><th>Year</th><th class="num">Revenue (actual)</th>
+            <th class="num">Spending (actual)</th><th>Read from</th></tr></thead>
+          <tbody>${yrs.map(y => `<tr>
+            <td>FY${y.fy}</td>
+            <td class="num">${y.revenues != null ? usd(y.revenues) : '—'}</td>
+            <td class="num">${y.expenditures != null ? usd(y.expenditures) : '—'}</td>
+            <td>${y.how === 'digital'
+              ? '<span class="badge ok">digital original</span>'
+              : '<span class="badge">scan, arithmetic-verified</span>'}</td>
+          </tr>`).join('')}</tbody></table></div>
+        <div class="callout warn" style="margin-top:var(--s5)">
+          <strong>Best practice: these should all be digital originals.</strong>
+          A figure read from a digital file is read directly; a figure recovered from a scan is an
+          inference, however carefully verified. Asking the town to publish digital copies of the
+          earlier reports would remove that distinction entirely — and it costs them nothing.
+        </div>`;
+      sec.appendChild(p3);
+    }
+  }
+
   sec.appendChild(disclosure('See the charts behind this', inner => {
     const years = [...new Set(state.data.facts.facts
       .map(f => f.fiscal_year).filter(v => v != null))].sort((a, b) => a - b);
@@ -1276,6 +1335,34 @@ function renderReceipts(host) {
     taken from those.</span>`;
   sec.appendChild(ans);
 
+  // ---- how the documents were read, and what would make it safer -------------
+  const clause = document.createElement('div');
+  clause.className = 'panel panel-pad';
+  clause.style.marginBottom = 'var(--s5)';
+  clause.innerHTML = `
+    <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+      How these documents were read — and what would make it safer</h3>
+    <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
+      Some of the town's reports are published only as <strong>scanned images</strong> rather than as
+      real digital files. Figures from those have to be recovered by character recognition. We do not
+      take that recognition on trust: a recovered figure is shown only when its column adds up
+      <em>exactly</em> to the total printed beside it on the same page, so a misread digit cannot pass
+      unnoticed. Anything that fails that check is withheld rather than published.
+    </p>
+    <div class="callout warn" style="margin:0">
+      <strong>Best practice: replace every scanned PDF with the original digital copy.</strong>
+      A digital original is read directly, character for character, and removes this entire class of
+      risk instead of managing it. Where the town has published a digital original we use it and
+      ignore the scan completely — that is how the audited FY2025 figures on this page were read, and
+      why they carry no recognition risk at all. Obtaining digital originals for the remaining years
+      from the town is the single best thing anyone could do for the accuracy of this site.
+    </div>
+    <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
+      Every figure on this page records how it was read. You can see which documents are digital and
+      which are scans in the list below, and the full method is in
+      <span class="mono">docs/EXTRACTION_NOTES.md</span>.</span></p>`;
+  sec.appendChild(clause);
+
   sec.appendChild(disclosure('See all the source documents', inner => {
     const rows = docs.slice().sort((a, b) =>
       (a.category || '').localeCompare(b.category) || a.filename.localeCompare(b.filename))
@@ -1344,7 +1431,7 @@ async function boot() {
     loadHome();
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
-                   'household', 'audited'];
+                   'household', 'audited', 'ocr_statements'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

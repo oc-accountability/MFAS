@@ -1,0 +1,77 @@
+{
+  "generated_by": "etl/s70_ocr.py",
+  "note": "Text recovered by character recognition from the scanned reports. Recognition quality was measured at 141/141 figures on a document that exists in both scanned and digital form, but recognition is never assumed correct: no figure reaches the website from here unless its column sums exactly to the total printed beside it (stage 75).",
+  "best_practice": "Replace every scanned PDF with the town's original digital copy. A digital original removes this entire class of risk, because the figures are read directly rather than recognised from an image. Where a digital original exists it is already used in preference to the scan.",
+  "engine": "tesseract 5.3.4",
+  "render_dpi": 300,
+  "documents": [
+    {
+      "document": "fiscal-year-2024-2026-strategic-plan-20230626",
+      "filename": "Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
+      "pages": 16,
+      "chars": 26826,
+      "chars_per_page": 1677
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
+      "pages": 175,
+      "chars": 396978,
+      "chars_per_page": 2268
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
+      "pages": 181,
+      "chars": 439400,
+      "chars_per_page": 2428
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
+      "pages": 163,
+      "chars": 434279,
+      "chars_per_page": 2664
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
+      "pages": 127,
+      "chars": 325154,
+      "chars_per_page": 2560
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2022",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2022.pdf",
+      "pages": 130,
+      "chars": 345053,
+      "chars_per_page": 2654
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2023",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2023.pdf",
+      "pages": 141,
+      "chars": 365638,
+      "chars_per_page": 2593
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2024",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2024.pdf",
+      "pages": 139,
+      "chars": 388892,
+      "chars_per_page": 2798
+    }
+  ],
+  "skipped": [
+    {
+      "document": "annual-financial-report-year-ended-june-30-2025",
+      "reason": "a digital original of the same report is available and is used instead"
+    },
+    {
+      "document": "comprehensive-annual-financial-report-fy18",
+      "reason": "duplicate with no recoverable content"
+    }
+  ],
+  "total_pages": 1072,
+  "elapsed_seconds": 3585
+}
