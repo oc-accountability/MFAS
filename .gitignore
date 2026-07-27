@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Source documents are NOT committed. They are large (726 MB) and two exceed
+# GitHub's 100 MB hard per-file limit. The repo commits *extracted data* plus a
+# hash manifest so any figure can be re-verified against the original.
+# See docs/PROVENANCE.md.
+# ---------------------------------------------------------------------------
+sources/
+build/
+
+# Never commit source formats directly
+*.pdf
+*.xlsx
+*.xls
+*.docx
+*.zip
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+*.swp

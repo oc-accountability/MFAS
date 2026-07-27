@@ -1,0 +1,171 @@
+{
+  "generated_by": "etl/s20_xlsx.py",
+  "facts": [
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2023,
+      "metric": "admin_spend_total",
+      "value": 2420000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Overview' row FY23",
+      "extraction": "stated",
+      "note": "Figure supplied in the initiative's request workbook and attributed there to Commissioner Matt Hughes, June 3. Not traced to an audited financial statement — treat as a claim to verify, not as an ACFR figure."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2024,
+      "metric": "admin_spend_total",
+      "value": 2730000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Overview' row FY24",
+      "extraction": "stated",
+      "note": "Figure supplied in the initiative's request workbook and attributed there to Commissioner Matt Hughes, June 3. Not traced to an audited financial statement — treat as a claim to verify, not as an ACFR figure."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2025,
+      "metric": "admin_spend_total",
+      "value": 3120000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Overview' row FY25",
+      "extraction": "stated",
+      "note": "Figure supplied in the initiative's request workbook and attributed there to Commissioner Matt Hughes, June 3. Not traced to an audited financial statement — treat as a claim to verify, not as an ACFR figure."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2026,
+      "metric": "admin_spend_total",
+      "value": 2950000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Overview' row FY26",
+      "extraction": "stated",
+      "note": "Figure supplied in the initiative's request workbook and attributed there to Commissioner Matt Hughes, June 3. Not traced to an audited financial statement — treat as a claim to verify, not as an ACFR figure."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "admin_spend_total",
+      "value": 3210000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Overview' row FY27",
+      "extraction": "stated",
+      "note": "Figure supplied in the initiative's request workbook and attributed there to Commissioner Matt Hughes, June 3. Not traced to an audited financial statement — treat as a claim to verify, not as an ACFR figure."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2024,
+      "metric": "admin_spend_yoy_pct",
+      "value": 12.81,
+      "unit": "percent",
+      "basis": "derived",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "computed from admin_spend_total",
+      "extraction": "derived",
+      "note": "Computed by this pipeline from FY2023 and FY2024 values."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2025,
+      "metric": "admin_spend_yoy_pct",
+      "value": 14.29,
+      "unit": "percent",
+      "basis": "derived",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "computed from admin_spend_total",
+      "extraction": "derived",
+      "note": "Computed by this pipeline from FY2024 and FY2025 values."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2026,
+      "metric": "admin_spend_yoy_pct",
+      "value": -5.45,
+      "unit": "percent",
+      "basis": "derived",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "computed from admin_spend_total",
+      "extraction": "derived",
+      "note": "Computed by this pipeline from FY2025 and FY2026 values."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "admin_spend_yoy_pct",
+      "value": 8.81,
+      "unit": "percent",
+      "basis": "derived",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "computed from admin_spend_total",
+      "extraction": "derived",
+      "note": "Computed by this pipeline from FY2026 and FY2027 values."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "admin_spend_change_pct_since",
+      "value": 32.64,
+      "unit": "percent",
+      "basis": "derived",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "FY2023->FY2027",
+      "extraction": "derived",
+      "note": "Total change in stated administrative spend from FY2023 to FY2027."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": null,
+      "metric": "capital_project_original_budget",
+      "value": 791000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "Project Cost Changes / Ridgewalk",
+      "extraction": "stated",
+      "note": "Source cell reads '$1,124M'. Interpreted as $1,124 thousand (= $1,124,000) because the row's own Original+Increase arithmetic requires it; the 'M' suffix in the source is a typo."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": null,
+      "metric": "capital_project_current_budget",
+      "value": 1124000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "Project Cost Changes / Ridgewalk",
+      "extraction": "stated",
+      "note": "Source cell reads '$1,124M'. Interpreted as $1,124 thousand (= $1,124,000) because the row's own Original+Increase arithmetic requires it; the 'M' suffix in the source is a typo."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": null,
+      "metric": "capital_project_original_budget",
+      "value": 116000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "Project Cost Changes / Dam Repair",
+      "extraction": "stated"
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": null,
+      "metric": "capital_project_current_budget",
+      "value": 2916000.0,
+      "unit": "USD",
+      "basis": "stated",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "Project Cost Changes / Dam Repair",
+      "extraction": "stated"
+    }
+  ]
+}

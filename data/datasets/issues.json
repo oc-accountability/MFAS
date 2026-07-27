@@ -1,0 +1,51 @@
+{
+  "generated_by": "etl/s20_xlsx.py",
+  "note": "The initiative's working topic list. 'key_facts' of TBD means research is open, not that no facts exist.",
+  "issues": [
+    {
+      "issue": "Library Funding",
+      "status": "Researching",
+      "key_facts": null,
+      "source_documents": "Budget Packet",
+      "next_action": "Review costs",
+      "source_doc": "issues-log",
+      "source_detail": "Sheet1"
+    },
+    {
+      "issue": "Affordable Housing",
+      "status": "Active",
+      "key_facts": "FY27 request",
+      "source_documents": "Commissioner Packet",
+      "next_action": "Prepare questions",
+      "source_doc": "issues-log",
+      "source_detail": "Sheet1"
+    },
+    {
+      "issue": "EMS",
+      "status": "Monitoring",
+      "key_facts": null,
+      "source_documents": "County Budget",
+      "next_action": "Compare counties",
+      "source_doc": "issues-log",
+      "source_detail": "Sheet1"
+    },
+    {
+      "issue": "Parks",
+      "status": null,
+      "key_facts": null,
+      "source_documents": null,
+      "next_action": null,
+      "source_doc": "issues-log",
+      "source_detail": "Sheet1"
+    },
+    {
+      "issue": "county spending",
+      "status": null,
+      "key_facts": null,
+      "source_documents": null,
+      "next_action": null,
+      "source_doc": "issues-log",
+      "source_detail": "Sheet1"
+    }
+  ]
+}

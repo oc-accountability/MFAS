@@ -1,0 +1,124 @@
+{
+  "generated_by": "etl/s90_build.py",
+  "metrics": {
+    "admin_spend_total": {
+      "label": "Total administrative spend",
+      "unit": "USD",
+      "category": "Spending",
+      "description": "Administrative spending as supplied by a county commissioner in the initiative's request workbook. Not an audited figure.",
+      "direction": "lower-is-cheaper"
+    },
+    "admin_spend_yoy_pct": {
+      "label": "Administrative spend, year-over-year change",
+      "unit": "percent",
+      "category": "Spending",
+      "description": "Computed by this pipeline from the stated totals."
+    },
+    "admin_spend_change_pct_since": {
+      "label": "Administrative spend, total change over the period",
+      "unit": "percent",
+      "category": "Spending",
+      "description": "First to last fiscal year in the stated series."
+    },
+    "capital_project_original_budget": {
+      "label": "Capital project — original budget",
+      "unit": "USD",
+      "category": "Capital projects",
+      "description": "Budget when the project was first approved."
+    },
+    "capital_project_current_budget": {
+      "label": "Capital project — current budget",
+      "unit": "USD",
+      "category": "Capital projects",
+      "description": "Most recent budget for the same project."
+    },
+    "general_fund_surplus_deficit": {
+      "label": "General Fund surplus / (deficit)",
+      "unit": "USD",
+      "category": "General Fund",
+      "description": "Negative values are deficits. Shown in the source in parentheses."
+    },
+    "general_fund_surplus_deficit_pct": {
+      "label": "General Fund surplus / (deficit), % of budget",
+      "unit": "percent",
+      "category": "General Fund",
+      "description": "Negative values are deficits."
+    },
+    "general_fund_balance_available_cash": {
+      "label": "General Fund balance — available cash",
+      "unit": "USD",
+      "category": "Savings",
+      "description": "The town's savings. Its stated floor is 50% of expenditures."
+    },
+    "general_fund_balance_pct_of_expenditures": {
+      "label": "Fund balance as % of expenditures",
+      "unit": "percent",
+      "category": "Savings",
+      "description": "The town states its aim is to stay no lower than 50%."
+    },
+    "general_fund_expenditures": {
+      "label": "General Fund expenditures",
+      "unit": "USD",
+      "category": "Budget totals"
+    },
+    "water_sewer_fund_expenditures": {
+      "label": "Water & Sewer Fund expenditures",
+      "unit": "USD",
+      "category": "Budget totals"
+    },
+    "stormwater_fund_expenditures": {
+      "label": "Stormwater Fund expenditures",
+      "unit": "USD",
+      "category": "Budget totals"
+    },
+    "total_budget": {
+      "label": "Total budget, all funds",
+      "unit": "USD",
+      "category": "Budget totals"
+    },
+    "property_tax_rate": {
+      "label": "Property tax rate",
+      "unit": "cents_per_100_valuation",
+      "category": "Taxes",
+      "description": "Cents per $100 of assessed value."
+    },
+    "revenue_per_cent_of_tax_rate": {
+      "label": "Revenue raised by one cent of tax rate",
+      "unit": "USD",
+      "category": "Taxes",
+      "description": "The town's own conversion factor. Powers the household cost estimate."
+    },
+    "salary_benefit_increase_cost": {
+      "label": "Cost of salary and benefit increases",
+      "unit": "USD",
+      "category": "Spending"
+    },
+    "tax_rate_increase_needed_cents": {
+      "label": "Tax rate increase needed to balance",
+      "unit": "cents_per_100_valuation",
+      "category": "Taxes",
+      "description": "Stated by the town as a floor ('over N cents')."
+    },
+    "capital_projects_tax_rate_equivalent_cents": {
+      "label": "Major capital projects, expressed as tax-rate cents",
+      "unit": "cents_per_100_valuation",
+      "category": "Capital projects"
+    },
+    "water_rate_increase_pct": {
+      "label": "Water rate increase",
+      "unit": "percent",
+      "category": "Utilities"
+    },
+    "tax_rate_above_revenue_neutral_cents": {
+      "label": "Tax rate above the revenue-neutral rate",
+      "unit": "cents_per_100_valuation",
+      "category": "Taxes",
+      "description": "Revenue-neutral is the rate raising the same revenue after a revaluation. The gap above it is the effective increase."
+    },
+    "affordable_housing_allocation": {
+      "label": "Affordable housing allocation",
+      "unit": "USD",
+      "category": "Housing"
+    }
+  }
+}

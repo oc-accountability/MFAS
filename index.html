@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hillsborough &amp; Orange County — Where the Money Goes</title>
+<meta name="description" content="Town of Hillsborough budget and financial data, extracted from public documents. Every figure links to the page it came from.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cg fill='%23fff'%3E%3Crect x='7' y='16' width='4' height='9' rx='1'/%3E%3Crect x='14' y='11' width='4' height='14' rx='1'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-palette="#2a78d6,#eb6834,#1baf7a">
+
+<header class="site-head">
+  <div class="wrap">
+    <p class="eyebrow">Orange County Efficiency &amp; Accountability Initiative</p>
+    <h1>Where the money goes</h1>
+    <p class="lede">
+      Budget and financial figures for the <strong>Town of Hillsborough, North&nbsp;Carolina</strong>,
+      pulled from the town's own published documents. Every number on this page carries a link to the
+      document and page it came from. Nothing here is an estimate by us unless it says so.
+    </p>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch between light and dark theme">
+      <span aria-hidden="true">◐</span> Theme
+    </button>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <p class="loading" id="loading">Loading published data…</p>
+</main>
+
+<footer class="site-foot wrap">
+  <h2>How to check this yourself</h2>
+  <p>
+    This site is generated from a public data pipeline. The figures are extracted from the
+    documents listed in <em>Source documents</em> below, and each source file's SHA-256 hash is
+    recorded so you can confirm you are looking at the same file we were.
+  </p>
+  <p class="caveat">
+    <strong>An honest limitation.</strong> The town's annual financial reports for FY2018 through
+    FY2024 are <em>scanned images</em>. Their embedded text is produced by character recognition
+    and it transposes digits — it renders <span class="mono">4,610,003</span> as
+    <span class="mono">460,100,3</span>. No figure on this page is taken from those text layers.
+    That is why the audited multi-year history is not charted here yet: it has to be transcribed
+    from the page images first, and doing that carelessly would publish wrong numbers about real
+    people. See <span class="mono">docs/EXTRACTION_NOTES.md</span>.
+  </p>
+  <p class="meta" id="footMeta"></p>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

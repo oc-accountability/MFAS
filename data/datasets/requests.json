@@ -1,0 +1,495 @@
+{
+  "generated_by": "etl/s20_xlsx.py",
+  "note": "A public records request sent to the Town of Hillsborough. The workbook was sent as a blank template; the fill state below reflects the copy in this archive and is a snapshot, not a claim that the Town refused to respond.",
+  "request_document": "hillsborough-data-request-june-2027",
+  "cover_note": [
+    "Commissioner Hughes indicated that organizational changes over time make comparisons challenging.",
+    "To avoid apples-to-oranges comparisons, I created the attached workbook and would appreciate",
+    "any assistance in populating it.",
+    "If the Town already maintains reports containing this information, I would be happy to receive",
+    "those documents instead of having staff populate the spreadsheet."
+  ],
+  "summary": {
+    "tables_requested": 23,
+    "tables_unanswered": 21,
+    "tables_partial": 0,
+    "tables_answered": 2,
+    "data_cells_requested": 436,
+    "data_cells_provided": 10
+  },
+  "tables": [
+    {
+      "sheet": "Overview",
+      "section": "Staffing & Compensation",
+      "title": "Total Administrative Spend",
+      "columns_requested": [
+        "2.42"
+      ],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 4,
+      "cells_provided": 4,
+      "status": "answered"
+    },
+    {
+      "sheet": "Position Counts",
+      "section": "Staffing & Compensation",
+      "title": "Position Counts",
+      "columns_requested": [
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27",
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27",
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "rows_requested": [
+        "Administration",
+        "Accounting",
+        "HR",
+        "IT",
+        "Communications",
+        "Facilities",
+        "Safety/Risk",
+        "Planning & Economic Development",
+        "Public Works",
+        "Utilities",
+        "Police",
+        "Fire",
+        "Other"
+      ],
+      "cells_expected": 195,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Personnel Costs",
+      "section": "Staffing & Compensation",
+      "title": "Personnel Expense (Salaries, Benefits, Total)",
+      "columns_requested": [
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "rows_requested": [
+        "Administration",
+        "Accounting",
+        "HR",
+        "IT",
+        "Communications",
+        "Facilities",
+        "Safety/Risk",
+        "Planning & Economic Development",
+        "Public Works",
+        "Utilities",
+        "Police",
+        "Fire",
+        "Other"
+      ],
+      "cells_expected": 65,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Professional Services",
+      "section": "Staffing & Compensation",
+      "title": "Consulting / Professional Services",
+      "columns_requested": [
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "rows_requested": [
+        "Legal Services",
+        "Auditing",
+        "Engineering",
+        "Planning Consultants",
+        "Communications Consultants",
+        "HR Consultants",
+        "IT Consultants",
+        "Other Professional Services"
+      ],
+      "cells_expected": 40,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Major Changes",
+      "section": "Staffing & Compensation",
+      "title": "Major Administrative Changes",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Utility Summary",
+      "section": "Utilities",
+      "title": "Utility Fund Summary",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Utility Rates",
+      "section": "Utilities",
+      "title": "Utility Rates",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Utility Staffing",
+      "section": "Utilities",
+      "title": "Utility Staffing",
+      "columns_requested": [
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "rows_requested": [
+        "Water Treatment",
+        "Wastewater Treatment",
+        "Distribution",
+        "Collection",
+        "Administration"
+      ],
+      "cells_expected": 25,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Utility Capital Projects",
+      "section": "Utilities",
+      "title": "Utility Capital Projects",
+      "columns_requested": [
+        "Budget",
+        "Status",
+        "Funding Source"
+      ],
+      "rows_requested": [
+        "Dam Repair",
+        "Cates Crete",
+        "Eno Interceptors",
+        "Pump Station",
+        "Hypochlorite Conversion"
+      ],
+      "cells_expected": 15,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Capital Projects Tracker",
+      "section": "Capital Projects",
+      "title": "Capital Projects Tracker",
+      "columns_requested": [
+        "Department",
+        "Cost",
+        "Start",
+        "Competion"
+      ],
+      "rows_requested": [
+        "Fire Station",
+        "Ridgewalk",
+        "Train Station",
+        "Dam Repairs",
+        "Utilities Projects"
+      ],
+      "cells_expected": 20,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Project Cost Changes",
+      "section": "Capital Projects",
+      "title": "Project Cost Changes",
+      "columns_requested": [
+        "Original Budget",
+        "Current Budget",
+        "Increase"
+      ],
+      "rows_requested": [
+        "Ridgewalk",
+        "Dam Repair"
+      ],
+      "cells_expected": 6,
+      "cells_provided": 6,
+      "status": "answered"
+    },
+    {
+      "sheet": "Funding Sources",
+      "section": "Capital Projects",
+      "title": "Funding Sources",
+      "columns_requested": [
+        "Taxes",
+        "Utility Fees",
+        "Grants",
+        "Debt",
+        "Developer"
+      ],
+      "rows_requested": [],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Debt Summary",
+      "section": "Debt",
+      "title": "Debt Summary",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Debt Service",
+      "section": "Debt",
+      "title": "Debt Service",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Major Borrowings",
+      "section": "Debt",
+      "title": "Major Borrowing",
+      "columns_requested": [
+        "Amount",
+        "Date",
+        "Purpose"
+      ],
+      "rows_requested": [
+        "Fire Station",
+        "Utility Projects",
+        "Other"
+      ],
+      "cells_expected": 9,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Tax Rates",
+      "section": "Revenue & Taxes",
+      "title": "Tax Rate History",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Revenue Source",
+      "section": "Revenue & Taxes",
+      "title": "Revenue Source",
+      "columns_requested": [
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "rows_requested": [
+        "Property Tax",
+        "Sales Tax",
+        "Utility Fees",
+        "Grants",
+        "Occupancy Tax",
+        "Food & Beverage Tax"
+      ],
+      "cells_expected": 30,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Affordable Housing",
+      "section": "Affordable Housing",
+      "title": "Affordable Housing Funding",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27 est.",
+        "FY28"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Affordable Housing Projects",
+      "section": "Affordable Housing",
+      "title": "Affordable Housing Projects",
+      "columns_requested": [
+        "Location",
+        "Units",
+        "Town Contribution",
+        "County Contribution",
+        "Status"
+      ],
+      "rows_requested": [
+        "Collins Ridge",
+        "Project B",
+        "Project C"
+      ],
+      "cells_expected": 15,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Committments",
+      "section": "Affordable Housing",
+      "title": "Housing Commitments and Future Obligations",
+      "columns_requested": [
+        "Commitment Date",
+        "Annual Cost",
+        "Total Commitment"
+      ],
+      "rows_requested": [
+        "Project A",
+        "Project B"
+      ],
+      "cells_expected": 6,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Cost Per Unit",
+      "section": "Affordable Housing",
+      "title": "Cost Per Unit",
+      "columns_requested": [
+        "Public Funding",
+        "# Units",
+        "Public Cost Per Unit"
+      ],
+      "rows_requested": [
+        "Collins Ridge",
+        "Project B"
+      ],
+      "cells_expected": 6,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Housing Policy",
+      "section": "Affordable Housing",
+      "title": "Housing Policy Timeline",
+      "columns_requested": [
+        "Action",
+        "Financial Impact"
+      ],
+      "rows_requested": [],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    },
+    {
+      "sheet": "Housing Tax Impact",
+      "section": "Affordable Housing",
+      "title": "Housing Funding vs Tax Impact",
+      "columns_requested": [],
+      "rows_requested": [
+        "FY24",
+        "FY25",
+        "FY26",
+        "FY27"
+      ],
+      "cells_expected": 0,
+      "cells_provided": 0,
+      "status": "unanswered"
+    }
+  ],
+  "projects_with_cost_changes": [
+    {
+      "project": "Ridgewalk",
+      "original_budget_usd": 791000.0,
+      "current_budget_usd": 1124000.0,
+      "increase_usd": 333000.0,
+      "increase_pct": 42.1,
+      "arithmetic_consistent": true,
+      "raw_cells": [
+        "$791k",
+        "$1,124M",
+        "$333k"
+      ],
+      "note": "Source cell reads '$1,124M'. Interpreted as $1,124 thousand (= $1,124,000) because the row's own Original+Increase arithmetic requires it; the 'M' suffix in the source is a typo.",
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Project Cost Changes'",
+      "extraction": "stated"
+    },
+    {
+      "project": "Dam Repair",
+      "original_budget_usd": 116000.0,
+      "current_budget_usd": 2916000.0,
+      "increase_usd": 2800000.0,
+      "increase_pct": 2413.8,
+      "arithmetic_consistent": true,
+      "raw_cells": [
+        "$116k",
+        "$2.916M",
+        "$2.8M"
+      ],
+      "note": null,
+      "source_doc": "hillsborough-data-request-june-2027",
+      "source_detail": "sheet 'Project Cost Changes'",
+      "extraction": "stated"
+    }
+  ]
+}

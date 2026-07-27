@@ -1,0 +1,294 @@
+{
+  "generated_by": "etl/s90_build.py",
+  "note": "Fiscal years that more than one document reports. This is the dataset behind the 'how have the town's projections moved?' view.",
+  "comparisons": [
+    {
+      "metric": "general_fund_balance_available_cash",
+      "fiscal_year": 2026,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": 15733111.0,
+          "basis": "estimate",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": 13541421.0,
+          "basis": "budget",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": 13541421.0,
+      "max": 15733111.0,
+      "spread": 2191690.0,
+      "spread_pct_of_min": 16.2,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_balance_available_cash",
+      "fiscal_year": 2027,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": 15266880.0,
+          "basis": "budget",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": 12710817.0,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": 12710817.0,
+      "max": 15266880.0,
+      "spread": 2556063.0,
+      "spread_pct_of_min": 20.1,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_balance_available_cash",
+      "fiscal_year": 2028,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": 14380540.0,
+          "basis": "projected",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": 11379358.0,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": 11379358.0,
+      "max": 14380540.0,
+      "spread": 3001182.0,
+      "spread_pct_of_min": 26.4,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_balance_pct_of_expenditures",
+      "fiscal_year": 2026,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": 73.0,
+          "basis": "estimate",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": 75.6,
+          "basis": "budget",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": 73.0,
+      "max": 75.6,
+      "spread": 2.6,
+      "spread_pct_of_min": 3.6,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_balance_pct_of_expenditures",
+      "fiscal_year": 2027,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": 78.0,
+          "basis": "budget",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": 68.3,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": 68.3,
+      "max": 78.0,
+      "spread": 9.7,
+      "spread_pct_of_min": 14.2,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_balance_pct_of_expenditures",
+      "fiscal_year": 2028,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": 72.0,
+          "basis": "projected",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": 59.3,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": 59.3,
+      "max": 72.0,
+      "spread": 12.7,
+      "spread_pct_of_min": 21.4,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_surplus_deficit",
+      "fiscal_year": 2026,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": -748667.0,
+          "basis": "estimate",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": -37425.0,
+          "basis": "budget",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": -748667.0,
+      "max": -37425.0,
+      "spread": 711242.0,
+      "spread_pct_of_min": 95.0,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_surplus_deficit",
+      "fiscal_year": 2027,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": -466231.0,
+          "basis": "budget",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": -830604.0,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": -830604.0,
+      "max": -466231.0,
+      "spread": 364373.0,
+      "spread_pct_of_min": 43.9,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_surplus_deficit",
+      "fiscal_year": 2028,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": -886340.0,
+          "basis": "projected",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": -1331459.0,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": -1331459.0,
+      "max": -886340.0,
+      "spread": 445119.0,
+      "spread_pct_of_min": 33.4,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_surplus_deficit_pct",
+      "fiscal_year": 2026,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": -3.5,
+          "basis": "estimate",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": -0.2,
+          "basis": "budget",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": -3.5,
+      "max": -0.2,
+      "spread": 3.3,
+      "spread_pct_of_min": 94.3,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_surplus_deficit_pct",
+      "fiscal_year": 2027,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": -2.4,
+          "basis": "budget",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": -4.5,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": -4.5,
+      "max": -2.4,
+      "spread": 2.1,
+      "spread_pct_of_min": 46.7,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    },
+    {
+      "metric": "general_fund_surplus_deficit_pct",
+      "fiscal_year": 2028,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "readings": [
+        {
+          "value": -4.4,
+          "basis": "projected",
+          "source_doc": "fy27-budget-message",
+          "source_page": 2
+        },
+        {
+          "value": -6.9,
+          "basis": "projected",
+          "source_doc": "fy26-budget-message",
+          "source_page": 3
+        }
+      ],
+      "min": -6.9,
+      "max": -4.4,
+      "spread": 2.5,
+      "spread_pct_of_min": 36.2,
+      "note": "The same fiscal year reported by more than one budget document. Differences reflect basis (projection vs budget vs estimate) and revised information, not necessarily error."
+    }
+  ]
+}
