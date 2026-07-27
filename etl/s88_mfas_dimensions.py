@@ -79,7 +79,13 @@ def main() -> None:
             "note": ("This project has one level where MFAS has two. Her Entity_ID (ORG_OC) is "
                      "an Organization within a Government. Splitting them matters as soon as "
                      "school districts, authorities or fire districts are added — each is a "
-                     "separate Organization under the same Government."),
+                     "separate Organization under the same Government. The project-scope "
+                     "document that arrived 2026-07-27 DEFINES the two levels — two Governments "
+                     "(Orange County, Town of Hillsborough), each with the same nine domains — "
+                     "so the structure is now known even though the data is not yet split by it. "
+                     "What remains is a modelling decision, not an extraction: whether the school "
+                     "district, sheriff's office and EMS are Organizations under the county or "
+                     "Governments in their own right. See datasets/context.json."),
         },
         "Fund": {
             "status": "available",

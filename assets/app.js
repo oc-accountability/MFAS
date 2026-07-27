@@ -1021,7 +1021,52 @@ function renderPaysFor(host) {
     }
   }));
 
+  whoProvidesWhat(sec);
   host.appendChild(sec);
+}
+
+/**
+ * Why the county's share of the bill is the bigger one.
+ *
+ * The page can already show that Orange County charges more per $100 than the town does,
+ * which surprises most people. It could not show *why*. The answer is simply that the two
+ * governments buy different things, and the county buys the expensive ones — schools, the
+ * sheriff, social services, public health, EMS.
+ *
+ * Everything here is a service name from the initiative's own project scope, not a
+ * spending figure, so there is nothing to reconcile and nothing is implied about value.
+ */
+function whoProvidesWhat(sec) {
+  const c = state.data.context;
+  if (!c || !c.who_provides_what) return;
+  const w = c.who_provides_what;
+  const county = w['Orange County'] || [], town = w['Town of Hillsborough'] || [];
+  if (!county.length || !town.length) return;
+
+  const tRate = val('property_tax_rate'), cRate = val('county_property_tax_rate');
+  const card = document.createElement('div');
+  card.className = 'card split';
+  card.innerHTML = `
+    <h3>Two governments, one bill</h3>
+    <p>Your property tax funds two separate governments, and they buy different things.
+      ${cRate && tRate ? `Orange County charges <strong>${cents(cRate)} cents</strong> per $100
+        and the town <strong>${cents(tRate)} cents</strong> — the county's is the larger share,
+        which surprises most people until you see what each one pays for.` : ''}</p>
+    <div class="split-cols">
+      <div>
+        <h4>Orange County provides</h4>
+        <ul>${county.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
+      </div>
+      <div>
+        <h4>The Town of Hillsborough provides</h4>
+        <ul>${town.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <p class="note"><span class="ic" aria-hidden="true">✓</span>
+      <span>${esc(c.why_two_governments_matter || '')} These are service names from the
+      initiative's project scope, not spending figures &mdash; the split shows what each
+      government is responsible for, not how well it does it.</span></p>`;
+  sec.appendChild(card);
 }
 
 /* ==================== the spending explorer ==================== */
@@ -1614,6 +1659,7 @@ function renderComing(host) {
       if (c) inner.appendChild(c);
     }));
   }
+  driversBlock(sec);
   tradeoffBlock(sec);
   projectsBlock(sec);
   host.appendChild(sec);
@@ -1629,6 +1675,90 @@ function renderComing(host) {
  * Hillsborough publishes both sides, so nothing here is inferred: the town's own
  * Funded and Unfunded lists, and its own stated consequence of declining each request.
  */
+/**
+ * What is driving the increase, in one comparable unit.
+ *
+ * This is the other half of the tradeoff question: not just what was declined, but what
+ * the new commitments cost. Every driver is shown in dollars AND in cents on the tax
+ * rate, because that is the only unit in which a pay rise, a housing commitment and a
+ * debt payment can be compared to each other — and to what a resident pays.
+ *
+ * The rows come from the initiative's own analysis workbook, not from this pipeline, and
+ * the page says so. Each carries the source the analyst cited and their own confidence
+ * rating, and where a figure could be checked against this pipeline's independent
+ * reading of the same documents, it was.
+ */
+function driversBlock(sec) {
+  const d = state.data.workbook_b;
+  if (!d || !d.material_change_drivers || !d.material_change_drivers.length) return;
+  // Negative rows are the resulting budget GAP, not a driver of it, and rendering one
+  // here printed "−$2.53M … $-422/yr on your home" — which reads as money coming back to
+  // the reader when closing that gap would in fact cost them. The gap has its own card.
+  const rows = d.material_change_drivers
+    .filter(r => r.amount > 0 && r.driver)
+    .sort((a, b) => b.amount - a.amount);
+  const gaps = d.material_change_drivers.filter(r => r.amount < 0 && r.driver);
+  if (!rows.length) return;
+  const v = d.verification || {};
+  const agreed = (v.cross_checks_against_this_pipeline || []).filter(c => c.agrees).length;
+  const checks = (v.cross_checks_against_this_pipeline || []).length;
+  const oneCent = state.homeValue / 100 * 0.01;
+
+  const card = document.createElement('div');
+  card.className = 'card drivers';
+  card.innerHTML = `
+    <h3>What is driving the increase</h3>
+    <p>Each commitment below is shown twice: in dollars, and in <strong>cents on the tax
+      rate</strong>. The second is the only unit in which a pay rise, a housing commitment and
+      a debt payment can be compared &mdash; and it converts straight into what you pay.</p>
+    <ul class="rows" id="driverRows"></ul>
+    <p class="note"><span class="ic" aria-hidden="true">✓</span>
+      <span>These rows come from the initiative's own analysis workbook rather than from this
+      page's own reading of the documents, and each carries the source and confidence its
+      author recorded.${checks ? ` Where the two could be compared, ${agreed} of ${checks}
+      figures matched this page's independent reading of the same documents exactly.` : ''}
+      The conversion uses the town's own published figure of
+      ${v.her_penny_assumption ? usd(v.her_penny_assumption) : 'n/a'} raised by one cent.
+      ${gaps.length ? `The projected budget gap these commitments contribute to is shown
+      separately below, since it is the result rather than a cause.` : ''}</span></p>`;
+  const ul = card.querySelector('#driverRows');
+  for (const r of rows) {
+    const li = document.createElement('li');
+    const onYours = r.cents_equivalent ? oneCent * r.cents_equivalent : null;
+    li.innerHTML = `<span class="k">${esc(r.driver)}
+        <small>${esc(r.period || '')}${r.budget_category ? ' · ' + esc(r.budget_category) : ''}
+          ${r.confidence ? `· confidence: ${esc(String(r.confidence).toLowerCase())}` : ''}</small>
+        ${r.commentary ? `<small class="why">${esc(clip(r.commentary, 200))}</small>` : ''}</span>
+      <span class="v">${compact(r.amount)}<small>${r.cents_equivalent
+        ? `${cents(r.cents_equivalent)} cents${onYours ? ` · ${usd(onYours)}/yr on your home` : ''}`
+        : ''}</small></span>`;
+    ul.appendChild(li);
+  }
+  sec.appendChild(card);
+
+  // The cliff is the point of the exercise: the commitments land in one year.
+  if (d.fy29_fiscal_cliff && d.fy29_fiscal_cliff.length && v.fy29_cliff_total_reconciles) {
+    const q = d.fy29_fiscal_cliff.filter(c => c.annual_amount);
+    const box = document.createElement('div');
+    box.className = 'card tradeoff-named';
+    box.innerHTML = `
+      <h3>Why FY2029 is the year to watch</h3>
+      <p>Several of those commitments start paying out at once. The initiative's workbook adds
+        the quantifiable ones to <strong>${usd(v.fy29_cliff_parts_sum)}</strong> in that single
+        year &mdash; about <strong>${cents(v.fy29_cliff_parts_sum
+          / (v.her_penny_assumption || 240000))} cents</strong> on the tax rate, or roughly
+        <strong>${usd(oneCent * v.fy29_cliff_parts_sum / (v.her_penny_assumption || 240000))}
+        a year</strong> on a home like yours.</p>
+      <ul class="rows">${q.map(c => `<li><span class="k">${esc(c.component)}
+        <small>${esc(String(c.status || '').toLowerCase())}</small></span>
+        <span class="v">${compact(c.annual_amount)}</span></li>`).join('')}</ul>
+      <p class="note"><span class="ic" aria-hidden="true">✓</span>
+        <span>The workbook deliberately leaves out exposures it cannot yet quantify, so this is
+        a floor rather than a forecast. Its parts were checked against its own stated total.</span></p>`;
+    sec.appendChild(box);
+  }
+}
+
 /** Trim to the last sentence that fits, so an excerpt never ends mid-word. */
 function clip(s, n) {
   if (!s || s.length <= n) return s || '';
@@ -1922,7 +2052,7 @@ async function boot() {
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
                    'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas',
-                   'transfers', 'utility', 'cost_of_ownership', 'projects', 'tradeoffs'];
+                   'transfers', 'utility', 'cost_of_ownership', 'projects', 'tradeoffs', 'workbook_b', 'context'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

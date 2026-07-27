@@ -11,7 +11,7 @@
   "counts": {
     "facts": 83,
     "metrics": 42,
-    "documents": 70,
+    "documents": 75,
     "documents_with_trustworthy_text": 46,
     "documents_scanned_needing_transcription": 10,
     "multi_document_comparisons": 12,
@@ -41,6 +41,8 @@
     "utility": "datasets/utility_rates.json",
     "cost_of_ownership": "datasets/total_cost_of_ownership.json",
     "projects": "datasets/projects.json",
-    "tradeoffs": "datasets/tradeoffs.json"
+    "tradeoffs": "datasets/tradeoffs.json",
+    "workbook_b": "datasets/workbook_b.json",
+    "context": "datasets/context.json"
   }
 }

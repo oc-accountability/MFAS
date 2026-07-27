@@ -625,3 +625,131 @@ def test_tradeoff_caveats_state_what_this_cannot_show(tradeoffs):
     assert "never" in blob and "submitted" in blob
     assert "recommend" in blob or "board" in blob
     assert tradeoffs["problems"] == [], tradeoffs["problems"]
+
+
+# ---------------------------------------------------------------------------
+# The initiative's newer analysis workbooks (s96)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def wbb():
+    return load("workbook_b.json")
+
+
+def test_the_pipeline_never_writes_to_her_analysis_workbooks():
+    src = (REPO / "etl" / "s96_workbook_b.py").read_text(encoding="utf-8")
+    for banned in ("wb.save(", ".save(", "openpyxl.Workbook("):
+        assert banned not in src, f"s96 must not write to her workbooks ({banned})"
+
+
+def test_her_tax_equivalent_arithmetic_is_verified_not_trusted(wbb):
+    """A cents-per-$100 figure must equal its dollar amount over the penny assumption."""
+    v = wbb["verification"]
+    assert v["tax_equivalent_arithmetic"], "the arithmetic check did not run"
+    assert v["tax_equivalent_all_consistent"] is True, [
+        a for a in v["tax_equivalent_arithmetic"] if not a["agrees"]]
+    for a in v["tax_equivalent_arithmetic"]:
+        assert abs(a["her_cents"] - a["recomputed"]) < 0.01, a
+
+
+def test_the_fy29_cliff_total_equals_its_parts(wbb):
+    v = wbb["verification"]
+    assert v["fy29_cliff_total_reconciles"] is True, (
+        f"parts {v['fy29_cliff_parts_sum']} vs stated {v['fy29_cliff_total_stated']}")
+
+
+def test_her_penny_assumption_matches_the_towns_published_figure(wbb):
+    for item in wbb["tax_equivalent_exposure"]:
+        if "penny_matches_published" in item:
+            assert item["penny_matches_published"] is True, item
+
+
+def test_a_crosscheck_never_compares_against_a_stale_projection(wbb):
+    """The same fiscal year is often reported by several documents — this year's budget
+    states FY2027 and last year's PROJECTED it. Comparing against whichever row came
+    last accused her of a disagreement on fund balance that was this pipeline's own
+    selection bug. Every reading must be carried so a comparison cannot look decisive
+    when the documents themselves disagree."""
+    checks = wbb["verification"]["cross_checks_against_this_pipeline"]
+    assert checks, "no cross-checks ran"
+    for c in checks:
+        assert "all_readings_this_pipeline_holds" in c, c
+        assert c["all_readings_this_pipeline_holds"], c
+        # The chosen reading must be one this pipeline actually holds, and must not be a
+        # projection when a firmer basis exists for the same year.
+        bases = [r["basis"] for r in c["all_readings_this_pipeline_holds"]]
+        if c["my_basis"] == "projected":
+            assert all(b == "projected" for b in bases), (
+                f"{c['her_label']}: compared against a projection while a firmer reading "
+                f"exists: {c['all_readings_this_pipeline_holds']}")
+    assert wbb["verification"]["cross_checks_all_agree"] is True, [
+        c for c in checks if not c["agrees"]]
+
+
+def test_a_budget_gap_is_never_shown_as_money_returned(wbb):
+    """Her drivers sheet includes the projected deficit as a negative. Rendering it beside
+    the drivers printed "$-422/yr on your home", which reads as money coming back when
+    closing the gap would cost the reader."""
+    app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "r.amount > 0" in app, (
+        "the drivers list no longer excludes negative (gap) rows")
+    assert any(r["amount"] and r["amount"] < 0 for r in wbb["material_change_drivers"]), (
+        "no negative row present — if her sheet changed, re-check the guard is still needed")
+
+
+def test_the_sales_tax_caveat_distinguishes_town_revenue_from_a_county_rate(wbb):
+    """She asked about a county sales tax for schools. Her sheet holds the TOWN's local
+    option sales tax revenue, which is a different thing."""
+    assert wbb["sales_tax_history"], "no sales tax history imported"
+    c = wbb["sales_tax_caveat"].lower()
+    assert "town" in c and "county" in c and "not" in c
+    for r in wbb["sales_tax_history"]:
+        assert r["source"], r
+
+
+def test_workbook_import_reported_no_problems(wbb):
+    assert wbb["problems"] == [], wbb["problems"]
+
+
+# ---------------------------------------------------------------------------
+# Narrative context: who provides what, and the Finance Director's words (s97)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def context():
+    return load("context.json")
+
+
+def test_every_quotation_appears_verbatim_in_its_source(context):
+    """A claim about what a named public official said is at least as damaging to get
+    wrong as a figure, and cannot be corrected by re-reading a table. Each quote is
+    checked against the document it is attributed to at build time."""
+    q = context["finance_director_on_debt"]["quotes"]
+    assert q, "no quotations were extracted"
+    for item in q:
+        assert item["verified_verbatim"] is True, item
+        assert item["speaker"] and item["source_doc"] and item["context"], item
+
+
+def test_the_finance_directors_ramp_up_example_adds_up(context):
+    r = context["finance_director_on_debt"]["ramp_up_example"]
+    if r is None:
+        pytest.skip("the worked example is not present in this revision of the document")
+    assert r["arithmetic_consistent"] is True, r
+    assert r["ramp_by_year"][-1] == r["target_annual_debt_service"], r
+    assert r["ramp_by_year"] == sorted(r["ramp_by_year"]), "a ramp-up must not decrease"
+
+
+def test_both_governments_service_lists_are_present(context):
+    w = context["who_provides_what"]
+    assert len(w["Orange County"]) >= 5, w["Orange County"]
+    assert len(w["Town of Hillsborough"]) >= 5, w["Town of Hillsborough"]
+    # These are service names, not figures — a number here means the parse caught prose.
+    for side in ("Orange County", "Town of Hillsborough"):
+        for s in w[side]:
+            assert not any(ch.isdigit() for ch in s), f"{side}: {s!r} looks like prose"
+            assert len(s) <= 60, f"{side}: {s!r} looks like a sentence"
+
+
+def test_context_extraction_reported_no_problems(context):
+    assert context["problems"] == [], context["problems"]

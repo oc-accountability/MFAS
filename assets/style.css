@@ -843,3 +843,18 @@ details.more > .inner { margin-top: var(--s5); }
                            font-size: var(--t-2xs); margin-top: 2px; }
 .tradeoff-named { border-left: 3px solid var(--warning); }
 .tradeoff-named .src { font-size: var(--t-2xs); color: var(--text-muted); margin: 0; }
+
+/* ---- drivers of the increase, in dollars and in tax cents ---- */
+.drivers .rows .k small { display: block; margin-top: 3px; color: var(--text-muted);
+                          font-size: var(--t-2xs); line-height: 1.5; }
+.drivers .rows .k small.why { max-width: 64ch; color: var(--text-secondary); margin-top: 5px; }
+.drivers .rows .v small { display: block; font-weight: 500; color: var(--accent);
+                          font-size: var(--t-2xs); margin-top: 3px; }
+
+/* ---- two governments, one bill ---- */
+.split-cols { display: grid; gap: var(--s5); grid-template-columns: 1fr; margin: var(--s4) 0; }
+@media (min-width: 620px) { .split-cols { grid-template-columns: 1fr 1fr; } }
+.split-cols h4 { margin: 0 0 var(--s2); font-size: var(--t-xs); font-weight: 650;
+                 color: var(--text-secondary); letter-spacing: .01em; }
+.split-cols ul { margin: 0; padding-left: 1.1em; }
+.split-cols li { font-size: var(--t-sm); line-height: 1.75; color: var(--text-primary); }

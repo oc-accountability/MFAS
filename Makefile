@@ -32,6 +32,8 @@ etl:
 	$(PY) etl/s93_utility_rates.py
 	$(PY) etl/s94_projects.py
 	$(PY) etl/s95_tradeoffs.py
+	$(PY) etl/s96_workbook_b.py
+	$(PY) etl/s97_context.py
 	$(PY) etl/s90_build.py
 
 test:

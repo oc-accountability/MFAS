@@ -1,9 +1,9 @@
 {
   "generated_by": "etl/s00_manifest.py",
   "summary": {
-    "unique_documents": 70,
+    "unique_documents": 75,
     "duplicate_copies_in_archive": 35,
-    "total_bytes": 877971253,
+    "total_bytes": 878641746,
     "pdf_digital_text": 46,
     "pdf_scanned_ocr": 10,
     "oversize_for_github": [
@@ -663,6 +663,34 @@
       "values_extractable": true
     },
     {
+      "id": "debt-schedules-from-hillsborough-fd",
+      "filename": "Debt Schedules from Hillsborough FD.docx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Debt Schedules from Hillsborough FD.docx",
+      "duplicate_paths": [],
+      "format": "docx",
+      "bytes": 9812,
+      "sha256": "4066745db57ba17d84417fa135158f341a22a3e8a63ba0050332b80f57a1d6fc",
+      "category": "financial-report",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": false
+    },
+    {
+      "id": "debt-service-projections",
+      "filename": "Debt Service Projections.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Debt Service Projections.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 27508,
+      "sha256": "efc644db8b5d2c5271e7fcaa06986621abaf2a64221333b8ef94ab0f8158bc86",
+      "category": "financial-report",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
       "id": "fy26-budget-ordinance",
       "filename": "FY26 Budget Ordinance.pdf",
       "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/FY26 Budget Ordinance.pdf",
@@ -681,6 +709,34 @@
       "full_page_images": 0,
       "sampled_pages": 3,
       "chars_per_page": 1480,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-gf-trend-schedules-fy18-fy27-v5-audit-edition",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 82308,
+      "sha256": "f2b817694d6dbeab55be11340c73c39fa11ff0dcdf2770432b2ce636faea79e7",
+      "category": "financial-report",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-workbook-b-fiscal-sustainability-risk-model",
+      "filename": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 524304,
+      "sha256": "f6fa0e0de53756eaef844a545f02cade9c093a7fbb3496db80f8041e96d3da9e",
+      "category": "financial-report",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
       "values_extractable": true
     },
     {
@@ -1438,6 +1494,20 @@
       "sampled_pages": 6,
       "chars_per_page": 1083,
       "values_extractable": true
+    },
+    {
+      "id": "oc-hillsborough-fiscal-analysis-project",
+      "filename": "OC & Hillsborough Fiscal Analysis Project.docx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/MFAS/OC & Hillsborough Fiscal Analysis Project.docx",
+      "duplicate_paths": [],
+      "format": "docx",
+      "bytes": 26561,
+      "sha256": "7ff6409f36a3503b133079b309f6bb9ae33e68851d7b9a571721439f25ee788a",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": false
     },
     {
       "id": "sales-tax-information",

@@ -2,13 +2,14 @@
   "generated_by": "etl/diff_manifest.py",
   "note": "Filenames lie; hashes do not. A document amended in place keeps its name while its contents move underneath every figure quoted from it.",
   "added": [
-    "Architecture & Design Specification.pdf",
-    "Decision Context Model.pptx",
-    "MFAS Architecture Notebook.pdf",
-    "MFAS Conceptual Architecture.pdf"
+    "Debt Schedules from Hillsborough FD.docx",
+    "Debt Service Projections.xlsx",
+    "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+    "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
+    "OC & Hillsborough Fiscal Analysis Project.docx"
   ],
   "removed": [],
   "changed": [],
-  "unchanged_count": 66,
+  "unchanged_count": 70,
   "published_figures_at_risk": {}
 }

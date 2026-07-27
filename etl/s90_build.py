@@ -292,6 +292,10 @@ def main() -> None:
             "projects": "datasets/projects.json",
             # what was funded, what was declined, and the town's stated consequence
             "tradeoffs": "datasets/tradeoffs.json",
+            # the initiative's own analysis workbooks, imported and cross-checked
+            "workbook_b": "datasets/workbook_b.json",
+            # who provides which services, and the Finance Director's own words on debt
+            "context": "datasets/context.json",
         },
     })
 

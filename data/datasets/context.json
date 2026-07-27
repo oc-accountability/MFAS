@@ -1,0 +1,91 @@
+{
+  "generated_by": "etl/s97_context.py",
+  "arrived": "2026-07-27",
+  "why_this_exists": "Neither document is a table. One explains which government provides which services, which is why the county's tax rate is the larger of the two. The other is the town Finance Director's written answer to a records request, explaining a mechanism the budget figures show without explaining.",
+  "verification": "Nothing here is a number, so nothing is reconciled. Instead every quotation is checked to appear verbatim in the document it is attributed to — a claim about what a named public official said is at least as damaging to get wrong as a figure.",
+  "who_provides_what": {
+    "source_doc": "oc-hillsborough-fiscal-analysis-project",
+    "note": "From the initiative's own project scope. Together these are, in its words, “the complete local tax burden for a Hillsborough resident”.",
+    "Orange County": [
+      "Schools",
+      "Sheriff",
+      "Social Services",
+      "Public Health",
+      "Libraries",
+      "Economic Development",
+      "Affordable Housing",
+      "EMS",
+      "County debt and capital projects"
+    ],
+    "Town of Hillsborough": [
+      "Police",
+      "Fire",
+      "Streets",
+      "Water & Sewer",
+      "Planning",
+      "Parks",
+      "Riverwalk",
+      "Affordable housing initiatives",
+      "Local debt and capital projects"
+    ]
+  },
+  "questions_the_project_exists_to_answer": [
+    "What am I paying in total?",
+    "Where does every tax dollar go?",
+    "How has spending changed over 10 years?",
+    "What is driving tax increases?",
+    "How much debt have both governments taken on?",
+    "How many employees are supported by taxpayers?",
+    "What capital projects are already committed?",
+    "What future obligations exist that aren't obvious from one year's budget?"
+  ],
+  "why_two_governments_matter": "Most residents only ever see one budget at a time, and no single budget document answers these questions because they span two governments.",
+  "finance_director_on_debt": {
+    "quotes": [
+      {
+        "id": "ramp_up_strategy",
+        "quote": "We often use a “ramp-up” strategy to build capacity over multiple years.",
+        "why_it_matters": "Why the budget sets aside money years before a debt payment starts.",
+        "speaker": "Town of Hillsborough Finance Director",
+        "context": "Written response to a public records request",
+        "source_doc": "debt-schedules-from-hillsborough-fd",
+        "verified_verbatim": true
+      },
+      {
+        "id": "no_affordability_analysis",
+        "quote": "No specific analysis has been done",
+        "why_it_matters": "Asked for any debt affordability or debt management analyses prepared by staff.",
+        "speaker": "Town of Hillsborough Finance Director",
+        "context": "Written response to a public records request",
+        "source_doc": "debt-schedules-from-hillsborough-fd",
+        "verified_verbatim": true
+      },
+      {
+        "id": "capacity_is_the_gate",
+        "quote": "the town’s ability to absorb any new debt service is a key factor in determining if and when a project may move forward",
+        "why_it_matters": "What actually decides whether a capital project proceeds.",
+        "speaker": "Town of Hillsborough Finance Director",
+        "context": "Written response to a public records request",
+        "source_doc": "debt-schedules-from-hillsborough-fd",
+        "verified_verbatim": true
+      }
+    ],
+    "ramp_up_example": {
+      "target_annual_debt_service": 300000.0,
+      "ramp_by_year": [
+        100000.0,
+        200000.0,
+        300000.0
+      ],
+      "reaches_target_in_years": 3,
+      "arithmetic_consistent": true,
+      "note": "The Finance Director's own illustration. The ramp-up money goes into the project itself, reducing what must be borrowed, and reserves budget capacity so it is not absorbed elsewhere."
+    },
+    "relevance": "This is the mechanism behind the fire station: the budget carries $300,000 a year against an eventual debt service near $670,000. It is also why the declined 'ramp-up expansion' request matters more than its size suggests — a ramp-up that starts late means either borrowing more or finding the money elsewhere later."
+  },
+  "organization_vs_government": {
+    "relevance_to_mfas": "Stage 88 reports Organization as conflated with Government. This document resolves what the two levels are: two Governments, each with the same nine domains — operating budget, capital budget, debt, staffing, utilities or schools, affordable housing, revenues, reserves, historical trends.",
+    "still_needed": "A decision on whether sub-entities the county funds — the school district, the sheriff's office, EMS — are Organizations under the county Government or Governments in their own right. That is a modelling choice, not a fact to extract."
+  },
+  "problems": []
+}

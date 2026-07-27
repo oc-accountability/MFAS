@@ -1,0 +1,551 @@
+{
+  "generated_by": "etl/s96_workbook_b.py",
+  "imported_from": [
+    "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+    "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx"
+  ],
+  "arrived": "2026-07-27",
+  "contract": "Her workbooks are READ, never written — she edits them in Excel. Every figure with an independently-extracted counterpart here is compared against it, and disagreements are reported rather than resolved in this pipeline's favour.",
+  "why_this_matters": "These two workbooks contain the commentary layer and the comparable-unit view that this project had been asked to build. Two independent readings of the same public documents — hers by hand, this pipeline's by parsing — is a real check on both.",
+  "verification": {
+    "her_penny_assumption": 240000.0,
+    "published_penny_source": "fy27-budget-message p.2",
+    "tax_equivalent_arithmetic": [
+      {
+        "item": "FY29 Projected Deficit",
+        "amount": 2534674.0,
+        "her_cents": 10.5611,
+        "recomputed": 10.5611,
+        "agrees": true
+      },
+      {
+        "item": "Fire Station Funding Gap",
+        "amount": 370026.0,
+        "her_cents": 1.5418,
+        "recomputed": 1.5418,
+        "agrees": true
+      },
+      {
+        "item": "Ridgewalk Funding Gap",
+        "amount": 337000.0,
+        "her_cents": 1.4042,
+        "recomputed": 1.4042,
+        "agrees": true
+      },
+      {
+        "item": "Rail Station Debt Service",
+        "amount": 326119.0,
+        "her_cents": 1.3588,
+        "recomputed": 1.3588,
+        "agrees": true
+      },
+      {
+        "item": "Affordable Housing Annual Target",
+        "amount": 320000.0,
+        "her_cents": 1.3333,
+        "recomputed": 1.3333,
+        "agrees": true
+      },
+      {
+        "item": "FY27 Personnel Increase",
+        "amount": 630000.0,
+        "her_cents": 2.625,
+        "recomputed": 2.625,
+        "agrees": true
+      },
+      {
+        "item": "Nonprofit Funding FY27",
+        "amount": 110000.0,
+        "her_cents": 0.4583,
+        "recomputed": 0.4583,
+        "agrees": true
+      },
+      {
+        "item": "Sustainability Annual Commitment",
+        "amount": 320000.0,
+        "her_cents": 1.3333,
+        "recomputed": 1.3333,
+        "agrees": true
+      }
+    ],
+    "tax_equivalent_all_consistent": true,
+    "fy29_cliff_parts_sum": 3567819.0,
+    "fy29_cliff_total_stated": 3567819.0,
+    "fy29_cliff_total_reconciles": true,
+    "cross_checks_against_this_pipeline": [
+      {
+        "her_label": "General Fund Expenditures / Budget",
+        "fiscal_year": 2027,
+        "metric": "general_fund_expenditures",
+        "hers": 19476631.0,
+        "this_pipeline": 19476631.0,
+        "difference": 0.0,
+        "agrees": true,
+        "my_source": "fy27-budget-message p.1",
+        "my_basis": "recommended",
+        "all_readings_this_pipeline_holds": [
+          {
+            "value": 19476631.0,
+            "basis": "recommended",
+            "source": "fy27-budget-message p.1"
+          }
+        ],
+        "documents_disagree_about_this_year": false
+      },
+      {
+        "her_label": "Fund Balance % of Expenditures",
+        "fiscal_year": 2027,
+        "metric": "general_fund_balance_pct_of_expenditures",
+        "hers": 78.0,
+        "this_pipeline": 78.0,
+        "difference": 0.0,
+        "agrees": true,
+        "my_source": "fy27-budget-message p.2",
+        "my_basis": "budget",
+        "all_readings_this_pipeline_holds": [
+          {
+            "value": 78.0,
+            "basis": "budget",
+            "source": "fy27-budget-message p.2"
+          },
+          {
+            "value": 68.3,
+            "basis": "projected",
+            "source": "fy26-budget-message p.3"
+          }
+        ],
+        "documents_disagree_about_this_year": true
+      }
+    ],
+    "cross_checks_all_agree": true
+  },
+  "material_change_drivers": [
+    {
+      "driver": "Salary and benefit increases",
+      "amount": 630000.0,
+      "period": "FY27",
+      "budget_category": "Personnel",
+      "commentary": "Town manager states FY27 salary and benefit increases cost roughly $630,000, equal to about 2.6 cents on the tax rate. This is a recurring cost that compounds over time.",
+      "source": "FY27 Budget Message / Cost Containment Strategies",
+      "confidence": "High",
+      "follow_up_question": "Request department-by-department compensation growth and headcount/FTE history.",
+      "cents_equivalent": 2.625
+    },
+    {
+      "driver": "FY26 market pay adjustments",
+      "amount": 220000.0,
+      "period": "FY26",
+      "budget_category": "Personnel",
+      "commentary": "Listed among major FY26 expenses. This is separate from ongoing COLA/merit/benefit increases and helps explain why personnel grows.",
+      "source": "FY26 Budget-at-a-Glance",
+      "confidence": "High",
+      "follow_up_question": "Clarify which departments received the largest pay adjustments.",
+      "cents_equivalent": 0.9167
+    },
+    {
+      "driver": "Fire station reserve / future debt gap",
+      "amount": 370000.0,
+      "period": "FY29 onward",
+      "budget_category": "Fire / Debt / Transfers",
+      "commentary": "Budget sets aside $300K annually, but projected future debt service is about $670K annually, leaving a roughly $370K annual gap.",
+      "source": "FY27 Budget Message / Noteworthy Expenses",
+      "confidence": "High",
+      "follow_up_question": "Ask for full station funding model and alternatives such as renovation.",
+      "cents_equivalent": 1.5417
+    },
+    {
+      "driver": "Ridgewalk Greenway reserve / future debt gap",
+      "amount": 337000.0,
+      "period": "FY30 onward",
+      "budget_category": "Public Space / Debt",
+      "commentary": "Budget sets aside $333K annually, but projected debt service is about $670K; gap is about $337K or 1.4 cents on the tax rate if no other funding is found.",
+      "source": "FY27 Budget Message / Noteworthy Expenses",
+      "confidence": "High",
+      "follow_up_question": "Ask if scope can be phased or outside funding increased.",
+      "cents_equivalent": 1.4042
+    },
+    {
+      "driver": "Passenger rail / multi-modal station town share",
+      "amount": 3500000.0,
+      "period": "FY29 onward",
+      "budget_category": "Transportation / Debt",
+      "commentary": "Town share now estimated near $3.5M; annual debt service projected around $326K starting FY29. Net-zero/solar/green roof add-ons are not included and could add $1M.",
+      "source": "FY27 Budget Message / Noteworthy Expenses",
+      "confidence": "High",
+      "follow_up_question": "Ask for current project budget, funding agreements, and local match cap.",
+      "cents_equivalent": 14.5833
+    },
+    {
+      "driver": "Affordable housing annual contribution target",
+      "amount": 320000.0,
+      "period": "FY27 onward",
+      "budget_category": "Special Appropriations / Community Activities",
+      "commentary": "FY27 completes the ramp-up to the town board target contribution equivalent to roughly 2 cents on the tax rate at the time.",
+      "source": "FY27 Budget Message / Affordable Housing",
+      "confidence": "High",
+      "follow_up_question": "Track commitments by project, partner, year, and restricted vs unrestricted funds.",
+      "cents_equivalent": 1.3333
+    },
+    {
+      "driver": "FY26 affordable housing major expense",
+      "amount": 376000.0,
+      "period": "FY26",
+      "budget_category": "Special Appropriations",
+      "commentary": "Listed as a major FY26 expense in the Budget-at-a-Glance.",
+      "source": "FY26 Budget-at-a-Glance",
+      "confidence": "High",
+      "follow_up_question": "Reconcile to affordable housing reserve and project-level commitments.",
+      "cents_equivalent": 1.5667
+    },
+    {
+      "driver": "Nonprofit partnership funding growth",
+      "amount": 110000.0,
+      "period": "FY27",
+      "budget_category": "Special Appropriations",
+      "commentary": "Town manager notes FY27 nonprofit funding set at $110K, up from $25K in FY24, a 440% increase over three years.",
+      "source": "FY27 Budget Message / Nonprofit Partnerships",
+      "confidence": "High",
+      "follow_up_question": "Review whether increases should be frozen during projected deficits.",
+      "cents_equivalent": 0.4583
+    },
+    {
+      "driver": "Public Space and Sustainability annual commitment",
+      "amount": 320000.0,
+      "period": "FY27",
+      "budget_category": "Public Space / Sustainability",
+      "commentary": "Annual commitment for energy efficiency and carbon reduction goals; budget message suggests possible redirection to train station sustainability upgrades.",
+      "source": "FY27 Budget Message / Public Space and Sustainability",
+      "confidence": "Medium",
+      "follow_up_question": "Ask for a project list and measurable ROI/savings for sustainability funds.",
+      "cents_equivalent": 1.3333
+    },
+    {
+      "driver": "Community Services reorganization",
+      "amount": 60423.0,
+      "period": "FY27",
+      "budget_category": "Public Space / IT",
+      "commentary": "Reorganization combines Public Works, Public Space/Sustainability and Stormwater coordination; budget form adds $60,423 in FY27, including $57,923 Public Space and $2,500 IT.",
+      "source": "FY27 Budget Justification Form",
+      "confidence": "High",
+      "follow_up_question": "Ask for before/after org chart, net FTE change, and total savings.",
+      "cents_equivalent": 0.2518
+    },
+    {
+      "driver": "Police cameras and equipment",
+      "amount": 75000.0,
+      "period": "FY27-FY29 annual",
+      "budget_category": "Police / Public Safety",
+      "commentary": "FY27 budget recommends in-car camera replacement $75K annually FY27-FY29, plus other equipment/radio upgrades.",
+      "source": "FY27 Budget Message / Police Department",
+      "confidence": "Medium",
+      "follow_up_question": "Ask for Axon/Flock contract terms and renewal schedule.",
+      "cents_equivalent": 0.3125
+    },
+    {
+      "driver": "Vehicle replacement funds",
+      "amount": 300000.0,
+      "period": "FY27",
+      "budget_category": "Police / Public Works",
+      "commentary": "FY27 includes Police vehicle replacement funds of $300K and Streets $85K; cash funding avoids interest and smooths annual budget impact.",
+      "source": "FY27 Budget Message / Vehicle Replacement",
+      "confidence": "High",
+      "follow_up_question": "Build a rolling vehicle replacement schedule by department.",
+      "cents_equivalent": 1.25
+    },
+    {
+      "driver": "Sales tax flatline",
+      "amount": 0.0,
+      "period": "FY27-FY29",
+      "budget_category": "Revenue",
+      "commentary": "Budget assumes zero percent sales tax growth FY27-FY29 after strong early-2020s growth; this removes a revenue cushion that had absorbed inflation.",
+      "source": "FY27 Budget Message / Sales Tax Slowdown",
+      "confidence": "High",
+      "follow_up_question": "Separate normal sales tax growth from COVID-era one-time growth and refunds.",
+      "cents_equivalent": null
+    },
+    {
+      "driver": "Projected FY29 deficit",
+      "amount": -2534674.0,
+      "period": "FY29",
+      "budget_category": "Structural Budget Gap",
+      "commentary": "FY29 deficit projected over $2.5M and would require a tax rate increase of over 10 cents according to the manager.",
+      "source": "FY27 Budget Message / Projected Surplus/(Deficit)",
+      "confidence": "High",
+      "follow_up_question": "Build deficit bridge: personnel, debt, capital, revenue, policy choices.",
+      "cents_equivalent": -10.5611
+    }
+  ],
+  "tax_equivalent_exposure": [
+    {
+      "item": "FY29 Projected Deficit",
+      "annual_cost": 2534674.0,
+      "cents_per_100": 10.5611,
+      "penny_assumption": 240000.0,
+      "status": "Verified projection",
+      "notes": "Budget says FY29 deficit would require >10 cents.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "Fire Station Funding Gap",
+      "annual_cost": 370026.0,
+      "cents_per_100": 1.5418,
+      "penny_assumption": 240000.0,
+      "status": "Estimated",
+      "notes": "Projected debt service $670,026 less $300K annual set-aside.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "Ridgewalk Funding Gap",
+      "annual_cost": 337000.0,
+      "cents_per_100": 1.4042,
+      "penny_assumption": 240000.0,
+      "status": "Estimated",
+      "notes": "Projected debt service $670K less $333K contribution.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "Rail Station Debt Service",
+      "annual_cost": 326119.0,
+      "cents_per_100": 1.3588,
+      "penny_assumption": 240000.0,
+      "status": "Estimated",
+      "notes": "Projected FY29 debt service.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "Affordable Housing Annual Target",
+      "annual_cost": 320000.0,
+      "cents_per_100": 1.3333,
+      "penny_assumption": 240000.0,
+      "status": "Verified/Policy",
+      "notes": "Roughly 2-cent equivalent target originally set at ~$320K.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "FY27 Personnel Increase",
+      "annual_cost": 630000.0,
+      "cents_per_100": 2.625,
+      "penny_assumption": 240000.0,
+      "status": "Verified budget message",
+      "notes": "Salary and benefit increases equal roughly 2.6 cents.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "Nonprofit Funding FY27",
+      "annual_cost": 110000.0,
+      "cents_per_100": 0.4583,
+      "penny_assumption": 240000.0,
+      "status": "Verified budget message",
+      "notes": "Increased from $25K FY24 to $110K FY27.",
+      "penny_matches_published": true
+    },
+    {
+      "item": "Sustainability Annual Commitment",
+      "annual_cost": 320000.0,
+      "cents_per_100": 1.3333,
+      "penny_assumption": 240000.0,
+      "status": "Verified budget message",
+      "notes": "Annual commitment; potential redirect to Rail Station discussed.",
+      "penny_matches_published": true
+    }
+  ],
+  "fy29_fiscal_cliff": [
+    {
+      "component": "FY29 Projected Deficit",
+      "annual_amount": 2534674.0,
+      "cents": 10.5611,
+      "status": "Verified",
+      "notes": "From FY27 Recommended Budget."
+    },
+    {
+      "component": "Fire Station Gap",
+      "annual_amount": 370026.0,
+      "cents": 1.5418,
+      "status": "Estimated",
+      "notes": "Difference between projected $670K debt service and $300K set-aside."
+    },
+    {
+      "component": "Ridgewalk Gap",
+      "annual_amount": 337000.0,
+      "cents": 1.4042,
+      "status": "Estimated",
+      "notes": "Difference between projected $670K debt service and $333K contribution."
+    },
+    {
+      "component": "Rail Station Debt",
+      "annual_amount": 326119.0,
+      "cents": 1.3588,
+      "status": "Estimated",
+      "notes": "Projected debt service beginning FY29."
+    },
+    {
+      "component": "Vehicle Replacement Increment",
+      "annual_amount": null,
+      "cents": null,
+      "status": "Data Needed",
+      "notes": "Need project/reserve balance and replacement plan."
+    },
+    {
+      "component": "Cost Allocation Reversal Risk",
+      "annual_amount": null,
+      "cents": null,
+      "status": "Data Needed",
+      "notes": "Need allocation plan and capital/project labor details."
+    }
+  ],
+  "policy_shifts": [
+    {
+      "category": "Affordable Housing",
+      "by_year": {
+        "FY22": 22488.0,
+        "FY25": 175000.0,
+        "FY27": 320000.0
+      },
+      "out_year": 320000.0,
+      "note": "Known ramp-up from FY22 baseline to roughly 2-cent equivalent annual funding target."
+    },
+    {
+      "category": "Sustainability / Carbon Reduction",
+      "by_year": {
+        "FY27": 320000.0
+      },
+      "out_year": 320000.0,
+      "note": "FY27 budget discusses annual sustainability commitment and potential use for Rail Station carbon-reduction upgrades."
+    },
+    {
+      "category": "Nonprofit Partnerships",
+      "by_year": {
+        "FY25": 25000.0,
+        "FY27": 110000.0
+      },
+      "out_year": 116699.0,
+      "note": "FY27 budget states increase from $25K in FY24 to $110K in FY27; 3% inflation included FY28/FY29."
+    },
+    {
+      "category": "Public Space / Connectivity",
+      "by_year": {
+        "FY18": 679309.0,
+        "FY22": 689734.0,
+        "FY25": 672031.0
+      },
+      "out_year": null,
+      "note": "Historical AFR function does not map cleanly to newer Public Space/Sustainability budget category."
+    },
+    {
+      "category": "Capital Contributions / Transfers Out",
+      "by_year": {
+        "FY25": 1582309.0,
+        "FY27": 1531826.0
+      },
+      "out_year": 1856826.0,
+      "note": "Ongoing transfers/reserves fund future capital and vehicle replacement commitments."
+    },
+    {
+      "category": "Debt Service",
+      "by_year": {
+        "FY25": 346942.0,
+        "FY27": 621818.0
+      },
+      "out_year": 1596154.0,
+      "note": "FY29 debt step-up is central to the fiscal risk profile."
+    }
+  ],
+  "sales_tax_history": [
+    {
+      "fiscal_year": 2018,
+      "amount": 1486817.0,
+      "source": "FY2019 ACFR Statement of Activities comparative 2018",
+      "notes": "Local option sales taxes."
+    },
+    {
+      "fiscal_year": 2019,
+      "amount": 1708025.0,
+      "source": "FY2019 ACFR Statement of Activities / FY2020 comparative table",
+      "notes": "Local option sales taxes."
+    },
+    {
+      "fiscal_year": 2020,
+      "amount": 1719865.0,
+      "source": "FY2020 ACFR Statement of Activities",
+      "notes": "Local option sales taxes."
+    },
+    {
+      "fiscal_year": 2021,
+      "amount": 2048982.0,
+      "source": "FY2022 AFR Schedule 1 comparative 2021",
+      "notes": "Local option sales tax line."
+    },
+    {
+      "fiscal_year": 2022,
+      "amount": 2868883.0,
+      "source": "FY2022 AFR Schedule 1",
+      "notes": "Local option sales tax line."
+    },
+    {
+      "fiscal_year": 2023,
+      "amount": 3200727.0,
+      "source": "FY2023 AFR Schedule 1",
+      "notes": "Local option sales tax line."
+    },
+    {
+      "fiscal_year": 2024,
+      "amount": 3355972.0,
+      "source": "FY26 Adopted Budget GF revenue table",
+      "notes": "Sales tax actual."
+    },
+    {
+      "fiscal_year": 2025,
+      "amount": 3419504.0,
+      "source": "FY27 Recommended Budget GF revenue table",
+      "notes": "Sales tax actual."
+    },
+    {
+      "fiscal_year": 2026,
+      "amount": 3408000.0,
+      "source": "FY27 Recommended Budget GF revenue table",
+      "notes": "FY26 estimate."
+    },
+    {
+      "fiscal_year": 2027,
+      "amount": 3408000.0,
+      "source": "FY27 Recommended Budget GF revenue table",
+      "notes": "FY27 budget assumes zero growth."
+    },
+    {
+      "fiscal_year": 2028,
+      "amount": 3408000.0,
+      "source": "FY27 Recommended Budget GF revenue table",
+      "notes": "Projection assumes zero growth."
+    },
+    {
+      "fiscal_year": 2029,
+      "amount": 3408000.0,
+      "source": "FY27 Recommended Budget GF revenue table",
+      "notes": "Projection assumes zero growth."
+    }
+  ],
+  "sales_tax_caveat": "This is the TOWN's local option sales tax REVENUE. It is not the county's sales tax rate for schools, which is a different thing and still has no source in the archive.",
+  "her_open_questions_to_the_town": [
+    {
+      "topic": "Cost Allocation",
+      "question": "Provide methodology, receiving funds and annual allocation amounts FY18-FY27."
+    },
+    {
+      "topic": "Personnel",
+      "question": "Which positions are funded by capital projects, utilities, grants?"
+    },
+    {
+      "topic": "Sales Tax",
+      "question": "Annual revenue FY18-FY25 and forecast assumptions."
+    },
+    {
+      "topic": "Capital",
+      "question": "Project cash-flow schedules and funding sources."
+    },
+    {
+      "topic": "Debt",
+      "question": "Debt amortization through maturity and affordability analysis."
+    }
+  ],
+  "problems": []
+}

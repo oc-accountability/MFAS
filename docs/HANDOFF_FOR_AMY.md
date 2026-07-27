@@ -108,9 +108,28 @@ Each step writes a file the next one reads. You can run any of them alone.
 | `s92` | Both governments' tax rates, FY2013-FY2027, cross-checked across five county annual reports |
 | `s93` | The water and sewer block-rate structure, so a resident can enter their own usage |
 | **`s94`** | **Project as a real dimension — the 27-project capital register** |
+| `s95` | What was funded, what was declined, and the town's own stated consequence |
+| **`s96`** | **Imports your v5 Audit Edition and Workbook B, and cross-checks them against this pipeline** |
+| `s97` | Who provides which services, and the Finance Director's own words on debt |
 | `s90` | Assembles everything the website loads, and refuses to build if anything is inconsistent |
 
-`make etl` runs them all. `make test` runs 47 checks. `make serve` shows the site locally.
+`make etl` runs them all. `make test` runs 64 checks. `make serve` shows the site locally.
+
+### What happens when you add a document
+
+Automatic: `s00_manifest` inventories everything under `sources/` on every run — it works out
+the type, takes a SHA-256 fingerprint, and decides whether a PDF is real digital text or a scan.
+Adding five files took it from 70 documents to 75 with no configuration. `etl/diff_manifest.py`
+additionally reports what was **added, removed, or amended in place** (same name, different
+fingerprint), and **fails** if any published figure cites a document that changed.
+
+Not automatic, on purpose: knowing that a column headed *Amount / Impact* is dollars rather than
+cents, or that a figure is audited rather than projected. Guessing at that is how a transparency
+site publishes a confidently wrong number, so each document gets a stage that proves its figures
+before they can appear.
+
+⚠️ **Google Drive exports are often partial.** One export held 71 files where this folder holds
+108. New files are merged in and nothing is ever deleted — never sync or mirror over `sources/`.
 
 ### Two errors these steps found in the source documents
 
