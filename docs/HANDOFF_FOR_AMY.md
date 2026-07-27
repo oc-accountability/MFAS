@@ -10,6 +10,35 @@ workbook is the authority for the county figures.
 
 ---
 
+## 0. Where the pieces sit relative to each other
+
+Amy has clarified the relationship between her documents, and it matters:
+
+| Artefact | What it is |
+|---|---|
+| **MFAS** (3 Word docs) | The **current** conceptual architecture. Phase I is complete and baselined at v1.0. Working notes kept from a design conversation, used as a decision log — not polished specification. |
+| **Excel v2.2** | An **earlier** implementation. It predates the expanded MFAS thinking, so it has not caught up with it. |
+| **This pipeline** | A working data layer: extraction, verification, publication. |
+
+So the Excel is not "behind" so much as **a different phase**. MFAS sets out Phase I
+(conceptual) → Phase II (information architecture / data dictionary) → Phase III (dimensional
+model, database, Excel or otherwise). The Excel warehouse and this pipeline are both Phase III-ish
+work built against the earlier framing.
+
+**What that means practically.** MFAS names five core objects — Community, Fiscal Change Event,
+Financial Fact, Decision, Outcome. This pipeline currently implements **Financial Fact** thoroughly
+(with metadata, traceability, and analytical views) and implements the others **not at all**.
+
+The most consequential gap is **Fiscal Change Event / Decision**: treating a decision as a
+first-class thing linked to its financial consequence. Notably, that is the same capability this
+project independently identified as its single most valuable missing feature — telling residents
+about a decision *before* it is taken, rather than reporting it afterwards. MFAS had already
+named it.
+
+Nothing built so far is wasted by this: MFAS's design principles ("fact-based", "traceable",
+"separate facts from interpretation", "define once, reuse everywhere") are the principles this
+pipeline already enforces. What MFAS adds is a larger frame the data layer sits inside.
+
 ## 1. What you already built, and what happened to it
 
 Your `Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx` is a real star
