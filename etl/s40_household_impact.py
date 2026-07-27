@@ -115,6 +115,53 @@ SCALARS = [
 ]
 
 
+# Verbatim statements by the town about its own finances, with the page they are
+# on. A resident-facing page should say "the town calls this concerning" and show
+# the quote, rather than have us paraphrase a judgement into existence.
+QUOTES = [
+    ("savings_floor", DOC, "FY27 Budget Message.pdf",
+     r"Our aim is to maintain fund balance levels no lower than \d+% but ideally higher\."),
+    # \s+ not a literal space: the PDF wraps between "levels" and "by".
+    ("savings_drop", DOC, "FY27 Budget Message.pdf",
+     r"The projected drop in fund balance levels\s+by [^.]+\."),
+    ("no_tax_increase", DOC, "FY27 Budget Message.pdf",
+     r"While no property tax increase is proposed in FY27[^.]+\."),
+    ("conservative_budgeting", "fiscal-year-2025-budget-message",
+     "Fiscal Year 2025 Budget Message.pdf",
+     r"After the audit, most years end up with deficits less than\s*\n?\s*projected or with an actual surplus generated\."),
+]
+
+
+def extract_quotes(problems: list[str]) -> list[dict]:
+    out = []
+    cache: dict[str, dict[int, str]] = {}
+    for key, doc_id, fname, pattern in QUOTES:
+        if fname not in cache:
+            p = SOURCES / ("Orange County Efficiency & Accountability Initiative/"
+                           "02 Research & Documents/Hillsborough Budget/") / fname
+            if not p.exists():
+                problems.append(f"quote {key}: missing {fname}")
+                cache[fname] = {}
+                continue
+            with pdfplumber.open(p) as pdf:
+                cache[fname] = {i: (pg.extract_text() or "")
+                                for i, pg in enumerate(pdf.pages, 1)}
+        pages = cache[fname]
+        page = next((i for i, t in pages.items() if re.search(pattern, t)), None)
+        if page is None:
+            problems.append(f"quote {key}: MISS")
+            continue
+        text = re.search(pattern, pages[page]).group(0)
+        out.append({
+            "key": key,
+            # collapse the line wrapping the PDF introduced, keep the wording exact
+            "text": re.sub(r"\s+", " ", text).strip(),
+            "source_doc": doc_id, "source_page": page,
+            "note": "Verbatim from the document. Wrapping whitespace collapsed; wording unchanged.",
+        })
+    return out
+
+
 def main() -> None:
     if not PATH.exists():
         sys.exit(f"missing {PATH}")
@@ -158,14 +205,20 @@ def main() -> None:
         else:
             problems.append(f"MISS participation detail: {label}")
 
+    quotes = extract_quotes(problems)
+
     write_json(DATASETS / "facts_household.json", {
         "generated_by": "etl/s40_household_impact.py",
         "extraction_problems": problems,
         "civic_participation": participation,
+        "town_statements": quotes,
         "facts": [f.as_row() for f in facts],
     })
 
-    print(f"\n  facts: {len(facts)}  participation notes: {len(participation)}")
+    print(f"\n  facts: {len(facts)}  participation notes: {len(participation)}  "
+          f"quotes: {len(quotes)}")
+    for q in quotes:
+        print(f"      [{q['key']}] p.{q['source_page']}: {q['text'][:88]}…")
     for p in problems:
         print(f"      {p}")
 

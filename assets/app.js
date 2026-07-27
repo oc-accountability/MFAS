@@ -1,16 +1,19 @@
-/* Hillsborough / Orange County fiscal transparency — client-side analytics.
+/* Your town, your money — resident-facing view of Hillsborough's published budget.
  *
- * Everything is computed here in the browser against the published JSON, so
- * adding a fact to the pipeline changes the site with no code edit.
+ * Organised around the questions a resident actually has, in order:
+ *   what does this cost me -> what does it pay for -> is the money healthy ->
+ *   what's coming -> how do I speak up -> where did these numbers come from
  *
- * Charting rules followed deliberately (from the dataviz method):
- *   - never a dual axis; two units means two charts
- *   - diverging blue/red only where the data has real polarity (surplus/deficit)
- *   - single-series charts get no legend box; the title names the series
- *   - values labelled selectively (endpoint / extreme), never every point
- *   - 2px surface gaps separate touching marks; 2px surface rings on markers
- *   - every chart ships a table twin
- *   - text never wears the series colour
+ * Personalisation is real, not theatre: the page adapts to the three things the
+ * reader tells us (home value, in/out of town, water use), remembers them in
+ * localStorage, and weaves them through the copy. It never invents anything
+ * about them — there is no address, parcel or neighbourhood data here, and the
+ * page says which figures are estimates from their own input.
+ *
+ * Charting rules kept from the dataviz method: no dual axes; diverging colour
+ * only for real polarity; no legend for a single series; selective labels; 2px
+ * surface gaps and rings; a table twin for every chart; text never wears the
+ * series colour.
  */
 'use strict';
 
@@ -18,10 +21,32 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const DEFAULT_HOME = 400000;   // the town's own worked example, so it is a fair default
 const state = {
   yearMin: null, yearMax: null, data: null,
-  homeValue: 400000, location: 'intown', useLevel: 'avg',
+  homeValue: DEFAULT_HOME, location: 'intown', useLevel: 'avg', returning: false,
 };
+
+/* ------------------------------------------------------- remembered settings */
+const STORE = 'hoa-home';
+function loadHome() {
+  try {
+    const raw = localStorage.getItem(STORE);
+    if (!raw) return;
+    const o = JSON.parse(raw);
+    if (typeof o.homeValue === 'number' && o.homeValue > 0) state.homeValue = o.homeValue;
+    if (o.location === 'intown' || o.location === 'outoftown') state.location = o.location;
+    if (o.useLevel === 'avg' || o.useLevel === 'min') state.useLevel = o.useLevel;
+    state.returning = true;
+  } catch (e) { /* private mode, or corrupt value — defaults are fine */ }
+}
+function saveHome() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify({
+      homeValue: state.homeValue, location: state.location, useLevel: state.useLevel,
+    }));
+  } catch (e) { /* nothing here is worth breaking the page over */ }
+}
 
 /* ---------------------------------------------------------------- formatters */
 const usd = n => '$' + Math.round(n).toLocaleString('en-US');
@@ -34,16 +59,16 @@ const compact = n => {
   if (a >= 1e3) return s + '$' + Math.round(a / 1e3) + 'K';
   return s + '$' + Math.round(a);
 };
-/* U+2212 minus, not an ASCII hyphen — it matches the dollar figures and lines up
-   in tabular-nums columns, where a hyphen sits visibly high and narrow. */
+/* U+2212 minus, not an ASCII hyphen — matches the dollar figures and aligns in
+   tabular-nums columns, where a hyphen sits visibly high and narrow. */
 const pctPlain = n => (n < 0 ? '−' : '') + Math.abs(n).toFixed(Math.abs(n) % 1 === 0 ? 0 : 1) + '%';
 /* A tax rate is cents per $100 of value, NOT a percentage. Labelling 51.3 cents
- * as "51.3%" would overstate the rate ~19.5x to anyone skimming. */
+   as "51.3%" would overstate the rate ~19.5x to anyone skimming. */
 const cents = n => n.toFixed(n % 1 === 0 ? 0 : 1);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-/* --------------------------------------------------------------- data access */
+/* -------------------------------------------------------------- data access */
 let _docMap = null;
 function docsById() {
   if (!_docMap) {
@@ -57,7 +82,6 @@ const facts = metric => state.data.facts.facts.filter(f => f.metric === metric);
 const inRange = f => f.fiscal_year == null
   || (f.fiscal_year >= state.yearMin && f.fiscal_year <= state.yearMax);
 
-/** One value per fiscal year: the reading from the most recent document. */
 function latestByYear(metric) {
   const by = new Map();
   for (const f of facts(metric)) {
@@ -72,8 +96,12 @@ function one(metric) {
   if (!rows.length) return null;
   return rows.reduce((a, b) => (docYear(b.source_doc) > docYear(a.source_doc) ? b : a));
 }
-const val = (metric, fallback = null) => { const f = one(metric); return f ? f.value : fallback; };
-
+const val = (metric, fb = null) => { const f = one(metric); return f ? f.value : fb; };
+const forYear = (metric, fy) => latestByYear(metric).find(f => f.fiscal_year === fy) || null;
+function quote(key) {
+  const qs = (state.data.household && state.data.household.town_statements) || [];
+  return qs.find(q => q.key === key) || null;
+}
 function cite(f) {
   if (!f) return '';
   const d = docsById().get(f.source_doc);
@@ -83,7 +111,7 @@ function cite(f) {
   return `<span class="src-link" title="Source file and SHA-256 recorded in data/datasets/documents.json">${label}</span>`;
 }
 
-/* ------------------------------------------------------------------- tooltip */
+/* ------------------------------------------------------------------ tooltip */
 const tip = Object.assign(document.createElement('div'), { id: 'tip' });
 document.body.appendChild(tip);
 function showTip(html, ev) {
@@ -97,7 +125,6 @@ function showTip(html, ev) {
   tip.style.top = Math.max(8, y) + 'px';
 }
 const hideTip = () => tip.classList.remove('on');
-/** Hover + keyboard focus show the same thing — a tooltip must never gate a value. */
 function bindTip(el, html) {
   el.addEventListener('mouseenter', e => showTip(html, e));
   el.addEventListener('mousemove', e => showTip(html, e));
@@ -111,14 +138,13 @@ function bindTip(el, html) {
   el.addEventListener('blur', hideTip);
 }
 
-/* ----------------------------------------------------------- svg primitives */
+/* --------------------------------------------------------- svg primitives */
 const NS = 'http://www.w3.org/2000/svg';
 const mk = (n, a = {}) => {
   const e = document.createElementNS(NS, n);
   for (const k in a) e.setAttribute(k, a[k]);
   return e;
 };
-/** Bar with the data-end rounded and the baseline end square. */
 function barPath(x, y, w, h, r, roundTop) {
   r = Math.max(0, Math.min(r, w / 2, h));
   if (h <= 0.5) return `M${x} ${y}h${w}`;
@@ -135,19 +161,13 @@ function niceTicks(lo, hi, n = 4) {
   for (let v = Math.floor(lo / step) * step; v <= hi + step * 0.5; v += step) out.push(+v.toFixed(6));
   return out;
 }
-
 const M = { t: 22, r: 76, b: 34, l: 60 };
 const W = 700, H = 250;
-
 const frame = () => mk('svg', {
   class: 'chart', viewBox: `0 0 ${W} ${H}`, role: 'img',
   preserveAspectRatio: 'xMidYMid meet'
 });
-function titled(svg, text) {
-  const t = mk('title');
-  t.textContent = text;
-  svg.appendChild(t);
-}
+function titled(svg, text) { const t = mk('title'); t.textContent = text; svg.appendChild(t); }
 function yAxis(svg, ticks, y, fmt) {
   for (const t of ticks) {
     const yy = y(t);
@@ -165,7 +185,7 @@ function xLabels(svg, n, cx, label) {
   }
 }
 
-/* --------------------------------------------------------------- chart cards */
+/* ------------------------------------------------------------ chart cards */
 function card(title, note, svg, legend, tableFn) {
   const c = document.createElement('div');
   c.className = 'chart-card';
@@ -217,225 +237,30 @@ function section(id, num, title, blurb) {
     <h2>${title}</h2>${blurb ? `<p>${blurb}</p>` : ''}</div>`;
   return s;
 }
-
-/* ====================== 01 — household calculator ======================= */
-function renderHousehold(host) {
-  const rateF = one('property_tax_rate');
-  if (!rateF) return;
-  const perCentF = one('revenue_per_cent_of_tax_rate');
-
-  const sec = section('household', '01', 'What the town costs your household',
-    `The town's property tax rate is <strong>${cents(rateF.value)} cents per $100</strong> of assessed
-     value (${esc(rateF.basis)}, FY${rateF.fiscal_year}). Enter what your home is assessed at to see
-     the town's share of your bill, and what next year's utility increases add on top.
-     This is the <em>town</em> rate only — your full bill also includes Orange County and any special
-     district, which are not in this dataset.`);
-
-  const panel = document.createElement('div');
-  panel.className = 'panel panel-pad';
-  panel.innerHTML = `
-    <div class="calc">
-      <div>
-        <div class="field">
-          <label class="field-label" for="hv">Assessed home value</label>
-          <input type="number" id="hv" min="0" step="5000" value="${state.homeValue}" inputmode="numeric">
-          <input type="range" id="hvr" min="50000" max="1500000" step="5000" value="${state.homeValue}"
-                 aria-label="Assessed home value slider">
-        </div>
-        <div class="field">
-          <span class="field-label" id="locLbl">Where is the property?</span>
-          <div class="seg" role="group" aria-labelledby="locLbl">
-            <button type="button" data-loc="intown" aria-pressed="true">Inside town limits</button>
-            <button type="button" data-loc="outoftown" aria-pressed="false">Outside town</button>
-          </div>
-        </div>
-        <div class="field">
-          <span class="field-label" id="useLbl">Household water use</span>
-          <div class="seg" role="group" aria-labelledby="useLbl">
-            <button type="button" data-use="avg" aria-pressed="true">Average · 4,000 gal/mo</button>
-            <button type="button" data-use="min" aria-pressed="false">Low · 2,000 gal/mo</button>
-          </div>
-        </div>
-      </div>
-      <div class="readout">
-        <p class="cap">Estimated annual town property tax</p>
-        <div class="hero-figure" id="heroV">—</div>
-        <p class="hero-sub" id="heroN"></p>
-        <ul class="rows" id="bd"></ul>
-        <div class="callout" id="calloutBox"></div>
-      </div>
-    </div>`;
-  sec.appendChild(panel);
-  host.appendChild(sec);
-
-  const num = $('#hv', sec), rng = $('#hvr', sec);
-
-  function draw(animate) {
-    const v = Math.max(0, +num.value || 0);
-    state.homeValue = v;
-    const annual = v / 100 * (rateF.value / 100);
-    const oneCent = v / 100 * 0.01;
-
-    setFigure($('#heroV', sec), annual, animate);
-    $('#heroN', sec).innerHTML =
-      `${usd(annual / 12)} a month at the FY${rateF.fiscal_year} rate of ${cents(rateF.value)} cents
-       per $100. Source: ${cite(rateF)}.`;
-
-    const water = val(`water_bill_increase_monthly_${state.location}_${state.useLevel}`);
-    const sewer = val(`sewer_bill_increase_monthly_${state.location}_${state.useLevel}`);
-    const utilMo = (water || 0) + (sewer || 0);
-
-    const rows = [];
-    rows.push([`Town property tax`, `<small>FY${rateF.fiscal_year}, rate unchanged</small>`,
-      usd(annual) + ' / yr']);
-    if (water != null) rows.push([`Water bill increase`,
-      `<small>FY2026 → FY2027, ${state.useLevel === 'avg' ? '4,000' : '2,000'} gal/mo</small>`,
-      '+' + usd2(water) + ' / mo']);
-    if (sewer != null) rows.push([`Sewer bill increase`, `<small>same basis</small>`,
-      '+' + usd2(sewer) + ' / mo']);
-    rows.push([`One cent on the tax rate, to you`, `<small>town-wide it raises ${
-      perCentF ? usd(perCentF.value) : 'n/a'}</small>`, usd(oneCent) + ' / yr']);
-
-    const need = one('tax_rate_increase_needed_cents');
-    if (need) rows.push([`A ${cents(need.value)}-cent rise`,
-      `<small>the town's FY${need.fiscal_year} deficit scenario</small>`,
-      '+' + usd(oneCent * need.value) + ' / yr']);
-
-    let html = rows.map(([k, sub, v2]) =>
-      `<li><span class="k">${k}${sub}</span><span class="v">${v2}</span></li>`).join('');
-    if (utilMo > 0) {
-      html += `<li class="total"><span class="k">What next year adds, in total</span>
-        <span class="v">+${usd(utilMo * 12)} / yr</span></li>`;
-    }
-    $('#bd', sec).innerHTML = html;
-
-    const box = $('#calloutBox', sec);
-    const wr = val('water_rate_increase_pct'), sr = val('sewer_rate_increase_pct');
-    if (utilMo > 0 && wr && sr) {
-      box.className = 'callout warn';
-      box.innerHTML = `<strong>No property tax increase this year — but your bill still goes up.</strong>
-        Water and sewer rates each rise ${pctPlain(wr)} in FY2027, which adds about
-        <strong>${usd2(utilMo)} a month</strong> (${usd(utilMo * 12)} a year) for this household.
-        A flat tax rate is not the same as a flat bill.`;
-    } else {
-      box.className = 'callout';
-      box.innerHTML = `The tax rate is unchanged for FY${rateF.fiscal_year}.`;
-    }
-  }
-
-  num.addEventListener('input', () => { rng.value = num.value; draw(false); });
-  rng.addEventListener('input', () => { num.value = rng.value; draw(false); });
-  $$('.seg button', sec).forEach(b => b.addEventListener('click', () => {
-    const key = b.dataset.loc ? 'location' : 'useLevel';
-    const v = b.dataset.loc || b.dataset.use;
-    state[key] = v;
-    $$(`[data-${b.dataset.loc ? 'loc' : 'use'}]`, sec)
-      .forEach(o => o.setAttribute('aria-pressed', String(o === b)));
-    draw(false);
-  }));
-  draw(!REDUCED);
+/** Collapsed detail, so the default view answers the question without a wall of charts. */
+function disclosure(label, buildInner) {
+  const d = document.createElement('details');
+  d.className = 'more';
+  const s = document.createElement('summary');
+  s.textContent = label;
+  d.appendChild(s);
+  const inner = document.createElement('div');
+  inner.className = 'inner';
+  d.appendChild(inner);
+  let built = false;
+  d.addEventListener('toggle', () => {
+    if (d.open && !built) { buildInner(inner); built = true; }
+  });
+  return d;
 }
 
-/** Count up to a value on first paint only; instant on later edits. */
-function setFigure(el, target, animate) {
-  if (!animate) { el.textContent = usd(target); return; }
-  const dur = 620, t0 = performance.now();
-  const step = now => {
-    const p = Math.min(1, (now - t0) / dur);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = usd(target * eased);
-    if (p < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-
-/* ======================= 02 — the budget, whole ========================= */
-function renderBudget(host) {
-  const total = one('total_budget');
-  const parts = [
-    ['general_fund_expenditures', 'General Fund', 'var(--series-1)',
-     'Police, fire, streets, parks, planning, administration — the tax-funded side.'],
-    ['water_sewer_fund_expenditures', 'Water & Sewer Fund', 'var(--series-2)',
-     'Paid for by water and sewer bills, not property tax.'],
-    ['stormwater_fund_expenditures', 'Stormwater Fund', 'var(--series-3)',
-     'Paid for by the stormwater fee, charged per Equivalent Residential Unit.'],
-  ].map(([m, label, colour, blurb]) => {
-    const f = one(m);
-    return f ? { label, colour, blurb, value: f.value, f } : null;
-  }).filter(Boolean);
-
-  if (!total || parts.length < 2) return;
-
-  const sec = section('budget', '02', 'Where the money goes',
-    `The FY2027 recommended budget is <strong>${compact(total.value)}</strong> across three funds.
-     Only the General Fund is supported by property tax — the other two are paid for by the bills
-     for those services, which is why a water rate rise is not a tax rise, and vice versa.`);
-
-  const sum = parts.reduce((a, p) => a + p.value, 0);
-  const panel = document.createElement('div');
-  panel.className = 'panel panel-pad';
-
-  const bars = parts.map(p =>
-    `<span style="background:${p.colour};width:${(p.value / sum * 100).toFixed(3)}%"
-       title="${esc(p.label)}: ${esc(compact(p.value))}"></span>`).join('');
-
-  const legend = parts.map(p => `<li>
-      <span class="sw" style="background:${p.colour}"></span>
-      <span><span class="nm">${esc(p.label)}</span>
-        <span class="amt">${esc(compact(p.value))}</span>
-        <span class="pc">${(p.value / sum * 100).toFixed(1)}% of total</span></span>
-    </li>`).join('');
-
-  // Publishing a total that does not equal its parts would be its own small lie.
-  const diff = Math.abs(sum - total.value);
-  const check = diff < 1
-    ? `The three funds sum exactly to the stated total of ${compact(total.value)} — checked by this
-       page, not assumed.`
-    : `⚠ The three funds sum to ${compact(sum)}, which differs from the stated total
-       ${compact(total.value)} by ${compact(diff)}. Shown as found in the source.`;
-
-  panel.innerHTML = `<div class="ptw" role="img"
-      aria-label="${esc(parts.map(p => `${p.label} ${compact(p.value)}`).join('; '))}">${bars}</div>
-    <ul class="ptw-legend">${legend}</ul>
-    <p class="note" style="margin:var(--s5) 0 0;font-size:var(--t-xs);color:var(--text-muted)">
-      ${check} Source: ${cite(total)}.</p>`;
-  sec.appendChild(panel);
-
-  // headline tiles
-  const defs = [
-    ['total_budget', 'Total budget, all funds', compact],
-    ['general_fund_balance_pct_of_expenditures', 'Savings, as % of spending', pctPlain],
-    ['general_fund_surplus_deficit', 'Deficit, furthest projection', compact],
-    ['revenue_per_cent_of_tax_rate', 'One cent of tax raises', compact],
-  ];
-  const tiles = defs.map(([metric, label, fmt]) => {
-    let f;
-    if (metric === 'general_fund_surplus_deficit') {
-      const rows = latestByYear(metric);
-      f = rows.length ? rows[rows.length - 1] : null;
-    } else f = one(metric);
-    if (!f) return '';
-    return `<div class="tile"><p class="k">${esc(label)}</p>
-      <div class="v">${esc(fmt(f.value))}</div>
-      <p class="d">FY${f.fiscal_year} · ${esc(f.basis || '')}</p></div>`;
-  }).join('');
-  const tw = document.createElement('div');
-  tw.className = 'tiles';
-  tw.style.marginTop = 'var(--s5)';
-  tw.innerHTML = tiles;
-  sec.appendChild(tw);
-
-  host.appendChild(sec);
-}
-
-/* ============================ charts: forms ============================= */
+/* ============================ chart forms ============================= */
 function chartSurplus() {
   const rows = latestByYear('general_fund_surplus_deficit').filter(inRange);
   if (!rows.length) return null;
   const vals = rows.map(r => r.value);
-  // Pad the domain so the deepest bar never reaches the lowest gridline — its
-  // value label sits below the bar end and would otherwise collide with the
-  // x-axis year labels.
+  // Pad the domain so the deepest bar never touches the lowest gridline — its
+  // label sits below the bar end and would collide with the year labels.
   const ticks = niceTicks(Math.min(0, ...vals) * 1.14, Math.max(0, ...vals) * 1.14, 4);
   const lo = Math.min(...ticks), hi = Math.max(...ticks);
   const y = v => M.t + (hi - v) / (hi - lo) * (H - M.t - M.b);
@@ -444,11 +269,10 @@ function chartSurplus() {
   const cx = i => M.l + band * (i + 0.5);
 
   const svg = frame();
-  titled(svg, 'General Fund surplus or deficit by fiscal year');
+  titled(svg, 'General Fund surplus or deficit by year');
   yAxis(svg, ticks, y, compact);
   const zero = y(0);
   svg.appendChild(mk('line', { class: 'axisline', x1: M.l, x2: W - M.r, y1: zero, y2: zero }));
-
   rows.forEach((r, i) => {
     const up = r.value >= 0, h = Math.abs(y(r.value) - zero);
     svg.appendChild(mk('path', {
@@ -472,13 +296,11 @@ function chartSurplus() {
     svg.appendChild(hit);
   });
   xLabels(svg, rows.length, cx, i => 'FY' + rows[i].fiscal_year);
-
   const table = () => tableOf('General Fund surplus / (deficit). Negative values are deficits.',
-    [{ label: 'Fiscal year' }, { label: 'Amount', num: true }, { label: 'Basis' }, { label: 'Source' }],
+    [{ label: 'Year' }, { label: 'Amount', num: true }, { label: 'Basis' }, { label: 'Source' }],
     rows.map(r => ['FY' + r.fiscal_year, usdSigned(r.value), esc(r.basis || '—'), cite(r)]));
-
-  return card('General Fund surplus and deficit',
-    'The most recent figure the town has published for each year. Bars below the line are deficits.',
+  return card('Does the town spend more than it takes in?',
+    'Bars below the line mean the town plans to spend more than it collects that year, covering the gap from savings.',
     svg, null, table);
 }
 
@@ -498,7 +320,6 @@ function chartLine(metric, title, note, fmtV, refLine, refLabel) {
   const svg = frame();
   titled(svg, title);
   yAxis(svg, ticks, y, fmtV);
-
   if (refLine != null) {
     svg.appendChild(mk('line', {
       class: 'reference', x1: M.l, x2: W - M.r, y1: y(refLine), y2: y(refLine)
@@ -507,23 +328,11 @@ function chartLine(metric, title, note, fmtV, refLine, refLabel) {
     rl.textContent = refLabel || `${fmtV(refLine)} floor`;
     svg.appendChild(rl);
   }
-
   const d = rows.map((r, i) => `${i ? 'L' : 'M'}${cx(i)} ${y(r.value)}`).join(' ');
-  const path = mk('path', {
+  svg.appendChild(mk('path', {
     d, fill: 'none', stroke: 'var(--series-1)', 'stroke-width': 2,
     'stroke-linejoin': 'round', 'stroke-linecap': 'round'
-  });
-  svg.appendChild(path);
-  if (!REDUCED) {
-    const len = path.getTotalLength ? 1400 : 0;
-    if (len) {
-      path.style.strokeDasharray = len;
-      path.style.strokeDashoffset = len;
-      path.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
-        { duration: 800, easing: 'ease-out', fill: 'forwards' });
-    }
-  }
-
+  }));
   rows.forEach((r, i) => {
     svg.appendChild(mk('circle', {
       cx: cx(i), cy: y(r.value), r: 4.5,
@@ -545,9 +354,8 @@ function chartLine(metric, title, note, fmtV, refLine, refLabel) {
     svg.appendChild(hit);
   });
   xLabels(svg, rows.length, cx, i => 'FY' + rows[i].fiscal_year);
-
   const table = () => tableOf(title,
-    [{ label: 'Fiscal year' }, { label: 'Value', num: true }, { label: 'Basis' }, { label: 'Source' }],
+    [{ label: 'Year' }, { label: 'Value', num: true }, { label: 'Basis' }, { label: 'Source' }],
     rows.map(r => ['FY' + r.fiscal_year, fmtV(r.value), esc(r.basis || '—'), cite(r)]));
   return card(title, note, svg, null, table);
 }
@@ -555,11 +363,10 @@ function chartLine(metric, title, note, fmtV, refLine, refLabel) {
 function chartDumbbell(items, title, note, fmtV, labels) {
   if (!items.length) return null;
   const all = items.flatMap(i => [i.a, i.b]);
-  // Scale to the data range, not to zero. In a dumbbell the mark POSITION encodes
-  // the value and the connecting line encodes the change — no length is measured
-  // from an origin, so a zero baseline is not required (unlike a bar chart). With
-  // values clustered at $11-16M, forcing zero squeezes every pair into the right
-  // quarter of the plot and hides the very differences the chart exists to show.
+  // Scale to the data range, not to zero: in a dumbbell the mark POSITION encodes
+  // the value and the line encodes the change, so no length is measured from an
+  // origin. Forcing zero squeezes clustered values into a corner and hides the
+  // very differences the chart exists to show.
   const lo0 = Math.min(...all), hi0 = Math.max(...all);
   const pad = (hi0 - lo0) * 0.18 || Math.abs(hi0 * 0.1) || 1;
   const ticks = niceTicks(Math.max(0, lo0 - pad), hi0 + pad, 4);
@@ -574,14 +381,12 @@ function chartDumbbell(items, title, note, fmtV, labels) {
   const x = v => L + (v - tlo) / (thi - tlo) * (W - L - R);
   const band = (h - M.t - M.b) / items.length;
   const cy = i => M.t + band * (i + 0.5);
-
   for (const t of ticks) {
     svg.appendChild(mk('line', { class: 'gridline', x1: x(t), x2: x(t), y1: M.t, y2: h - M.b }));
     const lab = mk('text', { class: 'tick', x: x(t), y: h - M.b + 17, 'text-anchor': 'middle' });
     lab.textContent = fmtV(t);
     svg.appendChild(lab);
   }
-
   items.forEach((it, i) => {
     const yy = cy(i);
     svg.appendChild(mk('line', {
@@ -597,12 +402,10 @@ function chartDumbbell(items, title, note, fmtV, labels) {
     const name = mk('text', { class: 'tick', x: L - 12, y: yy + 3.5, 'text-anchor': 'end' });
     name.textContent = it.label;
     svg.appendChild(name);
-
     const delta = it.b - it.a;
     const dl = mk('text', { class: 'dlabel', x: Math.max(x(it.a), x(it.b)) + 11, y: yy + 3.5 });
     dl.textContent = (delta >= 0 ? '+' : '−') + fmtV(Math.abs(delta));
     svg.appendChild(dl);
-
     const hit = mk('rect', {
       class: 'hit', x: 0, y: yy - Math.max(12, band / 2),
       width: W - 8, height: Math.max(24, band)
@@ -614,7 +417,6 @@ function chartDumbbell(items, title, note, fmtV, labels) {
       ${it.src ? `<div class="src">${it.src}</div>` : ''}`);
     svg.appendChild(hit);
   });
-
   const legend =
     `<li><span class="swatch" style="background:var(--step-early)"></span>${esc(labels[0])}</li>` +
     `<li><span class="swatch" style="background:var(--step-late)"></span>${esc(labels[1])}</li>`;
@@ -657,135 +459,499 @@ function chartColumns(rows, title, note, fmtV) {
   });
   xLabels(svg, rows.length, cx, i => 'FY' + rows[i].fiscal_year);
   const table = () => tableOf(title,
-    [{ label: 'Fiscal year' }, { label: 'Value', num: true }, { label: 'Source' }],
+    [{ label: 'Year' }, { label: 'Value', num: true }, { label: 'Source' }],
     rows.map(r => ['FY' + r.fiscal_year, fmtV(r.value), cite(r)]));
   return card(title, note, svg, null, table);
 }
 
-/* ========================= 03 — trends + filters ======================== */
-function renderTrends(host) {
-  const years = [...new Set(state.data.facts.facts
-    .map(f => f.fiscal_year).filter(v => v != null))].sort((a, b) => a - b);
-
-  const sec = section('trends', '03', 'Budget, savings and deficits',
-    `Savings in dollars and savings as a share of spending are different measures, so they get
-     separate charts rather than being stacked on one plot with two scales. Hover any point for the
-     document and page it came from; every chart has a table view.`);
-
-  const f = document.createElement('div');
-  f.className = 'filters';
-  const opts = ys => ys.map(y => `<option value="${y}">FY${y}</option>`).join('');
-  f.innerHTML = `<div class="f"><label class="field-label" for="ymin">From fiscal year</label>
-      <select id="ymin">${opts(years)}</select></div>
-    <div class="f"><label class="field-label" for="ymax">To fiscal year</label>
-      <select id="ymax">${opts(years)}</select></div>
-    <p class="hint">This range scopes every chart in this section. Beyond FY2027 the figures are the
-      town's own multi-year projections, not adopted budgets.</p>`;
-  sec.appendChild(f);
-  const a = $('#ymin', f), b = $('#ymax', f);
-  a.value = state.yearMin; b.value = state.yearMax;
-  const onChange = () => {
-    state.yearMin = Math.min(+a.value, +b.value);
-    state.yearMax = Math.max(+a.value, +b.value);
-    render();
-    const el = document.getElementById('trends');
-    if (el) el.scrollIntoView({ block: 'start', behavior: 'auto' });
-  };
-  a.addEventListener('change', onChange);
-  b.addEventListener('change', onChange);
-
-  const grid = document.createElement('div');
-  grid.className = 'grid2';
-  [
-    chartSurplus(),
-    chartLine('general_fund_balance_available_cash', 'General Fund savings (available cash)',
-      'The town’s cash reserve.', compact),
-    chartLine('general_fund_balance_pct_of_expenditures', 'Savings as a share of yearly spending',
-      'The town states its aim is to stay no lower than 50%.', pctPlain, 50, '50% stated floor'),
-    chartColumns(latestByYear('admin_spend_total').filter(inRange),
-      'Administrative spending',
-      'Supplied by a county commissioner in the request workbook — not an audited total.', compact),
-  ].filter(Boolean).forEach(c => grid.appendChild(c));
-  sec.appendChild(grid);
-  host.appendChild(sec);
+/* ==================== 01 — your bill ==================== */
+function utilMonthly() {
+  const w = val(`water_bill_increase_monthly_${state.location}_${state.useLevel}`);
+  const s = val(`sewer_bill_increase_monthly_${state.location}_${state.useLevel}`);
+  return { water: w, sewer: s, total: (w || 0) + (s || 0) };
+}
+function annualTax() {
+  const rate = val('property_tax_rate');
+  return rate == null ? null : state.homeValue / 100 * (rate / 100);
 }
 
-/* ======================== 04 — projections moved ======================== */
-function renderProjections(host) {
-  const cmps = state.data.projections.comparisons.filter(c =>
-    c.metric === 'general_fund_balance_available_cash');
-  if (!cmps.length) return;
-  const items = cmps.map(c => {
-    const rs = [...c.readings].sort((x, y) => docYear(x.source_doc) - docYear(y.source_doc));
-    return {
-      label: 'FY' + c.fiscal_year, a: rs[0].value, b: rs[rs.length - 1].value,
-      src: rs.map(r => esc(r.source_doc) + (r.source_page ? ` p.${r.source_page}` : '')).join(' → ')
-    };
-  });
-  const sec = section('projections', '04', 'How the town’s own projections moved',
-    `Hillsborough publishes a rolling three-year financial plan, so the same fiscal year appears in
-     several budget documents. This compares what an earlier document projected for a year against
-     what a later document reported for that same year.
+function renderYou(host) {
+  const rateF = one('property_tax_rate');
+  if (!rateF) return;
+  const perCentF = one('revenue_per_cent_of_tax_rate');
+
+  const sec = section('you', '01', 'What the town costs you',
+    `Start by telling us what your home is assessed at. Everything below then uses your figure
+     instead of a generic one, and this page will remember it next time.
      <br><br>
-     The gap is <strong>not</strong> an error, and this is not an accusation. A projection and an
-     adopted budget are different things, and the town's FY2025 budget message says plainly that it
-     is "conservative on revenue projections and cautious on expenditure amounts" and that most
-     years "end up with deficits less than projected or with an actual surplus generated." It is
-     shown because it is the honest measure of how much weight a three-year projection deserves.`);
-  // Full width: a dumbbell needs a label gutter plus room for the delta label, and
-  // at half width the rows compress into an unreadable strip.
-  const c = chartDumbbell(items, 'General Fund savings: first projection vs latest figure',
-    'Each row is one fiscal year. The line spans the earlier and later readings.',
-    compact, ['Earlier document', 'Later document']);
-  if (c) sec.appendChild(c);
+     This is the <strong>town's</strong> share only. Your full property tax bill also includes
+     Orange County and any special district, which are not in this dataset.`);
+
+  if (state.returning) {
+    const w = document.createElement('div');
+    w.className = 'welcome';
+    w.innerHTML = `<span>Welcome back — showing figures for a home assessed at
+      <strong>${usd(state.homeValue)}</strong>,
+      ${state.location === 'intown' ? 'inside town limits' : 'outside town'}.</span>
+      <button type="button" id="changeHome">Not yours? Change it</button>`;
+    sec.appendChild(w);
+  }
+
+  const panel = document.createElement('div');
+  panel.className = 'panel panel-pad';
+  panel.innerHTML = `
+    <div class="calc">
+      <div>
+        <div class="field">
+          <label class="field-label" for="hv">What is your home assessed at?</label>
+          <input type="number" id="hv" min="0" step="5000" value="${state.homeValue}"
+                 inputmode="numeric">
+          <input type="range" id="hvr" min="50000" max="1500000" step="5000"
+                 value="${state.homeValue}" aria-label="Assessed home value slider">
+        </div>
+        <div class="field">
+          <span class="field-label" id="locLbl">Is your home inside town limits?</span>
+          <div class="seg" role="group" aria-labelledby="locLbl">
+            <button type="button" data-loc="intown"
+              aria-pressed="${state.location === 'intown'}">Yes, in town</button>
+            <button type="button" data-loc="outoftown"
+              aria-pressed="${state.location === 'outoftown'}">No, outside</button>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label" id="useLbl">Roughly how much water does your household use?</span>
+          <div class="seg" role="group" aria-labelledby="useLbl">
+            <button type="button" data-use="avg"
+              aria-pressed="${state.useLevel === 'avg'}">Average · 4,000 gal/mo</button>
+            <button type="button" data-use="min"
+              aria-pressed="${state.useLevel === 'min'}">Low · 2,000 gal/mo</button>
+          </div>
+        </div>
+        <p class="reassure"><span class="ic" aria-hidden="true">✓</span>
+          <span>Nothing you type leaves your device. It is saved only in this browser so the page
+          can greet you with your own figures next time.</span></p>
+      </div>
+      <div class="readout">
+        <p class="cap">Your town property tax, per year</p>
+        <div class="hero-figure" id="heroV">—</div>
+        <p class="hero-sub" id="heroN"></p>
+        <ul class="rows" id="bd"></ul>
+        <div class="callout" id="calloutBox"></div>
+      </div>
+    </div>`;
+  sec.appendChild(panel);
+
+  const snap = document.createElement('div');
+  snap.className = 'snapshot';
+  snap.style.marginTop = 'var(--s5)';
+  snap.id = 'snapshot';
+  sec.appendChild(snap);
+
+  host.appendChild(sec);
+
+  const num = $('#hv', sec), rng = $('#hvr', sec);
+
+  function draw(animate) {
+    state.homeValue = Math.max(0, +num.value || 0);
+    const annual = annualTax();
+    const oneCent = state.homeValue / 100 * 0.01;
+    const u = utilMonthly();
+
+    setFigure($('#heroV', sec), annual, animate);
+    $('#heroN', sec).innerHTML =
+      `That is <strong>${usd(annual / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
+       ${cents(rateF.value)} cents per $100 of value. Source: ${cite(rateF)}.`;
+
+    const rows = [];
+    rows.push(['Your town property tax', `<small>FY${rateF.fiscal_year} — the rate did not change</small>`,
+      usd(annual) + ' / yr']);
+    if (u.water != null) rows.push(['Your water bill goes up by',
+      `<small>${state.useLevel === 'avg' ? '4,000' : '2,000'} gal/month, ${
+        state.location === 'intown' ? 'in town' : 'out of town'}</small>`,
+      '+' + usd2(u.water) + ' / mo']);
+    if (u.sewer != null) rows.push(['Your sewer bill goes up by', '<small>same basis</small>',
+      '+' + usd2(u.sewer) + ' / mo']);
+    rows.push(['One cent on the tax rate costs you',
+      `<small>across the whole town it raises ${perCentF ? usd(perCentF.value) : 'n/a'}</small>`,
+      usd(oneCent) + ' / yr']);
+    const need = one('tax_rate_increase_needed_cents');
+    if (need) rows.push([`If the rate rose ${cents(need.value)} cents`,
+      `<small>the town's own FY${need.fiscal_year} scenario</small>`,
+      '+' + usd(oneCent * need.value) + ' / yr']);
+
+    let html = rows.map(([k, sub, v]) =>
+      `<li><span class="k">${k}${sub}</span><span class="v">${v}</span></li>`).join('');
+    if (u.total > 0) {
+      html += `<li class="total"><span class="k">So next year costs you about</span>
+        <span class="v">+${usd(u.total * 12)} more</span></li>`;
+    }
+    $('#bd', sec).innerHTML = html;
+
+    const box = $('#calloutBox', sec);
+    const wr = val('water_rate_increase_pct'), sr = val('sewer_rate_increase_pct');
+    if (u.total > 0 && wr && sr) {
+      box.className = 'callout warn';
+      box.innerHTML = `<strong>Your property tax rate did not go up — but your bill still does.</strong>
+        Water and sewer rates each rise ${pctPlain(wr)} in FY2027, which adds about
+        <strong>${usd2(u.total)} a month</strong> for a household like yours. A flat tax rate is not
+        the same as a flat bill, and that distinction is easy to miss.`;
+    } else {
+      box.className = 'callout';
+      box.innerHTML = `The property tax rate is unchanged for FY${rateF.fiscal_year}.`;
+    }
+
+    // snapshot
+    const s = $('#snapshot', sec);
+    s.innerHTML = `<h3>Your snapshot</h3>
+      <div class="big">${usd(annual)}<span style="font-size:var(--t-md);font-weight:500;
+        letter-spacing:0;margin-left:.35em">to the town this year</span></div>
+      <p class="cap">Plus about ${usd(u.total * 12)} more over the year as water and sewer rates rise.
+        Based on a home assessed at ${usd(state.homeValue)},
+        ${state.location === 'intown' ? 'inside' : 'outside'} town limits.</p>
+      <div class="acts">
+        <button type="button" id="printSnap">Print or save as PDF</button>
+        <button type="button" id="copySnap">Copy these figures</button>
+      </div>
+      <p class="reassure" style="margin-top:var(--s4)"><span class="ic" aria-hidden="true">✓</span>
+        <span>Estimated from the assessed value you entered and the town's published rates. Your
+        actual bill depends on your county assessment.</span></p>`;
+    $('#printSnap', s).addEventListener('click', () => window.print());
+    $('#copySnap', s).addEventListener('click', async ev => {
+      const text = `Town of Hillsborough — my share, FY${rateF.fiscal_year}\n` +
+        `Home assessed at ${usd(state.homeValue)} (${state.location === 'intown'
+          ? 'in town' : 'out of town'})\n` +
+        `Town property tax: ${usd(annual)}/yr (${usd(annual / 12)}/mo)\n` +
+        `Water/sewer increase: +${usd2(u.total)}/mo (about ${usd(u.total * 12)}/yr)\n` +
+        `Tax rate: ${cents(rateF.value)} cents per $100 — unchanged for FY${rateF.fiscal_year}\n` +
+        `Source: ${(docsById().get(rateF.source_doc) || {}).filename || rateF.source_doc}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        ev.target.textContent = 'Copied';
+        setTimeout(() => { ev.target.textContent = 'Copy these figures'; }, 1800);
+      } catch (e) {
+        // Clipboard needs a secure context and permission; never leave the user stuck.
+        ev.target.textContent = 'Copy blocked — use Print';
+      }
+    });
+    saveHome();
+  }
+
+  const rerender = () => { draw(false); refreshDependents(); };
+  num.addEventListener('input', () => { rng.value = num.value; rerender(); });
+  rng.addEventListener('input', () => { num.value = rng.value; rerender(); });
+  $$('.seg button', sec).forEach(b => b.addEventListener('click', () => {
+    const isLoc = !!b.dataset.loc;
+    state[isLoc ? 'location' : 'useLevel'] = b.dataset.loc || b.dataset.use;
+    $$(`[data-${isLoc ? 'loc' : 'use'}]`, sec)
+      .forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+    rerender();
+  }));
+  const chg = $('#changeHome', sec);
+  if (chg) chg.addEventListener('click', () => {
+    num.focus();
+    num.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
+  });
+  draw(!REDUCED && !state.returning);
+}
+
+/* An in-flight count-up MUST be cancelled before writing a new value. Otherwise a
+ * reader who edits the figure within the animation window (620ms of page load)
+ * watches their own number get overwritten by the previous one as the old
+ * animation finishes — silently showing the wrong tax for their home. */
+let _figAnim = null;
+function setFigure(el, target, animate) {
+  if (_figAnim !== null) { cancelAnimationFrame(_figAnim); _figAnim = null; }
+  if (target == null) { el.textContent = '—'; return; }
+  if (!animate) { el.textContent = usd(target); return; }
+  const dur = 620, t0 = performance.now();
+  const step = now => {
+    const p = Math.min(1, (now - t0) / dur);
+    el.textContent = usd(target * (1 - Math.pow(1 - p, 3)));
+    _figAnim = p < 1 ? requestAnimationFrame(step) : null;
+  };
+  _figAnim = requestAnimationFrame(step);
+}
+
+/** Re-render the sections that quote the reader's own figures.
+ *
+ * Debounced, and it rebuilds "what's coming" in place rather than the whole page:
+ * re-rendering everything on each keystroke would tear down the input the reader
+ * is currently typing into and lose focus and caret position. */
+let _refreshTimer = null;
+function refreshDependents() {
+  const pf = $('#paysforAnswer');
+  if (pf) pf.innerHTML = paysForAnswer();
+  clearTimeout(_refreshTimer);
+  _refreshTimer = setTimeout(() => {
+    const old = document.getElementById('coming');
+    if (!old) return;
+    const holder = document.createElement('div');
+    renderComing(holder);
+    const fresh = holder.firstElementChild;
+    if (fresh) old.replaceWith(fresh);
+  }, 180);
+}
+
+/* ==================== 02 — what it pays for ==================== */
+function paysForAnswer() {
+  const gf = one('general_fund_expenditures'), total = one('total_budget');
+  const annual = annualTax();
+  if (!gf || !total || annual == null) return '';
+  return `Your <span class="fig">${usd(annual)}</span> in town property tax goes into the
+    <strong>General Fund</strong> — <span class="fig">${compact(gf.value)}</span> of the town's
+    <span class="fig">${compact(total.value)}</span> total. <span class="soft">Your water, sewer and
+    stormwater bills pay for the other two funds. Those are not tax money, and a rise in one is not
+    a rise in the other.</span>`;
+}
+
+function renderPaysFor(host) {
+  const total = one('total_budget');
+  const parts = [
+    ['general_fund_expenditures', 'General Fund', 'var(--series-1)',
+     'Police, fire, streets, parks, planning and administration. This is the part your property tax pays for.'],
+    ['water_sewer_fund_expenditures', 'Water & Sewer Fund', 'var(--series-2)',
+     'Paid for by water and sewer bills, not by property tax.'],
+    ['stormwater_fund_expenditures', 'Stormwater Fund', 'var(--series-3)',
+     'Paid for by the stormwater fee, charged per Equivalent Residential Unit.'],
+  ].map(([m, label, colour, blurb]) => {
+    const f = one(m);
+    return f ? { label, colour, blurb, value: f.value, f } : null;
+  }).filter(Boolean);
+  if (!total || parts.length < 2) return;
+
+  const sec = section('paysfor', '02', 'What your money pays for', '');
+  const ans = document.createElement('p');
+  ans.className = 'answer';
+  ans.id = 'paysforAnswer';
+  ans.innerHTML = paysForAnswer();
+  sec.appendChild(ans);
+
+  const sum = parts.reduce((a, p) => a + p.value, 0);
+  const bars = parts.map(p =>
+    `<span style="background:${p.colour};width:${(p.value / sum * 100).toFixed(3)}%"
+       title="${esc(p.label)}: ${esc(compact(p.value))}"></span>`).join('');
+  const legend = parts.map(p => `<li>
+      <span class="sw" style="background:${p.colour}"></span>
+      <span><span class="nm">${esc(p.label)}</span>
+        <span class="amt">${esc(compact(p.value))}</span>
+        <span class="pc">${(p.value / sum * 100).toFixed(1)}% of the total</span></span>
+    </li>`).join('');
+  // A total that does not equal its parts would be its own small lie.
+  const diff = Math.abs(sum - total.value);
+  const check = diff < 1
+    ? `The three funds add up exactly to the stated total of ${compact(total.value)} — this page
+       checks that rather than assuming it.`
+    : `⚠ The three funds add to ${compact(sum)}, which differs from the stated total
+       ${compact(total.value)} by ${compact(diff)}. Shown as found in the source.`;
+
+  const panel = document.createElement('div');
+  panel.className = 'panel panel-pad';
+  panel.innerHTML = `<div class="ptw" role="img"
+      aria-label="${esc(parts.map(p => `${p.label} ${compact(p.value)}`).join('; '))}">${bars}</div>
+    <ul class="ptw-legend">${legend}</ul>
+    <div class="gloss" style="margin-top:var(--s6)">${parts.map(p =>
+      `<div><dt>${esc(p.label)}</dt><dd>${esc(p.blurb)}</dd></div>`).join('')}</div>
+    <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>${check}
+      Source: ${cite(total)}.</span></p>`;
+  sec.appendChild(panel);
   host.appendChild(sec);
 }
 
-/* =========================== 05 — what's ahead ========================== */
-function renderAhead(host) {
-  const sec = section('ahead', '05', 'What’s ahead',
-    `The town's own three-year plan, in its own figures. FY2027 is adopted; FY2028 and FY2029 are
-     projections and will change.`);
+/* ==================== 03 — is the money healthy? ==================== */
+function renderHealth(host) {
+  const sec = section('health', '03', 'Is the town’s money in good shape?', '');
+
+  const now = forYear('general_fund_balance_pct_of_expenditures', 2027)
+    || one('general_fund_balance_pct_of_expenditures');
+  const far = latestByYear('general_fund_balance_pct_of_expenditures').slice(-1)[0];
+  const floorQ = quote('savings_floor');
+  const dropQ = quote('savings_drop');
+  const noTaxQ = quote('no_tax_increase');
+  const FLOOR = 50;
+
+  const ans = document.createElement('p');
+  ans.className = 'answer';
+  ans.innerHTML = now
+    ? `Right now, yes — with a warning attached. The town holds savings worth
+       <span class="fig">${pctPlain(now.value)}</span> of a year's spending, comfortably above the
+       <span class="fig">${FLOOR}%</span> floor it sets for itself.
+       <span class="soft">But it plans to spend more than it collects in every year of its
+       three-year plan, covering the gap from those savings — and it expects them to fall to
+       ${far ? pctPlain(far.value) : 'less'} by FY${far ? far.fiscal_year : ''}.</span>`
+    : '';
+  sec.appendChild(ans);
+
+  const items = [];
+  if (now) items.push([now.value >= FLOOR ? 'ok' : 'bad', now.value >= FLOOR ? '✓' : '!',
+    'Savings are above the town’s own floor',
+    `<span class="fig">${pctPlain(now.value)}</span> of a year's spending in FY${now.fiscal_year}.
+     The town's stated aim is no lower than ${FLOOR}%.`]);
+  if (far && far.fiscal_year !== (now && now.fiscal_year)) {
+    items.push([far.value >= FLOOR ? 'watch' : 'bad', far.value >= FLOOR ? '~' : '!',
+      `Savings are projected to fall by FY${far.fiscal_year}`,
+      `Down to <span class="fig">${pctPlain(far.value)}</span> —
+       ${far.value >= FLOOR ? 'still above the floor, but the town itself calls the drop concerning.'
+        : 'below the floor the town sets for itself.'}`]);
+  }
+  const defs = latestByYear('general_fund_surplus_deficit').filter(f => f.value < 0);
+  if (defs.length) {
+    const worst = defs.reduce((a, b) => (b.value < a.value ? b : a));
+    items.push(['watch', '~', `A planned shortfall in ${defs.length} of the coming years`,
+      `The largest is <span class="fig">${usdSigned(worst.value)}</span> in FY${worst.fiscal_year}.
+       Shortfalls are covered from savings, which is why the savings line matters.`]);
+  }
+  const rate = one('property_tax_rate');
+  if (rate) items.push(['ok', '✓', 'Your property tax rate is not going up this year',
+    `It stays at <span class="fig">${cents(rate.value)} cents</span> per $100 of value in
+     FY${rate.fiscal_year}.`]);
+  const wr = val('water_rate_increase_pct');
+  if (wr) items.push(['watch', '~', 'Water and sewer rates are going up',
+    `Each rises <span class="fig">${pctPlain(wr)}</span>, and the town recommends the same again for
+     the two years after.`]);
+
+  const panel = document.createElement('div');
+  panel.className = 'panel panel-pad';
+  panel.innerHTML = `<ul class="statlist">${items.map(([cls, ic, lb, dt]) =>
+    `<li class="${cls}"><span class="ic" aria-hidden="true">${ic}</span>
+      <span><span class="lb">${lb}</span><span class="dt">${dt}</span></span></li>`).join('')}</ul>`;
+
+  for (const q of [floorQ, dropQ, noTaxQ]) {
+    if (!q) continue;
+    const bq = document.createElement('blockquote');
+    bq.className = 'town';
+    bq.innerHTML = `“${esc(q.text)}”
+      <cite>The town’s own words — ${esc((docsById().get(q.source_doc) || {}).filename
+        || q.source_doc)}, p.${q.source_page}</cite>`;
+    panel.appendChild(bq);
+  }
+  sec.appendChild(panel);
+
+  sec.appendChild(disclosure('See the charts behind this', inner => {
+    const years = [...new Set(state.data.facts.facts
+      .map(f => f.fiscal_year).filter(v => v != null))].sort((a, b) => a - b);
+    const f = document.createElement('div');
+    f.className = 'filters';
+    const opts = ys => ys.map(y => `<option value="${y}">FY${y}</option>`).join('');
+    f.innerHTML = `<div class="f"><label class="field-label" for="ymin">From year</label>
+        <select id="ymin">${opts(years)}</select></div>
+      <div class="f"><label class="field-label" for="ymax">To year</label>
+        <select id="ymax">${opts(years)}</select></div>
+      <p class="hint">Beyond FY2027 these are the town's own projections, not adopted budgets.</p>`;
+    inner.appendChild(f);
+    const a = $('#ymin', f), b = $('#ymax', f);
+    a.value = state.yearMin; b.value = state.yearMax;
+    const onChange = () => {
+      state.yearMin = Math.min(+a.value, +b.value);
+      state.yearMax = Math.max(+a.value, +b.value);
+      grid.innerHTML = '';
+      build();
+    };
+    a.addEventListener('change', onChange);
+    b.addEventListener('change', onChange);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid2';
+    inner.appendChild(grid);
+    function build() {
+      [
+        chartSurplus(),
+        chartLine('general_fund_balance_pct_of_expenditures',
+          'How much savings the town holds', 'Measured against a year of spending.',
+          pctPlain, 50, '50% stated floor'),
+        chartLine('general_fund_balance_available_cash', 'Savings in dollars',
+          'The town’s cash reserve.', compact),
+        chartColumns(latestByYear('admin_spend_total').filter(inRange),
+          'Administrative spending',
+          'Supplied by a county commissioner, not an audited total.', compact),
+      ].filter(Boolean).forEach(c => grid.appendChild(c));
+    }
+    build();
+
+    // projection drift, full width
+    const cmps = state.data.projections.comparisons.filter(c =>
+      c.metric === 'general_fund_balance_available_cash');
+    if (cmps.length) {
+      const note = document.createElement('p');
+      note.className = 'sub';
+      note.style.margin = 'var(--s6) 0 var(--s4)';
+      note.style.color = 'var(--text-secondary)';
+      note.style.fontSize = 'var(--t-sm)';
+      note.innerHTML = `The town publishes a rolling three-year plan, so the same year appears in
+        several documents. Its forecasts have come in better than predicted — which is worth knowing
+        before treating a projection as a promise. This is not an accusation: the town says plainly
+        that it budgets cautiously.`;
+      inner.appendChild(note);
+      const items2 = cmps.map(c => {
+        const rs = [...c.readings].sort((x, y) => docYear(x.source_doc) - docYear(y.source_doc));
+        return { label: 'FY' + c.fiscal_year, a: rs[0].value, b: rs[rs.length - 1].value,
+          src: rs.map(r => esc(r.source_doc)).join(' → ') };
+      });
+      const c2 = chartDumbbell(items2, 'What was projected vs what was later reported',
+        'Each row is one year.', compact, ['Earlier document', 'Later document']);
+      if (c2) inner.appendChild(c2);
+    }
+  }));
+
+  host.appendChild(sec);
+}
+
+/* ==================== 04 — what's coming ==================== */
+function renderComing(host) {
+  const sec = section('coming', '04', 'What’s coming for you', '');
+  const need = one('tax_rate_increase_needed_cents');
+  const scenario = one('fy29_scenario_increase_on_400k_home');
+  const capCents = one('capital_projects_tax_rate_equivalent_cents');
+  const houseCents = one('affordable_housing_tax_rate_equivalent_cents');
+  const oneCent = state.homeValue / 100 * 0.01;
+
+  const ans = document.createElement('p');
+  ans.className = 'answer';
+  ans.innerHTML = need
+    ? `The town does not propose a tax increase this year, but it projects a shortfall of
+       <span class="fig">${usdSigned(val('general_fund_surplus_deficit') || 0)}</span> by FY2029 that
+       would need a rise of over <span class="fig">${cents(need.value)} cents</span> to close —
+       about <span class="fig">${usd(oneCent * need.value)} a year</span> for a home like yours.
+       <span class="soft">These are projections and will change.</span>`
+    : '';
+  sec.appendChild(ans);
 
   const def = latestByYear('general_fund_surplus_deficit');
   const pct = new Map(latestByYear('general_fund_surplus_deficit_pct').map(f => [f.fiscal_year, f]));
   const bal = new Map(latestByYear('general_fund_balance_pct_of_expenditures')
     .map(f => [f.fiscal_year, f]));
-  const need = one('tax_rate_increase_needed_cents');
-  const scenario = one('fy29_scenario_increase_on_400k_home');
-  const capCents = one('capital_projects_tax_rate_equivalent_cents');
-  const houseCents = one('affordable_housing_tax_rate_equivalent_cents');
 
   const items = def.filter(f => f.fiscal_year >= 2027).map(f => {
     const p = pct.get(f.fiscal_year), bl = bal.get(f.fiscal_year);
     const bad = f.value < 0 && Math.abs(p ? p.value : 0) > 8;
-    let body = `General Fund ${f.value < 0 ? 'deficit' : 'surplus'} of
-      <span class="fig">${usdSigned(f.value)}</span>`;
-    if (p) body += ` (${pctPlain(p.value)} of the budget)`;
+    let body = `The town plans to ${f.value < 0 ? 'spend' : 'take in'}
+      <span class="fig">${usdSigned(Math.abs(f.value))}</span>
+      ${f.value < 0 ? 'more than it collects' : 'more than it spends'}`;
+    if (p) body += ` (${pctPlain(Math.abs(p.value))} of its budget)`;
     body += '.';
-    if (bl) body += ` Savings at <span class="fig">${pctPlain(bl.value)}</span> of yearly spending`
-      + (bl.value < 50 ? ' — below the town’s own 50% floor.' : '.');
+    if (bl) body += ` Savings would sit at <span class="fig">${pctPlain(bl.value)}</span> of a
+      year's spending${bl.value < 50 ? ' — below its own 50% floor.' : '.'}`;
     if (f.fiscal_year === 2029 && need && scenario) {
-      body += ` Closing this would take a rise of over <span class="fig">${cents(need.value)}
-        cents</span>, about <span class="fig">${usd(scenario.value)} a year</span> on a
-        $400,000 home.`;
+      body += ` Closing that gap would take over <span class="fig">${cents(need.value)} cents</span>
+        on the rate — the town's own example is <span class="fig">${usd(scenario.value)} a year</span>
+        on a $400,000 home, and <span class="fig">${usd(oneCent * need.value)}</span> on yours.`;
     }
     return `<li class="${bad ? 'bad' : ''}"><span class="node" aria-hidden="true"></span>
       <span class="yr">FY${f.fiscal_year} · ${esc(f.basis)}</span>
-      <h4>${f.fiscal_year === 2027 ? 'Adopted year' : 'Projection'}</h4>
+      <h4>${f.fiscal_year === 2027 ? 'This year, already adopted' : 'Projected'}</h4>
       <p>${body}</p></li>`;
   });
 
   const commitments = [];
-  if (capCents) commitments.push(`the fire station, Ridgewalk Greenway and train station projects are
-    expected to need about <span class="fig">${cents(capCents.value)} cents</span> on the tax rate`);
+  if (capCents) commitments.push(`the new fire station, the Ridgewalk Greenway and the train station
+    are expected to need about <span class="fig">${cents(capCents.value)} cents</span> on the tax
+    rate — roughly <span class="fig">${usd(oneCent * capCents.value)} a year</span> for your home`);
   if (houseCents) commitments.push(`the board has committed to raising affordable-housing spending
-    until it reaches <span class="fig">${cents(houseCents.value)} cents</span>`);
+    until it reaches <span class="fig">${cents(houseCents.value)} cents</span>
+    (about <span class="fig">${usd(oneCent * houseCents.value)} a year</span> for you)`);
   if (commitments.length) {
-    const body = commitments.join('; ').replace(/^./, ch => ch.toUpperCase());
     items.push(`<li><span class="node" aria-hidden="true"></span>
-      <span class="yr">Beyond the plan</span><h4>Commitments already made</h4>
-      <p>${body}. These sit on top of the deficits above.</p></li>`);
+      <span class="yr">Already promised</span><h4>Commitments on top of the above</h4>
+      <p>${commitments.join('; ').replace(/^./, ch => ch.toUpperCase())}.</p></li>`);
   }
 
   const panel = document.createElement('div');
@@ -793,143 +959,132 @@ function renderAhead(host) {
   panel.innerHTML = `<ul class="timeline">${items.join('')}</ul>`;
   sec.appendChild(panel);
 
-  // capital cost growth
   const ps = state.data.requests.projects_with_cost_changes
     .filter(p => p.original_budget_usd != null && p.current_budget_usd != null);
   if (ps.length) {
-    const c = chartDumbbell(ps.map(p => ({
-      label: p.project, a: p.original_budget_usd, b: p.current_budget_usd,
-      src: 'Data request workbook, Project Cost Changes'
-    })), 'Capital projects: original budget vs current budget',
-      `Figures from the initiative's own workbook rather than an audited statement, so they are
-       published as claims to verify. Both rows' arithmetic reconciles.`,
-      compact, ['Original budget', 'Current budget']);
-    if (c) {
-      c.style.marginTop = 'var(--s4)';
-      sec.appendChild(c);
-    }
+    sec.appendChild(disclosure('See how project costs have grown', inner => {
+      const c = chartDumbbell(ps.map(p => ({
+        label: p.project, a: p.original_budget_usd, b: p.current_budget_usd,
+        src: 'Data request workbook, Project Cost Changes'
+      })), 'What these projects were budgeted at, then and now',
+        `From the initiative's own workbook rather than an audited statement, so treat them as
+         figures to verify. Both rows' arithmetic reconciles.`,
+        compact, ['Original budget', 'Current budget']);
+      if (c) inner.appendChild(c);
+    }));
   }
   host.appendChild(sec);
 }
 
-/* ========================== 06 — open request ========================== */
-function renderRequest(host) {
-  const r = state.data.requests, s = r.summary;
-  const filled = s.data_cells_requested
-    ? s.data_cells_provided / s.data_cells_requested * 100 : 0;
-
-  const sec = section('request', '06', 'The open records request',
-    `The initiative sent the Town of Hillsborough a workbook asking for staffing, utility,
-     capital-project, debt, revenue and affordable-housing figures on a consistent basis, so that
-     years could be compared without organisational changes muddying them. This is how much of it
-     has been filled in.`);
-
-  const rows = r.tables.map(t => {
-    const ico = t.status === 'answered' ? '✓' : t.status === 'partial' ? '○' : '✕';
-    return `<tr><td>${esc(t.section || '—')}</td><td>${esc(t.title)}</td>
-      <td class="num">${t.cells_provided} / ${t.cells_expected}</td>
-      <td><span class="status ${esc(t.status)}"><span class="ico" aria-hidden="true">${ico}</span>
-        ${esc(t.status)}</span></td></tr>`;
-  }).join('');
-
-  const panel = document.createElement('div');
-  panel.className = 'panel panel-pad';
-  panel.innerHTML = `
-    <div class="meter">
-      <div class="track"><div class="fill" style="width:${Math.max(0.7, filled).toFixed(1)}%"></div></div>
-      <div class="cap">
-        <span><strong>${s.data_cells_provided}</strong> of
-          <strong>${s.data_cells_requested}</strong> requested figures provided</span>
-        <span><strong>${filled.toFixed(1)}%</strong></span>
-      </div>
-    </div>
-    <p style="margin:var(--s5) 0 0;font-size:var(--t-sm);color:var(--text-secondary)">
-      ${s.tables_unanswered} of ${s.tables_requested} requested tables are still entirely blank.
-      This reflects the copy of the workbook held in this archive at the time it was collected — it
-      is a status snapshot, <strong>not</strong> a finding that the town declined to respond.
-    </p>
-    <blockquote style="margin:var(--s5) 0 0;padding:var(--s4) var(--s5);
-      border-left:3px solid var(--hairline-firm);color:var(--text-secondary);
-      font-size:var(--t-sm);background:var(--page-2);border-radius:0 var(--r-sm) var(--r-sm) 0">
-      ${r.cover_note.map(l => esc(l)).join('<br>')}
-    </blockquote>
-    <div class="tablewrap" style="margin-top:var(--s5)">
-      <table><caption>Every table requested, and whether it has been populated.</caption>
-      <thead><tr><th>Section</th><th>Table</th><th class="num">Filled</th><th>Status</th></tr></thead>
-      <tbody>${rows}</tbody></table>
-    </div>`;
-  sec.appendChild(panel);
-  host.appendChild(sec);
-}
-
-/* ====================== 07 — sources, say, glossary ==================== */
-const GLOSSARY = [
-  ['Fiscal year (FY)', 'The town’s budget year runs 1 July to 30 June. FY2027 means the year ending 30 June 2027.'],
-  ['General Fund', 'The main account for services paid out of taxes — police, fire, streets, parks, planning, administration.'],
-  ['Fund balance', 'Savings. Money not spent in prior years, held for emergencies and cash flow. The town aims to keep it at no less than 50% of a year’s spending.'],
-  ['Property tax rate', 'Charged in cents per $100 of assessed value. At 51.3 cents, a $100,000 home pays $513 a year to the town. That is 0.513% — not 51.3%.'],
-  ['Ad valorem tax', 'Latin for “according to value” — the property tax.'],
-  ['Revenue-neutral rate', 'After a revaluation raises property values, this is the rate that would bring in the same total revenue as before. A rate above it is an effective increase even if the cents figure looks lower.'],
-  ['ERU', 'Equivalent Residential Unit — the unit the stormwater fee is charged in, based on hard surface area that sheds rain.'],
-  ['Enterprise fund', 'A fund paid for by fees from the people who use the service rather than by taxes. The Water & Sewer and Stormwater funds are these.'],
-  ['Basis: budget / estimate / projection / actual', 'A budget is the plan adopted. An estimate is where the year is expected to land. A projection is a later year in the plan. An actual is audited and final. They are not interchangeable, and this site never mixes them.'],
-  ['ACFR', 'Annual Comprehensive Financial Report — the audited yearly accounts, produced by an outside auditor after the year ends.'],
-];
-
-function renderSources(host) {
-  const docs = state.data.documents.documents, sum = state.data.documents.summary;
-  const sec = section('sources', '07', 'Sources, method and plain English',
-    `Every figure on this page traces to one of these documents. Where the town has published a
-     document itself, that is the copy worth reading — linking to it is the next improvement to this
-     site.`);
-
-  // civic participation first — it is the actionable part
+/* ==================== 05 — speak up ==================== */
+function renderVoice(host) {
+  const sec = section('voice', '05', 'How to be heard', '');
   const part = (state.data.household && state.data.household.civic_participation) || [];
+  const r = state.data.requests, s = r.summary;
+
+  const ans = document.createElement('p');
+  ans.className = 'answer';
+  ans.innerHTML = `The budget is adopted by the mayor and Board of Commissioners, and the process
+    includes public hearings you can attend. <span class="soft">Below are the dates the FY2027
+    budget message names, and the questions residents have already put to the town.</span>`;
+  sec.appendChild(ans);
+
   if (part.length) {
     const p = document.createElement('div');
     p.className = 'panel panel-pad';
-    p.style.marginBottom = 'var(--s5)';
-    p.innerHTML = `<h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
-        Have your say</h3>
-      <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
-        The budget is adopted by the mayor and Board of Commissioners, and the process includes
-        public hearings. Dates below are as printed in the FY2027 budget message — confirm them
-        against the town's current meeting calendar before relying on them.</p>
+    p.innerHTML = `<h3 style="margin:0 0 var(--s4);font-size:var(--t-base);font-weight:640">
+        Dates named in the budget</h3>
       <ul class="rows" style="margin:0">${part.map(e =>
         `<li><span class="k">${esc(e.event)}</span>
-          <span class="v">${esc(e.date_stated)}</span></li>`).join('')}</ul>`;
+          <span class="v">${esc(e.date_stated)}</span></li>`).join('')}</ul>
+      <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>These are as printed in
+        the FY2027 budget message. Check the town's current meeting calendar before you go — dates
+        move.</span></p>`;
     sec.appendChild(p);
   }
 
-  const rows = docs.slice().sort((a, b) =>
-    (a.category || '').localeCompare(b.category) || a.filename.localeCompare(b.filename))
-    .map(d => {
-      const badge = d.format !== 'pdf'
-        ? `<span class="badge">${esc(d.format)}</span>`
-        : d.values_extractable
-          ? `<span class="badge ok">digital text</span>`
-          : `<span class="badge warn">scanned — OCR unreliable</span>`;
-      return `<tr><td>${esc(d.filename)}</td><td>${esc(d.category)}</td>
-        <td class="num">${d.fiscal_year || '—'}</td><td class="num">${d.pages || '—'}</td>
-        <td class="num">${(d.bytes / 1048576).toFixed(1)} MB</td><td>${badge}</td>
-        <td class="mono" title="${esc(d.sha256 || '')}">${esc((d.sha256 || '').slice(0, 10))}</td></tr>`;
-    }).join('');
+  const filled = s.data_cells_requested
+    ? s.data_cells_provided / s.data_cells_requested * 100 : 0;
+  const q = document.createElement('div');
+  q.className = 'panel panel-pad';
+  q.style.marginTop = 'var(--s5)';
+  q.innerHTML = `<h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+      Questions residents have already asked</h3>
+    <p style="margin:0 0 var(--s5);font-size:var(--t-sm);color:var(--text-secondary)">
+      Because organisational changes make year-to-year comparisons hard, residents sent the town a
+      workbook asking for staffing, utility, capital-project, debt, revenue and housing figures on a
+      consistent basis. This is how much of it has come back so far.</p>
+    <div class="meter">
+      <div class="track"><div class="fill" style="width:${Math.max(0.7, filled).toFixed(1)}%"></div></div>
+      <div class="cap"><span><strong>${s.data_cells_provided}</strong> of
+        <strong>${s.data_cells_requested}</strong> requested figures provided</span>
+        <span><strong>${filled.toFixed(1)}%</strong></span></div>
+    </div>
+    <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>${s.tables_unanswered} of
+      ${s.tables_requested} requested tables are still blank. This reflects the copy of the workbook
+      in our archive when it was collected — it is a status snapshot, <strong>not</strong> a finding
+      that the town refused to answer.</span></p>`;
+  q.appendChild(disclosure('See every question asked', inner => {
+    inner.innerHTML = `<div class="tablewrap"><table>
+      <caption>Every table requested, and whether it has been filled in.</caption>
+      <thead><tr><th>Topic</th><th>Table</th><th class="num">Filled</th><th>Status</th></tr></thead>
+      <tbody>${r.tables.map(t => {
+        const ic = t.status === 'answered' ? '✓' : t.status === 'partial' ? '○' : '✕';
+        return `<tr><td>${esc(t.section || '—')}</td><td>${esc(t.title)}</td>
+          <td class="num">${t.cells_provided} / ${t.cells_expected}</td>
+          <td><span class="status ${esc(t.status)}">
+            <span class="ico" aria-hidden="true">${ic}</span>${esc(t.status)}</span></td></tr>`;
+      }).join('')}</tbody></table></div>`;
+  }));
+  sec.appendChild(q);
+  host.appendChild(sec);
+}
 
-  const dp = document.createElement('div');
-  dp.className = 'panel panel-pad';
-  dp.innerHTML = `<p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
-      ${sum.unique_documents} unique documents (${sum.duplicate_copies_in_archive} duplicate copies in
-      the original archive were collapsed). <strong>${sum.pdf_digital_text}</strong> have real digital
-      text and are safe to read figures from; <strong>${sum.pdf_scanned_ocr}</strong> are scans whose
-      character recognition transposes digits, so no figure here is taken from them. The first 10
-      characters of each SHA-256 are shown — the full hash is in
-      <span class="mono">data/datasets/documents.json</span>.</p>
-    <div class="tablewrap"><table>
-      <caption>The documents behind every number on this page.</caption>
-      <thead><tr><th>File</th><th>Category</th><th class="num">FY</th><th class="num">Pages</th>
-        <th class="num">Size</th><th>Text</th><th>SHA-256</th></tr></thead>
+/* ==================== 06 — the receipts ==================== */
+const GLOSSARY = [
+  ['Fiscal year (FY)', 'The town’s budget year runs 1 July to 30 June. FY2027 means the year ending 30 June 2027.'],
+  ['General Fund', 'The main account for services paid out of taxes — police, fire, streets, parks, planning, administration.'],
+  ['Fund balance', 'Savings. Money not spent in earlier years, kept for emergencies and cash flow. The town aims to hold no less than 50% of a year’s spending.'],
+  ['Property tax rate', 'Charged in cents per $100 of assessed value. At 51.3 cents, a $100,000 home pays $513 a year to the town. That is 0.513% of the value — not 51.3%.'],
+  ['Ad valorem tax', 'Latin for “according to value” — in other words, the property tax.'],
+  ['Revenue-neutral rate', 'After a revaluation raises property values, this is the rate that would bring in the same money as before. A rate above it is a real increase even if the cents figure looks lower.'],
+  ['ERU', 'Equivalent Residential Unit — the unit the stormwater fee is charged in, based on how much hard surface sheds rain.'],
+  ['Enterprise fund', 'A fund paid for by the people who use the service rather than by taxes. Water & Sewer and Stormwater are these.'],
+  ['Budget vs estimate vs projection', 'A budget is the plan adopted. An estimate is where the year is expected to land. A projection is a later year in the plan, and least certain. This page never mixes them.'],
+  ['Audited', 'Checked by an outside accountant after the year ends. Audited figures are the most reliable, and are the ones this page cannot yet show — see the note at the bottom.'],
+];
+
+function renderReceipts(host) {
+  const docs = state.data.documents.documents, sum = state.data.documents.summary;
+  const sec = section('receipts', '06', 'Where every number came from', '');
+  const ans = document.createElement('p');
+  ans.className = 'answer';
+  ans.innerHTML = `Every figure on this page traces to one of
+    <span class="fig">${sum.unique_documents}</span> documents the town published.
+    <span class="soft">${sum.pdf_digital_text} of them can be read reliably by computer;
+    ${sum.pdf_scanned_ocr} are scans whose hidden text scrambles digits, so nothing on this page is
+    taken from those.</span>`;
+  sec.appendChild(ans);
+
+  sec.appendChild(disclosure('See all the source documents', inner => {
+    const rows = docs.slice().sort((a, b) =>
+      (a.category || '').localeCompare(b.category) || a.filename.localeCompare(b.filename))
+      .map(d => {
+        const badge = d.format !== 'pdf' ? `<span class="badge">${esc(d.format)}</span>`
+          : d.values_extractable ? `<span class="badge ok">readable</span>`
+            : `<span class="badge warn">scanned — not used for figures</span>`;
+        return `<tr><td>${esc(d.filename)}</td><td class="num">${d.fiscal_year || '—'}</td>
+          <td class="num">${d.pages || '—'}</td>
+          <td class="num">${(d.bytes / 1048576).toFixed(1)} MB</td><td>${badge}</td>
+          <td class="mono" title="${esc(d.sha256 || '')}">${esc((d.sha256 || '').slice(0, 10))}</td></tr>`;
+      }).join('');
+    inner.innerHTML = `<div class="tablewrap"><table>
+      <caption>The ${sum.unique_documents} documents behind this page. The code after each is the
+        first part of its SHA-256 fingerprint, so you can prove your copy is the same file.</caption>
+      <thead><tr><th>Document</th><th class="num">Year</th><th class="num">Pages</th>
+        <th class="num">Size</th><th>Can we read it?</th><th>Fingerprint</th></tr></thead>
       <tbody>${rows}</tbody></table></div>`;
-  sec.appendChild(dp);
+  }));
 
   const g = document.createElement('div');
   g.className = 'panel panel-pad';
@@ -939,7 +1094,6 @@ function renderSources(host) {
     <dl class="gloss">${GLOSSARY.map(([t, d]) =>
       `<div><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl>`;
   sec.appendChild(g);
-
   host.appendChild(sec);
 }
 
@@ -948,17 +1102,15 @@ let firstPaint = true;
 function render() {
   const main = $('#main');
   main.innerHTML = '';
-  renderHousehold(main);
-  renderBudget(main);
-  renderTrends(main);
-  renderProjections(main);
-  renderAhead(main);
-  renderRequest(main);
-  renderSources(main);
+  renderYou(main);
+  renderPaysFor(main);
+  renderHealth(main);
+  renderComing(main);
+  renderVoice(main);
+  renderReceipts(main);
   if (firstPaint) { setupScrollSpy(); firstPaint = false; }
 }
 
-/** Highlight the nav link for the section currently in view. */
 function setupScrollSpy() {
   const links = $$('#navLinks a');
   const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
@@ -979,6 +1131,7 @@ function setupScrollSpy() {
 /* ================================= boot ================================ */
 async function boot() {
   try {
+    loadHome();
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues', 'household'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
@@ -993,32 +1146,20 @@ async function boot() {
     $('#loading').remove();
     render();
 
-    $('#chipCount').textContent =
-      `${idx.counts.facts} figures · ${idx.counts.documents} documents`;
-
-    const c = idx.counts;
-    $('#verifyList').innerHTML = [
-      ['Published figures', c.facts, ''],
-      ['Source documents', c.documents, ''],
-      ['With digital text', c.documents_with_trustworthy_text, ''],
-      ['Scanned — excluded', c.documents_scanned_needing_transcription, 'warn'],
-      ['Cross-document checks', c.multi_document_comparisons, ''],
-    ].map(([k, v, cls]) =>
-      `<div class="vr"><dt>${esc(k)}</dt><dd class="${cls}">${v}</dd></div>`).join('');
+    $('#chipCount').textContent = `${idx.counts.facts} figures, every one sourced`;
     $('#footMeta').textContent =
       `${idx.counts.facts} published figures · ${idx.counts.metrics} measures · ` +
       `${idx.counts.documents} source documents · ` +
-      `${idx.counts.documents_with_trustworthy_text} with digital text · ` +
-      `${idx.counts.documents_scanned_needing_transcription} scanned and pending transcription.`;
+      `${idx.counts.documents_with_trustworthy_text} readable · ` +
+      `${idx.counts.documents_scanned_needing_transcription} scanned and excluded.`;
   } catch (err) {
     $('#loading').textContent =
-      'Could not load the published data. If you opened index.html straight from disk, the browser ' +
-      'blocks the fetch — serve the folder over HTTP instead (make serve).';
+      'Could not load the town’s figures. If you opened this file straight from your computer, your ' +
+      'browser blocks the data load — open the published web address instead.';
     console.error(err);
   }
 }
 
-/* theme toggle — persisted, and it wins over the OS setting in both directions */
 $('#themeToggle').addEventListener('click', () => {
   const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', next);

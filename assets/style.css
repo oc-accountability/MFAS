@@ -579,6 +579,109 @@ tbody tr:hover { background: var(--surface-2); }
 }
 .skip:focus { left: var(--s4); top: var(--s4); }
 
+/* ==================== resident-first components ==================== */
+
+/* "Showing figures for your home" bar — the returning-visitor cue. */
+.welcome {
+  display: flex; flex-wrap: wrap; gap: var(--s3) var(--s4); align-items: center;
+  padding: var(--s3) var(--s5); margin-bottom: var(--s5);
+  background: var(--accent-soft); border: 1px solid var(--accent-line);
+  border-radius: 999px; font-size: var(--t-sm); color: var(--text-secondary);
+}
+.welcome strong { color: var(--text-primary); }
+.welcome button {
+  margin-left: auto; min-height: 32px; padding: 5px 13px;
+  background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--hairline-firm); border-radius: 999px;
+  font: 600 var(--t-xs)/1.3 var(--sans); cursor: pointer;
+}
+.welcome button:hover { border-color: var(--accent); }
+
+/* Plain-language answer that opens each section, before any chart. */
+.answer {
+  font-size: clamp(var(--t-base), 2vw, var(--t-md)); line-height: 1.55;
+  color: var(--text-primary); font-weight: 500; margin: 0 0 var(--s4);
+  max-width: 62ch;
+}
+.answer .fig { font-weight: 680; font-variant-numeric: tabular-nums; }
+.answer .soft { color: var(--text-secondary); font-weight: 400; }
+
+/* Status readout — icon + label, never colour alone. */
+.statlist { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s4); }
+.statlist > li {
+  display: grid; grid-template-columns: 26px 1fr; gap: var(--s3);
+  align-items: start; font-size: var(--t-sm);
+}
+.statlist .ic {
+  width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 12px; font-weight: 700; margin-top: 1px;
+  border: 1.5px solid currentColor; flex: none;
+}
+.statlist li.ok .ic { color: var(--good); }
+.statlist li.watch .ic { color: var(--warning); }
+.statlist li.bad .ic { color: var(--critical); }
+.statlist .lb { font-weight: 620; color: var(--text-primary); display: block; }
+.statlist .dt { color: var(--text-secondary); }
+.statlist .dt .fig { font-weight: 640; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+/* Verbatim town statement. */
+blockquote.town {
+  margin: var(--s5) 0 0; padding: var(--s4) var(--s5);
+  background: var(--page-2); border-left: 3px solid var(--accent-line);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  font-size: var(--t-sm); color: var(--text-primary); line-height: 1.6;
+}
+blockquote.town cite {
+  display: block; margin-top: var(--s3); font-style: normal;
+  font-size: var(--t-2xs); color: var(--text-muted);
+}
+
+/* Progressive disclosure so the default view stays calm. */
+details.more { margin-top: var(--s5); }
+details.more > summary {
+  cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: var(--s2);
+  min-height: 38px; padding: 8px 15px;
+  background: var(--surface-1); border: 1px solid var(--hairline); border-radius: 999px;
+  font: 600 var(--t-xs)/1.3 var(--sans); color: var(--text-secondary);
+}
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary:hover { color: var(--text-primary); border-color: var(--hairline-firm); }
+details.more > summary::after { content: "›"; font-size: 15px; transform: rotate(90deg); }
+details.more[open] > summary::after { transform: rotate(-90deg); }
+details.more > .inner { margin-top: var(--s5); }
+
+/* Your snapshot — the takeaway card, printable. */
+.snapshot {
+  background: linear-gradient(160deg, var(--surface-2), var(--surface-1) 62%);
+  border: 1px solid var(--accent-line); border-radius: var(--r-lg);
+  padding: var(--s5); box-shadow: var(--shadow), var(--inset);
+}
+.snapshot h3 {
+  margin: 0 0 var(--s4); font-size: var(--t-2xs); letter-spacing: .11em;
+  text-transform: uppercase; color: var(--text-muted); font-weight: 640;
+}
+.snapshot .big {
+  font-size: clamp(2rem, 6vw, 2.7rem); font-weight: 660; letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.snapshot .cap { margin: var(--s2) 0 0; font-size: var(--t-xs); color: var(--text-secondary); }
+.snapshot .acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s5); }
+.snapshot .acts button {
+  min-height: 38px; padding: 8px 15px; cursor: pointer;
+  background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--hairline-firm); border-radius: 999px;
+  font: 600 var(--t-xs)/1.3 var(--sans);
+}
+.snapshot .acts button:hover { border-color: var(--accent); }
+
+/* Small reassurance line placed next to figures. */
+.reassure {
+  display: flex; align-items: flex-start; gap: var(--s2);
+  margin: var(--s4) 0 0; font-size: var(--t-2xs); color: var(--text-muted);
+  line-height: 1.55;
+}
+.reassure .ic { color: var(--good); font-weight: 700; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }

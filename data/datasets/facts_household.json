@@ -15,6 +15,36 @@
       "note": "Date as printed in the FY2027 budget message. Confirm against the town's current meeting calendar before relying on it."
     }
   ],
+  "town_statements": [
+    {
+      "key": "savings_floor",
+      "text": "Our aim is to maintain fund balance levels no lower than 50% but ideally higher.",
+      "source_doc": "fy27-budget-message",
+      "source_page": 2,
+      "note": "Verbatim from the document. Wrapping whitespace collapsed; wording unchanged."
+    },
+    {
+      "key": "savings_drop",
+      "text": "The projected drop in fund balance levels by 24 percentage points, from 78% in FY27 to 54% in FY29, is concerning.",
+      "source_doc": "fy27-budget-message",
+      "source_page": 2,
+      "note": "Verbatim from the document. Wrapping whitespace collapsed; wording unchanged."
+    },
+    {
+      "key": "no_tax_increase",
+      "text": "While no property tax increase is proposed in FY27 as this year’s deficit is relatively small and savings levels are strong.",
+      "source_doc": "fy27-budget-message",
+      "source_page": 1,
+      "note": "Verbatim from the document. Wrapping whitespace collapsed; wording unchanged."
+    },
+    {
+      "key": "conservative_budgeting",
+      "text": "After the audit, most years end up with deficits less than projected or with an actual surplus generated.",
+      "source_doc": "fiscal-year-2025-budget-message",
+      "source_page": 4,
+      "note": "Verbatim from the document. Wrapping whitespace collapsed; wording unchanged."
+    }
+  ],
   "facts": [
     {
       "jurisdiction": "Town of Hillsborough, NC",
