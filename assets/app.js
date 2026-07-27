@@ -22,9 +22,15 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const DEFAULT_HOME = 400000;   // the town's own worked example, so it is a fair default
+/* Amy's household uses about 9,000 gallons a month, and the site used to offer only
+ * the town's two published examples — 4,000 ("average") and 2,000 ("low"). Water use
+ * is now a real number the reader sets, because the fee schedule gives the whole rate
+ * structure and the bill at any consumption is exact rather than extrapolated. */
+const DEFAULT_GALLONS = 4000;  // the town's own "average", so the default matches its prose
+const GAL_PRESETS = [2000, 4000, 6000, 9000, 12000];
 const state = {
   yearMin: null, yearMax: null, data: null,
-  homeValue: DEFAULT_HOME, location: 'intown', useLevel: 'avg', returning: false,
+  homeValue: DEFAULT_HOME, location: 'intown', gallons: DEFAULT_GALLONS, returning: false,
 };
 
 /* ------------------------------------------------------- remembered settings */
@@ -36,14 +42,17 @@ function loadHome() {
     const o = JSON.parse(raw);
     if (typeof o.homeValue === 'number' && o.homeValue > 0) state.homeValue = o.homeValue;
     if (o.location === 'intown' || o.location === 'outoftown') state.location = o.location;
-    if (o.useLevel === 'avg' || o.useLevel === 'min') state.useLevel = o.useLevel;
+    if (typeof o.gallons === 'number' && o.gallons >= 0) state.gallons = o.gallons;
+    // Readers who set a level before water use became a number keep their choice.
+    else if (o.useLevel === 'min') state.gallons = 2000;
+    else if (o.useLevel === 'avg') state.gallons = 4000;
     state.returning = true;
   } catch (e) { /* private mode, or corrupt value — defaults are fine */ }
 }
 function saveHome() {
   try {
     localStorage.setItem(STORE, JSON.stringify({
-      homeValue: state.homeValue, location: state.location, useLevel: state.useLevel,
+      homeValue: state.homeValue, location: state.location, gallons: state.gallons,
     }));
   } catch (e) { /* nothing here is worth breaking the page over */ }
 }
@@ -507,10 +516,48 @@ function chartColumns(rows, title, note, fmtV) {
 }
 
 /* ==================== 01 — your bill ==================== */
+/** One block-rate bill: a fixed charge for the first N gallons, then a rate per 1,000. */
+function blockBill(set, gallons) {
+  if (!set) return null;
+  const over = Math.max(0, gallons - set.threshold_gallons);
+  return set.block1_charge + (over / 1000) * set.block2_per_1000;
+}
+/**
+ * The whole monthly utility bill at the reader's own consumption.
+ *
+ * The town publishes the *increase* only at 2,000 and 4,000 gallons, which is why this
+ * page once offered just those two. Extrapolating between them would have been unsafe
+ * if the rates were tiered — but the fee schedule shows two blocks and nothing more,
+ * so any consumption computes exactly. Falls back to the published increases if the
+ * rate structure is unavailable, so the page degrades rather than breaking.
+ */
 function utilMonthly() {
-  const w = val(`water_bill_increase_monthly_${state.location}_${state.useLevel}`);
-  const s = val(`sewer_bill_increase_monthly_${state.location}_${state.useLevel}`);
-  return { water: w, sewer: s, total: (w || 0) + (s || 0) };
+  const u = state.data && state.data.utility;
+  const g = state.gallons;
+  const loc = state.location === 'intown' ? 'inside' : 'outside';
+  if (u && u.rate_sets) {
+    const w = u.rate_sets[`water_${loc}`], s = u.rate_sets[`sewer_${loc}`];
+    if (w && s) {
+      const storm = (u.stormwater || {});
+      const sNow = (storm.residential_recommended || 0) / 12;
+      const sWas = (storm.residential_current || 0) / 12;
+      const wNow = blockBill(w.recommended, g), wWas = blockBill(w.current, g);
+      const sewNow = blockBill(s.recommended, g), sewWas = blockBill(s.current, g);
+      return {
+        exact: true, gallons: g,
+        waterBill: wNow, sewerBill: sewNow, stormBill: sNow,
+        billTotal: wNow + sewNow + sNow,
+        water: wNow - wWas, sewer: sewNow - sewWas, storm: sNow - sWas,
+        total: (wNow + sewNow + sNow) - (wWas + sewWas + sWas),
+      };
+    }
+  }
+  // Published increases are given at 2,000 and 4,000 gallons only; pick the nearer.
+  const level = Math.abs(g - 2000) < Math.abs(g - 4000) ? 'min' : 'avg';
+  const w = val(`water_bill_increase_monthly_${state.location}_${level}`);
+  const s = val(`sewer_bill_increase_monthly_${state.location}_${level}`);
+  return { exact: false, gallons: level === 'min' ? 2000 : 4000,
+           water: w, sewer: s, total: (w || 0) + (s || 0) };
 }
 function annualTax() {
   const rate = val('property_tax_rate');
@@ -576,13 +623,27 @@ function renderYou(host) {
           </div>
         </div>
         <div class="field">
-          <span class="field-label" id="useLbl">Roughly how much water does your household use?</span>
-          <div class="seg" role="group" aria-labelledby="useLbl">
-            <button type="button" data-use="avg"
-              aria-pressed="${state.useLevel === 'avg'}">Average · 4,000 gal/mo</button>
-            <button type="button" data-use="min"
-              aria-pressed="${state.useLevel === 'min'}">Low · 2,000 gal/mo</button>
+          <label class="field-label" for="galSel">How much water does your household use?</label>
+          <div class="dual">
+            <select id="galSel" aria-describedby="galHelp">
+              ${[['2000', 'Low · 2,000 gal/mo'], ['4000', 'Town average · 4,000 gal/mo'],
+                 ['6000', 'Above average · 6,000 gal/mo'], ['9000', 'High · 9,000 gal/mo'],
+                 ['12000', 'Very high · 12,000 gal/mo'], ['custom', 'Enter my own…']]
+                .map(([v, t]) => `<option value="${v}"${
+                  (v === 'custom' ? !GAL_PRESETS.includes(state.gallons)
+                                  : String(state.gallons) === v) ? ' selected' : ''}>${t}</option>`)
+                .join('')}
+            </select>
+            <div class="unit-input">
+              <input type="number" id="galNum" min="0" max="200000" step="100"
+                     value="${state.gallons}" inputmode="numeric"
+                     aria-label="Gallons per month">
+              <span class="unit">gal/mo</span>
+            </div>
           </div>
+          <p class="field-help" id="galHelp">Your last bill shows this. Pick the closest, or type
+            your own number — the bill below is calculated from the town's published rate schedule
+            at whatever figure you enter.</p>
         </div>
         <p class="reassure"><span class="ic" aria-hidden="true">✓</span>
           <span>Nothing you type leaves your device. It is saved only in this browser so the page
@@ -633,12 +694,26 @@ function renderYou(host) {
         `<small>FY${cRate.fiscal_year}${inc ? ` — the county rate rose ${cents(inc)} cents` : ''}</small>`,
         usd(county) + ' / yr']);
     }
-    if (u.water != null) rows.push(['Your water bill goes up by',
-      `<small>${state.useLevel === 'avg' ? '4,000' : '2,000'} gal/month, ${
-        state.location === 'intown' ? 'in town' : 'out of town'}</small>`,
-      '+' + usd2(u.water) + ' / mo']);
-    if (u.sewer != null) rows.push(['Your sewer bill goes up by', '<small>same basis</small>',
-      '+' + usd2(u.sewer) + ' / mo']);
+    const gal = u.gallons.toLocaleString('en-US');
+    const where = state.location === 'intown' ? 'in town' : 'out of town';
+    if (u.exact) {
+      // The whole bill, not just the increase — which is the point of asking for real usage.
+      rows.push(['Your water bill',
+        `<small>${gal} gal/month, ${where} · FY2027 rates</small>`,
+        usd2(u.waterBill) + ' / mo']);
+      rows.push(['Your sewer bill', '<small>same usage, charged separately</small>',
+        usd2(u.sewerBill) + ' / mo']);
+      rows.push(['Stormwater fee', '<small>flat, not based on water use</small>',
+        usd2(u.stormBill) + ' / mo']);
+      rows.push(['All three utility bills',
+        `<small>about ${usd(u.billTotal * 12)} a year — up ${usd2(u.total)}/mo on FY2026</small>`,
+        usd2(u.billTotal) + ' / mo']);
+    } else {
+      if (u.water != null) rows.push(['Your water bill goes up by',
+        `<small>${gal} gal/month, ${where}</small>`, '+' + usd2(u.water) + ' / mo']);
+      if (u.sewer != null) rows.push(['Your sewer bill goes up by', '<small>same basis</small>',
+        '+' + usd2(u.sewer) + ' / mo']);
+    }
     rows.push(['One cent on the tax rate costs you',
       `<small>across the whole town it raises ${perCentF ? usd(perCentF.value) : 'n/a'}</small>`,
       usd(oneCent) + ' / yr']);
@@ -722,12 +797,32 @@ function renderYou(host) {
   num.addEventListener('input', () => { rng.value = num.value; rerender(); });
   rng.addEventListener('input', () => { num.value = rng.value; rerender(); });
   $$('.seg button', sec).forEach(b => b.addEventListener('click', () => {
-    const isLoc = !!b.dataset.loc;
-    state[isLoc ? 'location' : 'useLevel'] = b.dataset.loc || b.dataset.use;
-    $$(`[data-${isLoc ? 'loc' : 'use'}]`, sec)
-      .forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+    state.location = b.dataset.loc;
+    $$('[data-loc]', sec).forEach(o => o.setAttribute('aria-pressed', String(o === b)));
     rerender();
   }));
+
+  // Water use: the dropdown and the number box are two views of one value.
+  const galSel = $('#galSel', sec), galNum = $('#galNum', sec);
+  if (galSel && galNum) {
+    galSel.addEventListener('change', () => {
+      if (galSel.value === 'custom') { galNum.focus(); galNum.select(); return; }
+      state.gallons = Number(galSel.value);
+      galNum.value = state.gallons;
+      rerender();
+    });
+    galNum.addEventListener('input', () => {
+      // Clearing the box to retype must hold the previous figure. Number('') is 0,
+      // which is finite and non-negative, so a numeric guard alone let an empty box
+      // render a real-looking bill at zero gallons.
+      if (galNum.value.trim() === '') return;
+      const g = Number(galNum.value);
+      if (!Number.isFinite(g) || g < 0) return;
+      state.gallons = g;
+      galSel.value = GAL_PRESETS.includes(g) ? String(g) : 'custom';
+      rerender();
+    });
+  }
   const chg = $('#changeHome', sec);
   if (chg) chg.addEventListener('click', () => {
     num.focus();
@@ -1664,7 +1759,8 @@ async function boot() {
     loadHome();
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
-                   'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas', 'transfers'];
+                   'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas',
+                   'transfers', 'utility', 'cost_of_ownership'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

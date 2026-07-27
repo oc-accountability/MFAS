@@ -1,0 +1,324 @@
+{
+  "generated_by": "etl/s93_utility_rates.py",
+  "requested_by": "Amy — the site was limited to the town's two published consumption levels (2,000 and 4,000 gallons). Her household uses about 9,000 gallons a month, so residents need to enter their own usage.",
+  "source_doc": "FY27 Budget and Financial Plan Recommended.pdf",
+  "structure": "Block 1 is a fixed charge covering the first 2,000 gallons; Block 2 is a per-1,000-gallon charge on everything above that. Two blocks, no escalating tiers, so a bill at any consumption is exact rather than extrapolated.",
+  "why_not_extrapolated": "The budget message publishes only the increase at 2,000 and 4,000 gallons. Straight-lining those two points out to higher usage would be wrong if the rates were tiered, so the full rate schedule is read instead.",
+  "consumption_terms": {
+    "low": 2000,
+    "average": 4000,
+    "note": "The town's 'average' bill means 4,000 gallons a month and its 'low' or 'minimum' means 2,000."
+  },
+  "verification": {
+    "internal_check": "Block 1 must equal the threshold volume priced at the Block 2 rate. This also pairs the schedule's two unlabelled rate columns, which print current and recommended figures on adjacent lines with one label between them.",
+    "external_check": "The bill computed from the structure must reproduce every increase the town states in prose.",
+    "all_stated_increases_reproduced": true,
+    "checks": [
+      {
+        "metric": "water_bill_increase_monthly_intown_avg",
+        "gallons": 4000,
+        "town_states": 3.72,
+        "computed_from_rate_structure": 3.72,
+        "difference": 0.0,
+        "agrees": true,
+        "note": "exact"
+      },
+      {
+        "metric": "water_bill_increase_monthly_intown_min",
+        "gallons": 2000,
+        "town_states": 1.86,
+        "computed_from_rate_structure": 1.86,
+        "difference": 0.0,
+        "agrees": true,
+        "note": "exact"
+      },
+      {
+        "metric": "water_bill_increase_monthly_outoftown_avg",
+        "gallons": 4000,
+        "town_states": 7.24,
+        "computed_from_rate_structure": 7.25,
+        "difference": 0.01,
+        "agrees": true,
+        "note": "differs by a cent, from rounding in the published schedule"
+      },
+      {
+        "metric": "water_bill_increase_monthly_outoftown_min",
+        "gallons": 2000,
+        "town_states": 3.62,
+        "computed_from_rate_structure": 3.63,
+        "difference": 0.01,
+        "agrees": true,
+        "note": "differs by a cent, from rounding in the published schedule"
+      },
+      {
+        "metric": "sewer_bill_increase_monthly_intown_avg",
+        "gallons": 4000,
+        "town_states": 5.24,
+        "computed_from_rate_structure": 5.24,
+        "difference": 0.0,
+        "agrees": true,
+        "note": "exact"
+      },
+      {
+        "metric": "sewer_bill_increase_monthly_intown_min",
+        "gallons": 2000,
+        "town_states": 2.62,
+        "computed_from_rate_structure": 2.62,
+        "difference": 0.0,
+        "agrees": true,
+        "note": "exact"
+      },
+      {
+        "metric": "sewer_bill_increase_monthly_outoftown_avg",
+        "gallons": 4000,
+        "town_states": 10.2,
+        "computed_from_rate_structure": 10.21,
+        "difference": 0.01,
+        "agrees": true,
+        "note": "differs by a cent, from rounding in the published schedule"
+      },
+      {
+        "metric": "sewer_bill_increase_monthly_outoftown_min",
+        "gallons": 2000,
+        "town_states": 5.1,
+        "computed_from_rate_structure": 5.11,
+        "difference": 0.01,
+        "agrees": true,
+        "note": "differs by a cent, from rounding in the published schedule"
+      }
+    ]
+  },
+  "rate_sets": {
+    "sewer_inside": {
+      "service": "sewer",
+      "location": "inside",
+      "threshold_gallons": 2000,
+      "source_page": 231,
+      "current": {
+        "block1_charge": 34.88,
+        "block2_per_1000": 17.44,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 34.88,
+        "rounding_difference": 0.0,
+        "fiscal_year": 2026,
+        "basis": "adopted"
+      },
+      "recommended": {
+        "block1_charge": 37.5,
+        "block2_per_1000": 18.75,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 37.5,
+        "rounding_difference": 0.0,
+        "fiscal_year": 2027,
+        "basis": "recommended"
+      },
+      "increase_pct": 7.51
+    },
+    "sewer_outside": {
+      "service": "sewer",
+      "location": "outside",
+      "threshold_gallons": 2000,
+      "source_page": 232,
+      "current": {
+        "block1_charge": 68.02,
+        "block2_per_1000": 34.01,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 68.02,
+        "rounding_difference": 0.0,
+        "fiscal_year": 2026,
+        "basis": "adopted"
+      },
+      "recommended": {
+        "block1_charge": 73.13,
+        "block2_per_1000": 36.56,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 73.12,
+        "rounding_difference": 0.01,
+        "fiscal_year": 2027,
+        "basis": "recommended"
+      },
+      "increase_pct": 7.5
+    },
+    "water_inside": {
+      "service": "water",
+      "location": "inside",
+      "threshold_gallons": 2000,
+      "source_page": 231,
+      "current": {
+        "block1_charge": 24.78,
+        "block2_per_1000": 12.39,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 24.78,
+        "rounding_difference": 0.0,
+        "fiscal_year": 2026,
+        "basis": "adopted"
+      },
+      "recommended": {
+        "block1_charge": 26.64,
+        "block2_per_1000": 13.32,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 26.64,
+        "rounding_difference": 0.0,
+        "fiscal_year": 2027,
+        "basis": "recommended"
+      },
+      "increase_pct": 7.51
+    },
+    "water_outside": {
+      "service": "water",
+      "location": "outside",
+      "threshold_gallons": 2000,
+      "source_page": 231,
+      "current": {
+        "block1_charge": 48.32,
+        "block2_per_1000": 24.16,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 48.32,
+        "rounding_difference": 0.0,
+        "fiscal_year": 2026,
+        "basis": "adopted"
+      },
+      "recommended": {
+        "block1_charge": 51.95,
+        "block2_per_1000": 25.97,
+        "threshold_gallons": 2000,
+        "block1_implied_by_block2": 51.94,
+        "rounding_difference": 0.01,
+        "fiscal_year": 2027,
+        "basis": "recommended"
+      },
+      "increase_pct": 7.49
+    }
+  },
+  "stormwater": {
+    "residential_current": 105.0,
+    "residential_recommended": 120.0,
+    "unit": "per year",
+    "source_page": 231,
+    "verified_against_stated_increase": {
+      "town_states": 15.0,
+      "computed": 15.0,
+      "agrees": true
+    }
+  },
+  "examples": [
+    {
+      "gallons_per_month": 2000,
+      "label": "Low use",
+      "inside": {
+        "water_recommended": 26.64,
+        "sewer_recommended": 37.5,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 74.14,
+        "monthly_total_current": 68.41,
+        "monthly_increase": 5.73,
+        "annual_total_recommended": 889.68
+      },
+      "outside": {
+        "water_recommended": 51.95,
+        "sewer_recommended": 73.13,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 135.08,
+        "monthly_total_current": 125.09,
+        "monthly_increase": 9.99,
+        "annual_total_recommended": 1620.96
+      }
+    },
+    {
+      "gallons_per_month": 4000,
+      "label": "Town average",
+      "inside": {
+        "water_recommended": 53.28,
+        "sewer_recommended": 75.0,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 138.28,
+        "monthly_total_current": 128.07,
+        "monthly_increase": 10.21,
+        "annual_total_recommended": 1659.36
+      },
+      "outside": {
+        "water_recommended": 103.89,
+        "sewer_recommended": 146.25,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 260.14,
+        "monthly_total_current": 241.43,
+        "monthly_increase": 18.71,
+        "annual_total_recommended": 3121.68
+      }
+    },
+    {
+      "gallons_per_month": 6000,
+      "label": "Above average",
+      "inside": {
+        "water_recommended": 79.92,
+        "sewer_recommended": 112.5,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 202.42,
+        "monthly_total_current": 187.73,
+        "monthly_increase": 14.69,
+        "annual_total_recommended": 2429.04
+      },
+      "outside": {
+        "water_recommended": 155.83,
+        "sewer_recommended": 219.37,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 385.2,
+        "monthly_total_current": 357.77,
+        "monthly_increase": 27.43,
+        "annual_total_recommended": 4622.4
+      }
+    },
+    {
+      "gallons_per_month": 9000,
+      "label": "High use",
+      "inside": {
+        "water_recommended": 119.88,
+        "sewer_recommended": 168.75,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 298.63,
+        "monthly_total_current": 277.22,
+        "monthly_increase": 21.41,
+        "annual_total_recommended": 3583.56
+      },
+      "outside": {
+        "water_recommended": 233.74,
+        "sewer_recommended": 329.05,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 572.79,
+        "monthly_total_current": 532.28,
+        "monthly_increase": 40.51,
+        "annual_total_recommended": 6873.48
+      }
+    },
+    {
+      "gallons_per_month": 12000,
+      "label": "Very high use",
+      "inside": {
+        "water_recommended": 159.84,
+        "sewer_recommended": 225.0,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 394.84,
+        "monthly_total_current": 366.71,
+        "monthly_increase": 28.13,
+        "annual_total_recommended": 4738.08
+      },
+      "outside": {
+        "water_recommended": 311.65,
+        "sewer_recommended": 438.73,
+        "stormwater_monthly": 10.0,
+        "monthly_total_recommended": 760.38,
+        "monthly_total_current": 706.79,
+        "monthly_increase": 53.59,
+        "annual_total_recommended": 9124.56
+      }
+    }
+  ],
+  "preset_gallons": [
+    2000,
+    4000,
+    6000,
+    9000,
+    12000
+  ],
+  "problems": []
+}

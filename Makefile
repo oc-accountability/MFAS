@@ -28,6 +28,8 @@ etl:
 	$(PY) etl/s85_warehouse.py
 	$(PY) etl/s88_mfas_dimensions.py
 	$(PY) etl/s89_transfers.py
+	$(PY) etl/s92_total_cost.py
+	$(PY) etl/s93_utility_rates.py
 	$(PY) etl/s90_build.py
 
 test:

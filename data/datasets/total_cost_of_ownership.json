@@ -1,0 +1,397 @@
+{
+  "generated_by": "etl/s92_total_cost.py",
+  "requested_by": "Amy — total cost of ownership: the Hillsborough and Orange County tax rates plus water, sewer and stormwater, trended from 2018 through 2029.",
+  "units": "dollars of tax per $100 of assessed value",
+  "home_value_basis": 400000.0,
+  "caveat_fixed_home_value": {
+    "field": "rate_on_fixed_400k",
+    "what_it_is": "The combined rate applied to a constant $400,000 assessed value, so the years can be compared on rate alone.",
+    "what_it_is_NOT": "A bill history. It is not what any real home paid over time, and reading it as one inverts the story across a revaluation. In a revaluation year the rate falls while assessed values rise, so a fixed home value shows the bill dropping when an actual home's bill may have risen. FY2026 is such a year: the county rate fell 26% and the town's 15%, but countywide assessed value was reassessed at the same time.",
+    "to_do_it_properly": "A real bill history needs each year's assessed value for the same property, which is parcel-level data the archive does not contain. The revenue-neutral rate is the honest comparator and is reported separately where the governments state it."
+  },
+  "method": "County rates are taken from ACFR Table 5 (Net Total Assessed Value), NOT from Table 6 (Direct and Overlapping Property Tax Rates), for the reason recorded under source_error below. Municipal, fire district and school district rates come from Table 6, whose other columns are unaffected. Every cell was read from all five ACFR editions held and is published only where the editions agree; the ten-year windows overlap, so most years are corroborated by two to five independently published reports. FY2026 and FY2027 come from the town and county budget messages.",
+  "source_error": {
+    "finding": "Table 6's Orange County column is Table 5's direct tax rate with the decimal point moved one place left, in every edition held. For FY2025 Table 6 prints $0.086290 where Table 5 prints 0.8629.",
+    "proof": "Table 6's county value multiplied by ten equals Table 5's value for every overlapping year, exactly. Verified below rather than asserted.",
+    "verified_exactly_ten_for_all_years": true,
+    "ratio_test": [
+      {
+        "fiscal_year": 2013,
+        "table5": 0.858,
+        "table6": 0.0858,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2014,
+        "table5": 0.858,
+        "table6": 0.0858,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2015,
+        "table5": 0.878,
+        "table6": 0.0878,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2016,
+        "table5": 0.878,
+        "table6": 0.0878,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2017,
+        "table5": 0.878,
+        "table6": 0.0878,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2018,
+        "table5": 0.8377,
+        "table6": 0.08377,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2019,
+        "table5": 0.8504,
+        "table6": 0.08504,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2020,
+        "table5": 0.8679,
+        "table6": 0.08679,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2021,
+        "table5": 0.8679,
+        "table6": 0.08679,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2022,
+        "table5": 0.8187,
+        "table6": 0.08187,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2023,
+        "table5": 0.8312,
+        "table6": 0.08312,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2024,
+        "table5": 0.8353,
+        "table6": 0.08353,
+        "ratio": 10.0,
+        "exactly_ten": true
+      },
+      {
+        "fiscal_year": 2025,
+        "table5": 0.8629,
+        "table6": 0.08629,
+        "ratio": 10.0,
+        "exactly_ten": true
+      }
+    ],
+    "consequence": "Table 6's own 'Total direct rate' row was computed from the shifted value and is wrong by the same amount. A resident reading Table 6 would conclude the county taxes them at a seventh of the town's rate, when in fact the county rate is the larger of the two.",
+    "not_corrected_silently": "The shifted figures are reported here as found. Nothing is republished as a corrected version of Table 6; the unaffected Table 5 is used instead.",
+    "unaffected": "Fire district and municipal columns. A fire district weighted average of 0.18 is ordinary for North Carolina; 1.8 would not be.",
+    "where": "Table 5 and Table 6, statistical section (unaudited), Orange County ACFR."
+  },
+  "summary": {
+    "editions_read": [
+      {
+        "file": "Orange Co ACFR 6.30.25Final.pdf",
+        "table5_page": 182,
+        "table6_page": 183,
+        "years_table5": 10,
+        "years_table6": 10
+      },
+      {
+        "file": "Orange Co ACFR 6_30_24 Final_.pdf",
+        "table5_page": 182,
+        "table6_page": 183,
+        "years_table5": 10,
+        "years_table6": 10
+      },
+      {
+        "file": "Orange County 6-30-21 ACFR - client_1.pdf",
+        "table5_page": 167,
+        "table6_page": 168,
+        "years_table5": 10,
+        "years_table6": 4
+      },
+      {
+        "file": "Orange County ACFR 6.30.22 Final_2.pdf",
+        "table5_page": 178,
+        "table6_page": 179,
+        "years_table5": 10,
+        "years_table6": 10
+      },
+      {
+        "file": "Orange County NC ACFR 6.30.23.pdf",
+        "table5_page": 185,
+        "table6_page": 186,
+        "years_table5": 10,
+        "years_table6": 10
+      }
+    ],
+    "years_covered": [
+      2012,
+      2027
+    ],
+    "years_with_both_rates": 15,
+    "county_rate_disputes": [],
+    "town_rate_disputes": []
+  },
+  "series": [
+    {
+      "fiscal_year": 2012,
+      "county_rate": 0.858,
+      "town_rate": null,
+      "school_district_rate": null,
+      "fire_district_rate": null,
+      "assessed_value_countywide": 15899136125.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 1,
+      "incomplete": "only one of the two rates is available for this year"
+    },
+    {
+      "fiscal_year": 2013,
+      "county_rate": 0.858,
+      "town_rate": 0.68,
+      "school_district_rate": 0.1884,
+      "fire_district_rate": 0.0593,
+      "assessed_value_countywide": 16075973471.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 2,
+      "combined_rate": 1.538,
+      "rate_on_fixed_400k": 6152.0
+    },
+    {
+      "fiscal_year": 2014,
+      "county_rate": 0.858,
+      "town_rate": 0.68,
+      "school_district_rate": 0.2084,
+      "fire_district_rate": 0.0663,
+      "assessed_value_countywide": 16632360368.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 3,
+      "combined_rate": 1.538,
+      "rate_on_fixed_400k": 6152.0
+    },
+    {
+      "fiscal_year": 2015,
+      "county_rate": 0.878,
+      "town_rate": 0.68,
+      "school_district_rate": 0.2084,
+      "fire_district_rate": 0.0599,
+      "assessed_value_countywide": 16501943134.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 4,
+      "combined_rate": 1.558,
+      "rate_on_fixed_400k": 6232.0
+    },
+    {
+      "fiscal_year": 2016,
+      "county_rate": 0.878,
+      "town_rate": 0.68,
+      "school_district_rate": 0.2084,
+      "fire_district_rate": 0.0623,
+      "assessed_value_countywide": 16778182392.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 5,
+      "combined_rate": 1.558,
+      "rate_on_fixed_400k": 6232.0
+    },
+    {
+      "fiscal_year": 2017,
+      "county_rate": 0.878,
+      "town_rate": 0.68,
+      "school_district_rate": 0.2084,
+      "fire_district_rate": 0.0603,
+      "assessed_value_countywide": 17024519084.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 5,
+      "combined_rate": 1.558,
+      "rate_on_fixed_400k": 6232.0
+    },
+    {
+      "fiscal_year": 2018,
+      "county_rate": 0.8377,
+      "town_rate": 0.62,
+      "school_district_rate": null,
+      "fire_district_rate": 0.07122,
+      "assessed_value_countywide": 18330900870.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 5,
+      "combined_rate": 1.4577,
+      "rate_on_fixed_400k": 5830.8
+    },
+    {
+      "fiscal_year": 2019,
+      "county_rate": 0.8504,
+      "town_rate": 0.62,
+      "school_district_rate": null,
+      "fire_district_rate": 0.08754,
+      "assessed_value_countywide": 18681613587.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 5,
+      "combined_rate": 1.4704,
+      "rate_on_fixed_400k": 5881.6
+    },
+    {
+      "fiscal_year": 2020,
+      "county_rate": 0.8679,
+      "town_rate": 0.62,
+      "school_district_rate": null,
+      "fire_district_rate": 0.090828,
+      "assessed_value_countywide": 18956491582.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 5,
+      "combined_rate": 1.4879,
+      "rate_on_fixed_400k": 5951.6
+    },
+    {
+      "fiscal_year": 2021,
+      "county_rate": 0.8679,
+      "town_rate": 0.62,
+      "school_district_rate": null,
+      "fire_district_rate": null,
+      "assessed_value_countywide": 19449954413.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 5,
+      "combined_rate": 1.4879,
+      "rate_on_fixed_400k": 5951.6
+    },
+    {
+      "fiscal_year": 2022,
+      "county_rate": 0.8187,
+      "town_rate": 0.587,
+      "school_district_rate": 0.514,
+      "fire_district_rate": 0.088733,
+      "assessed_value_countywide": 21944533529.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 4,
+      "combined_rate": 1.4057,
+      "rate_on_fixed_400k": 5622.8
+    },
+    {
+      "fiscal_year": 2023,
+      "county_rate": 0.8312,
+      "town_rate": 0.587,
+      "school_district_rate": 0.522,
+      "fire_district_rate": 0.094121,
+      "assessed_value_countywide": null,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 3,
+      "combined_rate": 1.4182,
+      "rate_on_fixed_400k": 5672.8
+    },
+    {
+      "fiscal_year": 2024,
+      "county_rate": 0.8353,
+      "town_rate": 0.587,
+      "school_district_rate": 0.572,
+      "fire_district_rate": 0.13038,
+      "assessed_value_countywide": 23019330145.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 2,
+      "combined_rate": 1.4223,
+      "rate_on_fixed_400k": 5689.2
+    },
+    {
+      "fiscal_year": 2025,
+      "county_rate": 0.8629,
+      "town_rate": 0.607,
+      "school_district_rate": 0.592,
+      "fire_district_rate": 0.180383,
+      "assessed_value_countywide": 23316128561.0,
+      "source": "ACFR statistical section",
+      "basis": null,
+      "corroborating_editions": 1,
+      "combined_rate": 1.4699,
+      "rate_on_fixed_400k": 5879.6
+    },
+    {
+      "fiscal_year": 2026,
+      "county_rate": 0.6383,
+      "town_rate": 0.513,
+      "school_district_rate": null,
+      "fire_district_rate": null,
+      "assessed_value_countywide": null,
+      "source": "budget message",
+      "basis": {
+        "town_rate": "adopted",
+        "county_rate": "adopted"
+      },
+      "corroborating_editions": 0,
+      "combined_rate": 1.1513,
+      "rate_on_fixed_400k": 4605.2
+    },
+    {
+      "fiscal_year": 2027,
+      "county_rate": 0.6758,
+      "town_rate": 0.513,
+      "school_district_rate": null,
+      "fire_district_rate": null,
+      "assessed_value_countywide": null,
+      "source": "budget message",
+      "basis": {
+        "town_rate": "recommended",
+        "county_rate": "recommended"
+      },
+      "corroborating_editions": 0,
+      "combined_rate": 1.1888,
+      "rate_on_fixed_400k": 4755.2
+    }
+  ],
+  "revaluation_join": {
+    "last_audited_year": 2025,
+    "last_audited_rate": 0.8629,
+    "next_year": 2026,
+    "next_year_rate": 0.6383,
+    "change_pct": -26.0,
+    "note": "FY2026 was a revaluation year. A revaluation raises assessed values, so a falling rate does not by itself mean a falling bill — which is why the revenue-neutral rate matters more than the rate alone."
+  },
+  "utility_increases_fy2027": {
+    "water_bill_increase_monthly_intown_avg": 3.72,
+    "sewer_bill_increase_monthly_intown_avg": 5.24,
+    "stormwater_fee_increase_per_eru": 15.0
+  },
+  "extraction_problems": [
+    "p169: 21 numeric rows, expected 9 — cannot align by position, page skipped"
+  ],
+  "gaps": [
+    "Water and sewer BASE rates are not in the archive — only the FY2027 increases — so the utility half of the cost of ownership cannot be trended yet. The rate studies held are slide decks without the underlying schedules.",
+    "The Orange County sales tax for schools is not located in the documents held. The manager's message discusses sales tax revenue but not a school-specific rate, so no figure is published for it.",
+    "FY2028 and FY2029 do not exist as adopted rates. The town's capital plan states the tax rate its projects would require, which is a plan rather than a rate, and is reported separately as such."
+  ]
+}

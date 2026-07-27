@@ -358,3 +358,105 @@ def test_the_pipeline_never_writes_to_her_workbook():
     src = (REPO / "etl" / "s85_warehouse.py").read_text(encoding="utf-8")
     for banned in ("wb.save(", ".save(wbp", "openpyxl.Workbook("):
         assert banned not in src, f"s85 must not write to the design workbook ({banned})"
+
+
+# ---------------------------------------------------------------------------
+# The rate history and the utility calculator (s92, s93)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def tco():
+    return load("total_cost_of_ownership.json")
+
+
+@pytest.fixture(scope="module")
+def utility():
+    return load("utility_rates.json")
+
+
+def test_the_county_rate_never_comes_from_the_table_that_is_wrong(tco):
+    """ACFR Table 6's county column has a misplaced decimal — it prints 0.086290
+    where Table 5 prints 0.8629 for the same year. Published county rates must come
+    from Table 5, and the ten-fold relationship must still hold, because if a future
+    edition fixes the typo this test should fail loudly rather than double-correct."""
+    err = tco["source_error"]
+    assert err["verified_exactly_ten_for_all_years"] is True, (
+        "the Table 5 / Table 6 relationship no longer holds — re-read both tables "
+        "before trusting either")
+    assert err["ratio_test"], "the ratio test did not run"
+    for r in err["ratio_test"]:
+        assert r["exactly_ten"], r
+
+
+def test_rate_history_agrees_across_every_acfr_edition(tco):
+    """The ten-year windows overlap, so most years are published in several reports.
+    A disagreement means one of them was misread and nothing should be published."""
+    s = tco["summary"]
+    assert s["county_rate_disputes"] == [], s["county_rate_disputes"]
+    assert s["town_rate_disputes"] == [], s["town_rate_disputes"]
+    assert s["years_with_both_rates"] >= 10, s
+
+
+def test_the_two_governments_rates_are_never_mixed_across_fiscal_years(tco):
+    """Both governments publish two forward years, and taking one row per metric
+    silently paired FY2026's county rate with FY2027's town rate. Every year that
+    reports a combined rate must have both components from that same year."""
+    for row in tco["series"]:
+        if row.get("combined_rate") is None:
+            continue
+        assert row["county_rate"] and row["town_rate"], row
+        assert abs(row["combined_rate"] - (row["county_rate"] + row["town_rate"])) < 1e-6, row
+    years = [r["fiscal_year"] for r in tco["series"] if r.get("combined_rate")]
+    assert 2027 in years, "FY2027 dropped out of the combined series"
+    assert len(years) == len(set(years)), "a fiscal year appears twice"
+
+
+def test_a_fixed_home_value_is_never_presented_as_a_bill_history(tco):
+    """Applying a constant $400,000 across a revaluation year inverts the story, so
+    the caveat has to travel with the data."""
+    c = tco["caveat_fixed_home_value"]
+    assert c["field"] == "rate_on_fixed_400k"
+    assert "bill history" in c["what_it_is_NOT"].lower()
+    assert "revaluation" in c["what_it_is_NOT"].lower()
+    assert "tax_on_400k_home" not in json.dumps(tco), (
+        "the old field name implied a bill; it must stay renamed")
+
+
+def test_utility_rates_reproduce_every_increase_the_town_published(utility):
+    """The whole reason a resident can enter their own consumption is that the rate
+    structure reproduces the town's own stated increases. If it stops doing so, the
+    structure was misread and no bill should be shown."""
+    v = utility["verification"]
+    assert v["all_stated_increases_reproduced"] is True, v["checks"]
+    assert len(v["checks"]) >= 8, f"expected all eight stated increases, got {len(v['checks'])}"
+    for c in v["checks"]:
+        assert c["agrees"], c
+
+
+def test_each_block_rate_set_is_internally_consistent(utility):
+    """Block 1 must equal the threshold volume priced at the Block 2 rate. This is
+    also what pairs the schedule's two unlabelled rate columns, so if it fails the
+    current and recommended figures may have been mixed."""
+    assert utility["rate_sets"], "no rate sets were extracted"
+    for name, rs in utility["rate_sets"].items():
+        for basis in ("current", "recommended"):
+            b = rs[basis]
+            implied = b["block2_per_1000"] * b["threshold_gallons"] / 1000.0
+            assert abs(b["block1_charge"] - implied) <= 0.02, (name, basis, b)
+        assert rs["recommended"]["block2_per_1000"] > rs["current"]["block2_per_1000"], (
+            f"{name}: the recommended rate is not above the current one — the two "
+            f"columns may have been swapped")
+
+
+def test_the_utility_extraction_reported_no_problems(utility):
+    assert utility["problems"] == [], utility["problems"]
+
+
+def test_water_use_is_a_number_the_reader_controls():
+    """Amy asked for this: her household uses ~9,000 gal/month and the page offered
+    only the town's 2,000 and 4,000 examples. Guard against a regression to a
+    two-option control."""
+    app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "state.gallons" in app, "water use is no longer a numeric state value"
+    assert "galNum" in app and "galSel" in app, "the custom-entry control is missing"
+    assert "blockBill" in app, "the bill is no longer computed from the rate structure"

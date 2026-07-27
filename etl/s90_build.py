@@ -284,6 +284,10 @@ def main() -> None:
             "mfas": "datasets/mfas_conformance.json",
             # cross-fund transfer schedule (requested by Amy)
             "transfers": "datasets/transfer_schedule.json",
+            # block-rate water/sewer structure, so a reader can enter their own usage
+            "utility": "datasets/utility_rates.json",
+            # tax rate history for both governments, corroborated across ACFR editions
+            "cost_of_ownership": "datasets/total_cost_of_ownership.json",
         },
     })
 

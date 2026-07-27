@@ -346,6 +346,31 @@ input[type="range"]::-moz-range-thumb {
   border: 3px solid var(--surface-1);
 }
 
+/* A preset picker beside a free number, for a value most people know only roughly.
+ * Stacks on a phone; the select takes the extra room on wider screens because its
+ * labels are long and the number box only ever holds five digits. */
+.dual { display: grid; gap: var(--s2); grid-template-columns: 1fr; }
+@media (min-width: 560px) { .dual { grid-template-columns: 1.55fr 1fr; align-items: center; } }
+
+/* Matches the number box beside it. The shared `select` rule (see filters) supplies
+ * the chevron and colours; only the larger calculator sizing belongs here. */
+.dual select {
+  border-radius: var(--r-md); padding: 13px 38px 13px 15px; min-height: 48px;
+}
+
+/* The unit rides inside the box so the number is never read without it. */
+.unit-input { position: relative; }
+.unit-input input[type="number"] { padding-right: 62px; }
+.unit-input .unit {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font: 600 var(--t-xs)/1 var(--sans); color: var(--text-muted);
+  pointer-events: none;
+}
+.field-help {
+  margin: var(--s2) 0 0; font-size: var(--t-xs); line-height: 1.5;
+  color: var(--text-muted);
+}
+
 /* segmented control */
 .seg { display: flex; gap: var(--s1); padding: var(--s1); background: var(--page-2);
        border: 1px solid var(--hairline); border-radius: var(--r-md); }
@@ -435,10 +460,18 @@ input[type="range"]::-moz-range-thumb {
 }
 /* Capped so two selects don't stretch across a 1140px row looking unfinished. */
 .filters .f { flex: 0 1 210px; min-width: 150px; }
+/* One rule for every select on the page. A native dark-mode dropdown arrow is
+ * inconsistent between browsers and sometimes invisible on a dark surface, so the
+ * arrow is drawn here — inlined, because an external asset is one more thing that
+ * can fail offline or on a subpath deploy. */
 select {
   width: 100%; font: 600 var(--t-sm)/1.2 var(--sans); color: var(--text-primary);
-  background: var(--page-2); border: 1px solid var(--hairline-firm);
-  border-radius: var(--r-sm); padding: 10px 12px; min-height: 42px; cursor: pointer;
+  background-color: var(--page-2); border: 1px solid var(--hairline-firm);
+  border-radius: var(--r-sm); padding: 10px 34px 10px 12px; min-height: 42px; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%238b93a1' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 13px center;
+  transition: border-color .14s, box-shadow .14s;
 }
 select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); outline: none; }
 .filters .hint { flex: 1 1 100%; margin: 0; font-size: var(--t-2xs); color: var(--text-muted); }

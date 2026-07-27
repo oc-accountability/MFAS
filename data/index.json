@@ -37,6 +37,8 @@
     "ocr_manifest": "datasets/ocr_manifest.json",
     "warehouse_county": "datasets/warehouse_county.json",
     "mfas": "datasets/mfas_conformance.json",
-    "transfers": "datasets/transfer_schedule.json"
+    "transfers": "datasets/transfer_schedule.json",
+    "utility": "datasets/utility_rates.json",
+    "cost_of_ownership": "datasets/total_cost_of_ownership.json"
   }
 }
