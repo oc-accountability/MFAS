@@ -754,7 +754,167 @@ function renderPaysFor(host) {
     <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>${check}
       Source: ${cite(total)}.</span></p>`;
   sec.appendChild(panel);
+
+  // The real answer to "where does it go" is the account-level detail. Behind a
+  // disclosure so the ~790 KB dataset is only fetched if the reader wants it.
+  sec.appendChild(disclosure('Break it down department by department', async inner => {
+    inner.innerHTML = `<p class="loading" style="padding:var(--s5) 0">Loading the town's
+      account-level spending…</p>`;
+    try {
+      const ok = await loadLineItems();
+      inner.innerHTML = '';
+      if (!ok) {
+        inner.innerHTML = `<p class="sub">The detailed spending data is not published in this
+          build.</p>`;
+        return;
+      }
+      const panel2 = document.createElement('div');
+      panel2.className = 'panel panel-pad';
+      inner.appendChild(panel2);
+      renderExplorer(panel2);
+    } catch (err) {
+      inner.innerHTML = `<p class="sub">Could not load the detailed spending data.</p>`;
+      console.error(err);
+    }
+  }));
+
   host.appendChild(sec);
+}
+
+/* ==================== the spending explorer ==================== */
+/* The account-level dataset is ~790 KB, so it is fetched only when the reader
+ * actually opens the explorer. Loading it on first paint would cost every phone
+ * visitor most of a megabyte to render a page most of them never drill into. */
+let _li = null, _liv = null;
+async function loadLineItems() {
+  if (_li) return true;
+  const idx = state.data.index;
+  if (!idx.datasets.lineitems) return false;
+  const [li, val] = await Promise.all([
+    fetch('data/' + idx.datasets.lineitems).then(r => r.json()),
+    idx.datasets.lineitem_validation
+      ? fetch('data/' + idx.datasets.lineitem_validation).then(r => r.json())
+      : Promise.resolve(null),
+  ]);
+  const C = Object.fromEntries(li.columns.map((c, i) => [c, i]));
+  _li = { C, rows: li.rows, note: li.note };
+  _liv = val;
+  return true;
+}
+
+/** Is this (fund, year, basis) slice one the pipeline proved reconciles? */
+function sliceVerified(fund, fy, basis) {
+  if (!_liv) return null;
+  const s = _liv.verified_slices.find(x =>
+    x.fund === fund && x.fiscal_year === fy && x.basis === basis);
+  return s ? s.verified : null;
+}
+
+function renderExplorer(host) {
+  const { C, rows } = _li;
+  const funds = [...new Set(rows.map(r => r[C.fund]))].sort();
+  const slices = [...new Set(rows.map(r => r[C.fiscal_year] + '|' + r[C.basis]))]
+    .map(s => s.split('|')).map(([y, b]) => ({ fy: +y, basis: b }))
+    .sort((a, b) => a.fy - b.fy);
+
+  const st = { fund: funds.includes('General Fund') ? 'General Fund' : funds[0],
+               fy: 2027, basis: 'budget', open: null };
+  if (!slices.some(s => s.fy === st.fy && s.basis === st.basis)) {
+    st.fy = slices[0].fy; st.basis = slices[0].basis;
+  }
+
+  const wrap = document.createElement('div');
+  host.appendChild(wrap);
+
+  function draw() {
+    const sel = rows.filter(r => r[C.fund] === st.fund
+      && r[C.fiscal_year] === st.fy && r[C.basis] === st.basis);
+    const total = sel.reduce((a, r) => a + r[C.value], 0);
+    const byDept = new Map();
+    for (const r of sel) {
+      const d = r[C.department];
+      if (!byDept.has(d)) byDept.set(d, { total: 0, rows: [] });
+      const e = byDept.get(d);
+      e.total += r[C.value];
+      e.rows.push(r);
+    }
+    const depts = [...byDept.entries()].sort((a, b) => b[1].total - a[1].total);
+    const max = depts.length ? depts[0][1].total : 1;
+    const yourTax = annualTax() || 0;
+    const verified = sliceVerified(st.fund, st.fy, st.basis);
+    const taxFunded = st.fund === 'General Fund';
+
+    wrap.innerHTML = `
+      <div class="explorer-controls">
+        <div class="f"><label class="field-label" for="exFund">Which fund?</label>
+          <select id="exFund">${funds.map(f =>
+            `<option ${f === st.fund ? 'selected' : ''}>${esc(f)}</option>`).join('')}</select></div>
+        <div class="f"><label class="field-label" for="exYear">Which year?</label>
+          <select id="exYear">${slices.map(s =>
+            `<option value="${s.fy}|${s.basis}" ${s.fy === st.fy && s.basis === st.basis
+              ? 'selected' : ''}>FY${s.fy} ${s.basis}</option>`).join('')}</select></div>
+      </div>
+      ${verified === false ? `<div class="callout warn" style="margin:0 0 var(--s5)">
+        <strong>This particular year does not fully add up in the source.</strong> The account
+        detail for FY${st.fy} ${esc(st.basis)} differs from the total the town publishes for it, and
+        we have not established why. It is shown because hiding it would be worse, but treat it as
+        provisional — the FY2027 budget figures reconcile exactly.</div>` : ''}
+      <p class="answer" style="font-size:var(--t-base)">
+        ${taxFunded && yourTax
+          ? `Of the <span class="fig">${usd(yourTax)}</span> you pay the town, this is roughly how it
+             divides — using the same proportions the town divides its
+             ${esc(st.fund)} into.`
+          : `How the ${esc(st.fund)} divides for FY${st.fy}.`}
+        <span class="soft">${esc(st.fund)} total: ${compact(total)}.</span>
+      </p>
+      <ul class="spend">${depts.map(([name, e]) => {
+        const pct = total ? e.total / total * 100 : 0;
+        const yours = taxFunded && total ? yourTax * (e.total / total) : null;
+        const isOpen = st.open === name;
+        const accounts = [...e.rows].sort((a, b) => b[C.value] - a[C.value]);
+        return `<li>
+          <button class="row" type="button" data-dept="${esc(name)}"
+                  aria-expanded="${isOpen}">
+            <span class="nm">${esc(name)}<span class="caret">${isOpen ? '▾' : '▸'}</span></span>
+            <span class="amt">${esc(compact(e.total))}${yours != null
+              ? ` <span class="yours">· ${esc(usd(yours))} of yours</span>` : ''}</span>
+            <span class="bar"><span style="width:${(e.total / max * 100).toFixed(2)}%"></span></span>
+            <span class="sub">${pct.toFixed(1)}% of the fund · ${accounts.length} line
+              item${accounts.length === 1 ? '' : 's'}</span>
+          </button>
+          ${isOpen ? `<ul class="accounts">${accounts.map(r =>
+            `<li><span>${esc(r[C.account])}${
+              // self-categorising rows (e.g. "Debt Service") would otherwise
+              // render as "Debt Service · Debt Service"
+              r[C.category] && r[C.category] !== r[C.account]
+                ? `<span style="color:var(--text-muted)"> · ${esc(r[C.category])}</span>` : ''}</span>
+              <span class="v">${esc(usd(r[C.value]))}</span></li>`).join('')}
+            <li style="border-top:1px solid var(--hairline);margin-top:4px;padding-top:6px">
+              <span style="color:var(--text-muted)">Every figure above is from
+                ${cite({ source_doc: accounts[0][C.source_doc], source_page: accounts[0][C.page] })}
+              </span></li></ul>` : ''}
+        </li>`;
+      }).join('')}</ul>
+      <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
+        ${verified ? `These figures add up to the town's own published total for
+          FY${st.fy} ${esc(st.basis)} — checked automatically, not assumed. ` : ''}
+        ${taxFunded ? `The split of <em>your</em> share is a proportional illustration: your property
+          tax is one of several revenues in this fund, so treat it as "where this fund goes", not as
+          an audit trail for your individual dollars.` : ''}</span></p>`;
+
+    $('#exFund', wrap).addEventListener('change', e => {
+      st.fund = e.target.value; st.open = null; draw();
+    });
+    $('#exYear', wrap).addEventListener('change', e => {
+      const [y, b] = e.target.value.split('|');
+      st.fy = +y; st.basis = b; st.open = null; draw();
+    });
+    $$('.spend .row', wrap).forEach(b => b.addEventListener('click', () => {
+      st.open = st.open === b.dataset.dept ? null : b.dataset.dept;
+      draw();
+    }));
+  }
+  draw();
 }
 
 /* ==================== 03 — is the money healthy? ==================== */

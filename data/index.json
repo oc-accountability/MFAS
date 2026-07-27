@@ -13,7 +13,13 @@
     "documents": 30,
     "documents_with_trustworthy_text": 16,
     "documents_scanned_needing_transcription": 10,
-    "multi_document_comparisons": 12
+    "multi_document_comparisons": 12,
+    "line_item_observations": 3636,
+    "line_item_accounts": 182,
+    "departments": 30,
+    "reconciliation_checks_passed": 55,
+    "reconciliation_checks_total": 60,
+    "reconciliation_unexplained": 0
   },
   "datasets": {
     "facts": "datasets/facts.json",
@@ -22,6 +28,8 @@
     "projections": "datasets/projections.json",
     "requests": "datasets/requests.json",
     "issues": "datasets/issues.json",
-    "household": "datasets/facts_household.json"
+    "household": "datasets/facts_household.json",
+    "lineitems": "datasets/lineitems.json",
+    "lineitem_validation": "datasets/lineitem_validation.json"
   }
 }

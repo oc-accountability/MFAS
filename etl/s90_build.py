@@ -203,6 +203,13 @@ def main() -> None:
         "comparisons": projections,
     })
 
+    # Stage 50's account-level data is large and lives in its own files; the site
+    # lazy-loads it. Surface its counts and its reconciliation result here so the
+    # entry point tells the whole story.
+    li = read_json(DATASETS / "lineitems.json") if (DATASETS / "lineitems.json").exists() else None
+    liv = (read_json(DATASETS / "lineitem_validation.json")
+           if (DATASETS / "lineitem_validation.json").exists() else None)
+
     fy = [f["fiscal_year"] for f in facts if f.get("fiscal_year")]
     write_json(DATA / "index.json", {
         "project": "Orange County Efficiency & Accountability Initiative",
@@ -215,6 +222,16 @@ def main() -> None:
             "documents_with_trustworthy_text": docs_blob["summary"]["pdf_digital_text"],
             "documents_scanned_needing_transcription": docs_blob["summary"]["pdf_scanned_ocr"],
             "multi_document_comparisons": len(projections),
+            **({} if not li else {
+                "line_item_observations": len(li["rows"]),
+                "line_item_accounts": len({r[3] for r in li["rows"]}),
+                "departments": len({r[1] for r in li["rows"]}),
+            }),
+            **({} if not liv else {
+                "reconciliation_checks_passed": liv["summary"]["reconciled"],
+                "reconciliation_checks_total": liv["summary"]["total"],
+                "reconciliation_unexplained": liv["summary"]["unexplained"],
+            }),
         },
         "datasets": {
             "facts": "datasets/facts.json",
@@ -225,6 +242,10 @@ def main() -> None:
             "issues": "datasets/issues.json",
             # carries civic_participation, which is text and must never be charted
             "household": "datasets/facts_household.json",
+            # large; the site fetches these only when the reader opens the
+            # spending explorer, so the first paint stays light on a phone
+            "lineitems": "datasets/lineitems.json",
+            "lineitem_validation": "datasets/lineitem_validation.json",
         },
     })
 

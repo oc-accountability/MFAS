@@ -103,6 +103,69 @@ and accepts only a 3–6 column header.
 ($791k original + $333k increase) fixes it at $1.124M. The ETL records the interpretation and the
 raw cell text so the reading is auditable rather than silent.
 
+## The line-item appendix (stage 50) — six traps, each found the hard way
+
+The FY27 plan's "Line-Item Budget" appendix yields ~3,600 account-level observations. Every one of
+these traps produced *plausible* wrong output, which is why they are written down.
+
+**1. The departments appear twice in the document.** Once in the narrative section with a
+category-level summary, once in the appendix with full account detail. Parsing both double-counts
+everything. Only the appendix is parsed.
+
+**2. The `Line-Item Budget: <Fund>` running header prints on a minority of appendix pages** — 7 of 28
+in FY27. Using it as a per-page filter looked like it worked and silently dropped ~80% of the rows
+(135 accounts instead of 766). It marks where the appendix *starts*; the last page with a column
+header marks where it ends.
+
+**3. State runs across page breaks.** A department's accounts continue onto pages that repeat neither
+the fund header nor the department name, so fund/department/category/columns must persist.
+
+**4. The page-number footer is appended to the END of data lines.**
+
+```
+SALARIES - COMMISSIONERS $36,110 $41,000 $41,000 $41,000 $41,000 249
+Debt Service 259
+```
+
+That trailing integer breaks an end-of-line anchor on the money run, so whole rows vanish silently —
+this alone lost Governing Body's $41,000 — and it invented a phantom department called
+`Debt Service 259` that stole Solid Waste's total. Strip it only from lines that carry money, so a
+label legitimately ending in a number (`TRANSFER TO FUND 69`) keeps its digits.
+
+**5. A category name can be a data row.** `Debt Service` alone is a header; `Debt Service $80,277 …`
+is data belonging to that category, *not* to the category printed above it. Getting this wrong moved
+$366,781 of debt service into Operating while leaving both subtotals looking plausible. Test the
+**extracted label**, not the whole line — testing the line never matches.
+
+**6. Wrapped labels leave fragments that attach to the wrong row.** PDF extraction emits a wrapped
+cell as label-part-1 / values / label-part-2. A surviving fragment latches onto the next values-only
+line, which is how $300,000 of interfund transfers was recorded as Capital — right value, wrong
+category, nothing visibly broken. Fragments are discarded at every section boundary and logged.
+
+Also worth knowing: **only the FY27 plan has this appendix.** The FY26 adopted, FY26 recommended and
+FY25 manager's plans were each checked and stop at category-level summaries, so FY2025 actuals reach
+this project only through the FY27 document's five-column layout.
+
+### The parse proves itself
+
+`etl/s50_line_items.py` reconciles the account detail against the category totals the town publishes
+on its own Financial Summary pages, then **fails the build** on any variance that is not explicitly
+documented. Currently 55 of 60 published totals reconcile, and **FY2027 budget — the year the site
+leads with — reconciles 12 of 12**.
+
+Five variances are disclosed but unexplained, all in prior-year actual/estimate columns. Those slices
+are marked `verified: false` in `lineitem_validation.json`, and the site shows a warning instead of
+presenting them as checked. Two rules follow from this:
+
+- Never widen `ROUNDING_TOLERANCE` or add to `KNOWN_VARIANCES` to make a red build go green. A
+  documented variance needs a *cause*, not a bigger tolerance.
+- If a variance changes size, it stops matching its recorded amount and fails. That is deliberate.
+
+One known source characteristic, as an example of what a real explanation looks like: the
+`Disaster - General Fund` unit is budgeted $10,000 of Operating at **category** level with no
+account-level line, so an account-level listing correctly shows $0 for it. The appendix is internally
+consistent; the money exists only above account grain.
+
 ## Reproducing the diagnosis
 
 ```bash

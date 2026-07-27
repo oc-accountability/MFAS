@@ -87,6 +87,8 @@ to re-run the pipeline. See [`docs/PROVENANCE.md`](docs/PROVENANCE.md).
 etl/s00_manifest.py         hash + inventory every source file; classify digital vs scan
 etl/s20_xlsx.py             the issues log, and the records request as a fill-state scoreboard
 etl/s30_budget_messages.py  fiscal indicators from the digital-text budget documents
+etl/s40_household_impact.py what next year costs a household; the town's own quoted statements
+etl/s50_line_items.py       account-level spending  ← reconciles to the town's own totals or fails
 etl/s90_build.py            merge, validate, emit the site payload  ← fails the build on bad data
 ```
 
@@ -96,7 +98,14 @@ rendered as `0` on a chart is a lie, so the pipeline will not produce one.
 
 ## What the data currently covers
 
-- **62 figures**, FY2023–FY2029, from **16 digital-text documents** (10 scans pending transcription)
+- **~3,600 account-level observations** across **30 departments** and 182 accounts — SALARIES,
+  RETIREMENT, UTILITIES, MAINTENANCE - INFRASTRUCTURE, GASOLINE — on five bases including a real
+  FY2025 **actual**. This is what powers the spending explorer.
+- **55 of 60** published category totals reconcile against the town's own Financial Summary pages,
+  with **FY2027 budget reconciling 12 of 12**. The five disclosed variances are all in prior-year
+  columns and are flagged unverified in the data and on the page.
+- **76 curated headline figures**, FY2023–FY2029, from **16 digital-text documents**
+  (10 scans pending transcription)
 - General Fund budget, expenditures, surplus/deficit, and fund balance
 - Property tax rate, and the town's own conversion factor: **one cent on the rate raises $240,000**
 - Water/sewer/stormwater rate changes, affordable-housing and capital-project tax-rate equivalents

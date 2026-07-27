@@ -682,6 +682,40 @@ details.more > .inner { margin-top: var(--s5); }
 }
 .reassure .ic { color: var(--good); font-weight: 700; }
 
+/* ==================== spending explorer ==================== */
+/* One hue for every bar. A value-ramp across nominal categories would burn the
+   colour channel on information the bar length already carries. */
+.spend { margin: 0; padding: 0; list-style: none; }
+.spend > li { border-bottom: 1px solid var(--hairline); }
+.spend > li:last-child { border-bottom: 0; }
+.spend .row {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--s2) var(--s4);
+  align-items: baseline; width: 100%;
+  padding: var(--s3) 0; background: none; border: 0; cursor: pointer;
+  font: inherit; color: inherit; text-align: left;
+}
+.spend .row:hover .nm { color: var(--accent); }
+.spend .nm { font-weight: 600; font-size: var(--t-sm); }
+.spend .nm .caret { color: var(--text-muted); font-size: var(--t-2xs); margin-left: 6px; }
+.spend .amt { font-variant-numeric: tabular-nums; font-weight: 650; font-size: var(--t-sm); white-space: nowrap; }
+.spend .amt .yours { color: var(--accent); }
+.spend .bar {
+  grid-column: 1 / -1; height: 7px; border-radius: 4px;
+  background: var(--surface-3); overflow: hidden;
+}
+.spend .bar span { display: block; height: 100%; background: var(--series-1); border-radius: 4px; }
+.spend .sub { grid-column: 1 / -1; font-size: var(--t-2xs); color: var(--text-muted); }
+.spend .accounts { margin: 0 0 var(--s4); padding: 0 0 0 var(--s4); list-style: none;
+                   border-left: 2px solid var(--hairline); }
+.spend .accounts li {
+  display: flex; justify-content: space-between; gap: var(--s4);
+  padding: 5px 0; font-size: var(--t-xs); color: var(--text-secondary);
+}
+.spend .accounts .v { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text-primary); }
+
+.explorer-controls { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: end; margin-bottom: var(--s5); }
+.explorer-controls .f { flex: 0 1 220px; min-width: 160px; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }

@@ -170,6 +170,77 @@ def test_documents_summary_matches_the_document_list(documents):
     assert s["pdf_digital_text"] == sum(1 for d in docs if d.get("text_layer") == "digital")
 
 
+# ------------------------------------------- account-level line items (stage 50)
+@pytest.fixture(scope="module")
+def lineitems():
+    return load("lineitems.json")
+
+
+@pytest.fixture(scope="module")
+def validation():
+    return load("lineitem_validation.json")
+
+
+def test_line_items_reconcile_to_the_towns_own_totals(validation):
+    """The load-bearing proof for the spending breakdown.
+
+    Account detail must add up to the category totals the town publishes on its
+    own Financial Summary pages. A breakdown that contradicts the summary would
+    be worse than no breakdown at all.
+    """
+    assert validation["summary"]["unexplained"] == 0, (
+        "unexplained reconciliation failures: "
+        + repr([c for c in validation["checks"] if c["status"] == "UNEXPLAINED"]))
+
+
+def test_the_headline_year_is_fully_verified(validation):
+    """FY2027 budget is the year the site leads with; it must reconcile outright."""
+    fy27 = [c for c in validation["checks"]
+            if c["fiscal_year"] == 2027 and c["basis"] == "budget"]
+    assert fy27, "no FY2027 budget checks ran"
+    bad = [c for c in fy27 if not c["reconciles"]]
+    assert not bad, f"FY2027 budget does not reconcile: {bad}"
+
+
+def test_unverified_slices_are_explicitly_flagged(validation):
+    """Every slice is labelled verified or not, so the site can refuse to present
+    an unreconciled slice as if it were checked."""
+    for s in validation["verified_slices"]:
+        assert isinstance(s["verified"], bool), s
+    for c in validation["checks"]:
+        assert "verified" in c, c
+        if not c["reconciles"]:
+            assert c["verified"] is False, c
+            assert c.get("explanation"), f"undisclosed variance: {c}"
+
+
+def test_line_items_have_no_null_or_blank_dimensions(lineitems):
+    C = {c: i for i, c in enumerate(lineitems["columns"])}
+    for r in lineitems["rows"][:5000]:
+        assert r[C["value"]] is not None
+        for dim in ("fund", "department", "account"):
+            assert str(r[C[dim]]).strip(), f"blank {dim} in {r}"
+        assert isinstance(r[C["fiscal_year"]], int)
+        assert r[C["basis"]]
+
+
+def test_line_items_never_come_from_a_scanned_document(lineitems, documents):
+    scans = {d["id"] for d in documents["documents"] if d.get("text_layer") == "scan"}
+    C = {c: i for i, c in enumerate(lineitems["columns"])}
+    bad = sorted({r[C["source_doc"]] for r in lineitems["rows"]
+                  if r[C["source_doc"]] in scans})
+    assert not bad, f"line items sourced from scanned documents: {bad}"
+
+
+def test_line_item_totals_are_not_mixed_into_the_account_data(lineitems):
+    """Subtotal rows must live in their own file — summing them with their own
+    children would double every department."""
+    C = {c: i for i, c in enumerate(lineitems["columns"])}
+    bad = [r[C["account"]] for r in lineitems["rows"]
+           if r[C["account"]].upper().endswith("TOTAL")]
+    assert not bad, f"total rows present in the account data: {sorted(set(bad))[:10]}"
+
+
 def test_index_counts_are_consistent(facts, documents):
     with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
         idx = json.load(fh)
