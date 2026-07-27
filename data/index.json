@@ -35,6 +35,7 @@
     "audited": "datasets/audited_general_fund.json",
     "ocr_statements": "datasets/ocr_statements.json",
     "ocr_manifest": "datasets/ocr_manifest.json",
-    "warehouse_county": "datasets/warehouse_county.json"
+    "warehouse_county": "datasets/warehouse_county.json",
+    "mfas": "datasets/mfas_conformance.json"
   }
 }

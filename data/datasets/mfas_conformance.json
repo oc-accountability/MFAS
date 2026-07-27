@@ -1,0 +1,168 @@
+{
+  "generated_by": "etl/s88_mfas_dimensions.py",
+  "contract": "Amy's Decision Context Model, slide 9: the seven data dimensions that uniquely identify every financial fact in MFAS.",
+  "seven_dimensions": [
+    "Government",
+    "Organization",
+    "Fund",
+    "Project",
+    "Activity",
+    "Account",
+    "Fiscal_Year"
+  ],
+  "summary": {
+    "fully_available": 4,
+    "partial_or_conflated": 2,
+    "missing": 1,
+    "rows_measured": 3636
+  },
+  "dimension_coverage": {
+    "Government": {
+      "status": "available",
+      "maps_to": "jurisdiction (Town of Hillsborough / Orange County, NC)",
+      "note": "Present on every row."
+    },
+    "Organization": {
+      "status": "conflated with Government",
+      "maps_to": "—",
+      "note": "This project has one level where MFAS has two. Her Entity_ID (ORG_OC) is an Organization within a Government. Splitting them matters as soon as school districts, authorities or fire districts are added — each is a separate Organization under the same Government."
+    },
+    "Fund": {
+      "status": "available",
+      "maps_to": "fund (General / Water & Sewer / Stormwater)",
+      "note": "Present on every row and reconciled to published fund totals."
+    },
+    "Project": {
+      "status": "MISSING as a dimension",
+      "maps_to": "—",
+      "note": "Capital projects exist in this project as named facts (Ridgewalk, Dam Repair, the fire station) but not as a dimension that a spending row can point at. Her Fire Station #3 worked example is exactly this: a decision whose costs land across several accounts and years. Without a Project dimension those costs cannot be gathered back together."
+    },
+    "Activity": {
+      "status": "partial",
+      "maps_to": "department (30 values) + category",
+      "note": "Department is close to Activity but not the same thing. Activity is what the money DOES; department is who spends it. 'Street repaving' is an activity that may sit in one department, while 'Public Works' contains many activities."
+    },
+    "Account": {
+      "status": "available",
+      "maps_to": "account (182 distinct: SALARIES, RETIREMENT, GASOLINE…)",
+      "note": "Present on every row."
+    },
+    "Fiscal_Year": {
+      "status": "available",
+      "maps_to": "fiscal_year + basis (actual / budget / estimate / projected)",
+      "note": "Her Dim_Fiscal_Year carries a Data Scenario per year; this project carries an equivalent basis per row, which is finer and compatible."
+    }
+  },
+  "recurrence_dimension": {
+    "why": "Added at Amy's request: 'the financial data needed the added dimension to differentiate ongoing operations from one-time items'. Aligns with her Change Events vocabulary.",
+    "derivation": "Derived from the town's own expenditure categories, NOT stated by the town. Interfund Transfers are left unclassified because they mix routine subsidy with one-off capital funding and cannot be split without reading each transfer individually.",
+    "mapping": {
+      "Personnel": {
+        "recurrence": "Recurring",
+        "change_event_type": "Continuing Operations",
+        "reason": "Salaries, benefits and retirement recur every year and compound."
+      },
+      "Operating": {
+        "recurrence": "Recurring",
+        "change_event_type": "Continuing Operations",
+        "reason": "Day-to-day cost of delivering existing services."
+      },
+      "Cost Allocations": {
+        "recurrence": "Recurring",
+        "change_event_type": "Continuing Operations",
+        "reason": "Internal charges that recur with the operations they support."
+      },
+      "Debt Service": {
+        "recurrence": "Recurring",
+        "change_event_type": "Committed",
+        "reason": "Recurring payments, but arising from a past one-time decision to borrow — the clearest example of a Change Event with a long tail."
+      },
+      "Capital": {
+        "recurrence": "One-Time",
+        "change_event_type": "Strategic Investment",
+        "reason": "A discrete purchase or project rather than an ongoing obligation, though it often creates recurring operating cost afterwards."
+      }
+    },
+    "rows_by_class": {
+      "Recurring": 3391,
+      "One-Time": 169,
+      "Unclassified": 76
+    },
+    "general_fund_fy2027_budget": {
+      "One-Time": 1067000.0,
+      "Recurring": 16867805.0,
+      "Unclassified": 1531826.0
+    },
+    "recurring_share_of_classified_general_fund_pct": 86.6,
+    "totals": [
+      {
+        "fund": "General Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "One-Time",
+        "amount": 1067000.0
+      },
+      {
+        "fund": "General Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "Recurring",
+        "amount": 16867805.0
+      },
+      {
+        "fund": "General Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "Unclassified",
+        "amount": 1531826.0
+      },
+      {
+        "fund": "Stormwater Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "One-Time",
+        "amount": 0.0
+      },
+      {
+        "fund": "Stormwater Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "Recurring",
+        "amount": 1093064.0
+      },
+      {
+        "fund": "Stormwater Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "Unclassified",
+        "amount": 100000.0
+      },
+      {
+        "fund": "Water & Sewer Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "One-Time",
+        "amount": 996240.0
+      },
+      {
+        "fund": "Water & Sewer Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "Recurring",
+        "amount": 14559064.0
+      },
+      {
+        "fund": "Water & Sewer Fund",
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "recurrence": "Unclassified",
+        "amount": 195540.0
+      }
+    ]
+  },
+  "what_would_close_the_gaps": [
+    "Project: add a project identifier to capital rows so a decision's cost can be gathered across accounts and years — this is what her Fire Station #3 example needs.",
+    "Activity: distinguish what the money does from who spends it; department is a proxy.",
+    "Organization: split Organization from Government before adding school districts, authorities or fire districts."
+  ]
+}

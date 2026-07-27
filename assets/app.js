@@ -837,6 +837,42 @@ function renderPaysFor(host) {
       Source: ${cite(total)}.</span></p>`;
   sec.appendChild(panel);
 
+  // Recurring vs one-time: how much of the budget is already committed before
+  // anyone chooses anything this year.
+  const mf = state.data.mfas;
+  if (mf && mf.recurrence_dimension) {
+    const rd = mf.recurrence_dimension;
+    const gf = rd.general_fund_fy2027_budget || {};
+    const share = rd.recurring_share_of_classified_general_fund_pct;
+    if (share) {
+      const p4 = document.createElement('div');
+      p4.className = 'panel panel-pad';
+      p4.style.marginTop = 'var(--s5)';
+      p4.innerHTML = `
+        <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+          How much of it is already committed?</h3>
+        <p class="answer" style="font-size:var(--t-base);margin-bottom:var(--s4)">
+          About <span class="fig">${pctPlain(share)}</span> of the General Fund goes on
+          <strong>ongoing commitments</strong> — salaries, benefits, day-to-day operations and debt
+          payments that recur every year.
+          <span class="soft">Only ${gf['One-Time'] ? compact(gf['One-Time']) : 'a small share'} is
+          one-time investment. That is the practical limit on how much any single budget can change
+          direction: most of it was decided in earlier years.</span>
+        </p>
+        <ul class="rows" style="margin:0">
+          ${Object.entries(gf).sort((a, b) => b[1] - a[1]).map(([k, v]) =>
+            `<li><span class="k">${esc(k)}${k === 'Unclassified'
+              ? '<small>transfers that mix routine subsidy with one-off funding — not split</small>'
+              : ''}</span><span class="v">${usd(v)}</span></li>`).join('')}
+        </ul>
+        <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>Grouped by this site
+          from the town's own expenditure categories — the town does not publish this split itself,
+          so it is our classification, not its words. Anything genuinely mixed is left
+          unclassified rather than forced into a bucket.</span></p>`;
+      sec.appendChild(p4);
+    }
+  }
+
   // The real answer to "where does it go" is the account-level detail. Behind a
   // disclosure so the ~790 KB dataset is only fetched if the reader wants it.
   sec.appendChild(disclosure('Break it down department by department', async inner => {
@@ -1598,7 +1634,7 @@ async function boot() {
     loadHome();
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
-                   'household', 'audited', 'ocr_statements', 'warehouse_county'];
+                   'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

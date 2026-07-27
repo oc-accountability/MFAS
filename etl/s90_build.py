@@ -280,6 +280,8 @@ def main() -> None:
             "ocr_manifest": "datasets/ocr_manifest.json",
             # curated Orange County warehouse, imported and re-verified
             "warehouse_county": "datasets/warehouse_county.json",
+            # conformance against the MFAS seven-dimension grain contract
+            "mfas": "datasets/mfas_conformance.json",
         },
     })
 
