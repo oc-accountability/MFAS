@@ -111,6 +111,48 @@ function cite(f) {
   return `<span class="src-link" title="Source file and SHA-256 recorded in data/datasets/documents.json">${label}</span>`;
 }
 
+/* ------------------------------------------------- reporting a problem ------ */
+const REPO = 'https://github.com/oc-accountability/hoa-funds';
+
+/** A pre-filled GitHub issue.
+ *
+ * Pre-filling is the point: a report that arrives already carrying the figure,
+ * the document and the page is one somebody can act on. A bare "a number looks
+ * wrong" usually cannot be chased down and quietly dies.
+ */
+function reportUrl(about, detail) {
+  const idx = (state.data && state.data.index) || {};
+  const body = [
+    `**What looks wrong**`,
+    ``,
+    `<!-- Please describe the problem. If it is a specific figure, the value you`,
+    `expected and where you saw the correct one is the most useful thing. -->`,
+    ``,
+    `---`,
+    `**Where on the site**: ${about || 'not specified'}`,
+    detail ? `**Figure in question**: ${detail}` : null,
+    `**Page**: ${location.href}`,
+    idx.counts ? `**Dataset**: ${idx.counts.facts} figures, `
+      + `${idx.counts.documents} documents` : null,
+    ``,
+    `<!-- Reported from the website. Thank you — corrections make this more useful`,
+    `for everyone. -->`,
+  ].filter(Boolean).join('\n');
+  return `${REPO}/issues/new?title=${encodeURIComponent('Possible error: ' + (about || 'website'))}`
+    + `&body=${encodeURIComponent(body)}`;
+}
+
+/** A small inline "flag this" control for one specific figure. */
+function flagButton(about, detail) {
+  const a = document.createElement('a');
+  a.className = 'flag';
+  a.href = reportUrl(about, detail);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'report a problem with this';
+  return a;
+}
+
 /* ------------------------------------------------------------------ tooltip */
 const tip = Object.assign(document.createElement('div'), { id: 'tip' });
 document.body.appendChild(tip);
@@ -913,6 +955,11 @@ function renderExplorer(host) {
       st.open = st.open === b.dataset.dept ? null : b.dataset.dept;
       draw();
     }));
+    const fr = document.createElement('p');
+    fr.style.margin = 'var(--s3) 0 0';
+    fr.appendChild(flagButton('the spending breakdown',
+      `${st.fund}, FY${st.fy} ${st.basis}`));
+    wrap.appendChild(fr);
   }
   draw();
 }
@@ -1091,6 +1138,11 @@ function renderHealth(host) {
           inference, however carefully verified. Asking the town to publish digital copies of the
           earlier reports would remove that distinction entirely — and it costs them nothing.
         </div>`;
+      const fr = document.createElement('p');
+      fr.style.margin = 'var(--s4) 0 0';
+      fr.appendChild(flagButton('the audited record table',
+        `FY${yrs[0].fy}–FY${yrs[yrs.length - 1].fy} audited actuals`));
+      p3.appendChild(fr);
       sec.appendChild(p3);
     }
   }
@@ -1334,6 +1386,39 @@ function renderReceipts(host) {
     ${sum.pdf_scanned_ocr} are scans whose hidden text scrambles digits, so nothing on this page is
     taken from those.</span>`;
   sec.appendChild(ans);
+
+  // ---- best effort, and how to tell us we got it wrong -----------------------
+  const effort = document.createElement('div');
+  effort.className = 'panel panel-pad';
+  effort.style.marginBottom = 'var(--s5)';
+  effort.innerHTML = `
+    <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+      This is a best-effort project — please tell us if something looks wrong</h3>
+    <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
+      This site is built and maintained by residents, not by the town. Every figure is traced to a
+      published document and checked by machine wherever the document makes that possible, but the
+      source material runs to thousands of pages and <strong>we do not claim it is
+      flawless</strong>. If a figure looks wrong, is out of date, or reads misleadingly, the fastest
+      way to get it fixed is to say so — a report costs you a minute and makes the site better for
+      everyone who reads it after you.
+    </p>
+    <p style="margin:0 0 var(--s2);font-size:var(--t-sm);color:var(--text-secondary)">
+      Reports go to a public tracker, so you can see what has been raised and what has been done
+      about it. If you are comfortable with GitHub you can also propose the fix yourself.
+    </p>
+    <div class="btn-row">
+      <a class="btn primary" href="${reportUrl('general')}" target="_blank" rel="noopener">
+        <span class="ic" aria-hidden="true">⚑</span> Report a problem</a>
+      <a class="btn" href="${REPO}/issues" target="_blank" rel="noopener">
+        <span class="ic" aria-hidden="true">☰</span> See what's been reported</a>
+      <a class="btn" href="${REPO}/fork" target="_blank" rel="noopener">
+        <span class="ic" aria-hidden="true">⑂</span> Propose a fix yourself</a>
+    </div>
+    <p class="reassure" style="margin-top:var(--s4)">
+      <span class="ic" aria-hidden="true">✓</span><span>The whole pipeline is open. Anyone can rebuild
+      this dataset from the same documents and check that it reproduces exactly what you see here.
+      Corrections are welcome from anyone, including the town.</span></p>`;
+  sec.appendChild(effort);
 
   // ---- how the documents were read, and what would make it safer -------------
   const clause = document.createElement('div');

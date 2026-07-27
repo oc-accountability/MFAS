@@ -682,6 +682,28 @@ details.more > .inner { margin-top: var(--s5); }
 }
 .reassure .ic { color: var(--good); font-weight: 700; }
 
+/* ==================== report / contribute ==================== */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 40px; padding: 9px 16px; cursor: pointer;
+  background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--hairline-firm); border-radius: 999px;
+  font: 600 var(--t-xs)/1.3 var(--sans); text-decoration: none;
+  transition: border-color .14s, color .14s;
+}
+.btn:hover { border-color: var(--accent); text-decoration: none; }
+.btn.primary { background: var(--accent-soft); border-color: var(--accent-line); }
+.btn .ic { font-size: 13px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s4); }
+
+/* a compact inline "flag this" beside a specific figure */
+.flag {
+  background: none; border: 0; cursor: pointer; padding: 2px 6px;
+  color: var(--text-muted); font: inherit; font-size: var(--t-2xs);
+  border-radius: 5px; text-decoration: underline; text-underline-offset: 2px;
+}
+.flag:hover { color: var(--accent); }
+
 /* ==================== spending explorer ==================== */
 /* One hue for every bar. A value-ramp across nominal categories would burn the
    colour channel on information the bar length already carries. */
