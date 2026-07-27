@@ -327,3 +327,34 @@ def test_index_counts_are_consistent(facts, documents):
         idx = json.load(fh)
     assert idx["counts"]["facts"] == len(facts)
     assert idx["counts"]["documents"] == len(documents["documents"])
+
+
+# ------------------------------------- the imported design warehouse (stage 85)
+@pytest.fixture(scope="module")
+def warehouse():
+    return load("warehouse_county.json")
+
+
+def test_imported_rows_keep_the_workbook_authors_schema(warehouse):
+    """Her field names are the contract; renaming them would break the handoff."""
+    for r in warehouse["rows"][:200]:
+        for field in ("Entity_ID", "Fiscal_Year_ID", "Source_ID", "Confidence"):
+            assert field in r, f"imported row lost the author's field {field}: {r}"
+        assert r["Entity_ID"].startswith("ORG_"), r
+
+
+def test_her_figures_are_verified_against_the_pages_she_cited(warehouse):
+    """Imported figures are checked, not trusted. Any row whose citation names a
+    page we hold must have every figure present on that page."""
+    v = warehouse["verification"]
+    assert v["rows_checked_against_source_pdf"] > 0, "verification did not run"
+    assert v["figures_not_found_on_cited_page"] == 0, (
+        f"figures absent from the page cited: {warehouse['mismatches'][:5]}")
+    assert v["every_figure_found"] == v["rows_checked_against_source_pdf"]
+
+
+def test_the_pipeline_never_writes_to_her_workbook():
+    """s85 must read the design workbook, never modify it — she edits in Excel."""
+    src = (REPO / "etl" / "s85_warehouse.py").read_text(encoding="utf-8")
+    for banned in ("wb.save(", ".save(wbp", "openpyxl.Workbook("):
+        assert banned not in src, f"s85 must not write to the design workbook ({banned})"

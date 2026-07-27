@@ -1178,6 +1178,48 @@ function renderHealth(host) {
           inference, however carefully verified. Asking the town to publish digital copies of the
           earlier reports would remove that distinction entirely — and it costs them nothing.
         </div>`;
+      // Orange County's audited series, from the curated design workbook.
+      const wc = state.data.warehouse_county;
+      if (wc && wc.rows) {
+        const byYear = new Map();
+        for (const r of wc.rows) {
+          if (!String(r.table || '').startsWith('2.0')) continue;
+          const cat = String(r.Category || '').toLowerCase();
+          if (!r.Actual_Amount) continue;
+          const e = byYear.get(r.Fiscal_Year_ID) || {};
+          if (cat === 'total revenues') e.rev = r.Actual_Amount;
+          if (cat === 'total expenditures') e.exp = r.Actual_Amount;
+          byYear.set(r.Fiscal_Year_ID, e);
+        }
+        const cy = [...byYear.entries()].filter(([, v]) => v.rev || v.exp)
+          .sort((a, b) => a[0].localeCompare(b[0]));
+        if (cy.length >= 2) {
+          const v = wc.verification || {};
+          const cw = document.createElement('div');
+          cw.style.marginTop = 'var(--s6)';
+          cw.innerHTML = `
+            <h4 style="margin:0 0 var(--s3);font-size:var(--t-sm);font-weight:640">
+              Orange County, the same years</h4>
+            <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
+              The county is a much larger government than the town, and this is its audited General
+              Fund. These figures come from a curated research workbook rather than from this site's
+              own extraction — every row carries the county report and page it was taken from, and
+              this build re-checks them against those pages
+              ${v.every_figure_found ? `(<strong>${v.every_figure_found} of
+              ${v.rows_checked_against_source_pdf}</strong> checkable rows matched exactly)` : ''}.
+            </p>
+            <div class="tablewrap"><table>
+              <caption>Orange County audited General Fund actuals.</caption>
+              <thead><tr><th>Year</th><th class="num">Revenue (actual)</th>
+                <th class="num">Spending (actual)</th></tr></thead>
+              <tbody>${cy.map(([fy, e]) => `<tr><td>${esc(fy)}</td>
+                <td class="num">${e.rev ? usd(e.rev) : '—'}</td>
+                <td class="num">${e.exp ? usd(e.exp) : '—'}</td></tr>`).join('')}</tbody>
+            </table></div>`;
+          p3.appendChild(cw);
+        }
+      }
+
       const fr = document.createElement('p');
       fr.style.margin = 'var(--s4) 0 0';
       fr.appendChild(flagButton('the audited record table',
@@ -1556,7 +1598,7 @@ async function boot() {
     loadHome();
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
-                   'household', 'audited', 'ocr_statements'];
+                   'household', 'audited', 'ocr_statements', 'warehouse_county'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

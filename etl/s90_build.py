@@ -278,6 +278,8 @@ def main() -> None:
             # audited totals recovered from scans, each proven by its own page
             "ocr_statements": "datasets/ocr_statements.json",
             "ocr_manifest": "datasets/ocr_manifest.json",
+            # curated Orange County warehouse, imported and re-verified
+            "warehouse_county": "datasets/warehouse_county.json",
         },
     })
 
