@@ -66,6 +66,33 @@ committing to OCR for FY2018–FY2024, look for digital originals on the Town of
 website. Fetching the authoritative file from the issuing government is both better data and
 better provenance than OCR-ing somebody's scan.
 
+## Fresh OCR *does* work — measured, not assumed
+
+The broken text layer above is somebody else's OCR, baked into the file years ago. It says nothing
+about what a modern engine does on a clean render, and that difference decides whether the audited
+decade is recoverable. So it was measured rather than guessed.
+
+`etl/ocr_accuracy_probe.py` exploits the fact that **one report exists in both forms** — the FY2025
+annual report is present as a 2 MB digital file *and* as a 61 MB scan of the same document. Render
+the scan at 300 DPI greyscale, OCR it with `tesseract --psm 6`, and compare every figure against the
+digital twin:
+
+| | |
+|---|---|
+| Pages tested | 6 dense statement pages (not prose, which would flatter the result) |
+| Figures in ground truth | 141 |
+| Reproduced **exactly** | **141 (100%)** |
+| Spurious numbers invented | 0 |
+
+**So the audited history is recoverable.** What blocks it is work, not capability.
+
+One honest limit on that result: it proves **digit recognition** is exact. It does *not* prove
+**row and column attribution** — OCR could in principle read every number correctly and still attach
+one to the wrong line. Any pipeline built on this must therefore verify each page against its own
+printed arithmetic (columns summing to totals), exactly as `s50` and `s60` already do, and must mark
+figures `extraction: "ocr-unverified"` until that check passes. `s90_build.py` refuses to publish
+that value, which is the safety net.
+
 ### If you do need FY2018–FY2024 history
 
 Options, in order of preference:

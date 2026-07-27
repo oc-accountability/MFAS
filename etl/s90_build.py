@@ -246,6 +246,8 @@ def main() -> None:
             # spending explorer, so the first paint stays light on a phone
             "lineitems": "datasets/lineitems.json",
             "lineitem_validation": "datasets/lineitem_validation.json",
+            # audited outcome — small, loaded with the first paint
+            "audited": "datasets/audited_general_fund.json",
         },
     })
 

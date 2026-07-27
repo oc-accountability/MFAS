@@ -1,0 +1,66 @@
+{
+  "generated_by": "etl/ocr_accuracy_probe.py",
+  "question": "Can fresh OCR be trusted to read the scanned annual financial reports? Measured against the one report that exists in both digital and scanned form, so the answer is evidence rather than assumption.",
+  "engine": "tesseract 5.3.4",
+  "render_dpi": 300,
+  "ground_truth": "Fiscal Year 2025 Financial Report.pdf",
+  "scan_under_test": "Annual Financial Report_ Year Ended June 30, 2025.pdf",
+  "pages": [
+    {
+      "page": 36,
+      "truth_numbers": 18,
+      "ocr_numbers": 18,
+      "matched": 18,
+      "recall_pct": 100.0,
+      "missed_sample": [],
+      "spurious_sample": []
+    },
+    {
+      "page": 37,
+      "truth_numbers": 44,
+      "ocr_numbers": 44,
+      "matched": 44,
+      "recall_pct": 100.0,
+      "missed_sample": [],
+      "spurious_sample": []
+    },
+    {
+      "page": 38,
+      "truth_numbers": 25,
+      "ocr_numbers": 25,
+      "matched": 25,
+      "recall_pct": 100.0,
+      "missed_sample": [],
+      "spurious_sample": []
+    },
+    {
+      "page": 40,
+      "truth_numbers": 25,
+      "ocr_numbers": 25,
+      "matched": 25,
+      "recall_pct": 100.0,
+      "missed_sample": [],
+      "spurious_sample": []
+    },
+    {
+      "page": 42,
+      "truth_numbers": 15,
+      "ocr_numbers": 15,
+      "matched": 15,
+      "recall_pct": 100.0,
+      "missed_sample": [],
+      "spurious_sample": []
+    },
+    {
+      "page": 43,
+      "truth_numbers": 14,
+      "ocr_numbers": 14,
+      "matched": 14,
+      "recall_pct": 100.0,
+      "missed_sample": [],
+      "spurious_sample": []
+    }
+  ],
+  "overall_recall_pct": 100.0,
+  "verdict": "OCR reproduces the audited figures exactly — safe to use with per-page arithmetic checks"
+}

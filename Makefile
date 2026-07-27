@@ -21,6 +21,7 @@ etl:
 	$(PY) etl/s30_budget_messages.py
 	$(PY) etl/s40_household_impact.py
 	$(PY) etl/s50_line_items.py
+	$(PY) etl/s60_audited.py
 	$(PY) etl/s90_build.py
 
 test:

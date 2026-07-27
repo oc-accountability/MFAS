@@ -69,6 +69,13 @@ A pipeline built on that text would publish confidently wrong figures about name
 So the manifest classifies every document, the build **refuses** to publish a value marked
 `ocr-unverified`, and none of the 62 figures on the site come from a scanned file.
 
+**But fresh OCR does work, and that was measured rather than assumed.** One report exists in both
+digital and scanned form, so it serves as ground truth: rendering the scan at 300 DPI and running
+`tesseract --psm 6` reproduced **141 of 141 figures exactly, with none invented**
+(`etl/ocr_accuracy_probe.py`). The audited decade is therefore recoverable — that is work not yet
+done, not a wall. The caveat that matters: this proves *digit recognition*, not *row and column
+attribution*, so anything built on it must check each page against its own printed arithmetic.
+
 Full diagnosis, evidence, and the safe paths to recovering the audited history:
 **[`docs/EXTRACTION_NOTES.md`](docs/EXTRACTION_NOTES.md)**.
 
@@ -104,6 +111,10 @@ rendered as `0` on a chart is a lie, so the pipeline will not produce one.
 - **55 of 60** published category totals reconcile against the town's own Financial Summary pages,
   with **FY2027 budget reconciling 12 of 12**. The five disclosed variances are all in prior-year
   columns and are flagged unverified in the data and on the page.
+- **The audited FY2025 General Fund**, budget vs actual, line by line — the town budgeted
+  $16,761,617 and spent $14,109,365, 15.8% under. Read from the *digital* twin of the FY2025 report,
+  so no OCR is involved, and it agrees with the budget document's own figures for the same year
+  **to within $1** across two documents and two independent parsers.
 - **76 curated headline figures**, FY2023–FY2029, from **16 digital-text documents**
   (10 scans pending transcription)
 - General Fund budget, expenditures, surplus/deficit, and fund balance

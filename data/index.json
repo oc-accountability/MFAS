@@ -30,6 +30,7 @@
     "issues": "datasets/issues.json",
     "household": "datasets/facts_household.json",
     "lineitems": "datasets/lineitems.json",
-    "lineitem_validation": "datasets/lineitem_validation.json"
+    "lineitem_validation": "datasets/lineitem_validation.json",
+    "audited": "datasets/audited_general_fund.json"
   }
 }

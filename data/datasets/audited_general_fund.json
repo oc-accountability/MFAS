@@ -1,0 +1,268 @@
+{
+  "cross_document_check": {
+    "question": "Does the audited statement agree with the budget document's own FY2025 actual figures?",
+    "budget_document_total": 15691673.0,
+    "less_interfund_transfers": 1582309.0,
+    "adjusted": 14109364.0,
+    "audited_total_expenditures": 14109365.0,
+    "difference": -1.0,
+    "agree": true,
+    "note": "The audited statement classifies interfund transfers as other financing uses rather than expenditures; removing them makes the two directly comparable. Agreement to within a dollar across two separate documents and two separate parsers is the strongest check in this project."
+  },
+  "generated_by": "etl/s60_audited.py",
+  "note": "Audited General Fund budget vs actual for the year ended 30 June 2025, from the digital (not scanned) financial report. Variance is positive-is-favourable as the statement prints it, and is independently recomputed from the columns.",
+  "fiscal_year": 2025,
+  "source_doc": "fiscal-year-2025-financial-report",
+  "source_page": 42,
+  "arithmetic_checks": [
+    {
+      "section": "revenues",
+      "column": "original_budget",
+      "sum_of_lines": 15915089.0,
+      "printed_total": 15915089.0,
+      "reconciles": true
+    },
+    {
+      "section": "revenues",
+      "column": "final_budget",
+      "sum_of_lines": 15757733.0,
+      "printed_total": 15757733.0,
+      "reconciles": true
+    },
+    {
+      "section": "revenues",
+      "column": "actual",
+      "sum_of_lines": 17047188.0,
+      "printed_total": 17047188.0,
+      "reconciles": true
+    },
+    {
+      "section": "expenditures",
+      "column": "original_budget",
+      "sum_of_lines": 16121290.0,
+      "printed_total": 16121290.0,
+      "reconciles": true
+    },
+    {
+      "section": "expenditures",
+      "column": "final_budget",
+      "sum_of_lines": 16761617.0,
+      "printed_total": 16761617.0,
+      "reconciles": true
+    },
+    {
+      "section": "expenditures",
+      "column": "actual",
+      "sum_of_lines": 14109365.0,
+      "printed_total": 14109365.0,
+      "reconciles": true
+    }
+  ],
+  "extraction_problems": [],
+  "rows": [
+    {
+      "section": "revenues",
+      "line": "Ad valorem taxes",
+      "original_budget": 10270000.0,
+      "final_budget": 10270000.0,
+      "actual": 10474657.0,
+      "variance_printed": 204657.0,
+      "variance_derived": 204657.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Other taxes and licenses",
+      "original_budget": 9100.0,
+      "final_budget": 9100.0,
+      "actual": 10763.0,
+      "variance_printed": 1663.0,
+      "variance_derived": 1663.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Unrestricted intergovernmental",
+      "original_budget": 4707100.0,
+      "final_budget": 4542100.0,
+      "actual": 4981797.0,
+      "variance_printed": 439697.0,
+      "variance_derived": 439697.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Restricted intergovernmental",
+      "original_budget": 382389.0,
+      "final_budget": 390270.0,
+      "actual": 398601.0,
+      "variance_printed": 8331.0,
+      "variance_derived": 8331.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Use and rental fees",
+      "original_budget": 62500.0,
+      "final_budget": 61500.0,
+      "actual": 105306.0,
+      "variance_printed": 43806.0,
+      "variance_derived": 43806.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Investment earnings",
+      "original_budget": 425000.0,
+      "final_budget": 425000.0,
+      "actual": 829076.0,
+      "variance_printed": 404076.0,
+      "variance_derived": 404076.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Miscellaneous",
+      "original_budget": 59000.0,
+      "final_budget": 59763.0,
+      "actual": 246988.0,
+      "variance_printed": 187225.0,
+      "variance_derived": 187225.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "revenues",
+      "line": "Total revenues",
+      "original_budget": 15915089.0,
+      "final_budget": 15757733.0,
+      "actual": 17047188.0,
+      "variance_printed": 1289455.0,
+      "variance_derived": 1289455.0,
+      "is_total": true,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "General government",
+      "original_budget": 3599838.0,
+      "final_budget": 4048922.0,
+      "actual": 3178752.0,
+      "variance_printed": 870170.0,
+      "variance_derived": 870170.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Public safety",
+      "original_budget": 6916998.0,
+      "final_budget": 7222905.0,
+      "actual": 6713159.0,
+      "variance_printed": 509746.0,
+      "variance_derived": 509746.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Transportation",
+      "original_budget": 2004412.0,
+      "final_budget": 2246352.0,
+      "actual": 1826906.0,
+      "variance_printed": 419446.0,
+      "variance_derived": 419446.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Environmental protection",
+      "original_budget": 1139199.0,
+      "final_budget": 1217943.0,
+      "actual": 744869.0,
+      "variance_printed": 473074.0,
+      "variance_derived": 473074.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Economic and physical development",
+      "original_budget": 585000.0,
+      "final_budget": 665000.0,
+      "actual": 644688.0,
+      "variance_printed": 20312.0,
+      "variance_derived": 20312.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Community activities and projects",
+      "original_budget": 732461.0,
+      "final_budget": 570129.0,
+      "actual": 328960.0,
+      "variance_printed": 241169.0,
+      "variance_derived": 241169.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Parks and recreation",
+      "original_budget": 693382.0,
+      "final_budget": 790366.0,
+      "actual": 672031.0,
+      "variance_printed": 118335.0,
+      "variance_derived": 118335.0,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Contingency",
+      "original_budget": 450000.0,
+      "final_budget": null,
+      "actual": null,
+      "variance_printed": null,
+      "variance_derived": null,
+      "is_total": false,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    },
+    {
+      "section": "expenditures",
+      "line": "Total expenditures",
+      "original_budget": 16121290.0,
+      "final_budget": 16761617.0,
+      "actual": 14109365.0,
+      "variance_printed": 2652252.0,
+      "variance_derived": 2652252.0,
+      "is_total": true,
+      "source_doc": "fiscal-year-2025-financial-report",
+      "source_page": 42
+    }
+  ]
+}

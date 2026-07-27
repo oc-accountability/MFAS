@@ -986,6 +986,56 @@ function renderHealth(host) {
   }
   sec.appendChild(panel);
 
+  // ---- the audited outcome: the only fully checked year on the page ----------
+  const aud = state.data.audited;
+  if (aud && aud.rows && aud.rows.length) {
+    const totE = aud.rows.find(r => r.section === 'expenditures' && r.is_total);
+    const totR = aud.rows.find(r => r.section === 'revenues' && r.is_total);
+    if (totE && totR) {
+      const underPct = totE.final_budget ? (totE.final_budget - totE.actual) / totE.final_budget * 100 : 0;
+      const overRev = totR.actual - totR.final_budget;
+      const p2 = document.createElement('div');
+      p2.className = 'panel panel-pad';
+      p2.style.marginTop = 'var(--s5)';
+      p2.innerHTML = `
+        <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+          Did they spend what they said they would?</h3>
+        <p class="answer" style="font-size:var(--t-base);margin-bottom:var(--s4)">
+          In <span class="fig">FY${aud.fiscal_year}</span> — the most recent year with audited
+          accounts — the town budgeted <span class="fig">${usd(totE.final_budget)}</span> and
+          actually spent <span class="fig">${usd(totE.actual)}</span>,
+          <span class="fig">${pctPlain(underPct)}</span> less than planned.
+          <span class="soft">Revenue came in ${usd(Math.abs(overRev))}
+          ${overRev >= 0 ? 'above' : 'below'} budget.</span>
+        </p>
+        <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
+          This is the audited statement, checked by an outside accountant after the year closed —
+          not a plan. It also lines up with the budget document's own figures for the same year to
+          within a dollar${aud.cross_document_check && aud.cross_document_check.agree
+            ? '' : ' (see the data files for detail)'}, across two separate documents.
+          Source: ${cite({ source_doc: aud.source_doc, source_page: aud.source_page })}.
+        </span></p>`;
+      p2.appendChild(disclosure('See it line by line', inner2 => {
+        const fmtc = v => v == null ? '—' : usd(v);
+        const body = aud.rows.map(r => `<tr${r.is_total
+          ? ' style="font-weight:650;border-top:1px solid var(--hairline-firm)"' : ''}>
+          <td>${esc(r.line)}</td>
+          <td class="num">${fmtc(r.final_budget)}</td>
+          <td class="num">${fmtc(r.actual)}</td>
+          <td class="num">${r.variance_derived == null ? '—'
+            : (r.variance_derived >= 0 ? '+' : '−') + usd(Math.abs(r.variance_derived))}</td>
+        </tr>`).join('');
+        inner2.innerHTML = tableOf(
+          `Audited General Fund, year ended 30 June ${aud.fiscal_year}. A positive variance means `
+          + `revenue came in above budget, or spending came in below it.`,
+          [{ label: 'Line' }, { label: 'Final budget', num: true },
+           { label: 'Actual', num: true }, { label: 'Variance', num: true }],
+          []) .replace('<tbody></tbody>', `<tbody>${body}</tbody>`);
+      }));
+      sec.appendChild(p2);
+    }
+  }
+
   sec.appendChild(disclosure('See the charts behind this', inner => {
     const years = [...new Set(state.data.facts.facts
       .map(f => f.fiscal_year).filter(v => v != null))].sort((a, b) => a - b);
@@ -1293,7 +1343,8 @@ async function boot() {
   try {
     loadHome();
     const idx = await (await fetch('data/index.json')).json();
-    const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues', 'household'];
+    const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
+                   'household', 'audited'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

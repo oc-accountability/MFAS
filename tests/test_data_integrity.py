@@ -241,6 +241,40 @@ def test_line_item_totals_are_not_mixed_into_the_account_data(lineitems):
     assert not bad, f"total rows present in the account data: {sorted(set(bad))[:10]}"
 
 
+# --------------------------------------- audited statement (stage 60)
+@pytest.fixture(scope="module")
+def audited():
+    return load("audited_general_fund.json")
+
+
+def test_audited_statement_adds_up(audited):
+    """Every column of the audited statement must sum to its printed total."""
+    bad = [c for c in audited["arithmetic_checks"] if not c["reconciles"]]
+    assert not bad, f"audited statement does not add up as parsed: {bad}"
+    assert audited["arithmetic_checks"], "no arithmetic checks ran"
+
+
+def test_audited_agrees_with_the_budget_document(audited):
+    """Two independent documents, two independent parsers, one answer.
+
+    The audited statement treats interfund transfers as other financing uses
+    while the budget document counts them as expenses; adjusted for that, the
+    FY2025 totals must agree. This is the closest thing the project has to an
+    external check on its own extraction.
+    """
+    x = audited.get("cross_document_check")
+    assert x, "cross-document check did not run"
+    assert x["agree"], (
+        f"audited {x['audited_total_expenditures']:,} vs budget-document "
+        f"{x['adjusted']:,} (diff {x['difference']:+,})")
+
+
+def test_audited_comes_from_the_digital_not_the_scanned_report(audited, documents):
+    d = next(x for x in documents["documents"] if x["id"] == audited["source_doc"])
+    assert d["text_layer"] == "digital", (
+        "the audited figures must come from the digital twin, not the 61 MB scan")
+
+
 def test_index_counts_are_consistent(facts, documents):
     with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
         idx = json.load(fh)
