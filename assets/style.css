@@ -858,3 +858,21 @@ details.more > .inner { margin-top: var(--s5); }
                  color: var(--text-secondary); letter-spacing: .01em; }
 .split-cols ul { margin: 0; padding-left: 1.1em; }
 .split-cols li { font-size: var(--t-sm); line-height: 1.75; color: var(--text-primary); }
+
+/* ---- revenue sources, and the structural question ---- */
+.revenue .rows .k small, .structure .rows .k small {
+  display: block; margin-top: 3px; color: var(--text-muted);
+  font-size: var(--t-2xs); line-height: 1.5; max-width: 58ch;
+}
+.revenue .rows .v small { display: block; font-weight: 500; color: var(--text-secondary);
+                          font-size: var(--t-2xs); margin-top: 3px; }
+.structure .rows .v small { display: block; font-weight: 400; color: var(--text-muted);
+                            font-size: var(--t-2xs); margin-top: 2px; }
+.structure .lead { font-size: var(--t-base); line-height: 1.65; }
+.structure h4, .revenue h4 {
+  margin: var(--s5) 0 var(--s2); font-size: var(--t-xs); font-weight: 650;
+  color: var(--text-secondary); letter-spacing: .02em; text-transform: uppercase;
+}
+ul.plain { margin: 0 0 var(--s3); padding-left: 1.1em; }
+ul.plain li { font-size: var(--t-xs); line-height: 1.65; color: var(--text-secondary);
+              margin-bottom: var(--s2); max-width: 74ch; }

@@ -43,6 +43,9 @@
     "projects": "datasets/projects.json",
     "tradeoffs": "datasets/tradeoffs.json",
     "workbook_b": "datasets/workbook_b.json",
-    "context": "datasets/context.json"
+    "context": "datasets/context.json",
+    "questions": "datasets/questions.json",
+    "revenue": "datasets/revenue.json",
+    "structure": "datasets/structure.json"
   }
 }

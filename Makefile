@@ -34,6 +34,9 @@ etl:
 	$(PY) etl/s95_tradeoffs.py
 	$(PY) etl/s96_workbook_b.py
 	$(PY) etl/s97_context.py
+	$(PY) etl/s99_revenue.py
+	$(PY) etl/s100_structure.py
+	$(PY) etl/s98_questions.py
 	$(PY) etl/s90_build.py
 
 test:

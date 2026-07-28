@@ -1,0 +1,185 @@
+{
+  "generated_by": "etl/s100_structure.py",
+  "requested_by": "Amy — \"I end up reading 2 budgets, and 2 tax calculations, to figure out why my taxes are going up... I wonder why this government is structured this way... I want this to highlight this insight.\"",
+  "constraint": "Her own, in the same message: \"But I don't want my opinion or me to tell anybody what is right or wrong.\" So this poses the question with measurements and refuses to answer it.",
+  "the_question": "Why does answering \"why is my property tax going up?\" require reading two budgets and combining two tax calculations, and what does running two administrations cost?",
+  "reading_burden": {
+    "governments_a_resident_must_read": 2,
+    "tax_calculations_to_combine": 2,
+    "current_cycle_documents": 6,
+    "current_cycle_pages": 1031,
+    "by_government": {
+      "Town of Hillsborough, NC": {
+        "documents": 3,
+        "pages": 288,
+        "examples": [
+          {
+            "filename": "FY27 Budget Message.pdf",
+            "pages": 7
+          },
+          {
+            "filename": "FY27 Budget and Financial Plan Recommended.pdf",
+            "pages": 280
+          },
+          {
+            "filename": "Recommended FY27BudgetAtAGlanceFlyer.pdf",
+            "pages": 1
+          }
+        ]
+      },
+      "Orange County, NC": {
+        "documents": 3,
+        "pages": 743,
+        "examples": [
+          {
+            "filename": "FY2026-27 Manager_s Recommended Budget.pdf",
+            "pages": 352
+          },
+          {
+            "filename": "FY2026-27 Managers Recommended Budget.pdf",
+            "pages": 357
+          },
+          {
+            "filename": "FY2026-27 Operating Budget Introduction2.pdf",
+            "pages": 34
+          }
+        ]
+      }
+    },
+    "whole_archive_documents": 56,
+    "whole_archive_pages": 6638,
+    "pages_counted_for": 56,
+    "note": "Page counts are only available for documents this pipeline could open and measure, so these are floors rather than totals."
+  },
+  "already_shared": {
+    "service": "Property tax billing and collection",
+    "arrangement": "Orange County bills and collects property taxes on behalf of the three municipalities with the county, Chapel Hill, Carrboro and Hillsborough. For this service, the county charges a collection fee of 0.5% of collected taxes. They have done a fee study and determined that the average fee to municipalities is 1.5% across their peer group, including neighboring Durham County.",
+    "provided_by": "Orange County",
+    "provided_for": [
+      "Chapel Hill",
+      "Carrboro",
+      "Hillsborough"
+    ],
+    "current_fee_pct_of_collections": 0.5,
+    "county_fee_study_peer_average_pct": 1.5,
+    "source_page": 27,
+    "why_this_matters_to_the_question": "This service is NOT duplicated — one government does it for all three municipalities, and at a third of what the county's own fee study says peers charge. Any argument about duplicated cost has to account for the services that are already consolidated, and for the fact that this one is currently cheap for the town.",
+    "proposed_increase_declined": {
+      "fy2027": 120000.0,
+      "three_year": 368000.0,
+      "status": "not funded in the recommended budget"
+    },
+    "what_the_town_records_paying": [
+      {
+        "fiscal_year": 2025,
+        "basis": "actual",
+        "amount": 47462.0,
+        "department": "Accounting",
+        "source_page": 247
+      },
+      {
+        "fiscal_year": 2026,
+        "basis": "estimate",
+        "amount": 57000.0,
+        "department": "Accounting",
+        "source_page": 247
+      },
+      {
+        "fiscal_year": 2027,
+        "basis": "budget",
+        "amount": 60000.0,
+        "department": "Accounting",
+        "source_page": 247
+      },
+      {
+        "fiscal_year": 2028,
+        "basis": "projected",
+        "amount": 61000.0,
+        "department": "Accounting",
+        "source_page": 247
+      },
+      {
+        "fiscal_year": 2029,
+        "basis": "projected",
+        "amount": 62000.0,
+        "department": "Accounting",
+        "source_page": 247
+      }
+    ]
+  },
+  "run_separately": {
+    "government": "Town of Hillsborough",
+    "fiscal_year": 2027,
+    "basis": "budget",
+    "fund": "General Fund",
+    "general_fund_total": 19466631.0,
+    "administration_broad": {
+      "departments": {
+        "Information Technology": 718097.0,
+        "Facility Management": 505442.0,
+        "Administration": 503619.0,
+        "Accounting": 473781.0,
+        "Safety & Risk Management": 362826.0,
+        "Human Resources": 261778.0,
+        "Communications": 238555.0,
+        "Governing Body": 145142.0
+      },
+      "total": 3209240.0,
+      "share_of_general_fund_pct": 16.5
+    },
+    "administration_narrow": {
+      "excludes": [
+        "Communications",
+        "Facility Management"
+      ],
+      "total": 2465243.0,
+      "share_of_general_fund_pct": 12.7
+    },
+    "why_two_figures": "Facility Management and Communications can reasonably be counted as administration or as services, so both totals are given rather than one being presented as the answer.",
+    "county_equivalent": null,
+    "county_note": "Orange County's administrative spending is not yet extracted at this grain, so the comparison a reader would most want cannot be drawn honestly. Publishing the town's figure alone would invite a comparison against nothing."
+  },
+  "who_provides_what": {
+    "source_doc": "oc-hillsborough-fiscal-analysis-project",
+    "note": "From the initiative's own project scope. Together these are, in its words, “the complete local tax burden for a Hillsborough resident”.",
+    "Orange County": [
+      "Schools",
+      "Sheriff",
+      "Social Services",
+      "Public Health",
+      "Libraries",
+      "Economic Development",
+      "Affordable Housing",
+      "EMS",
+      "County debt and capital projects"
+    ],
+    "Town of Hillsborough": [
+      "Police",
+      "Fire",
+      "Streets",
+      "Water & Sewer",
+      "Planning",
+      "Parks",
+      "Riverwalk",
+      "Affordable housing initiatives",
+      "Local debt and capital projects"
+    ]
+  },
+  "combined_rate_cents": {
+    "town": 51.3,
+    "county": 67.58,
+    "note": "Two rates, two governing bodies, one bill to the resident."
+  },
+  "what_the_documents_cannot_answer": [
+    "Whether two administrations cost more in total than one would. No document in the archive compares the two structures, so no figure is published for it.",
+    "What consolidation or shared services would save, or cost. There is no published estimate, and producing one here would be an opinion wearing a number's clothes.",
+    "Which duplication is real and which is apparent. Two governments each having a finance function is not by itself duplication — they administer different taxes, funds and statutory duties.",
+    "Whether the current structure delivers better or worse services than an alternative. Nothing in the archive measures service quality at all."
+  ],
+  "how_to_answer_it": [
+    "County administrative spending at the same department grain as the town's, which would make the only comparison the documents could support.",
+    "A shared-services inventory: which functions each government already buys from the other, and at what price. Tax collection is one; there may be more.",
+    "North Carolina statutory duties by level of government, which would separate duplication a locality could remove from duplication state law requires."
+  ],
+  "editorial_stance": "Nothing here argues a position. The reading burden is counted, the shared service is described from the town's own form including the fact that it is currently cheap for the town, the administrative share is given two ways because the boundary is arguable, and the question is left with the reader."
+}

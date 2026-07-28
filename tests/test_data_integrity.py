@@ -753,3 +753,121 @@ def test_both_governments_service_lists_are_present(context):
 
 def test_context_extraction_reported_no_problems(context):
     assert context["problems"] == [], context["problems"]
+
+
+# ---------------------------------------------------------------------------
+# Revenue sources (s99), the open-questions register (s98), the structural
+# question (s100)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def revenue():
+    return load("revenue.json")
+
+
+@pytest.fixture(scope="module")
+def register():
+    return load("questions.json")
+
+
+@pytest.fixture(scope="module")
+def structure():
+    return load("structure.json")
+
+
+def test_shares_are_only_published_where_the_parts_make_up_the_total(revenue):
+    """A percentage of a total the components do not sum to is not a share. Budget years
+    reconcile to the dollar; audited years differ because presentations differ."""
+    for y in revenue["years"]:
+        if y["shares_publishable"]:
+            assert y["reconciles"], y["fiscal_year"]
+            assert y["share_of_total"], y["fiscal_year"]
+            assert abs(sum(y["share_of_total"].values()) - 100) < 0.5, y["fiscal_year"]
+        else:
+            assert y["share_of_total"] is None, (
+                f"FY{y['fiscal_year']} publishes shares against a total its parts do not make")
+
+
+def test_missing_component_detail_is_never_reported_as_a_discrepancy(revenue):
+    """FY2018 carries only a sales tax figure. Treating that as a variance implied the
+    town was out by $8.8M, when the detail simply is not in the sheet."""
+    states = {y["fiscal_year"]: y["state"] for y in revenue["years"]}
+    assert "components incomplete" in states.values(), (
+        "no year is classed incomplete — if the sheet changed, re-check the guard")
+    for y in revenue["years"]:
+        if y["state"] == "components incomplete":
+            assert y["components_populated"] < 5, y
+            assert not y["reconciles"], y
+
+
+def test_revenue_variance_is_reported_not_resolved(revenue):
+    r = revenue["reconciliation"]
+    assert r["years_reconciling"] >= 2, r
+    assert "not resolved here" in r["finding"].lower() or "NOT resolved" in r["finding"]
+    for c in r["checks"]:
+        assert c["state"] in {"reconciles", "presentation difference",
+                              "components incomplete"}, c
+
+
+def test_every_register_item_has_an_owner_who_could_act(register):
+    valid = set(register["owners"])
+    assert valid, "no owners are defined"
+    for r in register["register"]:
+        assert r["owner"] in valid, r
+        assert r["question"] and r["topic"], r
+        assert r["status"] in {"open", "answered", "in progress", "awaiting upload"}, r
+        if r["status"] == "answered":
+            assert r.get("answer"), f"{r['id']} is answered with no answer recorded"
+
+
+def test_the_register_keeps_answered_items(register):
+    """A question that quietly vanishes is indistinguishable from one that was forgotten."""
+    assert register["summary"]["answered"] > 0, "answered items are being dropped"
+    assert register["summary"]["total"] == len(register["register"])
+    assert (register["summary"]["open"] + register["summary"]["answered"]
+            == register["summary"]["total"])
+
+
+def test_the_register_has_a_readable_version():
+    p = REPO / "docs" / "OPEN_QUESTIONS.md"
+    assert p.exists(), "docs/OPEN_QUESTIONS.md was not generated"
+    txt = p.read_text(encoding="utf-8")
+    assert "Ask the Town" in txt and "Your decision" in txt
+    assert "do not edit by hand" in txt
+
+
+def test_the_structural_question_is_posed_and_not_answered(structure):
+    """Amy asked for the insight highlighted AND said: "I don't want my opinion or me to
+    tell anybody what is right or wrong." So the dataset must carry the measurements and
+    an explicit statement of what it cannot settle — and must publish no cost comparison
+    between the two structures."""
+    assert structure["what_the_documents_cannot_answer"], "no limits are stated"
+    assert len(structure["what_the_documents_cannot_answer"]) >= 3
+    sep = structure["run_separately"]
+    assert sep["county_equivalent"] is None, (
+        "a county administrative figure appeared — half a comparison is worse than none")
+    assert sep["county_note"]
+    # Both boundary readings must be given rather than one presented as the answer.
+    assert sep["administration_broad"]["total"] > sep["administration_narrow"]["total"]
+    assert sep["administration_narrow"]["excludes"]
+    blob = json.dumps(structure).lower()
+    for loaded in ("wasteful", "should be merged", "should consolidate", "bloated"):
+        assert loaded not in blob, f"the dataset editorialises: {loaded!r}"
+
+
+def test_the_shared_service_is_described_including_what_cuts_against_the_thesis(structure):
+    """Tax collection is NOT duplicated, and the town pays a third of the peer average.
+    Anyone arguing duplicated cost has to see that, including the person who asked."""
+    sh = structure["already_shared"]
+    assert sh, "the shared-service finding is missing"
+    assert sh["current_fee_pct_of_collections"] < sh["county_fee_study_peer_average_pct"]
+    assert "not" in sh["why_this_matters_to_the_question"].lower()
+    assert sh["source_page"], "the arrangement is published without a page cite"
+
+
+def test_the_reading_burden_is_counted_not_asserted(structure):
+    b = structure["reading_burden"]
+    assert b["current_cycle_pages"] > 0 and b["current_cycle_documents"] > 0
+    assert b["governments_a_resident_must_read"] == 2
+    assert sum(v["pages"] for v in b["by_government"].values()) == b["current_cycle_pages"]
+    assert "floors rather than totals" in b["note"]

@@ -1021,8 +1021,128 @@ function renderPaysFor(host) {
     }
   }));
 
+  revenueBlock(sec);
   whoProvidesWhat(sec);
+  structureBlock(sec);
   host.appendChild(sec);
+}
+
+/**
+ * Where the money comes from — because the site was lopsided.
+ *
+ * It explained what a resident pays and what the town spends in detail, but treated
+ * revenue as one number, which quietly implies property tax funds everything. It funds
+ * about two thirds. A reader who believes otherwise will misjudge every tradeoff here.
+ *
+ * Shares are drawn ONLY for years whose components sum to the stated total. In the actual
+ * years they do not — audited statements and budget schedules count transfers and
+ * appropriated fund balance differently — so those years are shown as amounts with the
+ * variance stated, never as a percentage of a total the parts do not make up.
+ */
+function revenueBlock(sec) {
+  const d = state.data.revenue;
+  if (!d || !d.years) return;
+  const usable = d.years.filter(y => y.shares_publishable);
+  if (!usable.length) return;
+  const latest = usable[usable.length - 1];
+  const w = d.who_funds_the_town || {};
+  const defs = d.component_definitions || {};
+  const order = Object.keys(defs).filter(k => latest.components[k] != null);
+
+  const card = document.createElement('div');
+  card.className = 'card revenue';
+  card.innerHTML = `
+    <h3>Where the money comes from</h3>
+    <p>Property tax is the largest single source but not the whole story &mdash;
+      <strong>${w.property_tax_share_pct != null ? pctPlain(w.property_tax_share_pct)
+        : ''}</strong> of the General Fund in FY${latest.fiscal_year}. About
+      <strong>${w.raised_locally_pct != null ? pctPlain(w.raised_locally_pct) : ''}</strong>
+      is raised locally; the rest arrives from other governments or comes out of savings.</p>
+    <ul class="rows" id="revRows"></ul>
+    <p class="note"><span class="ic" aria-hidden="true">✓</span>
+      <span>${esc((d.caveats || [])[0] || '')} Shares are shown only for years whose parts add
+      up to the published total: the two budget years do, to the dollar, while the audited
+      years differ by up to $2.9M because budget schedules and audited statements count
+      transfers and savings differently. That difference is a question for the town, not
+      something this page resolves.</span></p>`;
+  const ul = card.querySelector('#revRows');
+  for (const k of order) {
+    const v = latest.components[k];
+    const share = (latest.share_of_total || {})[k];
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="k">${esc(k)}<small>${esc(defs[k] || '')}</small></span>
+      <span class="v">${compact(v)}<small>${share != null ? pctPlain(share) : ''}</small></span>`;
+    ul.appendChild(li);
+  }
+  sec.appendChild(card);
+}
+
+/**
+ * The structural question, posed and left open.
+ *
+ * Amy's own words: "I end up reading 2 budgets, and 2 tax calculations, to figure out why
+ * my taxes are going up... I wonder why this government is structured this way. I want
+ * this to highlight this insight." And in the same message: "But I don't want my opinion
+ * or me to tell anybody what is right or wrong."
+ *
+ * So this shows the measurable part — the page count, the service that is already shared,
+ * the town's administrative share — and then says explicitly what the documents cannot
+ * settle. It argues nothing. The one figure a reader would most want, the county's
+ * administrative cost beside the town's, is deliberately absent because it has not been
+ * extracted, and half a comparison is worse than none.
+ */
+function structureBlock(sec) {
+  const s = state.data.structure;
+  if (!s || !s.reading_burden) return;
+  const b = s.reading_burden;
+  const sh = s.already_shared;
+  const sep = s.run_separately || {};
+  const a = sep.administration_broad || {}, n = sep.administration_narrow || {};
+
+  const card = document.createElement('div');
+  card.className = 'card structure';
+  card.innerHTML = `
+    <h3>Why does this take two budgets to answer?</h3>
+    <p class="lead">To work out why your bill went up, you have to read
+      <strong>${b.current_cycle_pages.toLocaleString('en-US')} pages</strong> across
+      <strong>${b.current_cycle_documents} documents</strong> from
+      <strong>${b.governments_a_resident_must_read} governments</strong>, then combine
+      <strong>${b.tax_calculations_to_combine} separate tax calculations</strong> yourself.</p>
+    <ul class="rows">
+      ${Object.entries(b.by_government).filter(([g]) => g !== 'unstated')
+        .sort((x, y) => y[1].pages - x[1].pages)
+        .map(([g, v]) => `<li><span class="k">${esc(g)}
+          <small>${v.documents} document${v.documents === 1 ? '' : 's'} for this budget
+          cycle</small></span>
+          <span class="v">${v.pages.toLocaleString('en-US')}<small>pages</small></span></li>`)
+        .join('')}
+    </ul>
+    ${sh ? `<h4>What is already shared</h4>
+      <p>${esc(sh.arrangement || '')}</p>
+      <p class="soft">So this service is <strong>not</strong> duplicated, and at
+        ${sh.current_fee_pct_of_collections}% of collections the town currently pays about a
+        third of the ${sh.county_fee_study_peer_average_pct}% average the county's own fee
+        study found among its peers.${sh.proposed_increase_declined
+          ? ` A proposed increase &mdash; ${usd(sh.proposed_increase_declined.fy2027)} next year,
+             ${usd(sh.proposed_increase_declined.three_year)} over three &mdash; was not funded.`
+          : ''}</p>` : ''}
+    ${a.total ? `<h4>What each government runs for itself</h4>
+      <p>The town's own administrative departments &mdash; accounting, administration, human
+        resources, IT, communications, risk, facilities and the governing body &mdash; come to
+        <strong>${compact(a.total)}</strong>, or ${pctPlain(a.share_of_general_fund_pct)} of its
+        General Fund. Counted more narrowly, excluding
+        ${esc((n.excludes || []).join(' and '))}, it is <strong>${compact(n.total)}</strong>
+        (${pctPlain(n.share_of_general_fund_pct)}). Both figures are given because the boundary
+        is genuinely arguable.</p>
+      <p class="soft"><strong>${esc(sep.county_note || '')}</strong></p>` : ''}
+    <h4>What these documents cannot tell you</h4>
+    <ul class="plain">${(s.what_the_documents_cannot_answer || [])
+      .map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    <p class="note"><span class="ic" aria-hidden="true">✓</span>
+      <span>This page does not take a position on how local government should be organised.
+      It counts what can be counted, describes what the documents say, and leaves the
+      question with you.</span></p>`;
+  sec.appendChild(card);
 }
 
 /**
@@ -2052,7 +2172,7 @@ async function boot() {
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
                    'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas',
-                   'transfers', 'utility', 'cost_of_ownership', 'projects', 'tradeoffs', 'workbook_b', 'context'];
+                   'transfers', 'utility', 'cost_of_ownership', 'projects', 'tradeoffs', 'workbook_b', 'context', 'revenue', 'structure'];
     const loaded = await Promise.all(names.map(n => idx.datasets[n]
       ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));

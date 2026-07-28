@@ -1,0 +1,409 @@
+{
+  "generated_by": "etl/s99_revenue.py",
+  "requested_by": "Amy — \"The broader view includes revenue from sources such as Grants, State, Other Funds, etc. So I want to make sure we have this broader view too.\"",
+  "imported_from": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+  "contract": "Her workbook is READ, never written.",
+  "why_it_matters": "The site explained what a resident pays and what the town spends in detail, but treated revenue as one total — which implies property tax funds everything. It does not, and a reader who believes it will misjudge every tradeoff on the site.",
+  "component_definitions": {
+    "Property Tax": "paid directly by residents and businesses in the town",
+    "Sales Tax": "the town's share of local option sales tax, collected by the state",
+    "Other Taxes & Licenses": "smaller local taxes, licences and permits",
+    "Intergovernmental": "grants and revenue shared from state and federal government",
+    "Interest": "earnings on the town's own cash balances",
+    "Interfund Transfers": "money moved in from the town's other funds",
+    "Fund Balance Appropriated": "savings spent to balance the year — not new income",
+    "Other / Fees / Misc": "fees, charges and everything else"
+  },
+  "reconciliation": {
+    "method": "Each year's components are summed and compared to that year's stated total. Shares are only published for years that reconcile, because a percentage of a total the parts do not make up is not a share.",
+    "tolerance_usd": 1.0,
+    "years_reconciling": 2,
+    "years_with_a_presentation_difference": 7,
+    "years_with_incomplete_components": 1,
+    "incomplete_note": "A year whose component detail is largely absent is reported as incomplete, not as a discrepancy. FY2018 carries only sales tax, and treating that as a variance would have implied the town was out by $8.8M.",
+    "by_basis": {
+      "Actual": {
+        "years": 8,
+        "reconcile": 0,
+        "states": {
+          "components incomplete": 1,
+          "presentation difference": 7
+        },
+        "variance_range": [
+          -9617.0,
+          2928203.0
+        ]
+      },
+      "Adopted Budget": {
+        "years": 1,
+        "reconcile": 1,
+        "states": {
+          "reconciles": 1
+        },
+        "variance_range": [
+          0.0,
+          0.0
+        ]
+      },
+      "Recommended Budget": {
+        "years": 1,
+        "reconcile": 1,
+        "states": {
+          "reconciles": 1
+        },
+        "variance_range": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "finding": "Budget years reconcile to the dollar; actual years do not, by roughly $1.3-1.5M. That is consistent with a presentation difference between audited statements and budget schedules — they count transfers and appropriated fund balance differently — and her own Model_Integrity sheet flags the same thing. It is NOT resolved here, because deciding which presentation applies would be a guess about the town's accounting.",
+    "checks": [
+      {
+        "fiscal_year": 2018,
+        "basis": "Actual",
+        "stated_total": 10255489.0,
+        "components_sum": 1486817.0,
+        "variance": -8768672.0,
+        "reconciles": false,
+        "state": "components incomplete",
+        "components_populated": 1
+      },
+      {
+        "fiscal_year": 2019,
+        "basis": "Actual",
+        "stated_total": 10079224.0,
+        "components_sum": 11562449.0,
+        "variance": 1483225.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 6
+      },
+      {
+        "fiscal_year": 2020,
+        "basis": "Actual",
+        "stated_total": 11162292.0,
+        "components_sum": 12564945.0,
+        "variance": 1402653.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 6
+      },
+      {
+        "fiscal_year": 2021,
+        "basis": "Actual",
+        "stated_total": 11645302.0,
+        "components_sum": 13402403.0,
+        "variance": 1757101.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 6
+      },
+      {
+        "fiscal_year": 2022,
+        "basis": "Actual",
+        "stated_total": 13700724.0,
+        "components_sum": 16282956.0,
+        "variance": 2582232.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 6
+      },
+      {
+        "fiscal_year": 2023,
+        "basis": "Actual",
+        "stated_total": 15361655.0,
+        "components_sum": 18289858.0,
+        "variance": 2928203.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 6
+      },
+      {
+        "fiscal_year": 2024,
+        "basis": "Actual",
+        "stated_total": 16317812.0,
+        "components_sum": 16308195.0,
+        "variance": -9617.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 7
+      },
+      {
+        "fiscal_year": 2025,
+        "basis": "Actual",
+        "stated_total": 17047188.0,
+        "components_sum": 18356346.0,
+        "variance": 1309158.0,
+        "reconciles": false,
+        "state": "presentation difference",
+        "components_populated": 7
+      },
+      {
+        "fiscal_year": 2026,
+        "basis": "Adopted Budget",
+        "stated_total": 18214193.0,
+        "components_sum": 18214193.0,
+        "variance": 0.0,
+        "reconciles": true,
+        "state": "reconciles",
+        "components_populated": 8
+      },
+      {
+        "fiscal_year": 2027,
+        "basis": "Recommended Budget",
+        "stated_total": 19476631.0,
+        "components_sum": 19476631.0,
+        "variance": 0.0,
+        "reconciles": true,
+        "state": "reconciles",
+        "components_populated": 8
+      }
+    ]
+  },
+  "cross_checks_against_this_pipeline": [
+    {
+      "label": "FY2027 total",
+      "hers": 19476631.0,
+      "this_pipeline": 19476631.0,
+      "difference": 0.0,
+      "agrees": true,
+      "note": "Her revenue total for a budget year equals the expenditure total, because a budget balances by construction."
+    }
+  ],
+  "years": [
+    {
+      "fiscal_year": 2018,
+      "basis": "Actual",
+      "stated_total": 10255489.0,
+      "components_sum": 1486817.0,
+      "variance": -8768672.0,
+      "reconciles": false,
+      "state": "components incomplete",
+      "components_populated": 1,
+      "components": {
+        "Sales Tax": 1486817.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2019,
+      "basis": "Actual",
+      "stated_total": 10079224.0,
+      "components_sum": 11562449.0,
+      "variance": 1483225.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 6,
+      "components": {
+        "Property Tax": 6491857.0,
+        "Sales Tax": 1708025.0,
+        "Other Taxes & Licenses": 1728857.0,
+        "Intergovernmental": 1035259.0,
+        "Interest": 248824.0,
+        "Other / Fees / Misc": 349627.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2020,
+      "basis": "Actual",
+      "stated_total": 11162292.0,
+      "components_sum": 12564945.0,
+      "variance": 1402653.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 6,
+      "components": {
+        "Property Tax": 7422863.0,
+        "Sales Tax": 1719865.0,
+        "Other Taxes & Licenses": 1738597.0,
+        "Intergovernmental": 1081380.0,
+        "Interest": 170325.0,
+        "Other / Fees / Misc": 431915.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2021,
+      "basis": "Actual",
+      "stated_total": 11645302.0,
+      "components_sum": 13402403.0,
+      "variance": 1757101.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 6,
+      "components": {
+        "Property Tax": 7957352.0,
+        "Sales Tax": 2048982.0,
+        "Other Taxes & Licenses": 16410.0,
+        "Intergovernmental": 3147950.0,
+        "Interest": 3295.0,
+        "Other / Fees / Misc": 228414.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2022,
+      "basis": "Actual",
+      "stated_total": 13700724.0,
+      "components_sum": 16282956.0,
+      "variance": 2582232.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 6,
+      "components": {
+        "Property Tax": 9099860.0,
+        "Sales Tax": 2868883.0,
+        "Other Taxes & Licenses": 13171.0,
+        "Intergovernmental": 4102038.0,
+        "Interest": 33284.0,
+        "Other / Fees / Misc": 165720.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2023,
+      "basis": "Actual",
+      "stated_total": 15361655.0,
+      "components_sum": 18289858.0,
+      "variance": 2928203.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 6,
+      "components": {
+        "Property Tax": 9656519.0,
+        "Sales Tax": 3200727.0,
+        "Other Taxes & Licenses": 10513.0,
+        "Intergovernmental": 4601327.0,
+        "Interest": 418762.0,
+        "Other / Fees / Misc": 402010.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2024,
+      "basis": "Actual",
+      "stated_total": 16317812.0,
+      "components_sum": 16308195.0,
+      "variance": -9617.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 7,
+      "components": {
+        "Property Tax": 9931383.0,
+        "Sales Tax": 3355972.0,
+        "Other Taxes & Licenses": 10572.0,
+        "Intergovernmental": 1529506.0,
+        "Interest": 778203.0,
+        "Interfund Transfers": 167500.0,
+        "Other / Fees / Misc": 535059.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2025,
+      "basis": "Actual",
+      "stated_total": 17047188.0,
+      "components_sum": 18356346.0,
+      "variance": 1309158.0,
+      "reconciles": false,
+      "state": "presentation difference",
+      "components_populated": 7,
+      "components": {
+        "Property Tax": 10474657.0,
+        "Sales Tax": 3419504.0,
+        "Other Taxes & Licenses": 10763.0,
+        "Intergovernmental": 1562293.0,
+        "Interest": 829076.0,
+        "Interfund Transfers": 1707759.0,
+        "Other / Fees / Misc": 352294.0
+      },
+      "shares_publishable": false,
+      "share_of_total": null
+    },
+    {
+      "fiscal_year": 2026,
+      "basis": "Adopted Budget",
+      "stated_total": 18214193.0,
+      "components_sum": 18214193.0,
+      "variance": 0.0,
+      "reconciles": true,
+      "state": "reconciles",
+      "components_populated": 8,
+      "components": {
+        "Property Tax": 11759000.0,
+        "Sales Tax": 3233500.0,
+        "Other Taxes & Licenses": 112100.0,
+        "Intergovernmental": 1690500.0,
+        "Interest": 400000.0,
+        "Interfund Transfers": 711674.0,
+        "Fund Balance Appropriated": 207819.0,
+        "Other / Fees / Misc": 99600.0
+      },
+      "shares_publishable": true,
+      "share_of_total": {
+        "Property Tax": 64.56,
+        "Sales Tax": 17.75,
+        "Other Taxes & Licenses": 0.62,
+        "Intergovernmental": 9.28,
+        "Interest": 2.2,
+        "Interfund Transfers": 3.91,
+        "Fund Balance Appropriated": 1.14,
+        "Other / Fees / Misc": 0.55
+      }
+    },
+    {
+      "fiscal_year": 2027,
+      "basis": "Recommended Budget",
+      "stated_total": 19476631.0,
+      "components_sum": 19476631.0,
+      "variance": 0.0,
+      "reconciles": true,
+      "state": "reconciles",
+      "components_populated": 8,
+      "components": {
+        "Property Tax": 12535000.0,
+        "Sales Tax": 3408000.0,
+        "Other Taxes & Licenses": 125100.0,
+        "Intergovernmental": 1695500.0,
+        "Interest": 400000.0,
+        "Interfund Transfers": 720500.0,
+        "Fund Balance Appropriated": 466231.0,
+        "Other / Fees / Misc": 126300.0
+      },
+      "shares_publishable": true,
+      "share_of_total": {
+        "Property Tax": 64.36,
+        "Sales Tax": 17.5,
+        "Other Taxes & Licenses": 0.64,
+        "Intergovernmental": 8.71,
+        "Interest": 2.05,
+        "Interfund Transfers": 3.7,
+        "Fund Balance Appropriated": 2.39,
+        "Other / Fees / Misc": 0.65
+      }
+    }
+  ],
+  "who_funds_the_town": {
+    "fiscal_year": 2027,
+    "raised_locally": 16194400.0,
+    "raised_locally_pct": 83.1,
+    "from_elsewhere_or_savings": 3282231.0,
+    "from_elsewhere_or_savings_pct": 16.9,
+    "property_tax_share_pct": 64.4,
+    "note": "Property tax is the largest single source but not the whole story, which is why a tax-only view of the budget misleads."
+  },
+  "caveats": [
+    "Appropriated fund balance is savings being spent, not income. It appears here because the town counts it as a resource that balances the budget, but a year balanced with savings is not the same as a year funded by revenue.",
+    "Interfund transfers are money moved between the town's own funds, so they are revenue to the receiving fund and expenditure to the sending one. They are not new money entering the town.",
+    "Intergovernmental revenue is grants and state-shared revenue. It is real money but not under the town's control, and some of it is one-time."
+  ]
+}

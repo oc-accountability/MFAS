@@ -296,6 +296,12 @@ def main() -> None:
             "workbook_b": "datasets/workbook_b.json",
             # who provides which services, and the Finance Director's own words on debt
             "context": "datasets/context.json",
+            # the open-questions register Amy asked for, with an owner per item
+            "questions": "datasets/questions.json",
+            # where the money comes from, beyond property tax
+            "revenue": "datasets/revenue.json",
+            # the structural question, posed with evidence and left open
+            "structure": "datasets/structure.json",
         },
     })
 
