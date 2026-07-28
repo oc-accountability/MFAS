@@ -121,7 +121,7 @@ function cite(f) {
 }
 
 /* ------------------------------------------------- reporting a problem ------ */
-const REPO = 'https://github.com/oc-accountability/hoa-funds';
+const REPO = 'https://github.com/oc-accountability/MFAS';
 
 /** A pre-filled GitHub issue.
  *

@@ -170,11 +170,15 @@ def main() -> None:
             source="etl/s92_total_cost.py")
 
     add("david", "Repository name",
-        "Rename the GitHub repository from `hoa-funds` to `mfas`. Only the account owner can "
-        "do it: Settings -> General -> Repository name. GitHub redirects the old URLs.",
+        "Rename the GitHub repository from `hoa-funds` to something that matches the project.",
+        status="answered",
+        answer="Done 2026-07-28 — renamed to `MFAS`. git URLs redirect permanently; GitHub Pages "
+               "does NOT, and Pages paths are case-sensitive, so the live address is "
+               "https://oc-accountability.github.io/MFAS/ while both /hoa-funds/ and /mfas/ 404. "
+               "Every link sent before the rename is dead and needs re-sending.",
         why="The project is MFAS; \"hoa\" reads like a homeowners association and was the name "
             "of the empty repository this was first pushed into.",
-        source="Amy 2026-07-27; instructions in README")
+        source="Amy 2026-07-27; renamed by David 2026-07-28")
 
     # ---- questions already answered, kept so they cannot silently vanish -----
     add("amy", "Project dimension",

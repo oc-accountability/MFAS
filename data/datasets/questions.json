@@ -11,8 +11,8 @@
   },
   "summary": {
     "total": 36,
-    "open": 30,
-    "answered": 6,
+    "open": 29,
+    "answered": 7,
     "by_owner": {
       "town": {
         "open": 18,
@@ -32,7 +32,7 @@
         "open": 1
       },
       "david": {
-        "open": 1
+        "answered": 1
       }
     },
     "needs_a_government_answer": 21,
@@ -261,11 +261,11 @@
       "id": "Q019",
       "owner": "david",
       "topic": "Repository name",
-      "question": "Rename the GitHub repository from `hoa-funds` to `mfas`. Only the account owner can do it: Settings -> General -> Repository name. GitHub redirects the old URLs.",
-      "status": "open",
+      "question": "Rename the GitHub repository from `hoa-funds` to something that matches the project.",
+      "status": "answered",
       "why_it_matters": "The project is MFAS; \"hoa\" reads like a homeowners association and was the name of the empty repository this was first pushed into.",
-      "raised_by": "Amy 2026-07-27; instructions in README",
-      "answer": null,
+      "raised_by": "Amy 2026-07-27; renamed by David 2026-07-28",
+      "answer": "Done 2026-07-28 — renamed to `MFAS`. git URLs redirect permanently; GitHub Pages does NOT, and Pages paths are case-sensitive, so the live address is https://oc-accountability.github.io/MFAS/ while both /hoa-funds/ and /mfas/ 404. Every link sent before the rename is dead and needs re-sending.",
       "raised": null,
       "blocks": null
     },

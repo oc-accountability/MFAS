@@ -13,11 +13,12 @@ property tax actually costs you, where it goes, and what the town said no to. Th
 silent; the film is not.
 
 
-> **On the name.** The repository is still called `hoa-funds`, which reads like a homeowners
-> association and has nothing to do with this project — it was the name of the empty repository this
-> was first pushed into. The project's name is **MFAS, the Municipal Financial Analysis System**.
-> Renaming the repository on GitHub is a one-step change and GitHub redirects the old URLs; see
-> "Renaming the repository" at the bottom.
+> **On the name.** This repository was originally called `hoa-funds` — the name of the empty repo it
+> was first pushed into, which reads like a homeowners association and has nothing to do with the
+> project. It was renamed to **MFAS** (Municipal Financial Analysis System) on 2026-07-28.
+> ⚠️ **The live address changed with it, and GitHub Pages does not redirect the old one.** Anything
+> still pointing at `oc-accountability.github.io/hoa-funds/` now 404s. Note also that Pages paths are
+> **case-sensitive**: `/MFAS/` works, `/mfas/` does not.
 
 Budget and financial data for the **Town of Hillsborough, North Carolina**, extracted from the
 town's own published documents into a checkable dataset, with a website that runs the analysis in
@@ -25,7 +26,7 @@ the reader's browser.
 
 Built for the **Orange County Efficiency & Accountability Initiative**.
 
-## → Just want to look at it? **https://oc-accountability.github.io/hoa-funds/**
+## → Just want to look at it? **https://oc-accountability.github.io/MFAS/**
 
 That is the live site. Nothing to install, nothing to run. **This repository *is* that website** —
 GitHub Pages serves `index.html`, `assets/` and `data/` straight from the `main` branch, so a push
@@ -215,24 +216,16 @@ Hillsborough; the extraction, structure, and annotations here are released under
 
 ---
 
-## Renaming the repository
+## The rename — done 2026-07-28, and what it changed
 
-The project is MFAS; the repository name `hoa-funds` is a leftover. To fix it:
+`hoa-funds` → **`MFAS`**. What that did, and the one thing it broke:
 
-**GitHub → the repository → Settings → General → Repository name → `mfas` → Rename.**
-
-Or, with the `gh` CLI authenticated as the account owner:
-
-```
-gh repo rename mfas --repo oc-accountability/hoa-funds
-```
-
-What changes and what does not:
-
-- GitHub **permanently redirects** the old URLs, including `git push` from existing clones, so
-  nothing breaks immediately.
-- The live site moves to `https://oc-accountability.github.io/mfas/`. The old address redirects,
-  but update any printed or emailed links.
-- Local clones should be repointed: `git remote set-url origin <new URL>`.
-- Nothing inside this repository needs editing. Every path is relative, and the few GitHub links in
-  the footer follow the redirect.
+- **git URLs redirect permanently**, including `git push` from existing clones — a push to the old
+  remote succeeds and prints the new location. Repoint anyway:
+  `git remote set-url origin git@github.com:oc-accountability/MFAS.git`
+- **GitHub Pages does NOT redirect.** `oc-accountability.github.io/hoa-funds/` returns 404, and so
+  does `/mfas/` — **Pages paths are case-sensitive and the repo is `MFAS`**. The live address is
+  `https://oc-accountability.github.io/MFAS/`. Any link that was printed or emailed before the
+  rename is now dead and has to be re-sent.
+- Issues, history, stars and the deploy key all survive; the repo object is the same, so no new
+  SSH key was needed.
