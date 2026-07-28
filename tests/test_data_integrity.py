@@ -54,7 +54,8 @@ def test_no_source_documents_are_tracked():
     # so she has everything in her own schema. It is built from the datasets, not a source,
     # and it is small. Everything else with these extensions is a source document and some
     # exceed GitHub's hard 100 MB limit.
-    GENERATED = {"data/exports/MFAS_Data_Warehouse.xlsx"}
+    GENERATED = {"data/exports/MFAS_Data_Warehouse.xlsx",
+                 "data/exports/MFAS_Workbook_Tab_Map.xlsx"}
     bad = [f for f in out
            if (f.lower().endswith((".pdf", ".xlsx", ".xls", ".docx", ".zip"))
                or f.startswith("sources/"))
@@ -951,3 +952,28 @@ def test_the_export_warns_that_it_is_generated():
         wb.close()
     assert "GENERATED" in text.upper()
     assert "DESTROYED" in text.upper() or "OVERWRIT" in text.upper()
+
+
+
+def test_the_tab_map_has_a_column_per_tab():
+    """Amy asked for one workbook per row with each tab in its own column. A long/tidy table
+    would be better for a machine and worse for the thing she wants to do, which is scan
+    sixteen files left to right — so the wide shape is the deliverable, and it must stay wide."""
+    openpyxl = pytest.importorskip("openpyxl")
+    xl = REPO / "data" / "exports" / "MFAS_Workbook_Tab_Map.xlsx"
+    if not xl.exists():
+        pytest.skip("tab map not built yet")
+    tracked = subprocess.run(["git", "ls-files", "data/exports/MFAS_Workbook_Tab_Map.xlsx"],
+                             cwd=REPO, capture_output=True, text=True).stdout.strip()
+    assert tracked, "the tab map is not tracked by git"
+    wb = openpyxl.load_workbook(xl, read_only=True)
+    try:
+        ws = wb["Workbook_Tab_Map"]
+        header = [c for c in next(ws.iter_rows(max_row=1, values_only=True)) if c]
+        assert header[0] == "Workbook" and "Purpose" in header
+        tab_cols = [h for h in header if str(h).startswith("Tab ")]
+        assert len(tab_cols) >= 20, f"only {len(tab_cols)} tab columns — one workbook has 45"
+        for name in ("Tab_Index", "Recurring_Tabs", "Decisions_Inventory"):
+            assert name in wb.sheetnames, name
+    finally:
+        wb.close()

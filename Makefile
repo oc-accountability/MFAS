@@ -39,6 +39,7 @@ etl:
 	$(PY) etl/s98_questions.py
 	$(PY) etl/s102_workbook_audit.py
 	$(PY) etl/s101_workbook.py
+	$(PY) etl/s103_tab_map.py
 	$(PY) etl/s90_build.py
 
 test:
