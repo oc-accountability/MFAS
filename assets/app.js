@@ -1920,9 +1920,10 @@ function tradeoffBlock(sec) {
     // the town stated a consequence; the town's form states none; or no form was found.
     // Only the middle one is a statement about the town.
     const consequence = r.impact_if_not_funded
-      ? `${esc(clip(r.impact_if_not_funded, 210))}${
-          r.justification_match_basis && r.justification_match_basis !== 'exact name'
-            ? ` <em>(${esc(r.justification_match_basis)})</em>` : ''}`
+      // The match basis stays in the dataset for auditing, NOT on screen. Printing it
+      // put "(name variant (100% of words shared))" under a declined request, which reads
+      // as debug output leaking into resident-facing copy — caught while filming the site.
+      ? esc(clip(r.impact_if_not_funded, 210))
       : r.justification_matched
         ? 'The town’s form for this request states no consequence.'
         : 'No justification form was found for this request, so the town may have stated '
