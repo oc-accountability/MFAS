@@ -35,6 +35,17 @@ That is the live site. Nothing to install, nothing to run. **This repository *is
 GitHub Pages serves `index.html`, `assets/` and `data/` straight from the `main` branch, so a push
 updates the live page about a minute later.
 
+
+
+## → Want it all in one spreadsheet? **[`data/exports/MFAS_Data_Warehouse.xlsx`](data/exports/MFAS_Data_Warehouse.xlsx)**
+
+19 tabs in the schema of `Orange_County_Municipal_Financial_Information_System_v2.2_Foundation`
+— every Fact tab keyed by `Fiscal_Year_ID` and ending in `Source_ID` + `Confidence`, plus
+`Source_Register` (all 75 documents with their fingerprints), `Data_Quality_Gaps` and the open
+questions register.
+
+⚠️ **It is generated.** `make etl` rebuilds it from the datasets, so anything typed into it is
+overwritten. It is there to read from and copy out of — the authored workbooks stay authored.
 Everything below is for *changing* the project, not for viewing it.
 
 **Every number carries the document and page it came from.** Nothing is presented as a finding

@@ -50,9 +50,15 @@ def test_no_source_documents_are_tracked():
     """
     out = subprocess.run(["git", "ls-files"], cwd=REPO, capture_output=True,
                          text=True).stdout.split()
+    # The ONE permitted spreadsheet is the generated export (stage 101), which Amy asked for
+    # so she has everything in her own schema. It is built from the datasets, not a source,
+    # and it is small. Everything else with these extensions is a source document and some
+    # exceed GitHub's hard 100 MB limit.
+    GENERATED = {"data/exports/MFAS_Data_Warehouse.xlsx"}
     bad = [f for f in out
-           if f.lower().endswith((".pdf", ".xlsx", ".xls", ".docx", ".zip"))
-           or f.startswith("sources/")]
+           if (f.lower().endswith((".pdf", ".xlsx", ".xls", ".docx", ".zip"))
+               or f.startswith("sources/"))
+           and f not in GENERATED]
     assert not bad, f"source documents must not be tracked: {bad}"
 
 
@@ -890,3 +896,51 @@ def test_repo_media_stays_small():
     assert total < 12 * 1024 * 1024, (
         f"docs/media totals {total / 1e6:.1f} MB across {len(files)} files — "
         f"a data repo should not carry more video than data")
+
+
+
+def test_the_excel_export_keeps_amys_schema():
+    """Amy asked for everything in the format of her own workbook. Her convention is that
+    every Fact tab ends with Source_ID and Confidence, keyed by Fiscal_Year_ID — that is what
+    makes a figure checkable rather than merely present. A future change must not quietly
+    drop it."""
+    openpyxl = pytest.importorskip("openpyxl")
+    xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
+    if not xl.exists():
+        pytest.skip("export not built yet")
+    wb = openpyxl.load_workbook(xl, read_only=True)
+    try:
+        assert "README" in wb.sheetnames and "Index" in wb.sheetnames
+        assert "Source_Register" in wb.sheetnames
+        fact_tabs = [n for n in wb.sheetnames if "Fact_" in n]
+        assert len(fact_tabs) >= 6, fact_tabs
+        for name in fact_tabs:
+            ws = wb[name]
+            header = None
+            for row in ws.iter_rows(min_row=1, max_row=3, values_only=True):
+                vals = [str(v) for v in row if v is not None]
+                if "Confidence" in vals:
+                    header = vals
+                    break
+            assert header, f"{name}: no header row carrying Confidence"
+            assert "Source_ID" in header, f"{name}: no Source_ID column — a figure with no "\
+                                          f"traceable source should not be in here"
+    finally:
+        wb.close()
+
+
+def test_the_export_warns_that_it_is_generated():
+    """It looks like a workbook, so somebody will type in it. The next build overwrites the
+    file, so the warning has to be in the README tab, not only in the docs."""
+    openpyxl = pytest.importorskip("openpyxl")
+    xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
+    if not xl.exists():
+        pytest.skip("export not built yet")
+    wb = openpyxl.load_workbook(xl, read_only=True)
+    try:
+        text = " ".join(str(c) for row in wb["README"].iter_rows(values_only=True)
+                        for c in row if c)
+    finally:
+        wb.close()
+    assert "GENERATED" in text.upper()
+    assert "DESTROYED" in text.upper() or "OVERWRIT" in text.upper()
