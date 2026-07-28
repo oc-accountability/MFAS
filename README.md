@@ -21,12 +21,7 @@ What your property tax actually costs you, where it goes, and what the town said
 preview above is silent; the film is not.
 
 
-> **On the name.** This repository was originally called `hoa-funds` — the name of the empty repo it
-> was first pushed into, which reads like a homeowners association and has nothing to do with the
-> project. It was renamed to **MFAS** (Municipal Financial Analysis System) on 2026-07-28.
-> ⚠️ **The live address changed with it, and GitHub Pages does not redirect the old one.** Anything
-> still pointing at `oc-accountability.github.io/hoa-funds/` now 404s. Note also that Pages paths are
-> **case-sensitive**: `/MFAS/` works, `/mfas/` does not.
+
 
 Budget and financial data for the **Town of Hillsborough, North Carolina**, extracted from the
 town's own published documents into a checkable dataset, with a website that runs the analysis in
