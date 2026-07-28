@@ -871,3 +871,22 @@ def test_the_reading_burden_is_counted_not_asserted(structure):
     assert b["governments_a_resident_must_read"] == 2
     assert sum(v["pages"] for v in b["by_government"].values()) == b["current_cycle_pages"]
     assert "floors rather than totals" in b["note"]
+
+
+def test_repo_media_stays_small():
+    """The README film lives in the repo, which means every re-encode is committed forever —
+    git history keeps the old blob whether or not the file is replaced. GitHub's hard limit is
+    100MB per file and it warns at 50MB, but the real constraint is clone time for anyone who
+    just wants the data. Keep the whole media budget well under a tenth of that."""
+    media = REPO / "docs" / "media"
+    if not media.is_dir():
+        pytest.skip("no docs/media yet")
+        return
+    files = [(p.relative_to(REPO), p.stat().st_size) for p in media.iterdir() if p.is_file()]
+    assert files, "docs/media exists but is empty"
+    for rel, size in files:
+        assert size < 8 * 1024 * 1024, f"{rel} is {size / 1e6:.1f} MB — re-encode it smaller"
+    total = sum(s for _, s in files)
+    assert total < 12 * 1024 * 1024, (
+        f"docs/media totals {total / 1e6:.1f} MB across {len(files)} files — "
+        f"a data repo should not carry more video than data")

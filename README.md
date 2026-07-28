@@ -2,6 +2,17 @@
 
 **Hillsborough & Orange County fiscal transparency.**
 
+<!-- A repo-hosted mp4 does NOT autoplay inline in a GitHub README — GitHub only does that for
+     files uploaded through its own CDN. So the clickable preview is a GIF (silent, 6s) and it
+     links to the real 62s film, which plays with narration in GitHub's file viewer. -->
+
+[![Watch the 62-second film — what your property tax actually costs you](docs/media/mfas-commercial-preview.gif)](docs/media/mfas-commercial.mp4)
+
+**▶ [Watch the 62-second film, with narration](docs/media/mfas-commercial.mp4)** — what your
+property tax actually costs you, where it goes, and what the town said no to. The preview above is
+silent; the film is not.
+
+
 > **On the name.** The repository is still called `hoa-funds`, which reads like a homeowners
 > association and has nothing to do with this project — it was the name of the empty repository this
 > was first pushed into. The project's name is **MFAS, the Municipal Financial Analysis System**.
