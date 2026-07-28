@@ -2,15 +2,23 @@
 
 **Hillsborough & Orange County fiscal transparency.**
 
-<!-- A repo-hosted mp4 does NOT autoplay inline in a GitHub README — GitHub only does that for
-     files uploaded through its own CDN. So the clickable preview is a GIF (silent, 6s) and it
-     links to the real 62s film, which plays with narration in GitHub's file viewer. -->
+<!-- Why these links are ABSOLUTE Pages URLs and not repo-relative paths:
+       - GitHub's blob viewer REFUSES this file ("we can't show files that are this big right now"),
+         so docs/media/mfas-commercial.mp4 is a dead end for a viewer.
+       - raw.githubusercontent.com serves it as application/octet-stream, which downloads instead
+         of playing.
+       - GitHub Pages serves it as video/mp4 with Accept-Ranges, so it plays and scrubs in any
+         browser. Measured, not assumed.
+     ⚠️ If this repository is ever transferred to another account, these two URLs must be updated —
+     they are the only absolute links in the README. -->
 
-[![Watch the 62-second film — what your property tax actually costs you](docs/media/mfas-commercial-preview.gif)](docs/media/mfas-commercial.mp4)
+[![Watch the 62-second film — what your property tax actually costs you](docs/media/mfas-commercial-preview.gif)](https://oc-accountability.github.io/MFAS/docs/media/mfas-commercial.mp4)
 
-**▶ [Watch the 62-second film, with narration](docs/media/mfas-commercial.mp4)** — what your
-property tax actually costs you, where it goes, and what the town said no to. The preview above is
-silent; the film is not.
+**▶ [Watch the 62-second film, with narration](https://oc-accountability.github.io/MFAS/docs/media/mfas-commercial.mp4)**
+&nbsp;·&nbsp; [Open the website](https://oc-accountability.github.io/MFAS/)
+
+What your property tax actually costs you, where it goes, and what the town said no to. The looping
+preview above is silent; the film is not.
 
 
 > **On the name.** This repository was originally called `hoa-funds` — the name of the empty repo it

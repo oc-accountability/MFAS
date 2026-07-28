@@ -10,8 +10,8 @@
     "pipeline": "Work this project can do without anyone else."
   },
   "summary": {
-    "total": 36,
-    "open": 29,
+    "total": 37,
+    "open": 30,
     "answered": 7,
     "by_owner": {
       "town": {
@@ -24,7 +24,7 @@
         "open": 1
       },
       "amy": {
-        "open": 5,
+        "open": 6,
         "answered": 4
       },
       "pipeline": {
@@ -259,6 +259,18 @@
     },
     {
       "id": "Q019",
+      "owner": "amy",
+      "topic": "README film links if the repo moves",
+      "question": "If this repository is transferred to another GitHub account, the two film links at the top of the README have to be updated — they are absolute Pages URLs.",
+      "status": "open",
+      "why_it_matters": "They cannot be repo-relative: GitHub's blob viewer refuses the file outright (\"we can't show files that are this big right now\") and raw.githubusercontent serves it as application/octet-stream, which downloads instead of playing. Only Pages serves it as video/mp4 with Accept-Ranges. Measured, not assumed.",
+      "raised_by": "found 2026-07-28 when the blob link failed",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q020",
       "owner": "david",
       "topic": "Repository name",
       "question": "Rename the GitHub repository from `hoa-funds` to something that matches the project.",
@@ -270,7 +282,7 @@
       "blocks": null
     },
     {
-      "id": "Q020",
+      "id": "Q021",
       "owner": "amy",
       "topic": "Project dimension",
       "question": "Should Project be a real dimension?",
@@ -282,7 +294,7 @@
       "blocks": null
     },
     {
-      "id": "Q021",
+      "id": "Q022",
       "owner": "amy",
       "topic": "Recurring vs one-time",
       "question": "Add a dimension separating ongoing operations from one-time items.",
@@ -294,7 +306,7 @@
       "blocks": null
     },
     {
-      "id": "Q022",
+      "id": "Q023",
       "owner": "amy",
       "topic": "Cross-fund transfers",
       "question": "A schedule with the transfer columns going across.",
@@ -306,7 +318,7 @@
       "blocks": null
     },
     {
-      "id": "Q023",
+      "id": "Q024",
       "owner": "town",
       "topic": "Driver: Salary and benefit increases",
       "question": "Request department-by-department compensation growth and headcount/FTE history.",
@@ -318,7 +330,7 @@
       "blocks": null
     },
     {
-      "id": "Q024",
+      "id": "Q025",
       "owner": "town",
       "topic": "Driver: FY26 market pay adjustments",
       "question": "Clarify which departments received the largest pay adjustments.",
@@ -330,7 +342,7 @@
       "blocks": null
     },
     {
-      "id": "Q025",
+      "id": "Q026",
       "owner": "town",
       "topic": "Driver: Fire station reserve / future debt gap",
       "question": "Ask for full station funding model and alternatives such as renovation.",
@@ -342,7 +354,7 @@
       "blocks": null
     },
     {
-      "id": "Q026",
+      "id": "Q027",
       "owner": "town",
       "topic": "Driver: Ridgewalk Greenway reserve / future debt gap",
       "question": "Ask if scope can be phased or outside funding increased.",
@@ -354,7 +366,7 @@
       "blocks": null
     },
     {
-      "id": "Q027",
+      "id": "Q028",
       "owner": "town",
       "topic": "Driver: Passenger rail / multi-modal station town share",
       "question": "Ask for current project budget, funding agreements, and local match cap.",
@@ -366,7 +378,7 @@
       "blocks": null
     },
     {
-      "id": "Q028",
+      "id": "Q029",
       "owner": "town",
       "topic": "Driver: Affordable housing annual contribution target",
       "question": "Track commitments by project, partner, year, and restricted vs unrestricted funds.",
@@ -378,7 +390,7 @@
       "blocks": null
     },
     {
-      "id": "Q029",
+      "id": "Q030",
       "owner": "town",
       "topic": "Driver: FY26 affordable housing major expense",
       "question": "Reconcile to affordable housing reserve and project-level commitments.",
@@ -390,7 +402,7 @@
       "blocks": null
     },
     {
-      "id": "Q030",
+      "id": "Q031",
       "owner": "town",
       "topic": "Driver: Nonprofit partnership funding growth",
       "question": "Review whether increases should be frozen during projected deficits.",
@@ -402,7 +414,7 @@
       "blocks": null
     },
     {
-      "id": "Q031",
+      "id": "Q032",
       "owner": "town",
       "topic": "Driver: Public Space and Sustainability annual commitment",
       "question": "Ask for a project list and measurable ROI/savings for sustainability funds.",
@@ -414,7 +426,7 @@
       "blocks": null
     },
     {
-      "id": "Q032",
+      "id": "Q033",
       "owner": "town",
       "topic": "Driver: Community Services reorganization",
       "question": "Ask for before/after org chart, net FTE change, and total savings.",
@@ -426,7 +438,7 @@
       "blocks": null
     },
     {
-      "id": "Q033",
+      "id": "Q034",
       "owner": "town",
       "topic": "Driver: Police cameras and equipment",
       "question": "Ask for Axon/Flock contract terms and renewal schedule.",
@@ -438,7 +450,7 @@
       "blocks": null
     },
     {
-      "id": "Q034",
+      "id": "Q035",
       "owner": "town",
       "topic": "Driver: Vehicle replacement funds",
       "question": "Build a rolling vehicle replacement schedule by department.",
@@ -450,7 +462,7 @@
       "blocks": null
     },
     {
-      "id": "Q035",
+      "id": "Q036",
       "owner": "town",
       "topic": "Driver: Sales tax flatline",
       "question": "Separate normal sales tax growth from COVID-era one-time growth and refunds.",
@@ -462,7 +474,7 @@
       "blocks": null
     },
     {
-      "id": "Q036",
+      "id": "Q037",
       "owner": "town",
       "topic": "Driver: Projected FY29 deficit",
       "question": "Build deficit bridge: personnel, debt, capital, revenue, policy choices.",

@@ -169,6 +169,15 @@ def main() -> None:
         add("pipeline", "Total cost of ownership", gap,
             source="etl/s92_total_cost.py")
 
+    add("amy", "README film links if the repo moves",
+        "If this repository is transferred to another GitHub account, the two film links at the top "
+        "of the README have to be updated — they are absolute Pages URLs.",
+        why="They cannot be repo-relative: GitHub's blob viewer refuses the file outright (\"we "
+            "can't show files that are this big right now\") and raw.githubusercontent serves it "
+            "as application/octet-stream, which downloads instead of playing. Only Pages serves it "
+            "as video/mp4 with Accept-Ranges. Measured, not assumed.",
+        source="found 2026-07-28 when the blob link failed")
+
     add("david", "Repository name",
         "Rename the GitHub repository from `hoa-funds` to something that matches the project.",
         status="answered",
