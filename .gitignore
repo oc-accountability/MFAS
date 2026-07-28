@@ -10,6 +10,10 @@ build/
 # Never commit source formats directly
 *.pdf
 *.xlsx
+# ...except the ONE generated export (stage 101). `git add -A` silently skips an
+# ignored file, so without this negation the workbook was committed-but-absent: the
+# README linked it, the tests passed against the local copy, and the URL 404'd.
+!data/exports/MFAS_Data_Warehouse.xlsx
 *.xls
 *.docx
 *.zip

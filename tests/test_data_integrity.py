@@ -908,6 +908,13 @@ def test_the_excel_export_keeps_amys_schema():
     xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
     if not xl.exists():
         pytest.skip("export not built yet")
+    # Existing on disk is not the same as being IN the repo. .gitignore carries *.xlsx, so
+    # `git add -A` skipped this file silently: the README linked it, this test passed against
+    # the local copy, and the published URL 404'd. Check what git actually tracks.
+    tracked = subprocess.run(["git", "ls-files", "data/exports/MFAS_Data_Warehouse.xlsx"],
+                             cwd=REPO, capture_output=True, text=True).stdout.strip()
+    assert tracked, ("the export exists locally but is NOT tracked by git — check .gitignore, "
+                     "the README links to it and the link will 404")
     wb = openpyxl.load_workbook(xl, read_only=True)
     try:
         assert "README" in wb.sheetnames and "Index" in wb.sheetnames
