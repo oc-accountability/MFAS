@@ -55,8 +55,15 @@ def ds(name):
 
 
 def fy(v):
-    """Her fiscal-year key format."""
-    return f"FY{v}" if isinstance(v, int) else (v or "")
+    """Her fiscal-year key format — TWO digits.
+
+    Corrected 2026-07-28. This exported FY2027 because it was built to her Orange County
+    v2.2 workbook. Her Hillsborough database — the one she actually named — uses FY27, and
+    a key that does not match hers will not join to her data.
+    """
+    if isinstance(v, int):
+        return f"FY{v % 100:02d}"
+    return v or ""
 
 
 def sheet(wb, title, headers, rows, note=None, widths=None):
@@ -115,10 +122,13 @@ def main() -> None:
          "fails the build if that ever changes. Your authored files stay yours."),
         ("Purpose",
          "Everything the project publishes, in one place, in the schema of your "
-         "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation."),
+         "Hillsborough_Municipal_Financial_Database — Organization_ID, FY## keys, "
+         "Source_ID + Source_Detail. CORRECTED 2026-07-28: the first version of this "
+         "export followed your Orange County v2.2 workbook instead, which was the wrong "
+         "one to copy for town data."),
         ("Schema",
          "Every Fact tab ends with Source_ID and Confidence. Fiscal_Year_ID is FY####. "
-         "Entity_ID separates the two governments: ORG_HILLSBOROUGH and your ORG_OC."),
+         "Organization_ID separates the two governments: ORG_HB and ORG_OC — your own IDs."),
         ("Confidence", "High = an official published document. Medium = derived by this project "
                        "from official figures. Working = imported from an analysis workbook. "
                        "Pending = awaiting a source."),
@@ -150,7 +160,7 @@ def main() -> None:
         scan = d.get("text_layer") == "scan"
         src_rows.append([
             d["id"],
-            "ORG_OC" if "Orange" in (d.get("jurisdiction") or "") else "ORG_HILLSBOROUGH",
+            "ORG_OC" if "Orange" in (d.get("jurisdiction") or "") else "ORG_HB",
             d["filename"],
             fy(d.get("fiscal_year")) if d.get("fiscal_year") else "",
             (d.get("category") or d.get("format") or "").title(),
@@ -160,7 +170,7 @@ def main() -> None:
             (d.get("sha256") or "")[:16] + "…" if d.get("sha256") else "",
         ])
     add("Source_Register",
-        ["Source_ID", "Entity_ID", "Document", "Fiscal_Year", "Document_Type",
+        ["Source_ID", "Organization_ID", "Document", "Fiscal_Year", "Document_Type",
          "ACFR Page / Section", "Use in Model", "Confidence", "SHA-256 (first 16)"],
         src_rows, "Every source document, fingerprinted",
         note="A figure is only published if it traces to a row here. Scans are excluded because "
@@ -168,9 +178,9 @@ def main() -> None:
 
     # ---- Data_Dictionary -----------------------------------------------------
     add("Data_Dictionary", ["Table", "Field", "Definition", "Example", "Notes"], [
-        ["All Fact Tables", "Entity_ID", "Permanent ID for the government", "ORG_HILLSBOROUGH",
-         "ORG_OC is Orange County, as in your workbook"],
-        ["All Fact Tables", "Fiscal_Year_ID", "Fiscal year of the fact", "FY2027",
+        ["All Fact Tables", "Organization_ID", "Permanent ID for the government", "ORG_HB",
+         "Matches your Hillsborough database. ORG_OC is Orange County."],
+        ["All Fact Tables", "Fiscal_Year_ID", "Fiscal year of the fact", "FY27",
          "June 30 year-end"],
         ["All Fact Tables", "Scenario", "Actual, Budget, Estimate, Projected, Recommended",
          "Budget", "Finer than Actual/Budget alone — the town publishes four bases"],
@@ -187,11 +197,11 @@ def main() -> None:
     ], "Field conventions, matching your v2.2 Data_Dictionary")
 
     # ---- Permanent_IDs -------------------------------------------------------
-    perm = [["ORG_HILLSBOROUGH", "Organization", "Town of Hillsborough", "", "Municipal government"],
+    perm = [["ORG_HB", "Organization", "Town of Hillsborough", "", "Primary organization"],
             ["ORG_OC", "Organization", "Orange County", "", "County government (your ID)"]]
-    for f, name, parent in [("FUND_GF", "General Fund", "ORG_HILLSBOROUGH"),
-                            ("FUND_WS", "Water & Sewer Fund", "ORG_HILLSBOROUGH"),
-                            ("FUND_SW", "Stormwater Fund", "ORG_HILLSBOROUGH")]:
+    for f, name, parent in [("FUND_GF", "General Fund", "ORG_HB"),
+                            ("FUND_WS", "Water & Sewer Fund", "ORG_HB"),
+                            ("FUND_SW", "Stormwater Fund", "ORG_HB")]:
         perm.append([f, "Fund", name, parent,
                      "Enterprise fund — paid by users, not taxes"
                      if f != "FUND_GF" else "Chief operating fund"])
@@ -228,9 +238,9 @@ def main() -> None:
 
     # ---- 1.0 the published figures ------------------------------------------
     add("1.0 Fact_Published_Figures",
-        ["Entity_ID", "Fiscal_Year_ID", "Metric", "Value", "Unit", "Scenario",
+        ["Organization_ID", "Fiscal_Year_ID", "Metric", "Value", "Unit", "Scenario",
          "Source_ID", "Source_Page", "Extraction", "Confidence"],
-        [["ORG_OC" if f["metric"].startswith("county_") else "ORG_HILLSBOROUGH",
+        [["ORG_OC" if f["metric"].startswith("county_") else "ORG_HB",
           fy(f.get("fiscal_year")), f["metric"], f.get("value"), f.get("unit"),
           (f.get("basis") or "").title(), f.get("source_doc"), f.get("source_page"),
           f.get("extraction"),
@@ -275,10 +285,10 @@ def main() -> None:
     # ---- 4.0 capital projects ------------------------------------------------
     proj = ds("projects")
     add("4.0 Fact_Capital_Projects",
-        ["Project_ID", "Project", "Entity_ID", "Fund", "Department", "Priority_Rank",
+        ["Project_ID", "Project", "Organization_ID", "Fund", "Department", "Priority_Rank",
          "Plan_Window", "Total_Planned_Cost", "Creates_Recurring_Cost",
          "Recurring_Portion", "Funding_Unnamed", "Source_ID", "Source_Page", "Confidence"],
-        [[p["project_id"], p["project_name"], "ORG_HILLSBOROUGH", p.get("fund"),
+        [[p["project_id"], p["project_name"], "ORG_HB", p.get("fund"),
           p.get("department"), p.get("priority_rank"), p.get("plan_window"),
           p.get("total_planned_cost"), p.get("creates_recurring_cost"),
           (p.get("operating_budget_impact_quantified") or {}).get("recurring_portion"),
