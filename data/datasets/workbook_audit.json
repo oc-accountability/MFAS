@@ -1,0 +1,1753 @@
+{
+  "generated_by": "etl/s102_workbook_audit.py",
+  "requested_by": "Amy — \"I have so many excel files that we were WIP and never completed. I don't have a log to know what the purpose of each file is... It will take me so much time to review each file and sort out what to keep and build on.\"",
+  "method": "Each workbook is opened and described — sheets, row counts, which government it covers, which fiscal years it mentions, and whether it carries Source_ID/Confidence columns. Files are ordered by their Google Drive modifiedTime, which is when the work was done; the filesystem date on an export is just the export date and tells you nothing.",
+  "how_supersession_is_decided": "Within a family, the most recently authored file is CURRENT and the rest are history. Nothing is deleted: a superseded workbook is the record of how the thinking developed, which her own Design Manual asks to keep.",
+  "summary": {
+    "workbooks_catalogued": 20,
+    "in_amys_drive_folder": 16,
+    "held_in_this_archive": 11,
+    "awaiting_export": [
+      "Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx",
+      "Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx",
+      "Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx",
+      "Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx",
+      "Hillsborough_Municipal_Financial_Database_v1.xlsx",
+      "Municipal Finance Database - Hillsborough - v1.0.xlsx",
+      "Municipal Financial Analysis - Hillsborough - v1.0.xlsx",
+      "Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "Municipal Finance Project Design Manual v1.0.xlsx"
+    ],
+    "families": 5,
+    "authoring_span": [
+      "2026-06-18",
+      null
+    ]
+  },
+  "families": {
+    "GF Trend Schedules": {
+      "description": "Historical General Fund trend schedules for Hillsborough, FY18-FY27.",
+      "workbooks": 5,
+      "first_authored": "2026-06-18",
+      "latest_authored": "2026-07-07",
+      "build_on": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "superseded": [
+        "Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx",
+        "Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx",
+        "Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx",
+        "Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx"
+      ],
+      "same_session_ambiguity": []
+    },
+    "Hillsborough database": {
+      "description": "The Hillsborough municipal finance database — the schema Amy named.",
+      "workbooks": 4,
+      "first_authored": "2026-07-07",
+      "latest_authored": "2026-07-07",
+      "build_on": "Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "superseded": [
+        "Hillsborough_Municipal_Financial_Database_v1.xlsx",
+        "Municipal Finance Database - Hillsborough - v1.0.xlsx"
+      ],
+      "same_session_ambiguity": [
+        "Municipal Financial Analysis - Hillsborough - v1.0.xlsx"
+      ]
+    },
+    "Orange County database": {
+      "description": "The Orange County line, which evolved into the v2.2 Foundation.",
+      "workbooks": 5,
+      "first_authored": "2026-07-08",
+      "latest_authored": "2026-07-26",
+      "build_on": "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "superseded": [
+        "Orange_County_Municipal_Finance_Database_v1.0.xlsx",
+        "Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
+        "Orange_County_Municipal_Finance_Database_v1.1.xlsx",
+        "Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx"
+      ],
+      "same_session_ambiguity": []
+    },
+    "Risk model": {
+      "description": "Workbook B — the fiscal sustainability risk model. Not a version of anything else.",
+      "workbooks": 1,
+      "first_authored": "2026-06-25",
+      "latest_authored": "2026-06-25",
+      "build_on": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
+      "superseded": [],
+      "same_session_ambiguity": []
+    },
+    "Design manual": {
+      "description": "The project's own design manual: objectives, conventions, version history, open issues and the full Finance Director data request.",
+      "workbooks": 1,
+      "first_authored": "2026-07-07",
+      "latest_authored": "2026-07-07",
+      "build_on": "Municipal Finance Project Design Manual v1.0.xlsx",
+      "superseded": [],
+      "same_session_ambiguity": []
+    }
+  },
+  "workbooks": [
+    {
+      "workbook": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx",
+      "authored": "2026-06-18",
+      "authored_utc": "2026-06-18T21:11:05Z",
+      "drive_size_bytes": 66893,
+      "held_locally": false,
+      "family": "GF Trend Schedules",
+      "family_description": "Historical General Fund trend schedules for Hillsborough, FY18-FY27.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "superseded by Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx",
+      "authored": "2026-06-18",
+      "authored_utc": "2026-06-18T21:11:11Z",
+      "drive_size_bytes": 45498,
+      "held_locally": false,
+      "family": "GF Trend Schedules",
+      "family_description": "Historical General Fund trend schedules for Hillsborough, FY18-FY27.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "superseded by Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx",
+      "authored": "2026-06-18",
+      "authored_utc": "2026-06-18T21:11:14Z",
+      "drive_size_bytes": 27863,
+      "held_locally": false,
+      "family": "GF Trend Schedules",
+      "family_description": "Historical General Fund trend schedules for Hillsborough, FY18-FY27.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "superseded by Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
+      "authored": "2026-06-25",
+      "authored_utc": "2026-06-25T12:37:03Z",
+      "drive_size_bytes": 524304,
+      "held_locally": true,
+      "family": "Risk model",
+      "family_description": "Workbook B — the fiscal sustainability risk model. Not a version of anything else.",
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "rows": 68,
+          "cols": 1
+        },
+        {
+          "name": "0 Executive Dashboard",
+          "rows": 17,
+          "cols": 15
+        },
+        {
+          "name": "1 Budget Waterfall",
+          "rows": 13,
+          "cols": 15
+        },
+        {
+          "name": "2 Policy Shifts",
+          "rows": 9,
+          "cols": 15
+        },
+        {
+          "name": "3 Structural Health",
+          "rows": 15,
+          "cols": 15
+        },
+        {
+          "name": "4 Cost Allocation Stress",
+          "rows": 20,
+          "cols": 15
+        },
+        {
+          "name": "5 Personnel Exposure",
+          "rows": 26,
+          "cols": 15
+        },
+        {
+          "name": "6 Fire Station Bridge",
+          "rows": 13,
+          "cols": 15
+        },
+        {
+          "name": "7 Ridgewalk Bridge",
+          "rows": 9,
+          "cols": 15
+        },
+        {
+          "name": "8 Rail Station Bridge",
+          "rows": 9,
+          "cols": 15
+        },
+        {
+          "name": "9 Affordable Housing Bridge",
+          "rows": 13,
+          "cols": 15
+        },
+        {
+          "name": "10 Vehicle Replacement",
+          "rows": 10,
+          "cols": 15
+        },
+        {
+          "name": "11 Debt Service Build-up",
+          "rows": 15,
+          "cols": 15
+        },
+        {
+          "name": "12 Tax Equivalent Exposure",
+          "rows": 11,
+          "cols": 15
+        },
+        {
+          "name": "13 FY29 Fiscal Cliff",
+          "rows": 10,
+          "cols": 15
+        },
+        {
+          "name": "14 Base Case",
+          "rows": 21,
+          "cols": 15
+        },
+        {
+          "name": "15 Optimistic Case",
+          "rows": 21,
+          "cols": 15
+        },
+        {
+          "name": "16 Conservative Case",
+          "rows": 21,
+          "cols": 15
+        },
+        {
+          "name": "17 Questions for Management",
+          "rows": 10,
+          "cols": 15
+        },
+        {
+          "name": "18 Sources & Assumptions",
+          "rows": 11,
+          "cols": 15
+        }
+      ],
+      "rows_total": 342,
+      "years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026,
+        2027,
+        2028,
+        2029,
+        2030,
+        2031,
+        2032,
+        2033,
+        2034,
+        2035
+      ],
+      "entities": [
+        "Hillsborough"
+      ],
+      "has_source_ids": false,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 20,
+      "status": "CURRENT in its family",
+      "recommendation": "Build on this one"
+    },
+    {
+      "workbook": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx",
+      "authored": "2026-06-25",
+      "authored_utc": "2026-06-25T12:37:25Z",
+      "drive_size_bytes": 96637,
+      "held_locally": false,
+      "family": "GF Trend Schedules",
+      "family_description": "Historical General Fund trend schedules for Hillsborough, FY18-FY27.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "superseded by Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "authored": "2026-07-07",
+      "authored_utc": "2026-07-07T19:29:04Z",
+      "drive_size_bytes": 82308,
+      "held_locally": true,
+      "family": "GF Trend Schedules",
+      "family_description": "Historical General Fund trend schedules for Hillsborough, FY18-FY27.",
+      "sheets": [
+        {
+          "name": "README",
+          "rows": 10,
+          "cols": 2
+        },
+        {
+          "name": "Sheet1",
+          "rows": 455,
+          "cols": 11
+        },
+        {
+          "name": "Dashboard",
+          "rows": 23,
+          "cols": 25
+        },
+        {
+          "name": "Exp_Functional_FY18_FY27",
+          "rows": 14,
+          "cols": 26
+        },
+        {
+          "name": "Budget_Categories_FY26_FY27",
+          "rows": 11,
+          "cols": 26
+        },
+        {
+          "name": "GF_By_Type_FY26_FY27",
+          "rows": 6,
+          "cols": 26
+        },
+        {
+          "name": "Revenue_Trend",
+          "rows": 14,
+          "cols": 26
+        },
+        {
+          "name": "Material_Change_Drivers",
+          "rows": 16,
+          "cols": 26
+        },
+        {
+          "name": "Staffing_Payroll",
+          "rows": 21,
+          "cols": 26
+        },
+        {
+          "name": "Sources_Assumptions",
+          "rows": 17,
+          "cols": 26
+        },
+        {
+          "name": "Q&A_Summary",
+          "rows": 11,
+          "cols": 3
+        },
+        {
+          "name": "Revenue_Forecast_FY26_FY29",
+          "rows": 20,
+          "cols": 9
+        },
+        {
+          "name": "Sales_Tax_Detail",
+          "rows": 13,
+          "cols": 5
+        },
+        {
+          "name": "Functional_Recon_Gap",
+          "rows": 3,
+          "cols": 6
+        },
+        {
+          "name": "Category_Type_Recon",
+          "rows": 11,
+          "cols": 9
+        },
+        {
+          "name": "Transfers_Debt_Capital_Gaps",
+          "rows": 8,
+          "cols": 6
+        },
+        {
+          "name": "Debt_Service_Trend",
+          "rows": 11,
+          "cols": 7
+        },
+        {
+          "name": "Affordable_Housing_Detail",
+          "rows": 11,
+          "cols": 7
+        },
+        {
+          "name": "Function_Descriptions",
+          "rows": 11,
+          "cols": 4
+        },
+        {
+          "name": "Cost_Allocation_Risk",
+          "rows": 7,
+          "cols": 5
+        },
+        {
+          "name": "GF_Gross_to_Net_Bridge",
+          "rows": 13,
+          "cols": 11
+        },
+        {
+          "name": "Affordable_Housing_Rampup",
+          "rows": 16,
+          "cols": 10
+        },
+        {
+          "name": "Debt_Growth_Drivers",
+          "rows": 10,
+          "cols": 8
+        },
+        {
+          "name": "Capital_Project_Bridges",
+          "rows": 29,
+          "cols": 10
+        },
+        {
+          "name": "v4_Sources_Assumptions",
+          "rows": 9,
+          "cols": 3
+        },
+        {
+          "name": "Model_Integrity",
+          "rows": 6,
+          "cols": 3
+        },
+        {
+          "name": "Questions_for_Town",
+          "rows": 5,
+          "cols": 2
+        }
+      ],
+      "rows_total": 781,
+      "years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026,
+        2027,
+        2028,
+        2029,
+        2030,
+        2032,
+        2035
+      ],
+      "entities": [
+        "Hillsborough"
+      ],
+      "has_source_ids": false,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 27,
+      "status": "CURRENT in its family",
+      "recommendation": "Build on this one"
+    },
+    {
+      "workbook": "Hillsborough_Municipal_Financial_Database_v1.xlsx",
+      "authored": "2026-07-07",
+      "authored_utc": "2026-07-07T20:17:56Z",
+      "drive_size_bytes": 27300,
+      "held_locally": false,
+      "family": "Hillsborough database",
+      "family_description": "The Hillsborough municipal finance database — the schema Amy named.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "superseded by Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Municipal Finance Database - Hillsborough - v1.0.xlsx",
+      "authored": "2026-07-07",
+      "authored_utc": "2026-07-07T20:25:44Z",
+      "drive_size_bytes": 60575,
+      "held_locally": false,
+      "family": "Hillsborough database",
+      "family_description": "The Hillsborough municipal finance database — the schema Amy named.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "superseded by Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Municipal Financial Analysis - Hillsborough - v1.0.xlsx",
+      "authored": "2026-07-07",
+      "authored_utc": "2026-07-07T21:10:28Z",
+      "drive_size_bytes": 29267,
+      "held_locally": false,
+      "family": "Hillsborough database",
+      "family_description": "The Hillsborough municipal finance database — the schema Amy named.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "same working session as Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx (0 min apart)",
+      "recommendation": "Ordering is NOT evidence here — Amy should say which of these she intended to keep",
+      "same_session_as_head": true
+    },
+    {
+      "workbook": "Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "authored": "2026-07-07",
+      "authored_utc": "2026-07-07T21:11:01Z",
+      "drive_size_bytes": 74205,
+      "held_locally": false,
+      "family": "Hillsborough database",
+      "family_description": "The Hillsborough municipal finance database — the schema Amy named.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "CURRENT in its family",
+      "recommendation": "Build on this one"
+    },
+    {
+      "workbook": "Municipal Finance Project Design Manual v1.0.xlsx",
+      "authored": "2026-07-07",
+      "authored_utc": "2026-07-07T23:38:53Z",
+      "drive_size_bytes": 19923,
+      "held_locally": false,
+      "family": "Design manual",
+      "family_description": "The project's own design manual: objectives, conventions, version history, open issues and the full Finance Director data request.",
+      "sheets": [],
+      "sheet_count": null,
+      "rows_total": null,
+      "years": [],
+      "entities": [],
+      "has_source_ids": null,
+      "has_confidence": null,
+      "note": "In Amy's Drive folder but not in this archive — needs an export before it can be catalogued in full.",
+      "status": "CURRENT in its family",
+      "recommendation": "Build on this one"
+    },
+    {
+      "workbook": "Orange_County_Municipal_Finance_Database_v1.0.xlsx",
+      "authored": "2026-07-08",
+      "authored_utc": "2026-07-08T13:41:01Z",
+      "drive_size_bytes": 57333,
+      "held_locally": true,
+      "family": "Orange County database",
+      "family_description": "The Orange County line, which evolved into the v2.2 Foundation.",
+      "sheets": [
+        {
+          "name": "README",
+          "rows": 5,
+          "cols": 2
+        },
+        {
+          "name": "Source_Register",
+          "rows": 6,
+          "cols": 9
+        },
+        {
+          "name": "Data_Dictionary",
+          "rows": 9,
+          "cols": 5
+        },
+        {
+          "name": "Permanent_IDs",
+          "rows": 36,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fiscal_Year",
+          "rows": 4,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fund",
+          "rows": 9,
+          "cols": 6
+        },
+        {
+          "name": "Fact_Net_Position_2025",
+          "rows": 14,
+          "cols": 12
+        },
+        {
+          "name": "Fact_Activities_2025",
+          "rows": 15,
+          "cols": 13
+        },
+        {
+          "name": "Fact_GF_BudgetActual_2025",
+          "rows": 25,
+          "cols": 14
+        },
+        {
+          "name": "Fact_Gov_Funds_Balance",
+          "rows": 10,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Gov_Funds_Change",
+          "rows": 10,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Fund_Balance_2025",
+          "rows": 12,
+          "cols": 13
+        },
+        {
+          "name": "Fact_Debt_Capital_2025",
+          "rows": 14,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Enterprise_Funds_2025",
+          "rows": 14,
+          "cols": 12
+        },
+        {
+          "name": "Fact_FY26_Outlook",
+          "rows": 13,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Schools_2025",
+          "rows": 7,
+          "cols": 11
+        },
+        {
+          "name": "Data_Quality_Gaps",
+          "rows": 9,
+          "cols": 6
+        },
+        {
+          "name": "Change_Log",
+          "rows": 1,
+          "cols": 4
+        },
+        {
+          "name": "Index",
+          "rows": 6,
+          "cols": 3
+        }
+      ],
+      "rows_total": 219,
+      "years": [
+        2016,
+        2018,
+        2024,
+        2025,
+        2026,
+        2027
+      ],
+      "entities": [
+        "Hillsborough",
+        "Orange County"
+      ],
+      "has_source_ids": true,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 19,
+      "status": "superseded by Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
+      "authored": "2026-07-08",
+      "authored_utc": "2026-07-08T16:02:56Z",
+      "drive_size_bytes": 95789,
+      "held_locally": true,
+      "family": "Orange County database",
+      "family_description": "The Orange County line, which evolved into the v2.2 Foundation.",
+      "sheets": [
+        {
+          "name": "README",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Source_Register",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Data_Dictionary",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Permanent_IDs",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Dim_Fiscal_Year",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Dim_Fund",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Net_Position_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Activities_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_GF_BudgetActual_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Gov_Funds_Balance",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Gov_Funds_Change",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Fund_Balance_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Debt_Capital_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Enterprise_Funds_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_FY26_Outlook",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Schools_2025",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Data_Quality_Gaps",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Change_Log",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Index",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Architecture_Roadmap",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Financial_Statement_Map",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Deferred_Ideas",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Source_Catalog",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Project_Philosophy",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Design_Requirements",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_GF_BudgetActual_Hist",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_GF_Summary_Hist",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Revenue_GF_Hist",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Fact_Expense_GF_Hist",
+          "rows": 0,
+          "cols": 0
+        },
+        {
+          "name": "Review_Dashboard_v1.2",
+          "rows": 0,
+          "cols": 0
+        }
+      ],
+      "rows_total": 0,
+      "years": [],
+      "entities": [
+        "Orange County"
+      ],
+      "has_source_ids": true,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 30,
+      "status": "superseded by Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Orange_County_Municipal_Finance_Database_v1.1.xlsx",
+      "authored": "2026-07-08",
+      "authored_utc": "2026-07-08T17:09:36Z",
+      "drive_size_bytes": 67896,
+      "held_locally": true,
+      "family": "Orange County database",
+      "family_description": "The Orange County line, which evolved into the v2.2 Foundation.",
+      "sheets": [
+        {
+          "name": "README",
+          "rows": 7,
+          "cols": 2
+        },
+        {
+          "name": "Source_Register",
+          "rows": 6,
+          "cols": 9
+        },
+        {
+          "name": "Data_Dictionary",
+          "rows": 9,
+          "cols": 5
+        },
+        {
+          "name": "Permanent_IDs",
+          "rows": 36,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fiscal_Year",
+          "rows": 4,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fund",
+          "rows": 9,
+          "cols": 6
+        },
+        {
+          "name": "Fact_Net_Position_2025",
+          "rows": 14,
+          "cols": 12
+        },
+        {
+          "name": "Fact_Activities_2025",
+          "rows": 15,
+          "cols": 13
+        },
+        {
+          "name": "Fact_GF_BudgetActual_2025",
+          "rows": 25,
+          "cols": 14
+        },
+        {
+          "name": "Fact_Gov_Funds_Balance",
+          "rows": 10,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Gov_Funds_Change",
+          "rows": 10,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Fund_Balance_2025",
+          "rows": 12,
+          "cols": 13
+        },
+        {
+          "name": "Fact_Debt_Capital_2025",
+          "rows": 14,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Enterprise_Funds_2025",
+          "rows": 14,
+          "cols": 12
+        },
+        {
+          "name": "Fact_FY26_Outlook",
+          "rows": 13,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Schools_2025",
+          "rows": 7,
+          "cols": 11
+        },
+        {
+          "name": "Data_Quality_Gaps",
+          "rows": 9,
+          "cols": 6
+        },
+        {
+          "name": "Change_Log",
+          "rows": 2,
+          "cols": 4
+        },
+        {
+          "name": "Index",
+          "rows": 10,
+          "cols": 3
+        },
+        {
+          "name": "Architecture_Roadmap",
+          "rows": 5,
+          "cols": 8
+        },
+        {
+          "name": "Financial_Statement_Map",
+          "rows": 11,
+          "cols": 7
+        },
+        {
+          "name": "Deferred_Ideas",
+          "rows": 8,
+          "cols": 7
+        }
+      ],
+      "rows_total": 250,
+      "years": [
+        2016,
+        2018,
+        2024,
+        2025,
+        2026,
+        2027
+      ],
+      "entities": [
+        "Hillsborough",
+        "Orange County"
+      ],
+      "has_source_ids": true,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 22,
+      "status": "superseded by Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
+      "authored": "2026-07-14",
+      "authored_utc": "2026-07-14T22:10:06Z",
+      "drive_size_bytes": 112197,
+      "held_locally": true,
+      "family": "Orange County database",
+      "family_description": "The Orange County line, which evolved into the v2.2 Foundation.",
+      "sheets": [
+        {
+          "name": "README",
+          "rows": 7,
+          "cols": 2
+        },
+        {
+          "name": "Document_Control",
+          "rows": 11,
+          "cols": 2
+        },
+        {
+          "name": "Project_Philosophy",
+          "rows": 4,
+          "cols": 2
+        },
+        {
+          "name": "Design_Requirements",
+          "rows": 12,
+          "cols": 4
+        },
+        {
+          "name": "Architecture_Roadmap",
+          "rows": 7,
+          "cols": 8
+        },
+        {
+          "name": "Financial_Statement_Map",
+          "rows": 11,
+          "cols": 7
+        },
+        {
+          "name": "Source_Catalog",
+          "rows": 10,
+          "cols": 7
+        },
+        {
+          "name": "Source_Register",
+          "rows": 7,
+          "cols": 9
+        },
+        {
+          "name": "Data_Dictionary",
+          "rows": 9,
+          "cols": 5
+        },
+        {
+          "name": "Permanent_IDs",
+          "rows": 36,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fiscal_Year",
+          "rows": 11,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fund",
+          "rows": 9,
+          "cols": 6
+        },
+        {
+          "name": "Fact_GF_Summary_Hist",
+          "rows": 17,
+          "cols": 13
+        },
+        {
+          "name": "Fact_GF_BudgetActual_Hist",
+          "rows": 162,
+          "cols": 14
+        },
+        {
+          "name": "Fact_Revenue_GF_Hist",
+          "rows": 61,
+          "cols": 10
+        },
+        {
+          "name": "Fact_Expense_GF_Hist",
+          "rows": 64,
+          "cols": 10
+        },
+        {
+          "name": "Fact_Gov_Funds_Balance",
+          "rows": 10,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Gov_Funds_Change",
+          "rows": 10,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Fund_Balance_2025",
+          "rows": 12,
+          "cols": 13
+        },
+        {
+          "name": "Fact_Net_Position_2025",
+          "rows": 14,
+          "cols": 12
+        },
+        {
+          "name": "Fact_Activities_2025",
+          "rows": 15,
+          "cols": 13
+        },
+        {
+          "name": "Fact_Debt_Capital_2025",
+          "rows": 14,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Enterprise_Funds_2025",
+          "rows": 14,
+          "cols": 12
+        },
+        {
+          "name": "Fact_FY26_Outlook",
+          "rows": 13,
+          "cols": 11
+        },
+        {
+          "name": "Fact_Schools_2025",
+          "rows": 7,
+          "cols": 11
+        },
+        {
+          "name": "Review_Dashboard_v2.0",
+          "rows": 11,
+          "cols": 9
+        },
+        {
+          "name": "Data_Quality_Gaps",
+          "rows": 8,
+          "cols": 6
+        },
+        {
+          "name": "Deferred_Ideas",
+          "rows": 8,
+          "cols": 7
+        },
+        {
+          "name": "Change_Log",
+          "rows": 4,
+          "cols": 4
+        },
+        {
+          "name": "Index",
+          "rows": 16,
+          "cols": 3
+        },
+        {
+          "name": "Fact_GF_BudgetActual_2025",
+          "rows": 25,
+          "cols": 14
+        }
+      ],
+      "rows_total": 619,
+      "years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026,
+        2027
+      ],
+      "entities": [
+        "Hillsborough",
+        "Orange County"
+      ],
+      "has_source_ids": true,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 31,
+      "status": "superseded by Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "recommendation": "Keep as history — do not build on",
+      "same_session_as_head": false
+    },
+    {
+      "workbook": "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "authored": "2026-07-26",
+      "authored_utc": "2026-07-26T21:40:57Z",
+      "drive_size_bytes": 215919,
+      "held_locally": true,
+      "family": "Orange County database",
+      "family_description": "The Orange County line, which evolved into the v2.2 Foundation.",
+      "sheets": [
+        {
+          "name": "README",
+          "rows": 7,
+          "cols": 2
+        },
+        {
+          "name": "Document_Control",
+          "rows": 11,
+          "cols": 2
+        },
+        {
+          "name": "Project_Philosophy",
+          "rows": 4,
+          "cols": 2
+        },
+        {
+          "name": "Design_Requirements",
+          "rows": 12,
+          "cols": 4
+        },
+        {
+          "name": "Architecture_Roadmap",
+          "rows": 7,
+          "cols": 8
+        },
+        {
+          "name": "Financial_Statement_Map",
+          "rows": 11,
+          "cols": 7
+        },
+        {
+          "name": "Source_Catalog",
+          "rows": 10,
+          "cols": 7
+        },
+        {
+          "name": "Source_Register",
+          "rows": 7,
+          "cols": 9
+        },
+        {
+          "name": "Data_Dictionary",
+          "rows": 9,
+          "cols": 5
+        },
+        {
+          "name": "Permanent_IDs",
+          "rows": 36,
+          "cols": 5
+        },
+        {
+          "name": "Dim_Fiscal_Year",
+          "rows": 10,
+          "cols": 10
+        },
+        {
+          "name": "Dim_Fund",
+          "rows": 9,
+          "cols": 6
+        },
+        {
+          "name": "Fact Compilation",
+          "rows": 83,
+          "cols": 14
+        },
+        {
+          "name": "1.0 Fact_GF_Summary_Hist",
+          "rows": 23,
+          "cols": 13
+        },
+        {
+          "name": "2.0 Fact_GF_BudgetActual_Hist",
+          "rows": 188,
+          "cols": 14
+        },
+        {
+          "name": "3.0 Fact_Revenue_GF_Hist",
+          "rows": 79,
+          "cols": 10
+        },
+        {
+          "name": "4.0 Fact_Expense_GF_Hist",
+          "rows": 77,
+          "cols": 10
+        },
+        {
+          "name": "5.0 Fact_Gov_Funds_Balance",
+          "rows": 29,
+          "cols": 11
+        },
+        {
+          "name": "6.0 Fact_Gov_Funds_Change",
+          "rows": 27,
+          "cols": 11
+        },
+        {
+          "name": "7.0 Fact_Fund_Balance_2025",
+          "rows": 32,
+          "cols": 13
+        },
+        {
+          "name": "8.0 Fact_Net_Position_2025",
+          "rows": 37,
+          "cols": 12
+        },
+        {
+          "name": "9. Fact_Activities_2025",
+          "rows": 42,
+          "cols": 13
+        },
+        {
+          "name": "10. Fact_Debt_Capital_2025",
+          "rows": 35,
+          "cols": 11
+        },
+        {
+          "name": "11. Fact_Enterprise_Funds_2025",
+          "rows": 39,
+          "cols": 12
+        },
+        {
+          "name": "12. Fact_FY26_Outlook",
+          "rows": 13,
+          "cols": 11
+        },
+        {
+          "name": "13. Fact_Schools_2025",
+          "rows": 7,
+          "cols": 11
+        },
+        {
+          "name": "Review_Dashboard_v2.0",
+          "rows": 11,
+          "cols": 9
+        },
+        {
+          "name": "Data_Quality_Gaps",
+          "rows": 8,
+          "cols": 6
+        },
+        {
+          "name": "Deferred_Ideas",
+          "rows": 8,
+          "cols": 7
+        },
+        {
+          "name": "Change_Log",
+          "rows": 4,
+          "cols": 4
+        },
+        {
+          "name": "Fact_GF_BudgetActual_2025",
+          "rows": 25,
+          "cols": 14
+        },
+        {
+          "name": "Reading_Order_v2.2",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Index",
+          "rows": 18,
+          "cols": 3
+        },
+        {
+          "name": "FS_Roadmap_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Corp_vs_Gov",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "GF_Walkthrough_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "GF_Bridge_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Fact Index",
+          "rows": 28,
+          "cols": 10
+        },
+        {
+          "name": "Fund_Balance_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Budget_Actual_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "GovWide_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Capital_Debt_FY25",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Stat_Dim_Design",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Glossary_Muni_Fin",
+          "rows": 99,
+          "cols": 26
+        },
+        {
+          "name": "Questions_Discoveries",
+          "rows": 99,
+          "cols": 26
+        }
+      ],
+      "rows_total": 2134,
+      "years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026,
+        2027
+      ],
+      "entities": [
+        "Hillsborough",
+        "Orange County"
+      ],
+      "has_source_ids": true,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 45,
+      "status": "CURRENT in its family",
+      "recommendation": "Build on this one"
+    },
+    {
+      "workbook": "Debt Service Projections.xlsx",
+      "authored": null,
+      "authored_utc": null,
+      "drive_size_bytes": null,
+      "held_locally": true,
+      "note": "In the project archive but NOT in Amy's 'Excel workbooks' folder.",
+      "family": "Unclassified",
+      "family_description": "",
+      "sheets": [
+        {
+          "name": "Debt",
+          "rows": 41,
+          "cols": 25
+        },
+        {
+          "name": "Projected Assumptions",
+          "rows": 25,
+          "cols": 12
+        }
+      ],
+      "rows_total": 66,
+      "years": [
+        2027,
+        2028,
+        2029,
+        2030,
+        2031,
+        2032,
+        2033,
+        2034,
+        2035,
+        2036,
+        2037,
+        2038,
+        2039
+      ],
+      "entities": [],
+      "has_source_ids": false,
+      "has_confidence": false,
+      "error": null,
+      "sheet_count": 2,
+      "status": "unknown — no authoring date",
+      "recommendation": "Catalogue once exported"
+    },
+    {
+      "workbook": "Hillsborough Data Request June 2027.xlsx",
+      "authored": null,
+      "authored_utc": null,
+      "drive_size_bytes": null,
+      "held_locally": true,
+      "note": "In the project archive but NOT in Amy's 'Excel workbooks' folder.",
+      "family": "Unclassified",
+      "family_description": "",
+      "sheets": [
+        {
+          "name": "Request",
+          "rows": 6,
+          "cols": 1
+        },
+        {
+          "name": "1. Staffing & Compensation",
+          "rows": 0,
+          "cols": 1
+        },
+        {
+          "name": "Overview",
+          "rows": 9,
+          "cols": 5
+        },
+        {
+          "name": "Position Counts",
+          "rows": 18,
+          "cols": 18
+        },
+        {
+          "name": "Personnel Costs",
+          "rows": 18,
+          "cols": 6
+        },
+        {
+          "name": "Professional Services",
+          "rows": 13,
+          "cols": 6
+        },
+        {
+          "name": "Major Changes",
+          "rows": 18,
+          "cols": 2
+        },
+        {
+          "name": "2. Utilities",
+          "rows": 0,
+          "cols": 1
+        },
+        {
+          "name": "Utility Summary",
+          "rows": 7,
+          "cols": 5
+        },
+        {
+          "name": "Utility Rates",
+          "rows": 7,
+          "cols": 5
+        },
+        {
+          "name": "Utility Staffing",
+          "rows": 8,
+          "cols": 6
+        },
+        {
+          "name": "Utility Capital Projects",
+          "rows": 8,
+          "cols": 4
+        },
+        {
+          "name": "3. Capital Projects",
+          "rows": 0,
+          "cols": 1
+        },
+        {
+          "name": "Capital Projects Tracker",
+          "rows": 8,
+          "cols": 5
+        },
+        {
+          "name": "Project Cost Changes",
+          "rows": 4,
+          "cols": 4
+        },
+        {
+          "name": "Funding Sources",
+          "rows": 2,
+          "cols": 6
+        },
+        {
+          "name": "4. Debt",
+          "rows": 0,
+          "cols": 1
+        },
+        {
+          "name": "Debt Summary",
+          "rows": 7,
+          "cols": 2
+        },
+        {
+          "name": "Debt Service",
+          "rows": 7,
+          "cols": 4
+        },
+        {
+          "name": "Major Borrowings",
+          "rows": 5,
+          "cols": 4
+        },
+        {
+          "name": "5. Revenue & Taxes",
+          "rows": 0,
+          "cols": 1
+        },
+        {
+          "name": "Tax Rates",
+          "rows": 7,
+          "cols": 2
+        },
+        {
+          "name": "Revenue Source",
+          "rows": 8,
+          "cols": 6
+        },
+        {
+          "name": "6. Affordable Housing",
+          "rows": 0,
+          "cols": 1
+        },
+        {
+          "name": "Affordable Housing",
+          "rows": 8,
+          "cols": 6
+        },
+        {
+          "name": "Affordable Housing Projects",
+          "rows": 5,
+          "cols": 6
+        },
+        {
+          "name": "Committments",
+          "rows": 5,
+          "cols": 4
+        },
+        {
+          "name": "Cost Per Unit",
+          "rows": 4,
+          "cols": 4
+        },
+        {
+          "name": "Housing Policy",
+          "rows": 7,
+          "cols": 3
+        },
+        {
+          "name": "Housing Tax Impact",
+          "rows": 7,
+          "cols": 4
+        }
+      ],
+      "rows_total": 196,
+      "years": [
+        2023,
+        2024,
+        2025,
+        2026,
+        2027,
+        2028
+      ],
+      "entities": [],
+      "has_source_ids": false,
+      "has_confidence": false,
+      "error": null,
+      "sheet_count": 30,
+      "status": "unknown — no authoring date",
+      "recommendation": "Catalogue once exported"
+    },
+    {
+      "workbook": "Issues Log.xlsx",
+      "authored": null,
+      "authored_utc": null,
+      "drive_size_bytes": null,
+      "held_locally": true,
+      "note": "In the project archive but NOT in Amy's 'Excel workbooks' folder.",
+      "family": "Unclassified",
+      "family_description": "",
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "rows": 7,
+          "cols": 6
+        }
+      ],
+      "rows_total": 7,
+      "years": [
+        2027
+      ],
+      "entities": [],
+      "has_source_ids": false,
+      "has_confidence": false,
+      "error": null,
+      "sheet_count": 1,
+      "status": "unknown — no authoring date",
+      "recommendation": "Catalogue once exported"
+    },
+    {
+      "workbook": "OC Design.xlsx",
+      "authored": null,
+      "authored_utc": null,
+      "drive_size_bytes": null,
+      "held_locally": true,
+      "note": "In the project archive but NOT in Amy's 'Excel workbooks' folder.",
+      "family": "Unclassified",
+      "family_description": "",
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "rows": 290,
+          "cols": 1
+        }
+      ],
+      "rows_total": 290,
+      "years": [
+        2025
+      ],
+      "entities": [
+        "Orange County"
+      ],
+      "has_source_ids": false,
+      "has_confidence": false,
+      "error": null,
+      "sheet_count": 1,
+      "status": "unknown — no authoring date",
+      "recommendation": "Catalogue once exported"
+    }
+  ]
+}

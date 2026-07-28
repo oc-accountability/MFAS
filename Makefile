@@ -37,6 +37,7 @@ etl:
 	$(PY) etl/s99_revenue.py
 	$(PY) etl/s100_structure.py
 	$(PY) etl/s98_questions.py
+	$(PY) etl/s102_workbook_audit.py
 	$(PY) etl/s101_workbook.py
 	$(PY) etl/s90_build.py
 
