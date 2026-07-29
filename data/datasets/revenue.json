@@ -2,6 +2,7 @@
   "generated_by": "etl/s99_revenue.py",
   "requested_by": "Amy — \"The broader view includes revenue from sources such as Grants, State, Other Funds, etc. So I want to make sure we have this broader view too.\"",
   "imported_from": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+  "source_doc": "hillsborough-gf-trend-schedules-fy18-fy27-v5-audit-edition",
   "contract": "Her workbook is READ, never written.",
   "why_it_matters": "The site explained what a resident pays and what the town spends in detail, but treated revenue as one total — which implies property tax funds everything. It does not, and a reader who believes it will misjudge every tradeoff on the site.",
   "component_definitions": {

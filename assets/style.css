@@ -5,11 +5,11 @@
    light theme is a first-class toggle (persisted), because some readers need it
    and because these pages get printed.
 
-   Chart colours are the dataviz method's validated palette. BOTH modes were run
-   through the validator against their own surface — dark against #15181e, light
-   against #fcfcfb — because a light step is not a dark step flipped, and the light
-   set failed contrast until it was re-picked. All six checks pass in both, across
-   every pair, not just adjacent ones.
+   Chart colours are checked against their own surface in BOTH modes — dark
+   against #15181e, light against #fcfcfb — because a light step is not a dark
+   step flipped. Every chart colour and every status colour carries a measured
+   WCAG ratio: ≥3:1 for marks, ≥4.5:1 where the colour ever carries text or a
+   glyph. Verify with scripts/validate_palette.js (no dependencies).
 
    One type scale (1.25 ratio). One spacing unit (4px grid). No ad-hoc values.
    No webfont, no CDN: the page must work offline and on GitHub Pages.
@@ -69,7 +69,11 @@
   --good: #0ca30c;
   --warning: #fab219;
   --serious: #ec835a;
-  --critical: #d03b3b;
+  /* Small red TEXT wears this (badge.warn, the timeline's FY2029 label, the
+     unanswered ✕): #d03b3b measured 3.70:1 on this surface, under the 4.5 text
+     floor. #e26565 clears 5.3 and the tinted fills/borders mixed from it stay
+     within family. */
+  --critical: #e26565;
   --success-text: #0ca30c;
 
   --accent: #3987e5;
@@ -104,19 +108,30 @@
      The old light steps failed the contrast check: #1baf7a sat at 2.74:1, under the
      3:1 floor, and it is the colour of the smallest slice on the fund bar — the
      worst place to be faint. Darkening the green alone then broke protan
-     separation from the orange, so both moved together. All six checks now pass
-     across every pair; re-run before changing either:
-       node scripts/validate_palette.js "#2a78d6,#d9541c,#0d8f66" \
-            --mode light --surface "#fcfcfb" --pairs all   */
+     separation from the orange, so both moved together.
+     A CORRECTION on the earlier claim here: only the three series colours were
+     ever validated — --step-early was not, and at #86b6ef it sat at 2.06:1, the
+     same failure class on the dumbbell dots. Every chart colour below now has a
+     measured ratio ≥3:1 against this surface; re-check with:
+       node scripts/validate_palette.js --mode light --surface "#fcfcfb"   */
   --series-1: #2a78d6;
   --series-2: #d9541c;
   --series-3: #0d8f66;
   --pos: #2a78d6;
   --neg: #e34948;
   --mid: #f0efec;
-  --step-early: #86b6ef;
+  --step-early: #4a8ede;   /* 3.29:1 card / 3.12:1 page — was #86b6ef at 2.06:1 */
   --step-late:  #2a78d6;
   --success-text: #006300;
+
+  /* Status colours were never overridden for light, so dark-tuned values landed
+     on near-white: the amber '~' icons sat at 1.79:1 — near-invisible exactly
+     where the page flags something worth watching. All four now clear 4.5:1 on
+     both the card and the page, measured, with the tinted fills mixed from them. */
+  --good: #067806;
+  --warning: #8a6400;
+  --serious: #b3511f;
+  --critical: #bd3232;
 
   --accent: #2a78d6;
   /* The mark blue is 4.08:1 on this page — fine for a bar, a fail for text, and it
@@ -716,7 +731,7 @@ tbody tr:hover { background: var(--surface-2); }
 .timeline li.bad .yr { color: var(--critical); }
 .timeline .yr { font-family: var(--mono); font-size: var(--t-2xs); letter-spacing: .1em;
                 color: var(--accent-text); font-weight: 640; }
-.timeline h4 { margin: var(--s2) 0 var(--s2); font-size: var(--t-base); font-weight: 620;
+.timeline h3 { margin: var(--s2) 0 var(--s2); font-size: var(--t-base); font-weight: 620;
                letter-spacing: -0.01em; }
 .timeline p { margin: 0; font-size: var(--t-sm); color: var(--text-secondary); max-width: 62ch; }
 .timeline .fig { font-variant-numeric: tabular-nums; font-weight: 650; color: var(--text-primary); }
@@ -729,7 +744,11 @@ tbody tr:hover { background: var(--surface-2); }
 .gloss dd { margin: 0; font-size: var(--t-xs); color: var(--text-secondary); line-height: 1.6; }
 
 /* ============================== misc ============================== */
-.src-link { color: var(--text-secondary); border-bottom: 1px solid var(--axis); }
+/* overflow-wrap: filenames like Hillsborough_GF_Trend_Schedules_FY18_FY27_… are
+   one unbreakable token and pushed the page wide on phones the day a citation
+   named one. */
+.src-link { color: var(--text-secondary); border-bottom: 1px solid var(--axis);
+            overflow-wrap: anywhere; }
 .src-link:hover { color: var(--text-primary); text-decoration: none; border-bottom-color: var(--accent); }
 .mono { font-family: var(--mono); font-size: .92em; }
 
@@ -926,11 +945,26 @@ details.more > .inner { margin-top: var(--s5); }
   .spend .row { grid-template-columns: 1fr; gap: 2px var(--s3); }
   .spend .amt { white-space: normal; }
   .spend .accounts li { flex-wrap: wrap; gap: 0 var(--s3); }
+  /* The drivers card's value column inherits nowrap from .rows .v, and at 320px
+     its long cents label ("0.3 cents · $10/yr on your home") painted past the
+     card border. Same fix family as .spend above. */
+  .drivers .rows .v { white-space: normal; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Windows High Contrast / forced-colors strips background-colour paint, which is
+   the entire visible substance of the CSS-drawn marks (the fund bar's segments,
+   the spending bars, the request meter, legend swatches). The adjacent text keeps
+   the data available either way; this keeps the marks themselves visible, in
+   their own validated colours. */
+@media (forced-colors: active) {
+  .ptw span, .spend .bar span, .meter .fill, .swatch, .ptw-legend .sw {
+    forced-color-adjust: none;
+  }
 }
 
 /* ============================== the one-page takeaway ==============================
@@ -943,6 +977,38 @@ details.more > .inner { margin-top: var(--s5); }
   body::before, body::after { display: none; }
   .nav, .tabtoggle, .icon-btn, input[type="range"], .seg { display: none !important; }
   body { background: #fff; color: #000; }
+
+  /* Native File>Print, not just the one-page button. Browsers do not print
+     backgrounds by default, which had two consequences measured on real PDFs:
+     the gradient-clipped headlines (the page title and the reader's own tax
+     figure) printed as BLANK GAPS in both themes, and a reader printing from the
+     default dark theme got near-white token colours on white paper — 23 pages
+     missing their central numbers. Print gets ink-true tokens regardless of the
+     on-screen theme, and the clipped gradients fall back to solid ink. */
+  :root, :root[data-theme="dark"], :root[data-theme="light"] {
+    --page: #fff; --page-2: #fff;
+    --surface-1: #fff; --surface-2: #fff; --surface-3: #f2f2ef;
+    --hairline: rgba(11, 11, 11, 0.16); --hairline-firm: rgba(11, 11, 11, 0.3);
+    --text-primary: #111; --text-secondary: #333; --text-muted: #555;
+    --grid: #ddd; --axis: #bbb;
+    --series-1: #2a78d6; --series-2: #d9541c; --series-3: #0d8f66;
+    --pos: #2a78d6; --neg: #c43331; --mid: #f0efec;
+    --step-early: #4f92e1; --step-late: #2a78d6;
+    --good: #067806; --warning: #8a6400; --serious: #b3511f; --critical: #bd3232;
+    --success-text: #006300;
+    --accent: #2a78d6; --accent-text: #1f66bd;
+    --accent-soft: rgba(42, 120, 214, 0.09); --accent-line: rgba(42, 120, 214, 0.28);
+    --glow: transparent; --shadow: none; --inset: none;
+  }
+  h1 .accent, .hero-figure {
+    background: none;
+    -webkit-text-fill-color: currentColor; color: #111;
+  }
+  /* The CSS-drawn marks ARE their backgrounds; without this they print as empty
+     boxes beside their labels. */
+  .ptw span, .spend .bar span, .meter .fill, .swatch, .ptw-legend .sw {
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
+  }
 
   body.printing-takeaway > *:not(#takeaway) { display: none !important; }
   body.printing-takeaway #takeaway { display: block; }
@@ -983,11 +1049,16 @@ details.more > .inner { margin-top: var(--s5); }
   #takeaway .facts li { font-size: 10pt; margin-bottom: 4pt; }
   #takeaway .srcs { list-style: none; padding: 0; }
   #takeaway .srcs li { font-size: 8.5pt; color: #333; margin-bottom: 2pt; }
+  #takeaway .srcs .pp { color: #333; }
   #takeaway .srcs .fp { font-family: var(--mono); color: #777; }
   #takeaway .foot {
     margin-top: 16pt; padding-top: 8pt; border-top: 0.75pt solid #bbb;
     font-size: 8.5pt; color: #444;
   }
+  /* The address must never wrap: it used to break directly after the real hyphen
+     in "oc-accountability", and pdftotext (like a reader retyping from paper)
+     de-hyphenated it into a hostname that 404s. */
+  #takeaway .site-url { white-space: nowrap; font-weight: 700; }
   @page { margin: 14mm; }
 }
 

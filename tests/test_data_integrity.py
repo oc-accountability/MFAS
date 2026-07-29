@@ -45,11 +45,14 @@ def metrics():
 def test_no_source_documents_are_tracked():
     """Source PDFs/spreadsheets must never be committed.
 
-    Two of them exceed GitHub's hard 100 MB per-file limit, so a stray `git add -f`
-    would produce a repo that cannot be pushed at all.
+    One of them exceeds GitHub's hard 100 MiB per-file limit (a second sits at
+    98 MiB), so a stray `git add -f` would produce a repo that cannot be pushed.
+    check=True and the non-empty assertion matter: a failing or absent git would
+    otherwise return no files and pass this test vacuously.
     """
     out = subprocess.run(["git", "ls-files"], cwd=REPO, capture_output=True,
-                         text=True).stdout.split()
+                         text=True, check=True).stdout.split()
+    assert out, "git ls-files returned nothing — this test cannot see the repo"
     # The ONE permitted spreadsheet is the generated export (stage 101), which Amy asked for
     # so she has everything in her own schema. It is built from the datasets, not a source,
     # and it is small. Everything else with these extensions is a source document and some
@@ -65,7 +68,8 @@ def test_no_source_documents_are_tracked():
 
 def test_no_tracked_file_is_near_the_github_limit():
     out = subprocess.run(["git", "ls-files"], cwd=REPO, capture_output=True,
-                         text=True).stdout.split()
+                         text=True, check=True).stdout.split()
+    assert out, "git ls-files returned nothing — this test cannot see the repo"
     big = []
     for f in out:
         p = REPO / f
@@ -139,6 +143,34 @@ def test_scans_carry_an_extraction_warning(documents):
     assert not bad, f"scanned documents missing extraction_warning: {bad}"
 
 
+# The ten scanned reports, by id. Every scan gate in this file keys off the
+# text_layer labels — and mutation testing showed that relabelling all ten to
+# "digital" turned every gate green with nothing else failing. The labels
+# themselves need an anchor: these ids are stable (they name the documents), so
+# a manifest-regeneration bug that dropped or flipped them fails loudly here
+# instead of shipping.
+KNOWN_SCAN_IDS = {
+    "fiscal-year-2024-2026-strategic-plan-20230626",
+    "annual-comprehensive-financial-report-year-ended-june-30-2018",
+    "annual-comprehensive-financial-report-year-ended-june-30-2019",
+    "annual-comprehensive-financial-report-year-ended-june-30-2020",
+    "annual-comprehensive-financial-report-year-ended-june-30-2021",
+    "annual-financial-report-year-ended-june-30-2022",
+    "annual-financial-report-year-ended-june-30-2023",
+    "annual-financial-report-year-ended-june-30-2024",
+    "annual-financial-report-year-ended-june-30-2025",
+    "comprehensive-annual-financial-report-fy18",
+}
+
+
+def test_the_known_scans_are_still_labelled_as_scans(documents):
+    scans = {d["id"] for d in documents["documents"] if d.get("text_layer") == "scan"}
+    assert scans == KNOWN_SCAN_IDS, (
+        "the set of scan-labelled documents changed — if a scan was replaced by a "
+        f"digital original, update this anchor deliberately. diff: "
+        f"missing={sorted(KNOWN_SCAN_IDS - scans)} extra={sorted(scans - KNOWN_SCAN_IDS)}")
+
+
 # ----------------------------------------------------------- derived datasets
 def test_projection_comparisons_have_at_least_two_readings():
     for c in load("projections.json")["comparisons"]:
@@ -194,19 +226,48 @@ def test_line_items_reconcile_to_the_towns_own_totals(validation):
     Account detail must add up to the category totals the town publishes on its
     own Financial Summary pages. A breakdown that contradicts the summary would
     be worse than no breakdown at all.
+
+    Recomputed from the check rows, not read off the summary: mutation testing
+    showed a check row could be flipped to failing while the stored summary
+    integer stayed 0 and this test stayed green. (The old failure message also
+    filtered on a status string the data never uses.)
     """
-    assert validation["summary"]["unexplained"] == 0, (
-        "unexplained reconciliation failures: "
-        + repr([c for c in validation["checks"] if c["status"] == "UNEXPLAINED"]))
+    failing = [c for c in validation["checks"] if not c["reconciles"]]
+    # Every failing check must be disclosed as such AND flag its slice unverified.
+    for c in failing:
+        assert "unexplained" in c["status"] or "variance" in c["status"], c
+        assert c["verified"] is False, f"a failing check left its slice verified: {c}"
+    assert validation["summary"]["unexplained"] == 0, validation["summary"]
+    assert validation["summary"]["total"] == len(validation["checks"]), (
+        "summary.total does not match the number of check rows")
+    assert validation["summary"]["reconciled"] == sum(
+        1 for c in validation["checks"] if c["reconciles"]), (
+        "summary.reconciled does not match a recount of the check rows")
 
 
 def test_the_headline_year_is_fully_verified(validation):
-    """FY2027 budget is the year the site leads with; it must reconcile outright."""
-    fy27 = [c for c in validation["checks"]
-            if c["fiscal_year"] == 2027 and c["basis"] == "budget"]
-    assert fy27, "no FY2027 budget checks ran"
-    bad = [c for c in fy27 if not c["reconciles"]]
-    assert not bad, f"FY2027 budget does not reconcile: {bad}"
+    """The year the site leads with must reconcile outright.
+
+    Derived, not hardcoded: the year comes from index.json (written by the build
+    from the newest budget-basis line items) — the same field the site reads —
+    so the site and this gate cannot silently lead with different years. The
+    hardcoded 2027 this replaced would have kept testing FY2027 forever while
+    the site auto-advanced.
+    """
+    with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
+        idx = json.load(fh)
+    year = idx["headline_fiscal_year"]
+    assert year, "index.json carries no headline_fiscal_year"
+    li = load("lineitems.json")
+    src_i = li["columns"].index("fiscal_year")
+    basis_i = li["columns"].index("basis")
+    assert year == max(r[src_i] for r in li["rows"] if r[basis_i] == "budget"), (
+        "headline_fiscal_year does not match the newest budget-basis line items")
+    checks = [c for c in validation["checks"]
+              if c["fiscal_year"] == year and c["basis"] == "budget"]
+    assert checks, f"no FY{year} budget checks ran"
+    bad = [c for c in checks if not c["reconciles"]]
+    assert not bad, f"FY{year} budget does not reconcile: {bad}"
 
 
 def test_unverified_slices_are_explicitly_flagged(validation):
@@ -222,8 +283,10 @@ def test_unverified_slices_are_explicitly_flagged(validation):
 
 
 def test_line_items_have_no_null_or_blank_dimensions(lineitems):
+    # Every row — a [:5000] cap here would go silently partial the day the data
+    # grows past it, and 3,636 rows cost milliseconds.
     C = {c: i for i, c in enumerate(lineitems["columns"])}
-    for r in lineitems["rows"][:5000]:
+    for r in lineitems["rows"]:
         assert r[C["value"]] is not None
         for dim in ("fund", "department", "account"):
             assert str(r[C[dim]]).strip(), f"blank {dim} in {r}"
@@ -295,7 +358,14 @@ def test_every_ocr_figure_was_proven_by_its_own_page(ocr_statements):
     page add up exactly to the total printed beside them. Recognition fails by
     altering a digit, and an altered digit breaks that sum — so this check is
     what stands between a scan and a wrong number on a public site.
+
+    The non-empty assertion is what keeps this from passing vacuously: with
+    published=[] the loop never ran, the suite stayed green, and the site's
+    entire audited-record section could silently vanish.
     """
+    assert ocr_statements["published"], (
+        "ocr_statements publishes nothing — the audited record the site renders "
+        "would silently disappear")
     for p in ocr_statements["published"]:
         assert p["extraction"] == "ocr-arithmetic-verified", p
         assert p["component_lines"] >= 2, (
@@ -306,6 +376,8 @@ def test_every_ocr_figure_was_proven_by_its_own_page(ocr_statements):
 def test_ocr_column_roles_are_confirmed_never_assumed(ocr_statements):
     """Charting the wrong column would be a silent, serious error, so a role is
     only recorded when the variance column proves the layout arithmetically."""
+    assert any(d["status"] == "verified" for d in ocr_statements["documents"]), (
+        "no OCR document is verified — the loop below would pass over nothing")
     for doc in ocr_statements["documents"]:
         if doc["status"] != "verified":
             continue
@@ -332,8 +404,128 @@ def test_a_digital_original_always_beats_a_scan():
 def test_index_counts_are_consistent(facts, documents):
     with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
         idx = json.load(fh)
-    assert idx["counts"]["facts"] == len(facts)
-    assert idx["counts"]["documents"] == len(documents["documents"])
+    c = idx["counts"]
+    assert c["facts"] == len(facts)
+    assert c["documents"] == len(documents["documents"])
+    # The scan labels' redundant count is pinned here too — mutation testing
+    # showed nothing else noticed when all ten labels flipped to "digital".
+    assert c["documents_scanned_needing_transcription"] == sum(
+        1 for d in documents["documents"] if d.get("text_layer") == "scan")
+    assert c["documents_with_trustworthy_text"] == sum(
+        1 for d in documents["documents"] if d.get("text_layer") == "digital")
+    assert c["ocr_figures_published"] == len(load("ocr_statements.json")["published"])
+    liv = load("lineitem_validation.json")
+    assert c["reconciliation_checks_total"] == len(liv["checks"])
+    assert c["reconciliation_checks_passed"] == sum(
+        1 for x in liv["checks"] if x["reconciles"])
+
+
+def test_the_cited_documents_count_is_real(documents):
+    """The receipts section shows TWO numbers now — the evidence base and the
+    archive — precisely because one number was doing both jobs. The evidence
+    base must be recomputed here, independently of the build, from the same
+    field rules: a hand-typed or stale count would recreate the original defect.
+    """
+    with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
+        idx = json.load(fh)
+    doc_ids = {d["id"] for d in documents["documents"]}
+    by_filename = {d["filename"]: d["id"] for d in documents["documents"]}
+
+    def ds(name):
+        p = DATASETS / name
+        if not p.exists():
+            return {}
+        with open(p, encoding="utf-8") as fh:
+            return json.load(fh)
+
+    cited = set(f["source_doc"] for f in load("facts.json")["facts"] if f.get("source_doc"))
+    li = ds("lineitems.json")
+    if li:
+        i = li["columns"].index("source_doc")
+        cited |= {r[i] for r in li["rows"]}
+    cited |= {r["source_doc"] for c in ds("projections.json").get("comparisons", [])
+              for r in c["readings"]}
+    cited |= {q["source_doc"] for q in ds("facts_household.json").get("town_statements", [])
+              if q.get("source_doc")}
+    aud = ds("audited_general_fund.json")
+    if aud.get("source_doc"):
+        cited.add(aud["source_doc"])
+    cited |= {p["source_doc"] for p in ds("ocr_statements.json").get("published", [])}
+    proj = ds("projects.json")
+    cited |= {p["source_doc"] for p in proj.get("projects", []) if p.get("source_doc")}
+    if proj.get("source_doc"):
+        cited.add(proj["source_doc"])
+    cited |= {f["source_doc"] for f in ds("tradeoffs.json").get("justification_forms", [])
+              if f.get("source_doc")}
+    cited |= {i for s in ds("transfer_schedule.json").get("schedules", [])
+              for i in s.get("source_docs", [])}
+    req = ds("requests.json")
+    if req.get("request_document"):
+        cited.add(req["request_document"])
+    for single in ("utility_rates.json", "revenue.json", "warehouse_county.json"):
+        v = ds(single).get("source_doc")
+        if v:
+            cited.add(v)
+    cited |= set(ds("workbook_b.json").get("source_docs", []))
+    st = ds("structure.json")
+    sh = st.get("already_shared") or {}
+    if sh.get("source_doc"):
+        cited.add(sh["source_doc"])
+    cited |= set((st.get("run_separately") or {}).get("source_docs", []))
+    cited |= {t["source_doc"] for t in sh.get("what_the_town_records_paying", [])
+              if t.get("source_doc")}
+    cited |= {q["source_doc"] for q in
+              (ds("context.json").get("finance_director_on_debt") or {}).get("quotes", [])
+              if q.get("source_doc")}
+    cited |= {i["source_doc"] for i in ds("issues.json").get("issues", [])
+              if i.get("source_doc")}
+    cited = {c if c in doc_ids else by_filename.get(c, c) for c in cited}
+
+    assert cited <= doc_ids, f"published data cites unknown documents: {sorted(cited - doc_ids)}"
+    assert sorted(cited) == idx["cited_documents"], (
+        "index.json cited_documents does not match an independent recount: "
+        f"missing={sorted(cited - set(idx['cited_documents']))} "
+        f"extra={sorted(set(idx['cited_documents']) - cited)}")
+    assert idx["counts"]["documents_cited"] == len(cited)
+    # Sanity floors: the evidence base can grow, but a collapse to near-nothing
+    # means an extractor broke, not that the site stopped citing documents.
+    assert len(cited) >= 15, f"only {len(cited)} cited documents — an extractor broke?"
+    assert idx["counts"]["documents_cited"] < idx["counts"]["documents"], (
+        "every archived document claims to be cited — that is the original "
+        "misleading state this count exists to prevent")
+
+
+def test_no_published_figure_is_read_from_scan_text_anywhere(documents):
+    """The page-wide zero the credibility card shows. Recomputed here across the
+    same datasets the build counts, so the card's zero is a measured fact about
+    everything published — not, as it once was, a facts.json-only count wearing
+    a page-wide claim."""
+    with open(REPO / "data" / "index.json", encoding="utf-8") as fh:
+        idx = json.load(fh)
+    scans = {d["id"] for d in documents["documents"] if d.get("text_layer") == "scan"}
+    n = 0
+    n += sum(1 for f in load("facts.json")["facts"]
+             if f.get("source_doc") in scans
+             and f.get("extraction") not in ("transcribed", "ocr-arithmetic-verified"))
+    li = load("lineitems.json")
+    i = li["columns"].index("source_doc")
+    n += sum(1 for r in li["rows"] if r[i] in scans)
+    ocr = load("ocr_statements.json")
+    n += sum(1 for p in ocr["published"] if p.get("extraction") != "ocr-arithmetic-verified")
+    aud = load("audited_general_fund.json")
+    if aud.get("source_doc") in scans:
+        n += len(aud.get("rows", []))
+    assert idx["counts"]["figures_read_from_scan_text"] == n
+    assert n == 0, f"{n} published figures trace to a scan's text layer"
+
+
+def test_the_transfer_schedule_carries_its_sources():
+    """The rendered transfer matrix used to name no document at all — nine
+    dollar cells with no provenance, against the one rule."""
+    t = load("transfer_schedule.json")
+    assert t["schedules"], "no transfer schedules published"
+    for s in t["schedules"]:
+        assert s.get("source_docs"), f"schedule FY{s['fiscal_year']} {s['basis']} cites nothing"
 
 
 # ------------------------------------- the imported design warehouse (stage 85)
@@ -343,8 +535,12 @@ def warehouse():
 
 
 def test_imported_rows_keep_the_workbook_authors_schema(warehouse):
-    """Her field names are the contract; renaming them would break the handoff."""
-    for r in warehouse["rows"][:200]:
+    """Her field names are the contract; renaming them would break the handoff.
+
+    All rows: the old [:200] slice left half the warehouse unchecked (396 rows)
+    while the docstring claimed the schema was guarded.
+    """
+    for r in warehouse["rows"]:
         for field in ("Entity_ID", "Fiscal_Year_ID", "Source_ID", "Confidence"):
             assert field in r, f"imported row lost the author's field {field}: {r}"
         assert r["Entity_ID"].startswith("ORG_"), r
@@ -361,9 +557,14 @@ def test_her_figures_are_verified_against_the_pages_she_cited(warehouse):
 
 
 def test_the_pipeline_never_writes_to_her_workbook():
-    """s85 must read the design workbook, never modify it — she edits in Excel."""
+    """s85 must read the design workbook, never modify it — she edits in Excel.
+
+    The ban list matches s96's stricter one: the old list ('wb.save(',
+    '.save(wbp') missed a write through any other variable name, demonstrated
+    by mutation. Bare '.save(' catches every normally-spelled write.
+    """
     src = (REPO / "etl" / "s85_warehouse.py").read_text(encoding="utf-8")
-    for banned in ("wb.save(", ".save(wbp", "openpyxl.Workbook("):
+    for banned in ("wb.save(", ".save(", "openpyxl.Workbook("):
         assert banned not in src, f"s85 must not write to the design workbook ({banned})"
 
 
@@ -465,8 +666,33 @@ def test_water_use_is_a_number_the_reader_controls():
     two-option control."""
     app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
     assert "state.gallons" in app, "water use is no longer a numeric state value"
-    assert "galNum" in app and "galSel" in app, "the custom-entry control is missing"
+    # id= attribute forms, not bare tokens: a comment containing the word would
+    # satisfy a bare-token grep with the control itself deleted.
+    assert 'id="galNum"' in app and 'id="galSel"' in app, "the custom-entry control is missing"
     assert "blockBill" in app, "the bill is no longer computed from the rate structure"
+
+
+def test_the_coming_section_reads_the_deficit_by_year():
+    """Tripwire for the 3.4x understatement: one()/val() pick a single row per
+    metric by document recency and returned FY2026's estimate where the sentence
+    said "by FY2029". The fetch must stay year-addressed."""
+    app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "forYear('general_fund_surplus_deficit', need.fiscal_year)" in app, (
+        "the coming-section deficit is no longer fetched by the year the sentence names")
+    assert "val('general_fund_surplus_deficit')" not in app, (
+        "a year-blind deficit fetch is back — this is how the FY2029 sentence "
+        "silently showed FY2026's figure")
+
+
+def test_artifacts_that_leave_the_page_carry_sender_provenance():
+    """Tripwire: the printed sheet and the copied text must keep consulting the
+    sender-fields state — a shared link's figures used to leave the page in the
+    first person with no provenance at all."""
+    app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "function senderFields()" in app, "the sender-fields helper is gone"
+    assert app.count("senderFields()") >= 4, (
+        "senderFields() is no longer consulted everywhere figures leave the page "
+        "(notice, printed sheet, copied text)")
 
 
 # ---------------------------------------------------------------------------
@@ -663,9 +889,17 @@ def test_the_fy29_cliff_total_equals_its_parts(wbb):
     v = wbb["verification"]
     assert v["fy29_cliff_total_reconciles"] is True, (
         f"parts {v['fy29_cliff_parts_sum']} vs stated {v['fy29_cliff_total_stated']}")
+    # Both operands are stored, so assert the arithmetic — not only the ETL's own
+    # flag about its arithmetic (a bug writing optimistic flags passes flags-only
+    # tests).
+    assert abs(v["fy29_cliff_parts_sum"] - v["fy29_cliff_total_stated"]) < 1.0, v
 
 
 def test_her_penny_assumption_matches_the_towns_published_figure(wbb):
+    # The guard must exist to guard: an ETL rename dropping the key would have
+    # turned this into a loop over nothing, silently.
+    assert any("penny_matches_published" in i for i in wbb["tax_equivalent_exposure"]), (
+        "no tax-equivalent item carries penny_matches_published — the check vanished")
     for item in wbb["tax_equivalent_exposure"]:
         if "penny_matches_published" in item:
             assert item["penny_matches_published"] is True, item
@@ -858,7 +1092,8 @@ def test_the_structural_question_is_posed_and_not_answered(structure):
     assert sep["administration_broad"]["total"] > sep["administration_narrow"]["total"]
     assert sep["administration_narrow"]["excludes"]
     blob = json.dumps(structure).lower()
-    for loaded in ("wasteful", "should be merged", "should consolidate", "bloated"):
+    for loaded in ("wasteful", "should be merged", "should merge", "should consolidate",
+                   "consolidate the", "bloated", "duplicative waste", "waste of money"):
         assert loaded not in blob, f"the dataset editorialises: {loaded!r}"
 
 
@@ -908,7 +1143,13 @@ def test_the_excel_export_keeps_amys_schema():
     openpyxl = pytest.importorskip("openpyxl")
     xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
     if not xl.exists():
-        pytest.skip("export not built yet")
+        # Absence is only acceptable if nothing points readers at the file: the
+        # README links it, so "not built yet" must FAIL rather than skip — a
+        # skipped gate here is exactly how a linked 404 shipped once before.
+        readme = (REPO / "README.md").read_text(encoding="utf-8")
+        assert "MFAS_Data_Warehouse.xlsx" not in readme, (
+            "README links the warehouse export but the file does not exist")
+        pytest.skip("export not built and not referenced")
     # Existing on disk is not the same as being IN the repo. .gitignore carries *.xlsx, so
     # `git add -A` skipped this file silently: the README linked it, this test passed against
     # the local copy, and the published URL 404'd. Check what git actually tracks.
@@ -1000,8 +1241,9 @@ def test_the_site_never_claims_it_lacks_figures_it_publishes(ocr_statements):
     """If the audited series ships, no copy may say it does not."""
     if not ocr_statements["published"]:
         pytest.skip("nothing recovered from scans in this build")
-    text = _site_text().lower()
-    for phrase in ("cannot yet show", "work not yet done", "no longer out of reach"):
+    text = " ".join(_site_text().lower().split())
+    for phrase in ("cannot yet show", "cannot show yet", "cannot show audited",
+                   "work not yet done", "no longer out of reach"):
         assert phrase not in text, (
             f"site copy still says {phrase!r} while ocr_statements.json publishes "
             f"{len(ocr_statements['published'])} recovered figures")
@@ -1023,17 +1265,26 @@ def test_the_site_never_claims_scans_contribute_nothing(ocr_statements):
 
 def test_the_masthead_does_not_overclaim_where_figures_come_from(facts, documents):
     """14 of the published figures come from the initiative's own request workbook,
-    not from a government publication. The page labels them where they appear; the
-    masthead must not contradict that by claiming every figure is a government's."""
+    not from a government publication — and dozens of documents are the county's,
+    not the town's. The page labels both where they appear; the masthead must not
+    contradict that by claiming every figure is the town's.
+
+    The skip encodes BOTH reasons the banned sentence is false: mutation testing
+    showed that recategorising the one records-request document disarmed the old
+    single-condition skip while county documents still made the sentence false.
+    """
     by_id = {d["id"]: d for d in documents["documents"]}
     non_gov = {f["source_doc"] for f in facts
                if by_id.get(f["source_doc"], {}).get("category") in {"records-request", "issues"}}
-    if not non_gov:
-        pytest.skip("every fact currently comes from a government publication")
+    non_town = {f["source_doc"] for f in facts
+                if by_id.get(f["source_doc"], {}).get("jurisdiction")
+                not in (None, "Town of Hillsborough, NC")}
+    if not non_gov and not non_town:
+        pytest.skip("every fact currently comes from a town publication")
     html = (REPO / "index.html").read_text(encoding="utf-8")
     assert "Every figure comes from the town's own published documents" not in html, (
         f"the masthead claims every figure is the town's while {len(non_gov)} source "
-        f"document(s) are the initiative's own")
+        f"document(s) are the initiative's own and {len(non_town)} are not the town's")
 
 
 def test_the_masthead_does_not_promise_a_page_every_figure_lacks(facts):
@@ -1042,11 +1293,22 @@ def test_the_masthead_does_not_promise_a_page_every_figure_lacks(facts):
     "shown with the document and page it came from" was true of the 69 read out of
     PDFs and quietly false of the rest. The claim now carries its own exception, and
     it may only drop that exception if every fact really does carry a page.
+
+    Scope: ALL site copy, not just index.html. The original index.html-only scope
+    let the identical sentence survive in the print takeaway (app.js) — on the one
+    artefact a resident carries to a meeting — and let the meta description
+    reintroduce the claim as a paraphrase in the page's most-syndicated sentence.
+    The banned list carries the paraphrase too. Exact-string pins: a rewording can
+    still evade them, which is why the honest sentences are also derived from data
+    where possible rather than guarded only here.
     """
     pageless = [f["metric"] for f in facts if f.get("source_doc") and not f.get("source_page")]
     if not pageless:
         pytest.skip("every fact carries a page — the unqualified claim would be true")
-    html = (REPO / "index.html").read_text(encoding="utf-8")
-    assert "with the document and page it came from" not in html, (
-        f"the masthead promises a page for every figure while {len(pageless)} have none "
-        f"(e.g. {sorted(set(pageless))[:3]})")
+    text = " ".join(_site_text().split())
+    for phrase in ("with the document and page it came from",
+                   "with the document and page shown for every number",
+                   "document and page shown for every"):
+        assert phrase not in text, (
+            f"site copy promises a page for every figure ({phrase!r}) while "
+            f"{len(pageless)} facts have none (e.g. {sorted(set(pageless))[:3]})")

@@ -55,6 +55,9 @@
   },
   "recurrence_dimension": {
     "why": "Added at Amy's request: 'the financial data needed the added dimension to differentiate ongoing operations from one-time items'. Aligns with her Change Events vocabulary.",
+    "source_docs": [
+      "fy27-budget-and-financial-plan-recommended"
+    ],
     "derivation": "Derived from the town's own expenditure categories, NOT stated by the town. Interfund Transfers are left unclassified because they mix routine subsidy with one-off capital funding and cannot be split without reading each transfer individually.",
     "mapping": {
       "Personnel": {

@@ -4,6 +4,10 @@
     "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
     "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx"
   ],
+  "source_docs": [
+    "hillsborough-gf-trend-schedules-fy18-fy27-v5-audit-edition",
+    "hillsborough-workbook-b-fiscal-sustainability-risk-model"
+  ],
   "arrived": "2026-07-27",
   "contract": "Her workbooks are READ, never written — she edits them in Excel. Every figure with an independently-extracted counterpart here is compared against it, and disagreements are reported rather than resolved in this pipeline's favour.",
   "why_this_matters": "These two workbooks contain the commentary layer and the comparable-unit view that this project had been asked to build. Two independent readings of the same public documents — hers by hand, this pipeline's by parsing — is a real check on both.",

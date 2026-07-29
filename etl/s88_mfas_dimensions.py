@@ -167,6 +167,9 @@ def main() -> None:
             "why": ("Added at Amy's request: 'the financial data needed the added dimension to "
                     "differentiate ongoing operations from one-time items'. Aligns with her "
                     "Change Events vocabulary."),
+            # The documents the classified rows come from, so the site can cite this
+            # split on screen — it renders these figures with no source named.
+            "source_docs": sorted({r[C["source_doc"]] for r in rows}),
             "derivation": ("Derived from the town's own expenditure categories, NOT stated by the "
                           "town. Interfund Transfers are left unclassified because they mix "
                           "routine subsidy with one-off capital funding and cannot be split "

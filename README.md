@@ -48,8 +48,8 @@ updates the live page about a minute later.
 
 19 tabs in the schema of `Orange_County_Municipal_Financial_Information_System_v2.2_Foundation`
 — every Fact tab keyed by `Fiscal_Year_ID` and ending in `Source_ID` + `Confidence`, plus
-`Source_Register` (all 75 documents with their fingerprints), `Data_Quality_Gaps` and the open
-questions register.
+`Source_Register` (the full document manifest with fingerprints), `Data_Quality_Gaps` and the
+open questions register.
 
 ⚠️ **It is generated.** `make etl` rebuilds it from the datasets, so anything typed into it is
 overwritten. It is there to read from and copy out of — the authored workbooks stay authored.
@@ -90,8 +90,8 @@ leave today's page working and make every future number unverifiable.
 You only need this to change something. Three things cannot happen on GitHub:
 
 - **`make etl`** rebuilds `data/` from the source PDFs, and those are deliberately not in the repo
-  (726 MB, two files over GitHub's 100 MB limit). Only a machine with `sources/` populated can
-  regenerate the figures.
+  (879 MB; one file exceeds GitHub's hard 100 MiB limit and a second sits at 98 MiB). Only a
+  machine with `sources/` populated can regenerate the figures.
 - **`make test`** catches a bad figure *before* it is public. This site is about named public
   officials; a wrong number should never reach the live page.
 - **`make serve`** lets you see a change before everyone else does. Pushing to `main` publishes
@@ -101,7 +101,7 @@ You only need this to change something. Three things cannot happen on GitHub:
 make venv       # once: creates .venv and installs etl/requirements.txt
 
 make etl        # rebuild data/ from sources/   (needs the archive unpacked there)
-make test       # 16 integrity gates — must pass before you commit
+make test       # the integrity gates — must pass before you commit
 make serve      # then open http://127.0.0.1:8771/
 ```
 
@@ -154,8 +154,9 @@ Full diagnosis, evidence, and the safe paths to recovering the audited history:
 
 ## Why the source documents are not in this repo
 
-726 MB across 30 documents, and two files exceed GitHub's hard 100 MB per-file limit. Git LFS's free
-tier (1 GB storage, 1 GB bandwidth/month) would not survive public traffic either.
+879 MB across 84 unique documents, and one file exceeds GitHub's hard 100 MiB per-file limit (a
+second sits at 98 MiB). Git LFS's free tier (1 GB storage, 1 GB bandwidth/month) would not survive
+public traffic either.
 
 Instead the repo commits the extracted data plus a **SHA-256 manifest** of every source file, so
 anyone can prove their copy is the one the figures came from. Put the unpacked archive in `sources/`
@@ -199,8 +200,9 @@ the town's scanned reports require applies to them.
   RETIREMENT, UTILITIES, MAINTENANCE - INFRASTRUCTURE, GASOLINE — on five bases including a real
   FY2025 **actual**. This is what powers the spending explorer.
 - **55 of 60** published category totals reconcile against the town's own Financial Summary pages,
-  with **FY2027 budget reconciling 12 of 12**. The five disclosed variances are all in prior-year
-  columns and are flagged unverified in the data and on the page.
+  with **FY2027 budget reconciling 12 of 12**. The five disclosed variances all sit outside the
+  FY2027 budget columns — four in prior-year actual/estimate columns, one in a projected out-year —
+  and are flagged unverified in the data and on the page.
 - **An eight-year audited record, FY2018–FY2025** — what the town actually took in and actually
   spent each year. FY2025 is read from a digital original; FY2018–FY2024 are recovered from scanned
   reports by character recognition and then **proven by their own pages**: a figure is published only
@@ -210,8 +212,8 @@ the town's scanned reports require applies to them.
   $16,761,617 and spent $14,109,365, 15.8% under. Read from the *digital* twin of the FY2025 report,
   so no OCR is involved, and it agrees with the budget document's own figures for the same year
   **to within $1** across two documents and two independent parsers.
-- **76 curated headline figures**, FY2023–FY2029, from **16 digital-text documents**
-  (10 scans pending transcription)
+- **83 curated headline figures**, FY2023–FY2029; the published data as a whole cites
+  **19 of the archive's 84 documents** (the count is computed by the build and pinned by a test)
 - General Fund budget, expenditures, surplus/deficit, and fund balance
 - Property tax rate, and the town's own conversion factor: **one cent on the rate raises $240,000**
 - Water/sewer/stormwater rate changes, affordable-housing and capital-project tax-rate equivalents
@@ -229,12 +231,16 @@ the town's scanned reports require applies to them.
 
 ## Known gaps, stated plainly
 
-- **No county-level data yet.** The initiative is named for Orange County; every document in hand is
-  from the Town of Hillsborough. `jurisdiction` is on every fact so county data can be added without
-  a migration.
-- **No audited multi-year history yet.** It exists only in the scanned reports. FY2019 and FY2020
-  contain "Last Ten Fiscal Years" tables reaching back to FY2011 — a decade of trends — but they must
-  be transcribed from page images, not scraped.
+- **County data is thinner than the town's.** The archive now holds 31 county documents and the
+  site shows the county's tax rates and its audited General Fund summary — but the audited rows
+  come from a curated research workbook, and only the years whose citations resolve to a held
+  report can be re-verified (the rest are published as the workbook's own, and say so). The
+  comparison a reader would most want — county administrative cost beside the town's — is
+  deliberately absent until it can be extracted at the same grain.
+- **The detail beneath the audited summary statements.** The FY2018–FY2024 reports are scans, so
+  only the self-verifying summary totals are published. FY2019 and FY2020 contain "Last Ten Fiscal
+  Years" tables reaching back to FY2011 — a decade of trends — but they must be transcribed from
+  page images, not scraped.
 - **`official_url` is empty for every document.** Filling these in is the highest-value next
   contribution: it points readers at the government's own published record.
 - Tax-rate history before FY2023 is charted in the source documents as images, not tables.

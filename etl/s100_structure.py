@@ -48,6 +48,7 @@ yet. That absence is stated rather than filled with the town's figure alone.
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -84,6 +85,29 @@ def main() -> None:
            if (d.get("fiscal_year") in (2027, "2027", "FY27") or "FY27" in d["filename"]
                or "2026-27" in d["filename"] or "FY2026-27" in d["filename"])
            and d.get("format") == "pdf"]
+
+    # The archive holds the county's FY2026-27 recommended budget TWICE — two
+    # editions whose filenames differ only by an apostrophe artifact ("Manager_s"
+    # vs "Managers", 352 vs 357 pages, same table of contents, long identical
+    # stretches; verified page-by-page). A resident reads ONE of them, so counting
+    # both overstated the burden by ~350 pages — the exact Drive-duplicate trap
+    # the brief warns about, feeding this section's headline number. Editions are
+    # collapsed by normalised title here, keeping the fuller one; the manifest
+    # still lists both, and the collapse is recorded rather than silent.
+    def title_key(d):
+        return re.sub(r"[^a-z0-9]", "", d["filename"].lower().removesuffix(".pdf"))
+
+    editions: dict[str, dict] = {}
+    collapsed = []
+    for d in sorted(cur, key=lambda d: -(d.get("pages") or 0)):
+        k = title_key(d)
+        if k in editions:
+            collapsed.append({"kept": editions[k]["filename"], "dropped": d["filename"],
+                              "dropped_pages": d.get("pages")})
+        else:
+            editions[k] = d
+    cur = sorted(editions.values(), key=lambda d: d["filename"])
+
     by_gov: dict[str, dict] = {}
     for d in cur:
         j = d.get("jurisdiction") or "unstated"
@@ -93,11 +117,13 @@ def main() -> None:
         if len(s["examples"]) < 3:
             s["examples"].append({"filename": d["filename"], "pages": d.get("pages")})
     all_pdf = [d for d in docs if d.get("format") == "pdf"]
+    GOVERNMENTS = {"Town of Hillsborough, NC", "Orange County, NC"}
     burden = {
-        "governments_a_resident_must_read": len([k for k in by_gov if k != "unstated"]),
+        "governments_a_resident_must_read": len([k for k in by_gov if k in GOVERNMENTS]),
         "tax_calculations_to_combine": 2,
         "current_cycle_documents": len(cur),
         "current_cycle_pages": sum(d.get("pages") or 0 for d in cur),
+        "editions_collapsed": collapsed,
         "by_government": by_gov,
         "whole_archive_documents": len(all_pdf),
         "whole_archive_pages": sum(d.get("pages") or 0 for d in all_pdf),
@@ -120,6 +146,9 @@ def main() -> None:
             "provided_for": ["Chapel Hill", "Carrboro", "Hillsborough"],
             "current_fee_pct_of_collections": 0.5,
             "county_fee_study_peer_average_pct": 1.5,
+            # Document AND page: the site cites this block on screen, and a page
+            # number with no document is only half a citation.
+            "source_doc": fee_form.get("source_doc"),
             "source_page": fee_form.get("source_page"),
             "why_this_matters_to_the_question": (
                 "This service is NOT duplicated — one government does it for all three "
@@ -138,7 +167,7 @@ def main() -> None:
     C = {c: i for i, c in enumerate(li["columns"])}
     tax_coll = [{"fiscal_year": r[C["fiscal_year"]], "basis": r[C["basis"]],
                  "amount": r[C["value"]], "department": r[C["department"]],
-                 "source_page": r[C["page"]]}
+                 "source_doc": r[C["source_doc"]], "source_page": r[C["page"]]}
                 for r in li["rows"] if r[C["account"]].strip().upper() == "TAX COLLECTION"]
     if shared and tax_coll:
         shared["what_the_town_records_paying"] = sorted(
@@ -153,9 +182,13 @@ def main() -> None:
     gf = sum(dept.values())
     admin_all = {d: v for d, v in dept.items() if d in ADMIN_DEPARTMENTS}
     admin_core = {d: v for d, v in admin_all.items() if d not in ARGUABLE}
+    admin_docs = sorted({r[C["source_doc"]] for r in li["rows"]
+                         if r[C["fiscal_year"]] == 2027 and r[C["basis"]] == "budget"
+                         and r[C["fund"]] == "General Fund"})
     separate = {
         "government": "Town of Hillsborough",
         "fiscal_year": 2027, "basis": "budget", "fund": "General Fund",
+        "source_docs": admin_docs,
         "general_fund_total": round(gf, 2),
         "administration_broad": {
             "departments": {k: round(v, 2) for k, v in sorted(admin_all.items(),

@@ -106,14 +106,34 @@ def classify_pdf(path: Path) -> dict:
     return info
 
 
+INITIATIVE = "Orange County Efficiency & Accountability Initiative"
+
+
 def jurisdiction_for(name: str, text_sample: str = "") -> str:
-    """Be literal. Every document in the initial drop is Town of Hillsborough
-    even though the initiative is named for Orange County — recording that
-    honestly is what lets the site show the county-level gap."""
+    """Which government a document concerns — or the initiative itself.
+
+    Every archive path begins with the initiative's own folder, whose name contains
+    "Orange County", so matching the raw path made the county test match EVERY
+    document and the rule silently collapsed to "does the path mention
+    Hillsborough". That mislabelled the initiative's own working files (the design
+    manual, the issues log) as county documents. The root is stripped first now,
+    and a document that names neither government — or names both, which only the
+    initiative's own framing documents do — is recorded as the initiative's."""
     blob = f"{name} {text_sample}"
-    if re.search(r"Orange County", blob, re.I) and not re.search(r"Hillsborough", blob, re.I):
+    if blob.startswith(INITIATIVE):
+        blob = blob[len(INITIATIVE):]
+    # The town's response to the initiative's fiscal-trend data request arrived as a
+    # zip whose name (and extracted folder) carries neither government's name. Its
+    # contents are town staff answering about town finances, so it is the town's.
+    if re.search(r"redatarequest", blob, re.I):
+        return "Town of Hillsborough, NC"
+    county = bool(re.search(r"orange[ _]?county|\bOC\b", blob, re.I))
+    town = bool(re.search(r"Hillsborough", blob, re.I))
+    if county and not town:
         return "Orange County, NC"
-    return "Town of Hillsborough, NC"
+    if town and not county:
+        return "Town of Hillsborough, NC"
+    return INITIATIVE
 
 
 def main() -> None:

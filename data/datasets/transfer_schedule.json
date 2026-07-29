@@ -91,7 +91,14 @@
         "Utility Capital Improvements Fund": 636231.0,
         "Unidentified": 2688896.0
       },
-      "total_transferred": 4953436.0
+      "total_transferred": 4953436.0,
+      "source_docs": [
+        "fy27-budget-and-financial-plan-recommended"
+      ],
+      "source_pages": [
+        252,
+        272
+      ]
     },
     {
       "fiscal_year": 2026,
@@ -155,7 +162,14 @@
         "Utility Capital Improvements Fund": 1155600.0,
         "Unidentified": 961539.0
       },
-      "total_transferred": 4204742.0
+      "total_transferred": 4204742.0,
+      "source_docs": [
+        "fy27-budget-and-financial-plan-recommended"
+      ],
+      "source_pages": [
+        252,
+        272
+      ]
     },
     {
       "fiscal_year": 2027,
@@ -219,7 +233,14 @@
         "Utility Capital Improvements Fund": 195540.0,
         "Unidentified": 300000.0
       },
-      "total_transferred": 1827366.0
+      "total_transferred": 1827366.0,
+      "source_docs": [
+        "fy27-budget-and-financial-plan-recommended"
+      ],
+      "source_pages": [
+        252,
+        272
+      ]
     },
     {
       "fiscal_year": 2028,
@@ -283,7 +304,14 @@
         "Utility Capital Improvements Fund": 100000.0,
         "Unidentified": 315000.0
       },
-      "total_transferred": 2066826.0
+      "total_transferred": 2066826.0,
+      "source_docs": [
+        "fy27-budget-and-financial-plan-recommended"
+      ],
+      "source_pages": [
+        252,
+        272
+      ]
     },
     {
       "fiscal_year": 2029,
@@ -347,7 +375,14 @@
         "Utility Capital Improvements Fund": 470000.0,
         "Unidentified": 330000.0
       },
-      "total_transferred": 2401826.0
+      "total_transferred": 2401826.0,
+      "source_docs": [
+        "fy27-budget-and-financial-plan-recommended"
+      ],
+      "source_pages": [
+        252,
+        272
+      ]
     }
   ],
   "unidentified": [

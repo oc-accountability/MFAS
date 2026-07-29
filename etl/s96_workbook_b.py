@@ -40,7 +40,7 @@ from pathlib import Path
 import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASETS, SOURCES, read_json, write_json  # noqa: E402
+from common import DATASETS, SOURCES, doc_id_for_filename, read_json, write_json  # noqa: E402
 
 warnings.filterwarnings("ignore")
 
@@ -93,6 +93,10 @@ def main() -> None:
     for p in (tpath, bpath):
         if not p.exists():
             sys.exit(f"missing {p}")
+    source_docs = [doc_id_for_filename(n) for n in (TRENDS, WB_B)]
+    if not all(source_docs):
+        sys.exit(f"workbook(s) not in documents.json — run s00 first: "
+                 f"{[n for n, i in zip((TRENDS, WB_B), source_docs) if not i]}")
 
     facts = read_json(DATASETS / "facts.json")["facts"]
 
@@ -258,6 +262,9 @@ def main() -> None:
     write_json(DATASETS / "workbook_b.json", {
         "generated_by": "etl/s96_workbook_b.py",
         "imported_from": [TRENDS, WB_B],
+        # Manifest ids for the two workbooks, so the documents these figures trace to
+        # are machine-joinable rather than bare filenames.
+        "source_docs": source_docs,
         "arrived": "2026-07-27",
         "contract": ("Her workbooks are READ, never written — she edits them in Excel. Every "
                      "figure with an independently-extracted counterpart here is compared "

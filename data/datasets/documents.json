@@ -21,7 +21,7 @@
       "sha256": "e43269868eb341b3401df737002c63827ac5c13bb1dc04bdbe6945bc34c73415",
       "category": "issues",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": true
     },
@@ -753,7 +753,7 @@
       "sha256": "c7b6ae4934174283c596bd36240637e6aff5811bde5c6bb5f1edb8b762602f18",
       "category": "financial-report",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "values_extractable": false
     },
@@ -1498,7 +1498,7 @@
       "sha256": "1a917f31b130a27497367f6e6456b0accc4ab62216ab3d4580210651d9befe8b",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": true
     },
@@ -1526,7 +1526,7 @@
       "sha256": "cffc8ba7be2578fa754fd6d506f2e6eafe6e8af1522a5787a730c7097903f57f",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": false
     },
@@ -1540,7 +1540,7 @@
       "sha256": "adc8c4ccfb6ac00be179709e4e0dcdce2b682db2b51db7b78793e1e0861843c3",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "pages": 13,
       "text_layer": "digital",
@@ -1561,7 +1561,7 @@
       "sha256": "42c67c7ff8bd7ed26e87fae125ca05b7fc40010153df1fa58d0c02c885d490eb",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": false
     },
@@ -1575,7 +1575,7 @@
       "sha256": "545f29f4d95ffec5d6619a53069b6935d063e483360e4e125dc82de68bce4201",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": false
     },
@@ -1589,7 +1589,7 @@
       "sha256": "c2ad4c28ca659cc18eca3dd0d44865f3c687c2f145a5024bf10b50c9856f6dd5",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "pages": 18,
       "text_layer": "digital",
@@ -1610,7 +1610,7 @@
       "sha256": "7fc6ceb2b9492b20684a0731c6c65e9aaba5c4c7fd2a15243d46d45a481caae8",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": false
     },
@@ -1624,7 +1624,7 @@
       "sha256": "6071c5d487b22b703066f70536bd4df6a286778295fb21d531b2d0de0365ba9f",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Orange County, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "pages": 19,
       "text_layer": "digital",
@@ -1645,7 +1645,7 @@
       "sha256": "7ff6409f36a3503b133079b309f6bb9ae33e68851d7b9a571721439f25ee788a",
       "category": "other",
       "fiscal_year": null,
-      "jurisdiction": "Town of Hillsborough, NC",
+      "jurisdiction": "Orange County Efficiency & Accountability Initiative",
       "official_url": null,
       "values_extractable": false
     },

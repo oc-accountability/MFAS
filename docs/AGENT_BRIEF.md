@@ -20,9 +20,11 @@ Accountability Initiative.
 A transparency project that gets a figure wrong about a real public official has done more
 harm than not existing. Every other rule here is downstream of that one.
 
-Concretely: **the build fails rather than publishes.** 77 tests gate it, and the important
-ones are not style checks — they refuse to ship a fact from a scanned page, a metric with no
-registered unit, a share computed against a total its parts do not sum to.
+Concretely: **the build fails rather than publishes.** The integrity gates in
+`tests/test_data_integrity.py` enforce it (`make test`; the count grows — do not quote it in
+prose, it drifts), and the important ones are not style checks — they refuse to ship a fact
+from a scanned page, a metric with no registered unit, a share computed against a total its
+parts do not sum to.
 
 ---
 
@@ -128,7 +130,7 @@ She is the domain expert and the author. The pipeline serves her workbooks, not 
 | `docs/WORKBOOK_CATALOGUE.md` | Her 20 workbooks, 5 families, which to build on |
 | `docs/WAREHOUSE_DESIGN.md` | The warehouse proposal and its open questions |
 | `index.html`, `assets/` | The site. Runs entirely in the browser; no server. |
-| `sources/` | Source documents. **Never committed** — two exceed GitHub's 100 MB limit. |
+| `sources/` | Source documents. **Never committed** — one exceeds GitHub's 100 MiB limit and a second sits at 98 MiB. |
 
 **A stage docstring is the real documentation.** They record the reasoning and the failures,
 not just the behaviour. Read the one next to whatever you are changing.

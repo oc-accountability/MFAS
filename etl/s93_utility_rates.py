@@ -90,7 +90,9 @@ def stream(pdf) -> list[dict]:
 
 
 def main() -> None:
-    matches = glob.glob(str(SOURCES / "**" / BUDGET), recursive=True)
+    # sorted(): the archive holds this file at two paths (byte-identical today), and
+    # an unsorted glob makes the pick filesystem-order-dependent.
+    matches = sorted(glob.glob(str(SOURCES / "**" / BUDGET), recursive=True))
     if not matches:
         sys.exit(f"missing {BUDGET}")
     path = matches[0]

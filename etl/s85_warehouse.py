@@ -38,7 +38,7 @@ import openpyxl
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import BUILD, DATASETS, SOURCES, read_json, write_json  # noqa: E402
+from common import BUILD, DATASETS, SOURCES, doc_id_for_filename, read_json, write_json  # noqa: E402
 
 warnings.filterwarnings("ignore")
 
@@ -62,7 +62,8 @@ def newest_workbook() -> Path | None:
     if not d.exists():
         return None
     best, best_key = None, ()
-    for p in d.glob("*.xlsx"):
+    # sorted(): the >= tie-break must not depend on filesystem order.
+    for p in sorted(d.glob("*.xlsx")):
         m = re.search(r"v(\d+)\.(\d+)", p.name)
         key = (int(m.group(1)), int(m.group(2))) if m else (0, 0)
         if key >= best_key:
@@ -236,6 +237,9 @@ def main() -> None:
     write_json(DATASETS / "warehouse_county.json", {
         "generated_by": "etl/s85_warehouse.py",
         "workbook": wbp.name,
+        # Manifest id for the workbook itself — the proximate document every imported
+        # row traces to, machine-joinable rather than a bare filename.
+        "source_doc": doc_id_for_filename(wbp.name),
         "note": ("Imported from the design workbook, which remains the source of truth for these "
                  "figures and is never modified by this pipeline. Amy edits in Excel; the "
                  "pipeline re-reads and re-verifies on the next build."),

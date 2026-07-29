@@ -133,3 +133,19 @@ def write_json(path: Path, obj) -> None:
 def read_json(path: Path):
     with open(path, encoding="utf-8") as fh:
         return json.load(fh)
+
+
+def doc_id_for_filename(filename: str) -> str | None:
+    """Resolve a source filename to its manifest document id.
+
+    The workbook-import stages historically recorded provenance as a bare
+    filename ('imported_from'), which no machine could join back to the
+    manifest — so the documents those figures trace to were invisible to any
+    citation count. Returns None rather than guessing; callers must treat a
+    None as a problem to report, not to swallow.
+    """
+    docs = read_json(DATASETS / "documents.json")["documents"]
+    for d in docs:
+        if d["filename"] == filename:
+            return d["id"]
+    return None

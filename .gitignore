@@ -1,8 +1,8 @@
 # ---------------------------------------------------------------------------
-# Source documents are NOT committed. They are large (726 MB) and two exceed
-# GitHub's 100 MB hard per-file limit. The repo commits *extracted data* plus a
-# hash manifest so any figure can be re-verified against the original.
-# See docs/PROVENANCE.md.
+# Source documents are NOT committed. They are large (879 MB) and one exceeds
+# GitHub's 100 MiB hard per-file limit (a second sits at 98 MiB). The repo
+# commits *extracted data* plus a hash manifest so any figure can be
+# re-verified against the original. See docs/PROVENANCE.md.
 # ---------------------------------------------------------------------------
 sources/
 build/
@@ -10,10 +10,14 @@ build/
 # Never commit source formats directly
 *.pdf
 *.xlsx
-# ...except the ONE generated export (stage 101). `git add -A` silently skips an
-# ignored file, so without this negation the workbook was committed-but-absent: the
-# README linked it, the tests passed against the local copy, and the URL 404'd.
+# ...except the generated exports (stages 101 and 103). `git add -A` silently
+# skips an ignored file, so without these negations a workbook was
+# committed-but-absent once: the README linked it, the tests passed against the
+# local copy, and the URL 404'd. The tab map had been left off this list — it
+# was tracked, so updates staged fine, but a delete-and-regenerate would have
+# recreated the same silent 404.
 !data/exports/MFAS_Data_Warehouse.xlsx
+!data/exports/MFAS_Workbook_Tab_Map.xlsx
 *.xls
 *.docx
 *.zip

@@ -43,7 +43,7 @@ from pathlib import Path
 import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASETS, SOURCES, read_json, write_json  # noqa: E402
+from common import DATASETS, SOURCES, doc_id_for_filename, read_json, write_json  # noqa: E402
 
 warnings.filterwarnings("ignore")
 
@@ -70,6 +70,10 @@ def main() -> None:
     path = SOURCES / WB
     if not path.exists():
         sys.exit(f"missing {path}")
+    source_doc = doc_id_for_filename(Path(WB).name)
+    if not source_doc:
+        sys.exit(f"{Path(WB).name} is not in documents.json — run s00 first; these "
+                 f"figures must trace to a manifest document")
     wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
     ws = wb["Revenue_Trend"]
 
@@ -183,6 +187,9 @@ def main() -> None:
                          "State, Other Funds, etc. So I want to make sure we have this broader "
                          "view too.\""),
         "imported_from": Path(WB).name,
+        # The manifest id, so the workbook these figures trace to is machine-joinable —
+        # a bare filename kept the revenue card's source invisible to any citation count.
+        "source_doc": source_doc,
         "contract": "Her workbook is READ, never written.",
         "why_it_matters": ("The site explained what a resident pays and what the town spends in "
                           "detail, but treated revenue as one total — which implies property tax "

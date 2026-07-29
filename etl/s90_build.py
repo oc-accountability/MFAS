@@ -237,17 +237,123 @@ def main() -> None:
     liv = (read_json(DATASETS / "lineitem_validation.json")
            if (DATASETS / "lineitem_validation.json").exists() else None)
 
+    # ---- which documents does the published data actually cite? ---------------
+    # The receipts section used to say every figure "traces to one of 84 documents
+    # in the archive" — 84 is the archive's size, and 65 of those documents are
+    # cited by nothing the site shows. One number was doing two jobs. This computes
+    # the evidence base — the distinct manifest documents the published datasets
+    # actually cite — so the site can show both numbers and neither can drift:
+    # they are recomputed on every build and pinned by a test.
+    by_filename = {d["filename"]: d["id"] for d in docs_blob["documents"]}
+    scan_ids = {d["id"] for d in docs_blob["documents"] if d.get("text_layer") == "scan"}
+
+    def maybe(name):
+        p = DATASETS / f"{name}.json"
+        return read_json(p) if p.exists() else None
+
+    cited: dict[str, set] = {}          # dataset -> doc ids it cites
+    scan_text_figures = 0               # published values read from a scan's text layer
+
+    cited["facts"] = {f["source_doc"] for f in facts if f.get("source_doc")}
+    scan_text_figures += sum(1 for f in facts
+                             if f.get("source_doc") in scan_ids
+                             and f.get("extraction") not in ("transcribed",
+                                                            "ocr-arithmetic-verified"))
+    if li:
+        src_i = li["columns"].index("source_doc")
+        cited["lineitems"] = {r[src_i] for r in li["rows"]}
+        scan_text_figures += sum(1 for r in li["rows"] if r[src_i] in scan_ids)
+    cited["projections"] = {r["source_doc"] for c in projections for r in c["readings"]}
+
+    hh = maybe("facts_household")
+    if hh:
+        cited["household"] = {q["source_doc"] for q in hh.get("town_statements", [])
+                              if q.get("source_doc")}
+    aud = maybe("audited_general_fund")
+    if aud and aud.get("source_doc"):
+        cited["audited"] = {aud["source_doc"]}
+        if aud["source_doc"] in scan_ids:
+            scan_text_figures += len(aud.get("rows", []))
+    ocr = maybe("ocr_statements")
+    if ocr:
+        cited["ocr_statements"] = {p["source_doc"] for p in ocr.get("published", [])}
+        # A recovered figure is publishable only when re-read from the page IMAGE and
+        # proven by its own arithmetic; anything else here would be text-layer output.
+        scan_text_figures += sum(1 for p in ocr.get("published", [])
+                                 if p.get("extraction") != "ocr-arithmetic-verified")
+    for name, get in [
+        ("projects", lambda d: {p["source_doc"] for p in d.get("projects", [])
+                                if p.get("source_doc")} | ({d["source_doc"]}
+                                                           if d.get("source_doc") else set())),
+        ("tradeoffs", lambda d: {f["source_doc"] for f in d.get("justification_forms", [])
+                                 if f.get("source_doc")}),
+        ("transfer_schedule", lambda d: {i for s in d.get("schedules", [])
+                                         for i in s.get("source_docs", [])}),
+        ("requests", lambda d: {d["request_document"]} if d.get("request_document") else set()),
+        ("utility_rates", lambda d: {d["source_doc"]} if d.get("source_doc") else set()),
+        ("revenue", lambda d: {d["source_doc"]} if d.get("source_doc") else set()),
+        ("workbook_b", lambda d: set(d.get("source_docs", []))),
+        ("warehouse_county", lambda d: {d["source_doc"]} if d.get("source_doc") else set()),
+        ("structure", lambda d: (
+            ({d["already_shared"]["source_doc"]} if (d.get("already_shared") or {}).get("source_doc")
+             else set())
+            | set((d.get("run_separately") or {}).get("source_docs", []))
+            | {t["source_doc"] for t in (d.get("already_shared") or {})
+               .get("what_the_town_records_paying", []) if t.get("source_doc")})),
+        ("context", lambda d: {q["source_doc"] for q in
+                               (d.get("finance_director_on_debt") or {}).get("quotes", [])
+                               if q.get("source_doc")}),
+        ("issues", lambda d: {i["source_doc"] for i in d.get("issues", [])
+                              if i.get("source_doc")}),
+    ]:
+        blob = maybe(name)
+        if blob:
+            ids = get(blob)
+            if ids:
+                cited[name] = ids
+
+    # Some stages recorded provenance as a filename rather than a manifest id;
+    # both resolve here, and anything that resolves to neither fails the build.
+    def resolve(ref):
+        return ref if ref in doc_ids else by_filename.get(ref, ref)
+
+    cited = {name: {resolve(r) for r in ids} for name, ids in cited.items()}
+    cited_ids = sorted(set().union(*cited.values()))
+    unknown_cited = [i for i in cited_ids if i not in doc_ids]
+    if unknown_cited:
+        sys.exit(f"published data cites documents missing from the manifest: {unknown_cited}")
+    # Outside the datasets whose scan handling is counted precisely above, no
+    # dataset may cite a scanned document at all — each such citation counts.
+    for name, ids in cited.items():
+        if name not in ("facts", "lineitems", "ocr_statements", "audited"):
+            scan_text_figures += sum(1 for i in ids if i in scan_ids)
+
+    # The year the site leads with, derived once so the site and its tests cannot
+    # drift apart: the newest year the town has stated as an actual budget.
+    headline_fy = (max(r[li["columns"].index("fiscal_year")] for r in li["rows"]
+                       if r[li["columns"].index("basis")] == "budget") if li else None)
+
     fy = [f["fiscal_year"] for f in facts if f.get("fiscal_year")]
     write_json(DATA / "index.json", {
         "project": "Orange County Efficiency & Accountability Initiative",
         "jurisdictions": sorted({f["jurisdiction"] for f in facts}),
         "fiscal_year_range": [min(fy), max(fy)] if fy else None,
+        "headline_fiscal_year": headline_fy,
+        # The distinct manifest documents the published datasets cite — the evidence
+        # base, as opposed to counts.documents, which is the size of the archive.
+        "cited_documents": cited_ids,
         "counts": {
             "facts": len(facts),
             "metrics": len(METRICS),
             "documents": len(docs_blob["documents"]),
+            "documents_cited": len(cited_ids),
             "documents_with_trustworthy_text": docs_blob["summary"]["pdf_digital_text"],
             "documents_scanned_needing_transcription": docs_blob["summary"]["pdf_scanned_ocr"],
+            # Published values whose provenance is a scanned page's embedded text
+            # layer — measured across every dataset above, not just the headline
+            # facts. The whole pipeline exists to keep this zero.
+            "figures_read_from_scan_text": scan_text_figures,
+            "ocr_figures_published": len(ocr.get("published", [])) if ocr else 0,
             "multi_document_comparisons": len(projections),
             **({} if not li else {
                 "line_item_observations": len(li["rows"]),

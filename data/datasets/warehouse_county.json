@@ -1,6 +1,7 @@
 {
   "generated_by": "etl/s85_warehouse.py",
   "workbook": "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+  "source_doc": "orange-county-municipal-financial-information-system-v2-2-foundation",
   "note": "Imported from the design workbook, which remains the source of truth for these figures and is never modified by this pipeline. Amy edits in Excel; the pipeline re-reads and re-verifies on the next build.",
   "schema_owner": "Amy's v2.x design workbook — Entity_ID / Fiscal_Year_ID / Scenario / Category_ID / Source_ID / Confidence are her field names.",
   "entities": [

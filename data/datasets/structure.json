@@ -6,9 +6,30 @@
   "reading_burden": {
     "governments_a_resident_must_read": 2,
     "tax_calculations_to_combine": 2,
-    "current_cycle_documents": 6,
-    "current_cycle_pages": 1031,
+    "current_cycle_documents": 5,
+    "current_cycle_pages": 679,
+    "editions_collapsed": [
+      {
+        "kept": "FY2026-27 Managers Recommended Budget.pdf",
+        "dropped": "FY2026-27 Manager_s Recommended Budget.pdf",
+        "dropped_pages": 352
+      }
+    ],
     "by_government": {
+      "Orange County, NC": {
+        "documents": 2,
+        "pages": 391,
+        "examples": [
+          {
+            "filename": "FY2026-27 Managers Recommended Budget.pdf",
+            "pages": 357
+          },
+          {
+            "filename": "FY2026-27 Operating Budget Introduction2.pdf",
+            "pages": 34
+          }
+        ]
+      },
       "Town of Hillsborough, NC": {
         "documents": 3,
         "pages": 288,
@@ -24,24 +45,6 @@
           {
             "filename": "Recommended FY27BudgetAtAGlanceFlyer.pdf",
             "pages": 1
-          }
-        ]
-      },
-      "Orange County, NC": {
-        "documents": 3,
-        "pages": 743,
-        "examples": [
-          {
-            "filename": "FY2026-27 Manager_s Recommended Budget.pdf",
-            "pages": 352
-          },
-          {
-            "filename": "FY2026-27 Managers Recommended Budget.pdf",
-            "pages": 357
-          },
-          {
-            "filename": "FY2026-27 Operating Budget Introduction2.pdf",
-            "pages": 34
           }
         ]
       }
@@ -62,6 +65,7 @@
     ],
     "current_fee_pct_of_collections": 0.5,
     "county_fee_study_peer_average_pct": 1.5,
+    "source_doc": "fy27-budget-and-financial-plan-recommended",
     "source_page": 27,
     "why_this_matters_to_the_question": "This service is NOT duplicated — one government does it for all three municipalities, and at a third of what the county's own fee study says peers charge. Any argument about duplicated cost has to account for the services that are already consolidated, and for the fact that this one is currently cheap for the town.",
     "proposed_increase_declined": {
@@ -75,6 +79,7 @@
         "basis": "actual",
         "amount": 47462.0,
         "department": "Accounting",
+        "source_doc": "fy27-budget-and-financial-plan-recommended",
         "source_page": 247
       },
       {
@@ -82,6 +87,7 @@
         "basis": "estimate",
         "amount": 57000.0,
         "department": "Accounting",
+        "source_doc": "fy27-budget-and-financial-plan-recommended",
         "source_page": 247
       },
       {
@@ -89,6 +95,7 @@
         "basis": "budget",
         "amount": 60000.0,
         "department": "Accounting",
+        "source_doc": "fy27-budget-and-financial-plan-recommended",
         "source_page": 247
       },
       {
@@ -96,6 +103,7 @@
         "basis": "projected",
         "amount": 61000.0,
         "department": "Accounting",
+        "source_doc": "fy27-budget-and-financial-plan-recommended",
         "source_page": 247
       },
       {
@@ -103,6 +111,7 @@
         "basis": "projected",
         "amount": 62000.0,
         "department": "Accounting",
+        "source_doc": "fy27-budget-and-financial-plan-recommended",
         "source_page": 247
       }
     ]
@@ -112,6 +121,9 @@
     "fiscal_year": 2027,
     "basis": "budget",
     "fund": "General Fund",
+    "source_docs": [
+      "fy27-budget-and-financial-plan-recommended"
+    ],
     "general_fund_total": 19466631.0,
     "administration_broad": {
       "departments": {

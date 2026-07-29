@@ -102,6 +102,12 @@ def main() -> None:
     dests = sorted({k[3] for k in cells}, key=lambda d: (d == "Unidentified", d))
 
     # One matrix per (year, basis) — the schedule she described.
+    #
+    # The rendered matrix must carry its own provenance: the site shows these rows
+    # directly, and a table whose cells name no document broke the one rule ("never
+    # publish a number that cannot be traced"). Every cell is an aggregate of detail
+    # rows that each know their document and page, so the schedule states the
+    # distinct documents and the page range its cells came from.
     schedules = []
     for fy, basis in sorted({(k[0], k[1]) for k in cells}):
         rows = []
@@ -113,12 +119,16 @@ def main() -> None:
         if not rows:
             continue
         received = {d: round(sum(r["to"][d] for r in rows), 2) for d in dests}
+        contributing = [r for r in detail if r["fiscal_year"] == fy and r["basis"] == basis]
+        pages = sorted({r["source_page"] for r in contributing if r["source_page"]})
         schedules.append({
             "fiscal_year": fy, "basis": basis,
             "destinations": dests,
             "rows": rows,
             "total_received_by_destination": received,
             "total_transferred": round(sum(r["total_out"] for r in rows), 2),
+            "source_docs": sorted({r["source_doc"] for r in contributing}),
+            "source_pages": [pages[0], pages[-1]] if pages else None,
         })
 
     write_json(DATASETS / "transfer_schedule.json", {

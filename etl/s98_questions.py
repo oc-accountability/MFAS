@@ -59,6 +59,21 @@ def main() -> None:
     mfas = ds("mfas_conformance.json")
     proj = ds("projects.json")
     trade = ds("tradeoffs.json")
+    docs = ds("documents.json").get("documents", [])
+    facts_all = ds("facts.json").get("facts", [])
+
+    # Counted from the datasets on every run. The first version of the masthead item
+    # hardcoded "40 of the 75 documents" — in the very commit that raised the manifest
+    # to 84 — inside a register whose own header says it cannot drift out of date.
+    n_docs = len(docs)
+    n_county = sum(1 for d in docs if d.get("jurisdiction") == "Orange County, NC")
+    by_id = {d["id"]: d for d in docs}
+    n_initiative_facts = sum(1 for f in facts_all
+                             if by_id.get(f.get("source_doc"), {}).get("category")
+                             in ("records-request", "issues"))
+    n_pageless_facts = sum(1 for f in facts_all
+                           if f.get("source_doc") and not f.get("source_page"))
+    burden = ds("structure.json").get("reading_burden", {})
 
     # ---- questions only a government can answer ------------------------------
     for q in wbb.get("her_open_questions_to_the_town", []):
@@ -154,13 +169,15 @@ def main() -> None:
         "documents\". It now reads that every figure is shown with its document and page, and "
         "that the page says so on the spot wherever a figure comes from something other than a "
         "government's own publication. Is that the wording you want?",
-        why="The original sentence was not quite true and a sceptical reader could catch it: 40 "
-            "of the 75 documents are the county's rather than the town's, and 14 of the 83 "
-            "published figures come from the initiative's own request workbook — the "
-            "administrative-spend series a commissioner supplied, and two capital-project cost "
-            "changes. Each of those is already labelled where it appears, so the masthead was "
-            "the only place that overclaimed. Changed rather than left, because the strongest "
-            "sentence on the page is the worst one to have to walk back.",
+        why=f"The original sentence was not quite true and a sceptical reader could catch it: "
+            f"{n_county} of the {n_docs} documents concern Orange County rather than the town, "
+            f"and {n_initiative_facts} of the {len(facts_all)} published figures come from the "
+            f"initiative's own request workbook — the administrative-spend series a "
+            f"commissioner supplied, and two capital-project cost changes. Each of those is "
+            f"already labelled where it appears. (The masthead was not the only place: the "
+            f"page's meta description carried the same claim and was corrected separately.) "
+            f"Changed rather than left, because the strongest sentence on the page is the "
+            f"worst one to have to walk back.",
         source="site audit 2026-07-28; enforced by "
                "tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from")
 
@@ -177,12 +194,20 @@ def main() -> None:
         "At about 50 seconds the film shows a screenshot of the site carrying a sentence that "
         "has since been corrected — the old \"nothing on this page is taken from those\" line "
         "about scanned documents. Is that worth a re-cut?",
-        why="The sentence was superseded because the site now publishes the audited record "
-            "recovered from those scans. Nothing in the film's narration is wrong; it is one "
-            "frame of a screenshot that no longer matches the page. Re-cutting means "
-            "regenerating machine narration and music, so it is a cost and an ownership "
-            "question rather than a fix this project should make unasked.",
-        source="site audit 2026-07-28")
+        why=f"The sentence was superseded because the site now publishes the audited record "
+            f"recovered from those scans. Since this was first raised, a second audit widened "
+            f"it: the narration itself says at ~49s that \"Every figure names the document and "
+            f"the page it came from\", which overpromises the same way the old masthead did "
+            f"({n_pageless_facts} figures come from spreadsheet cells that have no page); and "
+            f"the film's \"2 governments / 6 documents / 1,031 pages\" hold shows counts that "
+            f"changed when the archive's duplicate county budget stopped being counted twice "
+            f"(now {burden.get('current_cycle_documents', '?')} documents, "
+            f"{burden.get('current_cycle_pages', '?')} pages — the masthead card was switched "
+            f"to the film's opening question so the stale figures no longer sit on the front "
+            f"page, but they remain inside the film). Re-cutting means regenerating machine "
+            f"narration and music, so it is a cost and an ownership question rather than a "
+            f"fix this project should make unasked.",
+        source="site audit 2026-07-28; widened by the second-pass audit 2026-07-28")
 
     # ---- work this project owes ----------------------------------------------
     add("pipeline", "Revenue by source",
@@ -249,6 +274,64 @@ def main() -> None:
                 why=(f"Her own follow-up against a "
                      f"${m['amount']:,.0f} driver" if m.get("amount") else None),
                 source="Amy's v5 Audit Edition, Material_Change_Drivers")
+
+    # ---- raised by the second-pass audit, 2026-07-28 -------------------------
+    # New items are appended AFTER every pre-existing one on purpose: ids are
+    # sequence positions, and inserting mid-list renumbers every later item (which
+    # b4321db did — see the id-stability question below).
+    add("amy", "County workbook — Source_Register alignment",
+        "Six of the eight county summary rows the site shows (Source_IDs OC_ACFR_2021 through "
+        "OC_ACFR_2025, and OC_CAFR_2019) cite reports that are not in your workbook's own "
+        "Source_Register, so this build cannot resolve them to a held file and re-check the "
+        "figures. The FY2019 CAFR itself is not in the archive at all. Could the "
+        "Source_Register gain rows for those years — and do you have the FY2019 CAFR to add?",
+        why="The county table's figures are yours and are published as yours, but only FY2018's "
+            "row can currently be re-verified against a held report. Aligning the register "
+            "makes every year checkable the way FY2018 already is.",
+        source="second-pass audit 2026-07-28; measured by etl/s85_warehouse.py")
+
+    add("town", "Dam Repairs — funding vs expenditure totals",
+        "In the FY27 capital plan, the Dam Repairs project's funding sources total $2,915,840 "
+        "while its expenditures total $2,861,320 — funding exceeds spending by $54,520, and "
+        "each table reconciles to its own printed total. Which figure is authoritative, and "
+        "what does the $54,520 difference represent?",
+        why="Both tables are printed in the same document and both add up internally, so this "
+            "is a question about the document rather than an extraction error — exactly the "
+            "kind of difference a resident checking the numbers would find.",
+        source="second-pass audit 2026-07-28; measured from data/datasets/projects.json")
+
+    add("david", "Question-register id stability",
+        "Register ids are sequence positions, so inserting an item renumbers every later one — "
+        "the 2026-07-28 insertions moved Q019 to Q022, and any Q-number cited in an earlier "
+        "email now points at a different question. Should ids become stable slugs (breaking "
+        "all existing references once), or stay positional with a rule that new items only "
+        "ever append?",
+        why="Amy asked for this register specifically to track her open questions; an id that "
+            "silently changes meaning defeats that. Append-only is the interim rule as of this "
+            "audit, but it relies on discipline rather than the generator.",
+        source="second-pass audit 2026-07-28")
+
+    add("amy", "Wording — who adopts the budget",
+        "The speak-up section used to say the budget is adopted by \"the mayor and Board of "
+        "Commissioners\". No document in the archive states the adoption mechanics, and in NC "
+        "towns the board ordinarily adopts with the mayor voting only to break ties — so the "
+        "sentence now says \"the town's governing board\", which is true on any reading. "
+        "Should it name the Board of Commissioners alone, or is the mayor part of adoption "
+        "here?",
+        why="A claim about who exercises a power is the kind a resident can check against the "
+            "town charter, and the archive cannot settle it either way — so it is flagged "
+            "rather than silently rewritten.",
+        source="second-pass audit 2026-07-28")
+
+    add("pipeline", "Stormwater Fund reconciliation checks",
+        "The spending explorer's reconciliation gate covers the General Fund and Water & Sewer "
+        "(30 checks each) but emits no checks at all for the Stormwater Fund, so its slices "
+        "render with no verification statement either way. Emit Stormwater checks in stage 50 "
+        "from the appendix's own category totals.",
+        why="A fund with no checks is indistinguishable on screen from a fund that failed "
+            "them. The explorer now says so explicitly, but the honest fix is to run the "
+            "checks.",
+        source="second-pass audit 2026-07-28; measured from data/datasets/lineitem_validation.json")
 
     # ---- resolve items the archive already answers ---------------------------
     # The first run of this register showed two of her standing questions to the town as

@@ -167,7 +167,8 @@ def inspect(path: Path) -> dict:
 
 def main() -> None:
     found = {}
-    for p in SOURCES.rglob("*.xlsx"):
+    # sorted(): first-wins dedup by basename must not depend on filesystem order.
+    for p in sorted(SOURCES.rglob("*.xlsx")):
         if p.name.startswith("~$"):
             continue
         found.setdefault(p.name, p)

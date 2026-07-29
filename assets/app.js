@@ -32,6 +32,11 @@ const state = {
   yearMin: null, yearMax: null, data: null,
   homeValue: DEFAULT_HOME, location: 'intown', gallons: DEFAULT_GALLONS,
   returning: false, fromLink: false,
+  // Which fields the link actually supplied, and which the reader has touched.
+  // Both matter for honesty: the notice must only attribute to the sender the
+  // values the sender actually sent, and saving must never adopt a link-supplied
+  // value the reader did not edit themselves.
+  linkFields: {}, touched: {},
 };
 
 /* ------------------------------------------------------- remembered settings */
@@ -52,9 +57,21 @@ function loadHome() {
 }
 function saveHome() {
   try {
-    localStorage.setItem(STORE, JSON.stringify({
-      homeValue: state.homeValue, location: state.location, gallons: state.gallons,
-    }));
+    /* A link-supplied value the reader never edited must not become "theirs":
+       changing the gallons dropdown used to silently persist a stranger's
+       home value, and the next visit greeted the reader with it as their own.
+       Fields still owned by the link keep whatever the reader had saved before
+       (or stay unwritten, so the default returns). */
+    const prev = JSON.parse(localStorage.getItem(STORE) || '{}');
+    const keep = (field, key) =>
+      (state.linkFields[field] && !state.touched[field]) ? prev[key] : state[key];
+    const out = {
+      homeValue: keep('home', 'homeValue'),
+      location: keep('where', 'location'),
+      gallons: keep('gal', 'gallons'),
+    };
+    for (const k of Object.keys(out)) if (out[k] === undefined) delete out[k];
+    localStorage.setItem(STORE, JSON.stringify(out));
   } catch (e) { /* nothing here is worth breaking the page over */ }
 }
 
@@ -71,23 +88,57 @@ function loadShared() {
   try { q = new URLSearchParams(location.search); } catch (e) { return; }
   const home = Number(q.get('home'));
   const where = q.get('where');
-  const gal = Number(q.get('gal'));
-  let used = false;
-  if (Number.isFinite(home) && home > 0 && home <= 1e9) { state.homeValue = home; used = true; }
-  if (where === 'intown' || where === 'outoftown') { state.location = where; used = true; }
-  if (q.has('gal') && Number.isFinite(gal) && gal >= 0 && gal <= 200000) {
-    state.gallons = gal; used = true;
+  /* Number('') is 0 — finite and non-negative — so a bare `gal=` in a link set the
+     recipient's water use to zero and rendered a real-looking bill for it. The
+     input handler already guards against exactly this; the link parser now does
+     the same. And a home under $1,000 renders a styled, sourced $0 tax bill, so
+     the accepted range starts where an assessed value plausibly could. */
+  const galRaw = q.get('gal');
+  const gal = Number(galRaw);
+  if (Number.isFinite(home) && home >= 1000 && home <= 1e9) {
+    state.homeValue = home; state.linkFields.home = true;
   }
-  if (used) { state.fromLink = true; state.returning = false; }
+  if (where === 'intown' || where === 'outoftown') {
+    state.location = where; state.linkFields.where = true;
+  }
+  if (galRaw !== null && galRaw.trim() !== '' && Number.isFinite(gal)
+      && gal >= 0 && gal <= 200000) {
+    state.gallons = gal; state.linkFields.gal = true;
+  }
+  if (Object.keys(state.linkFields).length) { state.fromLink = true; state.returning = false; }
 }
 
-/** The address that reproduces exactly what the reader is looking at. */
+/** The link-supplied fields the reader has not yet made their own. The sender's-
+ * figures notice, the printed sheet and the copied text all key off this: an
+ * artefact that shows a stranger's number without saying so has told the reader
+ * something untrue. */
+function senderFields() {
+  return ['home', 'where', 'gal'].filter(f => state.linkFields[f] && !state.touched[f]);
+}
+
+/** The most recent two years of the town rate, so "did not change" is measured
+ * rather than asserted. Returns null when two years are not both published —
+ * the claim is then withheld, not guessed. */
+function townRateChange() {
+  const seq = latestByYear('property_tax_rate');
+  if (seq.length < 2) return null;
+  const prev = seq[seq.length - 2], cur = seq[seq.length - 1];
+  return { prev, cur, delta: Math.round((cur.value - prev.value) * 100) / 100 };
+}
+
+/** The address that reproduces exactly what the reader is looking at.
+ *
+ * Emit ONLY what loadShared() accepts. A reader who typed a $5B home value used
+ * to get a link that silently opened at the $400,000 default on the recipient's
+ * screen — and attributed that default to the sender. The two domains must match.
+ */
 function shareUrl() {
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, Math.round(v)));
   const u = new URL(location.href);
   u.search = new URLSearchParams({
-    home: String(Math.round(state.homeValue)),
+    home: String(clamp(state.homeValue, 1000, 1e9)),
     where: state.location,
-    gal: String(Math.round(state.gallons)),
+    gal: String(clamp(state.gallons, 0, 200000)),
   }).toString();
   u.hash = 'you';
   return u.toString();
@@ -95,7 +146,8 @@ function shareUrl() {
 
 /* ---------------------------------------------------------------- formatters */
 const usd = n => '$' + Math.round(n).toLocaleString('en-US');
-const usd2 = n => '$' + n.toFixed(2);
+const usd2 = n => '$' + n.toLocaleString('en-US',
+  { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const usdSigned = n => (n < 0 ? '−' : '') + '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
 const compact = n => {
   const a = Math.abs(n), s = n < 0 ? '−' : '';
@@ -108,8 +160,15 @@ const compact = n => {
    tabular-nums columns, where a hyphen sits visibly high and narrow. */
 const pctPlain = n => (n < 0 ? '−' : '') + Math.abs(n).toFixed(Math.abs(n) % 1 === 0 ? 0 : 1) + '%';
 /* A tax rate is cents per $100 of value, NOT a percentage. Labelling 51.3 cents
-   as "51.3%" would overstate the rate ~19.5x to anyone skimming. */
-const cents = n => n.toFixed(n % 1 === 0 ? 0 : 1);
+   as "51.3%" would overstate the rate ~19.5x to anyone skimming.
+   Precision follows the source: the county's rate is printed as 67.58 and its
+   increase as 3.75, and rounding those to 67.6 / 3.8 put numbers on the page
+   that the documents never printed — a reader checking against the manager's
+   message found figures that do not appear in it. */
+const cents = n => {
+  if (n % 1 === 0) return n.toFixed(0);
+  return (Math.round(n * 10) === n * 10) ? n.toFixed(1) : n.toFixed(2);
+};
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -123,6 +182,11 @@ function docsById() {
   return _docMap;
 }
 const docYear = id => (docsById().get(id) || {}).fiscal_year || 0;
+/* Some datasets record their source as a filename rather than a manifest id. */
+function docIdForFilename(name) {
+  for (const d of state.data.documents.documents) if (d.filename === name) return d.id;
+  return null;
+}
 const facts = metric => state.data.facts.facts.filter(f => f.metric === metric);
 const inRange = f => f.fiscal_year == null
   || (f.fiscal_year >= state.yearMin && f.fiscal_year <= state.yearMax);
@@ -176,7 +240,13 @@ function reportUrl(about, detail) {
     `---`,
     `**Where on the site**: ${about || 'not specified'}`,
     detail ? `**Figure in question**: ${detail}` : null,
-    `**Page**: ${location.href}`,
+    /* Rebuilt from known parts, never location.href: a crafted link could smuggle
+       arbitrary markdown through an extra query parameter, and a resident pressing
+       "report a problem" would publish the attacker's text — a fabricated figure
+       with the site's name on it — into the public issue tracker. */
+    `**Page**: ${location.origin + location.pathname}${state.fromLink
+      ? `?home=${Math.round(state.homeValue)}&where=${state.location}`
+        + `&gal=${Math.round(state.gallons)}` : ''}`,
     idx.counts ? `**Dataset**: ${idx.counts.facts} figures, `
       + `${idx.counts.documents} documents` : null,
     ``,
@@ -212,12 +282,20 @@ function showTip(html, ev) {
   tip.style.top = Math.max(8, y) + 'px';
 }
 const hideTip = () => tip.classList.remove('on');
+// WCAG 1.4.13: hover/focus content must be dismissable without moving the pointer.
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideTip(); });
 function bindTip(el, html) {
   el.addEventListener('mouseenter', e => showTip(html, e));
   el.addEventListener('mousemove', e => showTip(html, e));
   el.addEventListener('mouseleave', hideTip);
   el.setAttribute('tabindex', '0');
   el.setAttribute('role', 'img');
+  /* The tooltip's content, as the element's accessible name — without it a
+     screen-reader user tabs through dozens of unnamed "image" stops whose
+     values (the point of the chart) never reach them. Same strings, tags
+     stripped, so the two cannot say different things. */
+  el.setAttribute('aria-label',
+    html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim());
   el.addEventListener('focus', () => {
     const b = el.getBoundingClientRect();
     showTip(html, { clientX: b.left + b.width / 2, clientY: b.top });
@@ -324,7 +402,7 @@ function section(id, num, title, blurb) {
   // straight to the part they are talking about.
   s.innerHTML = `<div class="sec-head">
     <a class="sec-num" href="#${id}" title="Link to this section"
-       aria-label="Link to this section">${num}<span aria-hidden="true">#</span></a>
+       aria-label="Link to this section: ${esc(title)}">${num}<span aria-hidden="true">#</span></a>
     <h2>${title}</h2>${blurb ? `<p>${blurb}</p>` : ''}</div>`;
   return s;
 }
@@ -391,7 +469,7 @@ function chartSurplus() {
     [{ label: 'Year' }, { label: 'Amount', num: true }, { label: 'Basis' }, { label: 'Source' }],
     rows.map(r => ['FY' + r.fiscal_year, usdSigned(r.value), esc(r.basis || '—'), cite(r)]));
   return card('Does the town spend more than it takes in?',
-    'Bars below the line mean the town plans to spend more than it collects that year, covering the gap from savings.',
+    'Bars below the line mean the town plans — or, for years already past, estimates — spending more than it collects, covering the gap from savings.',
     svg, null, table);
 }
 
@@ -521,8 +599,12 @@ function chartDumbbell(items, title, note, fmtV, labels) {
 
 function chartColumns(rows, title, note, fmtV) {
   if (!rows.length) return null;
-  const ticks = niceTicks(0, Math.max(...rows.map(r => r.value)), 4);
-  const thi = Math.max(...ticks);
+  const dataMax = Math.max(...rows.map(r => r.value));
+  const ticks = niceTicks(0, dataMax, 4);
+  /* The scale must cover the data: when the top tick landed below the max, the
+     tallest bar and its label overflowed the viewBox top and the most recent
+     year's figure was clipped in half. */
+  const thi = Math.max(Math.max(...ticks), dataMax * 1.08);
   const y = v => M.t + (thi - v) / thi * (H - M.t - M.b);
   const band = (W - M.l - M.r) / rows.length;
   const bw = Math.min(24, band * 0.46);
@@ -631,22 +713,8 @@ function renderYou(host) {
           It does <strong>not</strong> include fire district taxes, which vary by district.`
        : `This is the <strong>town's</strong> share only.`}`);
 
-  if (state.fromLink || state.returning) {
-    const w = document.createElement('div');
-    w.className = 'welcome';
-    const where = state.location === 'intown' ? 'inside town limits' : 'outside town';
-    /* Being explicit that these are somebody else's figures matters: a reader who
-       assumes the number is theirs has been told something untrue by the page. */
-    w.innerHTML = state.fromLink
-      ? `<span>You followed a link showing a home assessed at
-         <strong>${usd(state.homeValue)}</strong>, ${where}. These are the sender's figures,
-         not yours.</span>
-         <button type="button" id="changeHome">Use my own instead</button>`
-      : `<span>Welcome back — showing figures for a home assessed at
-         <strong>${usd(state.homeValue)}</strong>, ${where}.</span>
-         <button type="button" id="changeHome">Not yours? Change it</button>`;
-    sec.appendChild(w);
-  }
+  const wSlot = document.createElement('div');
+  sec.appendChild(wSlot);
 
   const panel = document.createElement('div');
   panel.className = 'panel panel-pad';
@@ -655,8 +723,8 @@ function renderYou(host) {
       <div>
         <div class="field">
           <label class="field-label" for="hv">What is your home assessed at?</label>
-          <input type="number" id="hv" min="0" step="5000" value="${state.homeValue}"
-                 inputmode="numeric">
+          <input type="number" id="hv" min="0" max="1000000000" step="5000"
+                 value="${state.homeValue}" inputmode="numeric">
           <input type="range" id="hvr" min="50000" max="1500000" step="5000"
                  value="${state.homeValue}" aria-label="Assessed home value slider">
         </div>
@@ -719,30 +787,109 @@ function renderYou(host) {
 
   const num = $('#hv', sec), rng = $('#hvr', sec);
 
+  /* Rebuilt on every draw, from current state. The old notice was written once and
+     never touched again, so after the reader typed their own value it still said
+     "these are the sender's figures" above an input showing the reader's own — two
+     contradictory statements on one screen. It also attributed values to the sender
+     that the link never carried (a bare ?where=intown link disclaimed the reader's
+     own saved home value as a stranger's). */
+  function drawWelcome() {
+    const sf = senderFields();
+    if (sf.length) {
+      const bits = [];
+      if (sf.includes('home')) bits.push(`a home assessed at <strong>${usd(state.homeValue)}</strong>`);
+      if (sf.includes('where')) bits.push(state.location === 'intown'
+        ? 'inside town limits' : 'outside town limits');
+      if (sf.includes('gal')) bits.push(`water use of
+        <strong>${state.gallons.toLocaleString('en-US')} gallons a month</strong>`);
+      wSlot.innerHTML = `<div class="welcome"><span>You followed a link that set
+        ${bits.join(', ')}. ${bits.length === 3 || sf.includes('home')
+          ? "These are the sender's figures, not yours."
+          : "Those came from the sender, not from you."}</span>
+        <button type="button" id="changeHome">Use my own instead</button></div>`;
+    } else if (state.returning) {
+      const where = state.location === 'intown' ? 'inside town limits' : 'outside town';
+      wSlot.innerHTML = `<div class="welcome"><span>Welcome back — showing figures for a home
+        assessed at <strong>${usd(state.homeValue)}</strong>, ${where}.</span>
+        <button type="button" id="changeHome">Not yours? Change it</button></div>`;
+    } else {
+      wSlot.innerHTML = '';
+    }
+    const chg = $('#changeHome', wSlot);
+    if (chg) chg.addEventListener('click', () => {
+      if (senderFields().length) {
+        /* "Use my own instead" must DO that: put back what the reader had saved
+           (or the defaults), for every field still carrying the sender's value. */
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) {}
+        if (state.linkFields.home && !state.touched.home) {
+          state.homeValue = (typeof saved.homeValue === 'number' && saved.homeValue > 0)
+            ? saved.homeValue : DEFAULT_HOME;
+        }
+        if (state.linkFields.where && !state.touched.where) {
+          state.location = (saved.location === 'intown' || saved.location === 'outoftown')
+            ? saved.location : 'intown';
+        }
+        if (state.linkFields.gal && !state.touched.gal) {
+          state.gallons = (typeof saved.gallons === 'number' && saved.gallons >= 0)
+            ? saved.gallons : DEFAULT_GALLONS;
+        }
+        state.linkFields = {};
+        state.returning = Object.keys(saved).length > 0;
+        num.value = state.homeValue; rng.value = state.homeValue;
+        const gs = $('#galSel', sec), gn = $('#galNum', sec);
+        if (gn) gn.value = state.gallons;
+        if (gs) gs.value = GAL_PRESETS.includes(state.gallons) ? String(state.gallons) : 'custom';
+        $$('[data-loc]', sec).forEach(o =>
+          o.setAttribute('aria-pressed', String(o.dataset.loc === state.location)));
+        draw(false);
+        refreshDependents();
+      } else {
+        num.focus();
+        num.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
+      }
+    });
+  }
+
   function draw(animate) {
-    state.homeValue = Math.max(0, +num.value || 0);
+    state.homeValue = Math.min(1e9, Math.max(0, +num.value || 0));
+    drawWelcome();
     const annual = annualTax();
     const county = countyTax();
-    const total = totalPropertyTax();
     const oneCent = state.homeValue / 100 * 0.01;
     const u = utilMonthly();
+    /* The headline is the sum of the rounded rows beneath it, not a separately
+       rounded exact total: at many home values the two differed by $1, on a sheet
+       that invites the reader to check it with a calculator. */
+    const annualR = Math.round(annual);
+    const countyR = county != null ? Math.round(county) : null;
+    const total = annualR + (countyR || 0);
 
     setFigure($('#heroV', sec), total, animate);
     $('#heroN', sec).innerHTML = county != null
-      ? `That is <strong>${usd(total / 12)} a month</strong> — ${usd(annual)} to the town at
-         ${cents(rateF.value)} cents per $100, plus ${usd(county)} to Orange County at
+      ? `That is <strong>${usd(total / 12)} a month</strong> — ${usd(annualR)} to the town at
+         ${cents(rateF.value)} cents per $100, plus ${usd(countyR)} to Orange County at
          ${cents(cRate.value)} cents. Sources: ${cite(rateF)} and ${cite(cRate)}.`
-      : `That is <strong>${usd(annual / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
+      : `That is <strong>${usd(annualR / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
          ${cents(rateF.value)} cents per $100 of value. Source: ${cite(rateF)}.`;
 
+    /* "The town rate did not change" is measured against the prior year's published
+       rate, never asserted: when the two years are not both in the data, the claim
+       is dropped rather than guessed — a sub-label that silently went stale is how
+       three sentences on this page became false the last time. */
+    const rc = townRateChange();
+    const rateNote = rc == null ? ''
+      : rc.delta === 0 ? ' — the town rate did not change'
+        : rc.delta > 0 ? ` — the town rate rose ${cents(rc.delta)} cents`
+          : ` — the town rate fell ${cents(-rc.delta)} cents`;
     const rows = [];
-    rows.push(['Town of Hillsborough', `<small>FY${rateF.fiscal_year} — the town rate did not change</small>`,
-      usd(annual) + ' / yr']);
+    rows.push(['Town of Hillsborough', `<small>FY${rateF.fiscal_year}${rateNote}</small>`,
+      usd(annualR) + ' / yr']);
     if (county != null) {
       const inc = val('county_tax_rate_increase_cents');
       rows.push(['Orange County',
         `<small>FY${cRate.fiscal_year}${inc ? ` — the county rate rose ${cents(inc)} cents` : ''}</small>`,
-        usd(county) + ' / yr']);
+        usd(countyR) + ' / yr']);
     }
     const gal = u.gallons.toLocaleString('en-US');
     const where = state.location === 'intown' ? 'in town' : 'out of town';
@@ -767,10 +914,15 @@ function renderYou(host) {
     rows.push(['One cent on the tax rate costs you',
       `<small>across the whole town it raises ${perCentF ? usd(perCentF.value) : 'n/a'}</small>`,
       usd(oneCent) + ' / yr']);
+    /* The town states "over N cents" — a floor, not an exact figure — so the dollar
+       translation is "at least", and the row does not attribute the flat-N-cents
+       arithmetic to the town (its own printed example is $440 on a $400,000 home,
+       which implies ~11 cents). */
     const need = one('tax_rate_increase_needed_cents');
     if (need) rows.push([`If the rate rose ${cents(need.value)} cents`,
-      `<small>the town's own FY${need.fiscal_year} scenario</small>`,
-      '+' + usd(oneCent * need.value) + ' / yr']);
+      `<small>the town says over ${cents(need.value)} cents would be needed by
+       FY${need.fiscal_year}</small>`,
+      'at least +' + usd(oneCent * need.value) + ' / yr']);
 
     let html = rows.map(([k, sub, v]) =>
       `<li><span class="k">${k}${sub}</span><span class="v">${v}</span></li>`).join('');
@@ -783,24 +935,39 @@ function renderYou(host) {
     }
     $('#bd', sec).innerHTML = html;
 
+    /* Two honesty rules here. The "held steady" framing only renders when the data
+       shows the town rate actually flat year-over-year — it used to be asserted
+       whenever a county increase existed. And u.total includes the stormwater fee
+       rise, so attributing all of it to "water and sewer" put a number on the page
+       ($10.21) that the town's own rate-impact table (3.72 + 5.24) does not show. */
     const box = $('#calloutBox', sec);
     const wr = val('water_rate_increase_pct'), sr = val('sewer_rate_increase_pct');
-    if (cInc && u.total > 0 && wr) {
+    const townFlat = rc != null && rc.delta === 0;
+    if (cInc && u.total > 0 && wr && townFlat) {
       box.className = 'callout warn';
       box.innerHTML = `<strong>The town's rate held steady — the rest of your bill did not.</strong>
         Orange County's rate rose ${cents(cInc)} cents, which adds
-        <strong>${usd(addedTax)} a year</strong> for a home like yours, and water and sewer each
-        rise ${pctPlain(wr)}, adding about ${usd2(u.total)} a month. "No town tax increase" is true
+        <strong>${usd(addedTax)} a year</strong> for a home like yours, and water, sewer and the
+        stormwater fee together add about ${usd2(u.total)} a month. "No town tax increase" is true
         and is not the same as "your bill is flat".`;
-    } else if (u.total > 0 && wr && sr) {
+    } else if (u.total > 0 && wr && sr && townFlat) {
       box.className = 'callout warn';
       box.innerHTML = `<strong>Your property tax rate did not go up — but your bill still does.</strong>
-        Water and sewer rates each rise ${pctPlain(wr)} in FY2027, which adds about
-        <strong>${usd2(u.total)} a month</strong> for a household like yours. A flat tax rate is not
-        the same as a flat bill, and that distinction is easy to miss.`;
-    } else {
+        Water and sewer rates each rise ${pctPlain(wr)} in FY2027, and with the stormwater fee
+        that adds about <strong>${usd2(u.total)} a month</strong> for a household like yours. A
+        flat tax rate is not the same as a flat bill, and that distinction is easy to miss.`;
+    } else if (townFlat) {
       box.className = 'callout';
       box.innerHTML = `The property tax rate is unchanged for FY${rateF.fiscal_year}.`;
+    } else if (rc != null && rc.delta !== 0) {
+      box.className = 'callout warn';
+      box.innerHTML = `The town's rate ${rc.delta > 0 ? 'rises' : 'falls'} by
+        <strong>${cents(Math.abs(rc.delta))} cents</strong> for FY${rateF.fiscal_year} against
+        FY${rc.prev.fiscal_year}'s published rate.`;
+    } else {
+      box.className = 'callout';
+      box.innerHTML = `The FY${rateF.fiscal_year} rate is ${cents(rateF.value)} cents per $100
+        of assessed value.`;
     }
 
     // snapshot
@@ -809,8 +976,9 @@ function renderYou(host) {
       <div class="big">${usd(total)}<span style="font-size:var(--t-md);font-weight:500;
         letter-spacing:0;margin-left:.35em">in property tax this year</span></div>
       <p class="cap">${county != null
-        ? `${usd(annual)} to the town, ${usd(county)} to Orange County. `
-        : ''}Plus about ${usd(u.total * 12)} more over the year as water and sewer rates rise.
+        ? `${usd(annualR)} to the town, ${usd(countyR)} to Orange County. `
+        : ''}Plus about ${usd(u.total * 12)} more over the year as water, sewer and stormwater
+        rates rise.
         Based on a home assessed at ${usd(state.homeValue)},
         ${state.location === 'intown' ? 'inside' : 'outside'} town limits.</p>
       <div class="acts">
@@ -823,15 +991,27 @@ function renderYou(host) {
         actual bill depends on your county assessment.</span></p>`;
     $('#printSnap', s).addEventListener('click', printTakeaway);
     $('#copySnap', s).addEventListener('click', ev => {
-      const text = `Town of Hillsborough — my share, FY${rateF.fiscal_year}\n` +
+      /* The copied text leaves the page, so it must carry its own provenance: a
+         reader who arrived on a stranger's link used to copy "my share ...
+         $999,999,999" in the first person with the site's citation under it. */
+      const sender = senderFields().length > 0;
+      const docNames = [rateF.source_doc, cRate && cRate.source_doc,
+        u.exact && state.data.utility ? docIdForFilename(state.data.utility.source_doc)
+          || state.data.utility.source_doc : null]
+        .filter(Boolean)
+        .map(id => (docsById().get(id) || {}).filename || id);
+      const text = `Town of Hillsborough — ${sender
+          ? 'figures from a link someone shared (not this household’s own)'
+          : 'my share'}, FY${rateF.fiscal_year}\n` +
         `Home assessed at ${usd(state.homeValue)} (${state.location === 'intown'
           ? 'in town' : 'out of town'})\n` +
-        `Town property tax: ${usd(annual)}/yr\n` +
-        (county != null ? `Orange County property tax: ${usd(county)}/yr\n` +
+        `Town property tax: ${usd(annualR)}/yr\n` +
+        (county != null ? `Orange County property tax: ${usd(countyR)}/yr\n` +
           `Total property tax: ${usd(total)}/yr (${usd(total / 12)}/mo)\n` : '') +
-        `Water/sewer increase: +${usd2(u.total)}/mo (about ${usd(u.total * 12)}/yr)\n` +
-        `Tax rate: ${cents(rateF.value)} cents per $100 — unchanged for FY${rateF.fiscal_year}\n` +
-        `Source: ${(docsById().get(rateF.source_doc) || {}).filename || rateF.source_doc}\n` +
+        `Water/sewer/stormwater increase: +${usd2(u.total)}/mo (about ${usd(u.total * 12)}/yr)\n` +
+        `Tax rate: ${cents(rateF.value)} cents per $100${rc && rc.delta === 0
+          ? ` — unchanged for FY${rateF.fiscal_year}` : ''}\n` +
+        `Sources: ${[...new Set(docNames)].join('; ')}\n` +
         `Check it yourself: ${shareUrl()}`;
       offerCopy(ev.currentTarget, text, 'Copy these figures');
     });
@@ -846,18 +1026,19 @@ function renderYou(host) {
       }
       offerCopy(ev.currentTarget, url, 'Copy a link to them');
     });
-    /* A shared link must not quietly replace the visitor's own saved figures. It
-       only becomes theirs once they touch a control. */
-    if (!state.fromLink) saveHome();
+    /* A shared link must not quietly replace the visitor's own saved figures.
+       saveHome() itself keeps link-supplied, untouched fields out of storage, so
+       saving here is safe even mid-link: only what the reader edited persists. */
+    saveHome();
   }
 
-  const rerender = () => { state.fromLink = false; draw(false); refreshDependents(); };
-  num.addEventListener('input', () => { rng.value = num.value; rerender(); });
-  rng.addEventListener('input', () => { num.value = rng.value; rerender(); });
+  const rerender = field => { if (field) state.touched[field] = true; draw(false); refreshDependents(); };
+  num.addEventListener('input', () => { rng.value = num.value; rerender('home'); });
+  rng.addEventListener('input', () => { num.value = rng.value; rerender('home'); });
   $$('.seg button', sec).forEach(b => b.addEventListener('click', () => {
     state.location = b.dataset.loc;
     $$('[data-loc]', sec).forEach(o => o.setAttribute('aria-pressed', String(o === b)));
-    rerender();
+    rerender('where');
   }));
 
   // Water use: the dropdown and the number box are two views of one value.
@@ -867,7 +1048,7 @@ function renderYou(host) {
       if (galSel.value === 'custom') { galNum.focus(); galNum.select(); return; }
       state.gallons = Number(galSel.value);
       galNum.value = state.gallons;
-      rerender();
+      rerender('gal');
     });
     galNum.addEventListener('input', () => {
       // Clearing the box to retype must hold the previous figure. Number('') is 0,
@@ -878,14 +1059,9 @@ function renderYou(host) {
       if (!Number.isFinite(g) || g < 0) return;
       state.gallons = g;
       galSel.value = GAL_PRESETS.includes(g) ? String(g) : 'custom';
-      rerender();
+      rerender('gal');
     });
   }
-  const chg = $('#changeHome', sec);
-  if (chg) chg.addEventListener('click', () => {
-    num.focus();
-    num.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
-  });
   draw(!REDUCED && !state.returning);
 }
 
@@ -908,7 +1084,10 @@ async function offerCopy(btn, text, restoreLabel) {
   box.rows = Math.min(8, text.split('\n').length + 1);
   box.value = text;
   box.setAttribute('aria-label', 'Select and copy this text');
-  btn.replaceWith(box);
+  /* after(), not replaceWith(): swallowing the button meant one clipboard refusal
+     removed the control for the rest of the session. */
+  btn.textContent = 'Select and copy below';
+  btn.after(box);
   box.focus();
   box.select();
 }
@@ -929,16 +1108,23 @@ async function offerCopy(btn, text, restoreLabel) {
 function takeawayHTML() {
   const rateF = one('property_tax_rate'), cRate = one('county_property_tax_rate');
   if (!rateF) return '';
-  const annual = annualTax(), county = countyTax(), total = totalPropertyTax();
+  const annual = annualTax(), county = countyTax();
+  /* Headline = sum of the rounded rows below it. The sheet invites checking with a
+     calculator, and rounding the exact total separately handed over a $1
+     self-inconsistency at many home values. */
+  const annualR = Math.round(annual);
+  const countyR = county != null ? Math.round(county) : null;
+  const total = annualR + (countyR || 0);
   const u = utilMonthly();
   const oneCent = state.homeValue / 100 * 0.01;
   const idx = state.data.index || {};
+  const rc = townRateChange();
 
   const row = (k, v, note) => `<tr><th>${k}${note ? `<small>${note}</small>` : ''}</th>
     <td>${v}</td></tr>`;
-  const rows = [row('Town of Hillsborough', usd(annual) + ' / yr',
+  const rows = [row('Town of Hillsborough', usd(annualR) + ' / yr',
     `${cents(rateF.value)} cents per $100 of assessed value, FY${rateF.fiscal_year}`)];
-  if (county != null) rows.push(row('Orange County', usd(county) + ' / yr',
+  if (county != null) rows.push(row('Orange County', usd(countyR) + ' / yr',
     `${cents(cRate.value)} cents per $100, FY${cRate.fiscal_year}`));
   if (u.exact) {
     /* Annual, like the rows above it — a sheet that mixes /yr and /mo down one column
@@ -957,8 +1143,12 @@ function takeawayHTML() {
   const facts = [];
   const wr = val('water_rate_increase_pct');
   const cInc = val('county_tax_rate_increase_cents');
-  if (cInc) facts.push(`The town's rate is unchanged for FY${rateF.fiscal_year}; Orange County's
-    rose ${cents(cInc)} cents.`);
+  if (cInc && rc && rc.delta === 0) {
+    facts.push(`The town's rate is unchanged for FY${rateF.fiscal_year}; Orange County's
+      rose ${cents(cInc)} cents.`);
+  } else if (cInc) {
+    facts.push(`Orange County's rate rose ${cents(cInc)} cents for FY${cRate.fiscal_year}.`);
+  }
   if (wr) facts.push(`Water and sewer rates each rise ${pctPlain(wr)}, and the town recommends the
     same again for the two years after.`);
   const now = forYear('general_fund_balance_pct_of_expenditures', 2027)
@@ -970,23 +1160,49 @@ function takeawayHTML() {
       ${pctPlain(far.value)} by FY${far.fiscal_year}.`);
   }
   const need = one('tax_rate_increase_needed_cents');
-  if (need) facts.push(`Closing the FY2029 shortfall the town projects would take a rise of over
-    ${cents(need.value)} cents — about ${usd(oneCent * need.value)} a year on this home.`);
+  if (need) facts.push(`Closing the FY${need.fiscal_year} shortfall the town projects would take
+    a rise it puts at over ${cents(need.value)} cents — at least ${usd(oneCent * need.value)}
+    a year on this home.`);
 
-  /* One line per distinct document behind the figures above. */
-  const srcIds = [...new Set([rateF, cRate, one('water_rate_increase_pct'), now, far, need]
-    .filter(Boolean).map(f => f.source_doc))];
-  const srcs = srcIds.map(id => {
+  /* One line per distinct document behind the figures above — including the fee
+     schedule the utility bill is computed from, which the old list omitted: the
+     sheet printed a utility figure its own source list could not explain. Pages
+     are printed per document, because the sheet is the one artefact a resident
+     carries where they cannot click through for the page number. */
+  const srcFacts = [rateF, cRate, one('water_rate_increase_pct'), now, far, need].filter(Boolean);
+  const srcPages = new Map();
+  for (const f of srcFacts) {
+    if (!srcPages.has(f.source_doc)) srcPages.set(f.source_doc, new Set());
+    if (f.source_page) srcPages.get(f.source_doc).add(f.source_page);
+  }
+  if (u.exact && state.data.utility && state.data.utility.source_doc) {
+    const uid = docIdForFilename(state.data.utility.source_doc) || state.data.utility.source_doc;
+    if (!srcPages.has(uid)) srcPages.set(uid, new Set());
+    for (const rs of Object.values(state.data.utility.rate_sets || {})) {
+      if (rs.source_page) srcPages.get(uid).add(rs.source_page);
+    }
+    const sw = state.data.utility.stormwater || {};
+    if (sw.source_page) srcPages.get(uid).add(sw.source_page);
+  }
+  const srcs = [...srcPages.entries()].map(([id, pages]) => {
     const d = docsById().get(id) || {};
-    return `<li>${esc(d.filename || id)}${d.sha256
+    const pp = [...pages].sort((a, b) => a - b);
+    return `<li>${esc(d.filename || id)}${pp.length
+      ? ` <span class="pp">${pp.length === 1 ? 'p.' : 'pp.'}${pp.join(', ')}</span>` : ''}${d.sha256
       ? ` <span class="fp">${esc(d.sha256.slice(0, 10))}</span>` : ''}</li>`;
   }).join('');
 
+  /* The sheet leaves the page, so it carries its own provenance: a reader who
+     arrived on a stranger's link used to print a sheet presenting the sender's
+     figures as this household's, with nothing on it saying otherwise. */
+  const sender = senderFields().length > 0;
   return `
     <h1>What local government costs this household</h1>
     <p class="sub">Estimated for a home assessed at <strong>${usd(state.homeValue)}</strong>,
       ${state.location === 'intown' ? 'inside' : 'outside'} Hillsborough town limits, using the
-      published FY${rateF.fiscal_year} rates. Your actual bill depends on your county assessment.</p>
+      published FY${rateF.fiscal_year} rates. Your actual bill depends on your county
+      assessment.${sender ? ` <strong>These figures came from a link someone shared — they are
+      not this household's own. Enter yours at the site for a sheet that is.</strong>` : ''}</p>
     <p class="headline">${usd(total)}<span> in property tax a year —
       ${usd(total / 12)} a month</span></p>
     <table>${rows.join('')}</table>
@@ -995,11 +1211,13 @@ function takeawayHTML() {
     <h2>Where these numbers came from</h2>
     <ul class="srcs">${srcs}</ul>
     <p class="foot">Built by residents for the Orange County Efficiency &amp; Accountability
-      Initiative, not by the town or the county. Every figure on the website is shown with the
-      document and page it came from, and the whole dataset can be rebuilt from those documents.
-      ${idx.counts ? `${idx.counts.facts} published figures, drawn from an archive of
-      ${idx.counts.documents} documents. ` : ''}Check it, and report anything that looks wrong, at
-      <strong>oc-accountability.github.io/MFAS</strong></p>`;
+      Initiative, not by the town or the county. Every figure on the website names the document
+      it came from — and the page, wherever the document has pages — and the whole dataset can
+      be rebuilt from those documents.
+      ${idx.counts ? `The site's figures trace to ${idx.counts.documents_cited
+        || 'a handful of'} source documents, held in an archive of
+      ${idx.counts.documents} catalogued files. ` : ''}Check it, and report anything that looks
+      wrong, at <span class="site-url">oc-accountability.github.io/MFAS</span></p>`;
 }
 
 function refreshTakeaway() {
@@ -1156,7 +1374,9 @@ function renderPaysFor(host) {
         <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>Grouped by this site
           from the town's own expenditure categories — the town does not publish this split itself,
           so it is our classification, not its words. Anything genuinely mixed is left
-          unclassified rather than forced into a bucket.</span></p>`;
+          unclassified rather than forced into a bucket.${(rd.source_docs || []).length
+            ? ` Source: ${rd.source_docs.map(id => cite({ source_doc: id })).join('; ')}.` : ''}
+          </span></p>`;
       sec.appendChild(p4);
     }
   }
@@ -1210,7 +1430,12 @@ function renderPaysFor(host) {
             }<td class="num" style="font-weight:650">${usd(r.total_out)}</td></tr>`).join('')}
             </tbody></table></div>
           <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
-            ${esc(tf.limitation)}</span></p>`;
+            ${esc(tf.limitation)}${(cur.source_docs || []).length
+              /* The table's nine dollar cells named no document at all — the one
+                 rule this site has. The schedule now carries its sources. */
+              ? ` Source: ${cur.source_docs.map(id => cite({ source_doc: id })).join('; ')}${
+                cur.source_pages ? `, pp.${cur.source_pages[0]}–${cur.source_pages[1]}` : ''}.`
+              : ''}</span></p>`;
       }));
     }
   }
@@ -1245,16 +1470,25 @@ function revenueBlock(sec) {
 
   const card = document.createElement('div');
   card.className = 'card revenue';
+  /* Two corrections here. "The rest arrives from other governments or comes out of
+     savings" left out a third of "the rest" — interest earned and transfers between
+     the town's own funds are neither. And the card named no source at all while
+     the masthead promises one on the spot: these rows are imported from the
+     initiative's own trend workbook, which the note now says and cites. */
   card.innerHTML = `
     <h3>Where the money comes from</h3>
     <p>Property tax is the largest single source but not the whole story &mdash;
       <strong>${w.property_tax_share_pct != null ? pctPlain(w.property_tax_share_pct)
         : ''}</strong> of the General Fund in FY${latest.fiscal_year}. About
       <strong>${w.raised_locally_pct != null ? pctPlain(w.raised_locally_pct) : ''}</strong>
-      is raised locally; the rest arrives from other governments or comes out of savings.</p>
+      is raised locally; the rest arrives from other governments, moves in from the town's
+      own other funds, is interest earned, or comes out of savings.</p>
     <ul class="rows" id="revRows"></ul>
     <p class="note"><span class="ic" aria-hidden="true">✓</span>
-      <span>${esc((d.caveats || [])[0] || '')} Shares are shown only for years whose parts add
+      <span>These rows are imported from the initiative's own trend workbook
+      ${d.source_doc ? `(${cite({ source_doc: d.source_doc })})` : ''} rather than read from a
+      government document, and each year's parts are checked against its stated total.
+      ${esc((d.caveats || [])[0] || '')} Shares are shown only for years whose parts add
       up to the published total: the two budget years do, to the dollar, while the audited
       years differ by up to $2.9M because budget schedules and audited statements count
       transfers and savings differently. That difference is a question for the town, not
@@ -1319,7 +1553,10 @@ function structureBlock(sec) {
         study found among its peers.${sh.proposed_increase_declined
           ? ` A proposed increase &mdash; ${usd(sh.proposed_increase_declined.fy2027)} next year,
              ${usd(sh.proposed_increase_declined.three_year)} over three &mdash; was not funded.`
-          : ''}</p>` : ''}
+          : ''}${sh.source_doc
+          /* These percentages sat with no citation at all — against the one rule. */
+          ? ` Source: ${cite({ source_doc: sh.source_doc, source_page: sh.source_page })}.` : ''}</p>`
+      : ''}
     ${a.total ? `<h4>What each government runs for itself</h4>
       <p>The town's own administrative departments &mdash; accounting, administration, human
         resources, IT, communications, risk, facilities and the governing body &mdash; come to
@@ -1327,7 +1564,9 @@ function structureBlock(sec) {
         General Fund. Counted more narrowly, excluding
         ${esc((n.excludes || []).join(' and '))}, it is <strong>${compact(n.total)}</strong>
         (${pctPlain(n.share_of_general_fund_pct)}). Both figures are given because the boundary
-        is genuinely arguable.</p>
+        is genuinely arguable.${(sep.source_docs || []).length
+          ? ` Source: ${sep.source_docs.map(id => cite({ source_doc: id })).join('; ')},
+             FY${sep.fiscal_year} ${esc(sep.basis || '')} line items.` : ''}</p>
       <p class="soft"><strong>${esc(sep.county_note || '')}</strong></p>` : ''}
     <h4>What these documents cannot tell you</h4>
     <ul class="plain">${(s.what_the_documents_cannot_answer || [])
@@ -1461,6 +1700,10 @@ function renderExplorer(host) {
         detail for FY${st.fy} ${esc(st.basis)} differs from the total the town publishes for it, and
         we have not established why. It is shown because hiding it would be worse, but treat it as
         provisional — the FY2027 budget figures reconcile exactly.</div>` : ''}
+      ${verified == null && _liv ? `<div class="callout" style="margin:0 0 var(--s5)">
+        No reconciliation checks exist for the ${esc(st.fund)} in this build, so these figures
+        carry no verification either way — unlike the checked funds, where every slice is
+        either proven against a published total or flagged.</div>` : ''}
       <p class="answer" style="font-size:var(--t-base)">
         ${taxFunded && yourTax
           ? `Of the <span class="fig">${usd(yourTax)}</span> you pay the town, this is roughly how it
@@ -1493,13 +1736,41 @@ function renderExplorer(host) {
               <span class="v">${esc(usd(r[C.value]))}</span></li>`).join('')}
             <li style="border-top:1px solid var(--hairline);margin-top:4px;padding-top:6px">
               <span style="color:var(--text-muted)">Every figure above is from
-                ${cite({ source_doc: accounts[0][C.source_doc], source_page: accounts[0][C.page] })}
+                ${(() => {
+                  /* The full page RANGE: half these department groups span two
+                     pages, and citing only the largest row's page made the
+                     printed cite wrong for every row on the other page. */
+                  const pp = [...new Set(accounts.map(r => r[C.page]).filter(Boolean))]
+                    .sort((x, y) => x - y);
+                  const d = docsById().get(accounts[0][C.source_doc]);
+                  const name = d ? d.filename : accounts[0][C.source_doc];
+                  const label = pp.length > 1 ? `${name}, pp.${pp[0]}–${pp[pp.length - 1]}`
+                    : pp.length ? `${name}, p.${pp[0]}` : name;
+                  return `<span class="src-link" title="Source file and SHA-256 recorded in
+                    data/datasets/documents.json">${esc(label)}</span>`;
+                })()}
               </span></li></ul>` : ''}
         </li>`;
       }).join('')}</ul>
       <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
-        ${verified ? `These figures add up to the town's own published total for
-          FY${st.fy} ${esc(st.basis)} — checked automatically, not assumed. ` : ''}
+        ${verified ? (() => {
+          /* "Add up ... checked automatically" was flatly false for the General
+             Fund, whose accounts sum $10,000 below the published total in a
+             disclosed, explained way. The exception renders WITH the claim,
+             derived from the same validation rows that grant the green flag. */
+          const kv = (_liv.checks || []).filter(c => c.fund === st.fund
+            && c.fiscal_year === st.fy && c.basis === st.basis
+            && c.status === 'known source variance' && c.difference);
+          const base = `These figures add up to the town's own published total for
+            FY${st.fy} ${esc(st.basis)} — checked automatically, not assumed`;
+          if (!kv.length) return base + '. ';
+          return base + `, with ${kv.length === 1 ? 'one disclosed exception' :
+            kv.length + ' disclosed exceptions'}: the ${esc(kv.map(c => c.category)
+              .join(' and '))} accounts sum ${kv.map(c =>
+              `${usd(Math.abs(c.difference))} ${c.difference < 0 ? 'below' : 'above'}`).join(' and ')}
+            the published figure — recorded in the validation data as a known source variance,
+            with its reason, rather than as an unexplained one. `;
+        })() : ''}
         ${taxFunded ? `The split of <em>your</em> share is a proportional illustration: your property
           tax is one of several revenues in this fund, so treat it as "where this fund goes", not as
           an audit trail for your individual dollars.` : ''}</span></p>`;
@@ -1560,17 +1831,33 @@ function renderHealth(host) {
        ${far.value >= FLOOR ? 'still above the floor, but the town itself calls the drop concerning.'
         : 'below the floor the town sets for itself.'}`]);
   }
-  const defs = latestByYear('general_fund_surplus_deficit').filter(f => f.value < 0);
+  /* "Coming years" must mean coming years: FY2026 ended a month ago and its figure
+     is an estimate, not a plan, so it is excluded here rather than counted. */
+  const headlineFy = (state.data.index || {}).headline_fiscal_year || 2027;
+  const defs = latestByYear('general_fund_surplus_deficit')
+    .filter(f => f.value < 0 && f.fiscal_year >= headlineFy);
   if (defs.length) {
     const worst = defs.reduce((a, b) => (b.value < a.value ? b : a));
     items.push(['watch', '~', `A planned shortfall in ${defs.length} of the coming years`,
       `The largest is <span class="fig">${usdSigned(worst.value)}</span> in FY${worst.fiscal_year}.
        Shortfalls are covered from savings, which is why the savings line matters.`]);
   }
+  /* Measured against the prior year's published rate — never asserted. If the two
+     years are not both in the data the item is withheld; if the rate moved, the
+     item says so instead of celebrating. */
   const rate = one('property_tax_rate');
-  if (rate) items.push(['ok', '✓', 'Your property tax rate is not going up this year',
-    `It stays at <span class="fig">${cents(rate.value)} cents</span> per $100 of value in
-     FY${rate.fiscal_year}.`]);
+  const rcH = townRateChange();
+  if (rate && rcH && rcH.delta === 0) {
+    items.push(['ok', '✓', 'Your property tax rate is not going up this year',
+      `It stays at <span class="fig">${cents(rate.value)} cents</span> per $100 of value in
+       FY${rate.fiscal_year}, the same as FY${rcH.prev.fiscal_year}.`]);
+  } else if (rate && rcH) {
+    items.push([rcH.delta > 0 ? 'watch' : 'ok', rcH.delta > 0 ? '~' : '✓',
+      `Your property tax rate ${rcH.delta > 0 ? 'rises' : 'falls'} this year`,
+      `From <span class="fig">${cents(rcH.prev.value)}</span> to
+       <span class="fig">${cents(rate.value)} cents</span> per $100 of value in
+       FY${rate.fiscal_year}.`]);
+  }
   const wr = val('water_rate_increase_pct');
   if (wr) items.push(['watch', '~', 'Water and sewer rates are going up',
     `Each rises <span class="fig">${pctPlain(wr)}</span>, and the town recommends the same again for
@@ -1617,9 +1904,19 @@ function renderHealth(host) {
         </p>
         <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>
           This is the audited statement, checked by an outside accountant after the year closed —
-          not a plan. It also lines up with the budget document's own figures for the same year to
-          within a dollar${aud.cross_document_check && aud.cross_document_check.agree
-            ? '' : ' (see the data files for detail)'}, across two separate documents.
+          not a plan.${aud.cross_document_check && aud.cross_document_check.agree
+            /* The alignment sentence renders ONLY when the check passed — the old
+               fallback still asserted "lines up to within a dollar" and merely
+               appended a parenthetical when it did not. And the adjustment is
+               stated, because a resident who opens the budget document sees
+               $15.7M against this panel's $14.1M: the $1.58M the budget counts as
+               transfers between town funds explains the whole gap. */
+            ? ` It also lines up with the budget document's own figures for the same year to
+               within a dollar, across two separate documents — once the
+               ${compact(aud.cross_document_check.less_interfund_transfers || 0)} the budget
+               document counts as transfers between town funds is set aside, as the audited
+               statement classifies it.`
+            : ''}
           Source: ${cite({ source_doc: aud.source_doc, source_page: aud.source_page })}.
         </span></p>`;
       p2.appendChild(disclosure('See it line by line', inner2 => {
@@ -1688,7 +1985,7 @@ function renderHealth(host) {
         </p>
         <div class="tablewrap"><table>
           <caption>Audited General Fund actuals. "Read from" shows whether the figures came from a
-            digital document or from a verified reading of a scan.</caption>
+            digital document or from a verified reading of a scan, and names the report.</caption>
           <thead><tr><th>Year</th><th class="num">Revenue (actual)</th>
             <th class="num">Spending (actual)</th><th>Read from</th></tr></thead>
           <tbody>${yrs.map(y => `<tr>
@@ -1697,7 +1994,10 @@ function renderHealth(host) {
             <td class="num">${y.expenditures != null ? usd(y.expenditures) : '—'}</td>
             <td>${y.how === 'digital'
               ? '<span class="badge ok">digital original</span>'
-              : '<span class="badge">scan, arithmetic-verified</span>'}</td>
+              : '<span class="badge">scan, arithmetic-verified</span>'}${y.doc
+              ? `<span class="src-link" style="display:block">${
+                  esc((docsById().get(y.doc) || {}).filename || y.doc)}${y.page
+                  ? `, p.${esc(String(y.page))}` : ''}</span>` : ''}</td>
           </tr>`).join('')}</tbody></table></div>
         <div class="callout warn" style="margin-top:var(--s5)">
           <strong>Best practice: these should all be digital originals.</strong>
@@ -1709,10 +2009,15 @@ function renderHealth(host) {
       const wc = state.data.warehouse_county;
       if (wc && wc.rows) {
         const byYear = new Map();
+        let cellsChecked = 0, cellsUnchecked = 0;
         for (const r of wc.rows) {
           if (!String(r.table || '').startsWith('2.0')) continue;
           const cat = String(r.Category || '').toLowerCase();
           if (!r.Actual_Amount) continue;
+          if (cat === 'total revenues' || cat === 'total expenditures') {
+            if (r.verification === 'every figure found on the cited page') cellsChecked += 1;
+            else cellsUnchecked += 1;
+          }
           const e = byYear.get(r.Fiscal_Year_ID) || {};
           if (cat === 'total revenues') e.rev = r.Actual_Amount;
           if (cat === 'total expenditures') e.exp = r.Actual_Amount;
@@ -1724,16 +2029,26 @@ function renderHealth(host) {
           const v = wc.verification || {};
           const cw = document.createElement('div');
           cw.style.marginTop = 'var(--s6)';
+          /* Counted from the rows this table actually renders, not asserted: the
+             old sentence said "every row carries the county report and page ...
+             and this build re-checks them", when most of these rows cite reports
+             the workbook's own Source_Register does not resolve to a held file —
+             so only some cells can be re-checked at all. Saying which is the
+             difference between a verified figure and a trusted one. */
           cw.innerHTML = `
             <h4 style="margin:0 0 var(--s3);font-size:var(--t-sm);font-weight:640">
               Orange County, the same years</h4>
             <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
               The county is a much larger government than the town, and this is its audited General
               Fund. These figures come from a curated research workbook rather than from this site's
-              own extraction — every row carries the county report and page it was taken from, and
-              this build re-checks them against those pages
-              ${v.every_figure_found ? `(<strong>${v.every_figure_found} of
-              ${v.rows_checked_against_source_pdf}</strong> checkable rows matched exactly)` : ''}.
+              own extraction, and are published as the workbook's own.
+              ${v.every_figure_found ? `Across the workbook, every row this build could match to a
+              held county report checked out exactly (<strong>${v.every_figure_found} of
+              ${v.rows_checked_against_source_pdf}</strong> checkable rows).` : ''}
+              ${cellsUnchecked ? `Of the ${cellsChecked + cellsUnchecked} summary figures shown
+              here, <strong>${cellsChecked}</strong> ${cellsChecked === 1 ? 'has' : 'have'} been
+              re-checked against the cited page; the rest cite report years whose citations do not
+              yet resolve to a file in the archive, so they are shown unverified.` : ''}
             </p>
             <div class="tablewrap"><table>
               <caption>Orange County audited General Fund actuals.</caption>
@@ -1814,7 +2129,9 @@ function renderHealth(host) {
       const items2 = cmps.map(c => {
         const rs = [...c.readings].sort((x, y) => docYear(x.source_doc) - docYear(y.source_doc));
         return { label: 'FY' + c.fiscal_year, a: rs[0].value, b: rs[rs.length - 1].value,
-          src: rs.map(r => esc(r.source_doc)).join(' → ') };
+          // Document NAMES, not internal ids — residents saw "fy26-budget-message".
+          src: rs.map(r => esc((docsById().get(r.source_doc) || {}).filename
+            || r.source_doc)).join(' → ') };
       });
       const c2 = chartDumbbell(items2, 'What was projected vs what was later reported',
         'Each row is one year.', compact, ['Earlier document', 'Later document']);
@@ -1848,10 +2165,25 @@ function projectsBlock(sec) {
   head.textContent = 'What the town plans to build';
   sec.appendChild(head);
 
+  /* The tables' first column is the CURRENT project budget — money already
+     appropriated — and the seven that follow are FY2027-FY2033. A fifth of the
+     headline total sits in that first column, so "worth $72.59M across
+     FY2027-FY2033" misattributed $14.5M of already-committed budget to the coming
+     window. Split from the EXPENDITURE rows, the same basis as the headline
+     total: the funding tables differ from it by $54,520 (the Dam Repairs
+     question in the register), and a split whose parts do not sum to the total
+     beside it would be this page's own small lie. */
+  const already = d.projects.reduce((a, p) =>
+    a + p.expenditures_by_account.reduce((x, r) => x + (r.amounts[0] || 0), 0), 0);
+  const window7 = d.projects.reduce((a, p) =>
+    a + p.expenditures_by_account.reduce((x, r) =>
+      x + r.amounts.slice(1).reduce((y, v) => y + (v || 0), 0), 0), 0);
   const h = document.createElement('p');
   h.className = 'answer';
   h.innerHTML = `The town has <span class="fig">${d.projects.length}</span> capital projects
-    planned, together worth <span class="fig">${compact(s.total_planned_cost)}</span> across
+    planned, together worth <span class="fig">${compact(s.total_planned_cost)}</span> through
+    FY2033 — <span class="fig">${compact(already)}</span> of that already in current project
+    budgets, and <span class="fig">${compact(window7)}</span> planned across
     FY2027&ndash;FY2033. <span class="soft">Each one below is a decision, with what it costs, how
     it gets paid for, and the page it came from. Capital plans change; these are the town's
     current figures, not commitments.</span>`;
@@ -1922,12 +2254,22 @@ function renderComing(host) {
 
   const ans = document.createElement('p');
   ans.className = 'answer';
-  ans.innerHTML = need
-    ? `The town does not propose a tax increase this year, but it projects a shortfall of
-       <span class="fig">${usdSigned(val('general_fund_surplus_deficit') || 0)}</span> by FY2029 that
-       would need a rise of over <span class="fig">${cents(need.value)} cents</span> to close —
-       about <span class="fig">${usd(oneCent * need.value)} a year</span> for a home like yours.
-       <span class="soft">These are projections and will change.</span>`
+  /* The year's own figure, fetched BY year. val()/one() pick one row per metric by
+     document recency and returned FY2026's estimate (−$748,667) here, which the
+     sentence then attributed to FY2029 — understating the town's own projected
+     FY2029 shortfall (−$2,534,674) 3.4x, two paragraphs above a timeline stating
+     the right number. "At least", because the town states "over N cents". */
+  const needYearDef = need ? forYear('general_fund_surplus_deficit', need.fiscal_year) : null;
+  const rcC = townRateChange();
+  ans.innerHTML = need && needYearDef
+    ? `${rcC && rcC.delta === 0
+        ? 'The town does not propose a tax increase this year, but it'
+        : 'The town'} projects a shortfall of
+       <span class="fig">${usd(Math.abs(needYearDef.value))}</span> by
+       FY${need.fiscal_year} that would need a rise of over
+       <span class="fig">${cents(need.value)} cents</span> to close —
+       at least <span class="fig">${usd(oneCent * need.value)} a year</span> for a home like
+       yours. <span class="soft">These are projections and will change.</span>`
     : '';
   sec.appendChild(ans);
 
@@ -1949,11 +2291,18 @@ function renderComing(host) {
     if (f.fiscal_year === 2029 && need && scenario) {
       body += ` Closing that gap would take over <span class="fig">${cents(need.value)} cents</span>
         on the rate — the town's own example is <span class="fig">${usd(scenario.value)} a year</span>
-        on a $400,000 home, and <span class="fig">${usd(oneCent * need.value)}</span> on yours.`;
+        on a $400,000 home, and at least <span class="fig">${usd(oneCent * need.value)}</span>
+        on yours.`;
     }
+    /* "Already adopted" was false — no adopted FY2027 budget exists in the archive;
+       the rate facts carry basis "recommended" and the tradeoffs caveat two cards
+       down says these are the manager's recommendations, not final. */
+    const hFy = (state.data.index || {}).headline_fiscal_year || 2027;
+    // h3, not h4: these sit directly under the section h2, and the jump from
+    // h2 to h4 was the page's one heading-level skip.
     return `<li class="${bad ? 'bad' : ''}"><span class="node" aria-hidden="true"></span>
       <span class="yr">FY${f.fiscal_year} · ${esc(f.basis)}</span>
-      <h4>${f.fiscal_year === 2027 ? 'This year, already adopted' : 'Projected'}</h4>
+      <h3>${f.fiscal_year === hFy ? 'This year’s plan' : 'Projected'}</h3>
       <p>${body}</p></li>`;
   });
 
@@ -1966,7 +2315,7 @@ function renderComing(host) {
     (about <span class="fig">${usd(oneCent * houseCents.value)} a year</span> for you)`);
   if (commitments.length) {
     items.push(`<li><span class="node" aria-hidden="true"></span>
-      <span class="yr">Already promised</span><h4>Commitments on top of the above</h4>
+      <span class="yr">Already promised</span><h3>Commitments on top of the above</h3>
       <p>${commitments.join('; ').replace(/^./, ch => ch.toUpperCase())}.</p></li>`);
   }
 
@@ -2171,7 +2520,11 @@ function renderVoice(host) {
 
   const ans = document.createElement('p');
   ans.className = 'answer';
-  ans.innerHTML = `The budget is adopted by the mayor and Board of Commissioners, and the process
+  /* "Adopted by the mayor and Board of Commissioners" asserted adoption mechanics
+     no document in the archive states (NC mayors ordinarily vote only to break
+     ties). "Governing board" is true on any reading; the precise wording is
+     registered as Amy's question. */
+  ans.innerHTML = `The budget is adopted by the town's governing board, and the process
     includes public hearings you can attend. <span class="soft">Below are the dates the FY2027
     budget message names, and the questions residents have already put to the town.</span>`;
   sec.appendChild(ans);
@@ -2246,16 +2599,29 @@ function renderReceipts(host) {
   const sec = section('receipts', '06', 'Where every number came from', '');
   const ans = document.createElement('p');
   ans.className = 'answer';
-  /* This paragraph used to say the scanned reports contributed nothing to the page.
-     That stopped being true when the audited record was recovered from them and
-     verified — and a claim the reader can disprove two sections up is worse than no
-     claim at all. What is still absolutely true, and is the point worth making, is
-     that the *hidden text layer* of a scan is never trusted. */
-  ans.innerHTML = `Every figure on this page traces to one of
-    <span class="fig">${sum.unique_documents}</span> documents in the archive, named where the
-    figure appears.
-    <span class="soft">${sum.pdf_scanned_ocr} of those documents are scanned images. The text
-    hidden inside a scan scrambles digits — a page that plainly reads
+  /* Two numbers, two jobs. This sentence used to say every figure "traces to one
+     of 84 documents in the archive" — defensible as worded, and still misleading:
+     84 is the size of the archive, and 65 of those documents are cited by nothing
+     the site publishes. A resident read 84 as the depth of the evidence base. The
+     evidence base and the archive are different numbers, both computed at build
+     time (data/index.json) and pinned by tests, so neither can drift.
+     This paragraph also once said the scanned reports contributed nothing — false
+     since the audited record was recovered from them — so the scan clause names
+     exactly which cited documents are scans rather than sweeping. */
+  const idx = state.data.index || {};
+  const citedIds = new Set(idx.cited_documents || []);
+  const nCited = idx.counts && idx.counts.documents_cited || citedIds.size;
+  const scansCited = docs.filter(d => d.text_layer === 'scan' && citedIds.has(d.id)).length;
+  ans.innerHTML = `Every figure on this page traces to a document named where the figure
+    appears. All of the published figures come from
+    <span class="fig">${nCited}</span> source documents — the two governments' budgets and
+    financial reports, and the initiative's own workbooks, each labelled as such where it is
+    used. They are held in an archive of <span class="fig">${sum.unique_documents}</span>
+    catalogued files, listed below; the rest of the archive is context — earlier years'
+    editions, working papers and correspondence that no published figure is taken from.
+    <span class="soft">${sum.pdf_scanned_ocr} of the archive's documents are scanned images
+    (${scansCited} of them among the cited sources). The text hidden inside a scan scrambles
+    digits — a page that plainly reads
     <span class="mono">4,610,003</span> comes back as <span class="mono">460,100,3</span> — so
     <strong>nothing here is ever read from it</strong>. Where a scanned page is used at all it is
     re-read from the image, and published only if that page's own column still adds up to the
@@ -2324,22 +2690,29 @@ function renderReceipts(host) {
   sec.appendChild(clause);
 
   sec.appendChild(disclosure('See all the source documents', inner => {
+    /* Cited sources sort first and are marked, so the archive list itself shows
+       which files carry the site's figures and which are context. */
     const rows = docs.slice().sort((a, b) =>
-      (a.category || '').localeCompare(b.category) || a.filename.localeCompare(b.filename))
+      (citedIds.has(b.id) - citedIds.has(a.id))
+      || (a.category || '').localeCompare(b.category) || a.filename.localeCompare(b.filename))
       .map(d => {
         const badge = d.format !== 'pdf' ? `<span class="badge">${esc(d.format)}</span>`
           : d.values_extractable ? `<span class="badge ok">readable</span>`
-            : `<span class="badge warn">scanned — not used for figures</span>`;
+            : `<span class="badge warn">scanned — text layer never used</span>`;
+        const used = citedIds.has(d.id)
+          ? `<span class="badge ok">cited</span>` : `<span class="badge">context</span>`;
         return `<tr><td>${esc(d.filename)}</td><td class="num">${d.fiscal_year || '—'}</td>
           <td class="num">${d.pages || '—'}</td>
-          <td class="num">${(d.bytes / 1048576).toFixed(1)} MB</td><td>${badge}</td>
+          <td class="num">${(d.bytes / 1048576).toFixed(1)} MB</td><td>${used}</td><td>${badge}</td>
           <td class="mono" title="${esc(d.sha256 || '')}">${esc((d.sha256 || '').slice(0, 10))}</td></tr>`;
       }).join('');
     inner.innerHTML = `<div class="tablewrap"><table>
-      <caption>The ${sum.unique_documents} documents behind this page. The code after each is the
+      <caption>The ${sum.unique_documents} files catalogued behind this project —
+        ${nCited} cited by the published figures, the rest context. The code after each is the
         first part of its SHA-256 fingerprint, so you can prove your copy is the same file.</caption>
       <thead><tr><th>Document</th><th class="num">Year</th><th class="num">Pages</th>
-        <th class="num">Size</th><th>Can we read it?</th><th>Fingerprint</th></tr></thead>
+        <th class="num">Size</th><th>Used for figures?</th><th>Can we read it?</th>
+        <th>Fingerprint</th></tr></thead>
       <tbody>${rows}</tbody></table></div>`;
   }));
 
@@ -2382,6 +2755,18 @@ function setupFilm() {
     alt.className = 'film-alt';
     alt.innerHTML = `62 seconds · narration and captions ·
       <a href="docs/media/mfas-commercial.mp4">open the file directly</a> if it will not play.`;
+    /* Failures must say so. A 404'd mp4 used to leave a live-looking dead player
+       whose "open the file directly" rescue pointed at the same missing file; a
+       404'd caption track played silently while the card still promised captions. */
+    const srcEl = v.querySelector('source'), trkEl = v.querySelector('track');
+    if (srcEl) srcEl.addEventListener('error', () => {
+      alt.innerHTML = `The film could not be loaded — the video file did not arrive. This is
+        usually temporary; reloading the page tries again.`;
+    });
+    if (trkEl) trkEl.addEventListener('error', () => {
+      alt.innerHTML += ` <strong>Captions failed to load this time</strong> — the narration
+        is still spoken.`;
+    });
     btn.replaceWith(v);
     wrap.querySelector('.film-cap').replaceWith(alt);
     /* A blocked autoplay must not look like a broken player. */
@@ -2394,10 +2779,13 @@ function setupFilm() {
 /**
  * How you can check this — the masthead's credibility column.
  *
- * Every row is measured from the published data at render time rather than typed
- * into the markup, including the zero. If a figure ever did reach the page from a
- * scan's text layer this card would say so, which is the only reason it is worth
- * printing a zero at all.
+ * Every row is measured rather than typed into the markup, including the zero.
+ * The zero is the build's own count across EVERY published dataset — headline
+ * facts, line items, the audited series, projects, tradeoffs, the imported
+ * workbooks — not just the 83 core facts, which is what an earlier version
+ * measured while claiming to cover the page. If a figure anywhere in the
+ * published data were read from a scan's text layer, the build would count it
+ * and this card would say so.
  */
 function renderVerify() {
   const slot = $('#verifySlot');
@@ -2406,18 +2794,28 @@ function renderVerify() {
   const c = idx.counts || {};
   const docs = docsById();
   const all = state.data.facts.facts;
-  const fromScanText = all.filter(f => {
+  // Fallback for an index.json predating the page-wide count: facts-only scope.
+  const factsFromScanText = all.filter(f => {
     const d = docs.get(f.source_doc);
     return d && d.values_extractable === false && f.extraction !== 'transcribed';
   }).length;
+  const fromScanText = c.figures_read_from_scan_text != null
+    ? c.figures_read_from_scan_text : factsFromScanText;
   const traced = all.filter(f => f.source_doc).length;
+  // The audited-record cells two sections down that were recovered from scanned
+  // pages and proven by their own arithmetic — counted the same way that table
+  // builds itself, so the two cannot disagree.
+  const recovered = ((state.data.ocr_statements || {}).published || [])
+    .filter(p => p.column_role === 'actual' && p.fiscal_year && p.total != null).length;
 
   const rows = [
-    ['Published figures', all.length.toLocaleString('en-US')],
-    ['Traced to a named document', `${traced} of ${all.length}`, traced < all.length],
-    ['Read from a scan’s hidden text', String(fromScanText), fromScanText > 0],
-    ['Documents in the archive', (c.documents || 0).toLocaleString('en-US')],
+    ['Core figures, each traced to a document', `${traced} of ${all.length}`,
+     traced < all.length],
     ['Account-level observations', (c.line_item_observations || 0).toLocaleString('en-US')],
+    ['Read from a scan’s hidden text, anywhere', String(fromScanText), fromScanText > 0],
+    ['Recovered from scans, arithmetic-proven', String(recovered)],
+    ['Documents the published figures cite', String(c.documents_cited || '—')],
+    ['In the archive, catalogued', (c.documents || 0).toLocaleString('en-US')],
   ];
   const el = document.createElement('div');
   el.className = 'verify';
@@ -2443,7 +2841,7 @@ function render() {
   renderVoice(main);
   renderReceipts(main);
   if (firstPaint) {
-    renderVerify(); setupFilm(); setupScrollSpy(); setupNavMenu();
+    renderVerify(); setupScrollSpy();
     firstPaint = false;
   }
 }
@@ -2515,12 +2913,33 @@ async function boot() {
     $('#loading').remove();
     render();
 
-    $('#chipCount').textContent = `${idx.counts.facts} figures, every one sourced`;
+    /* The browser's own fragment jump fires before these sections exist — every
+       deep link (including the share feature's own #you) landed at the top of a
+       19,000px page. Re-apply it once the target is real. Instant, because this
+       replaces the navigation jump, not a smooth in-page scroll. */
+    if (location.hash.length > 1) {
+      const target = document.getElementById(location.hash.slice(1));
+      if (target) target.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+
+    /* The chip's count must say what it counts: "83 figures" was facts.json's row
+       count on a page rendering thousands of sourced values. And the old footer
+       line ("84 source documents · 46 readable · 10 scanned and excluded") could
+       not be reconciled on screen — 46+10 is the PDFs only, 28 other files sat in
+       neither bucket, 65 of the 84 are sources of nothing, and "excluded" repeated
+       the exact sweeping claim the receipts section already had to walk back. */
+    $('#chipCount').textContent =
+      `${idx.counts.facts} core figures · every figure sourced`;
+    const nOther = idx.counts.documents
+      - idx.counts.documents_with_trustworthy_text
+      - idx.counts.documents_scanned_needing_transcription;
     $('#footMeta').textContent =
-      `${idx.counts.facts} published figures · ${idx.counts.metrics} measures · ` +
-      `${idx.counts.documents} source documents · ` +
-      `${idx.counts.documents_with_trustworthy_text} readable · ` +
-      `${idx.counts.documents_scanned_needing_transcription} scanned and excluded.`;
+      `${idx.counts.facts} core figures · ${idx.counts.line_item_observations
+        ? idx.counts.line_item_observations.toLocaleString('en-US') + ' line items · ' : ''}` +
+      `${idx.counts.documents_cited || '—'} documents cited, from an archive of ` +
+      `${idx.counts.documents} (${idx.counts.documents_with_trustworthy_text} digital PDFs, ` +
+      `${idx.counts.documents_scanned_needing_transcription} scans whose hidden text is never ` +
+      `used, ${nOther} spreadsheets and other files).`;
   } catch (err) {
     $('#loading').textContent =
       'Could not load the town’s figures. If you opened this file straight from your computer, your ' +
@@ -2534,5 +2953,11 @@ $('#themeToggle').addEventListener('click', () => {
   document.documentElement.setAttribute('data-theme', next);
   try { localStorage.setItem('hoa-theme', next); } catch (e) {}
 });
+
+/* Wired here, not inside render(): these are static-HTML affordances. When the
+   data fetch failed they used to be visible but dead — a play button that did
+   nothing, a phone menu that would not open. */
+setupFilm();
+setupNavMenu();
 
 boot();
