@@ -336,6 +336,18 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .film video { display: block; width: 100%; height: auto; border-radius: var(--r-lg);
               background: #000; border: 1px solid var(--hairline); }
 .film-alt { margin: var(--s3) 0 0; font-size: var(--t-2xs); color: var(--text-muted); }
+/* The film's own corrections. Amber like every other "read this" on the page, and
+   never hidden behind a disclosure: a correction the reader has to open is one the
+   reader will not read. */
+.film-note {
+  margin: var(--s3) 0 0; padding: var(--s3) var(--s4);
+  background: color-mix(in srgb, var(--warning) 9%, transparent);
+  border-left: 3px solid var(--warning);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: var(--t-2xs); line-height: 1.6; color: var(--text-secondary);
+}
+.film-note strong { color: var(--text-primary); }
+.film-note em { color: var(--text-primary); font-style: normal; }
 /* Credibility card — the site's whole thesis is that it can be checked, so the
    masthead states how, instead of leaving the column empty. */
 .verify {

@@ -29,6 +29,7 @@ a question that quietly vanishes is indistinguishable from one that was forgotte
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -74,6 +75,18 @@ def main() -> None:
     n_pageless_facts = sum(1 for f in facts_all
                            if f.get("source_doc") and not f.get("source_page"))
     burden = ds("structure.json").get("reading_burden", {})
+
+    # The film's own on-screen counts are frozen in a video and cannot be derived, so
+    # the site keeps them as one constant and this register reads that constant rather
+    # than repeating it. Two copies of a number nobody can re-measure is exactly how
+    # the register's header promises not to drift.
+    app_js = (Path(__file__).resolve().parent.parent / "assets" / "app.js").read_text(
+        encoding="utf-8")
+    m = re.search(r"const FILM_SAYS = \{\s*documents:\s*(\d+),\s*pages:\s*(\d+)", app_js)
+    if not m:
+        raise SystemExit("FILM_SAYS not found in assets/app.js — the film's on-screen counts "
+                         "are quoted in the register and must come from one place")
+    film_docs, film_pages = int(m.group(1)), int(m.group(2))
 
     # ---- questions only a government can answer ------------------------------
     for q in wbb.get("her_open_questions_to_the_town", []):
@@ -179,7 +192,12 @@ def main() -> None:
             f"Changed rather than left, because the strongest sentence on the page is the "
             f"worst one to have to walk back.",
         source="site audit 2026-07-28; enforced by "
-               "tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from")
+               "tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from",
+        status="answered",
+        answer="David settled it on 2026-07-29: the corrected wording stands and is live. Kept "
+               "here because it is a change to the most prominent sentence on the site and to "
+               "how the project describes its own sourcing — if you would put it differently, "
+               "say so and it changes. Nothing about it is expensive to revisit.")
 
     add("amy", "Resident film",
         "The 62-second film is now on the site itself, as a still image in the masthead that "
@@ -188,7 +206,11 @@ def main() -> None:
         why="It only appeared in the README before, where no resident will ever look. Placed as "
             "an offer on the judgement that a reader who arrives annoyed about a tax bill wants "
             "their own number first — but it is your film and the call is yours.",
-        source="site audit 2026-07-28")
+        source="site audit 2026-07-28",
+        status="answered",
+        answer="David settled it on 2026-07-29: it stays an offer. The reader reaches the "
+               "calculator, or a button pointing at it, before the film in every layout, and "
+               "nothing of the film downloads until somebody presses play.")
 
     add("amy", "Resident film",
         "At about 50 seconds the film shows a screenshot of the site carrying a sentence that "
@@ -207,7 +229,19 @@ def main() -> None:
             f"page, but they remain inside the film). Re-cutting means regenerating machine "
             f"narration and music, so it is a cost and an ownership question rather than a "
             f"fix this project should make unasked.",
-        source="site audit 2026-07-28; widened by the second-pass audit 2026-07-28")
+        source="site audit 2026-07-28; widened by the second-pass audit 2026-07-28",
+        status="answered",
+        answer=f"David settled it on 2026-07-29: no re-cut, the film stays exactly as it was "
+               f"cut. That leaves two claims inside it that the data has since moved past, so "
+               f"they are now corrected in writing beside the film on the site itself — the "
+               f"{film_docs} documents / {film_pages:,} pages hold against the checked "
+               f"{burden.get('current_cycle_documents', '?')} and "
+               f"{burden.get('current_cycle_pages', 0):,}, and the closing promise of a page for "
+               f"every figure against the {n_pageless_facts} that come from spreadsheet cells. "
+               f"The correction is computed from the data rather than typed in, so it will "
+               f"disappear by itself if the film is ever re-cut to match. Reporting our own "
+               f"source's errors instead of quietly living with them is the same rule this "
+               f"project applies to the county's misprinted tax-rate table.")
 
     # ---- work this project owes ----------------------------------------------
     add("pipeline", "Revenue by source",

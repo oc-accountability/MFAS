@@ -8,6 +8,7 @@ Run with: make test
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -1312,3 +1313,40 @@ def test_the_masthead_does_not_promise_a_page_every_figure_lacks(facts):
         assert phrase not in text, (
             f"site copy promises a page for every figure ({phrase!r}) while "
             f"{len(pageless)} facts have none (e.g. {sorted(set(pageless))[:3]})")
+
+
+def test_the_film_is_corrected_wherever_the_data_has_moved_past_it():
+    """The film is a frozen artefact; the data under it is not.
+
+    It holds "6 documents / 1,031 pages" on screen and promises a page for every
+    figure in its closing line. The first is now 5 and 679 — the archive held the
+    county's recommended budget twice under near-identical names — and the second
+    is true of all but the figures that come from spreadsheet cells. The decision
+    was taken not to re-cut it, so the correction has to live on the page beside
+    it, and it has to be computed rather than typed or it will rot the way the
+    sentences it corrects did.
+
+    This asserts the wiring, not the wording: the film's own counts exist as ONE
+    constant, the page has somewhere to render a correction, and the correction is
+    derived from the same reading-burden figures the rest of the site uses.
+    """
+    app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    html = (REPO / "index.html").read_text(encoding="utf-8")
+
+    m = re.search(r"const FILM_SAYS = \{\s*documents:\s*(\d+),\s*pages:\s*(\d+)", app)
+    assert m, "assets/app.js must state the film's on-screen counts as one FILM_SAYS constant"
+    film_docs, film_pages = int(m.group(1)), int(m.group(2))
+
+    assert 'id="filmNote"' in html, "the film has nowhere to carry its correction"
+    assert "renderFilmNote()" in app, "renderFilmNote is never called"
+    # Derived, not typed: the corrected figures must come out of the dataset.
+    assert "current_cycle_documents" in app and "current_cycle_pages" in app, (
+        "the correction must read the live reading-burden figures, not repeat them")
+
+    burden = load("structure.json")["reading_burden"]
+    if (burden["current_cycle_documents"], burden["current_cycle_pages"]) == (
+            film_docs, film_pages):
+        pytest.skip("the film's counts match the data again — the note renders nothing")
+    # Anything that quotes those counts must agree with the one constant.
+    for stray in re.findall(r"1,031 pages", html):
+        raise AssertionError("index.html hardcodes the film's page count; FILM_SAYS owns it")
