@@ -2520,11 +2520,11 @@ function renderVoice(host) {
 
   const ans = document.createElement('p');
   ans.className = 'answer';
-  /* "Adopted by the mayor and Board of Commissioners" asserted adoption mechanics
-     no document in the archive states (NC mayors ordinarily vote only to break
-     ties). "Governing board" is true on any reading; the precise wording is
-     registered as Amy's question. */
-  ans.innerHTML = `The budget is adopted by the town's governing board, and the process
+  /* Settled by Amy's research (register Q044, 2026-07-29): Hillsborough's Board of
+     Commissioners is officially the mayor plus five commissioners, with the mayor
+     voting only to break a tie on adoption — so naming the Board is precise and
+     includes the mayor by definition. */
+  ans.innerHTML = `The budget is adopted by the town's Board of Commissioners, and the process
     includes public hearings you can attend. <span class="soft">Below are the dates the FY2027
     budget message names, and the questions residents have already put to the town.</span>`;
   sec.appendChild(ans);

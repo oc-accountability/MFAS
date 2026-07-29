@@ -10,9 +10,9 @@
     "pipeline": "Work this project can do without anyone else."
   },
   "summary": {
-    "total": 48,
-    "open": 36,
-    "answered": 12,
+    "total": 51,
+    "open": 37,
+    "answered": 14,
     "by_owner": {
       "town": {
         "open": 19,
@@ -24,8 +24,10 @@
         "open": 1
       },
       "amy": {
-        "open": 9,
-        "answered": 9
+        "in progress": 1,
+        "open": 8,
+        "answered": 11,
+        "awaiting upload": 1
       },
       "pipeline": {
         "in progress": 2,
@@ -37,7 +39,7 @@
       }
     },
     "needs_a_government_answer": 22,
-    "awaiting_upload": 2
+    "awaiting_upload": 3
   },
   "register": [
     {
@@ -110,7 +112,7 @@
       "status": "awaiting upload",
       "why_it_matters": "It is part of the total cost of ownership and currently has no source.",
       "raised_by": "Amy's request; gap reported by etl/s92_total_cost.py",
-      "answer": "Amy states she has uploaded OC Sales Tax information. Not yet present in sources/ — needs a fresh Drive export.",
+      "answer": "Partially landed 2026-07-29: 'White Paper-Basics of Local Sales Taxes.pdf' is now in the archive — it explains the NC local-option articles (Article 40 and 42 carry the school earmarks) but contains no Orange County figures. Still needed: the county's own rate and proceeds.",
       "raised": null,
       "blocks": null
     },
@@ -122,7 +124,7 @@
       "status": "awaiting upload",
       "why_it_matters": "The FY2026 and FY2027 structures are exact, so a bill can be computed at any consumption, but the series cannot be trended backwards without the older schedules. The rate studies held are slide decks without the underlying tables.",
       "raised_by": "gap reported by etl/s93_utility_rates.py",
-      "answer": "Amy states she has uploaded Water and Sewer historical rates. Not yet present in sources/ — needs a fresh Drive export.",
+      "answer": "A file landed 2026-07-29 ('water and sewer historical rates.docx') and is archived — but its own first line says 'Source: Gemini AI', so under the one rule its figures cannot be published: an AI answer is not a source document. Its reference links are real leads, though — the town's water-and-sewer-rates page and three town news posts are recorded in this item. Still needed: the town's PUBLISHED rate schedules for years before FY2026 (hillsboroughnc.gov/about-us/budget-and-finances/water-and-sewer-rates is the place to start).",
       "raised": null,
       "blocks": null
     },
@@ -155,10 +157,10 @@
       "owner": "amy",
       "topic": "Organization vs Government",
       "question": "A decision on whether sub-entities the county funds — the school district, the sheriff's office, EMS — are Organizations under the county Government or Governments in their own right. That is a modelling choice, not a fact to extract.",
-      "status": "open",
+      "status": "in progress",
       "why_it_matters": "Your project scope defines two Governments with nine domains each, so the structure is known. Which level the county-funded bodies belong to is a modelling choice rather than something a document can settle.",
-      "raised_by": "etl/s97_context.py",
-      "answer": null,
+      "raised_by": "etl/s97_context.py; her direction 2026-07-29",
+      "answer": "Her direction, 2026-07-29: the county-funded bodies could be BOTH — elements of an Organization, and elements of Funds where they receive separately tracked funding — \"if this is the case, we should have both views\". Confirmed: the dimensional design supports exactly that (an organization view and a fund view over the same rows). Final modelling waits until the county data is extracted at that grain.",
       "raised": null,
       "blocks": null
     },
@@ -228,7 +230,7 @@
       "topic": "Wording — where figures come from",
       "question": "The masthead used to read \"Every figure comes from the town's own published documents\". It now reads that every figure is shown with its document and page, and that the page says so on the spot wherever a figure comes from something other than a government's own publication. Is that the wording you want?",
       "status": "answered",
-      "why_it_matters": "The original sentence was not quite true and a sceptical reader could catch it: 31 of the 84 documents concern Orange County rather than the town, and 14 of the 83 published figures come from the initiative's own request workbook — the administrative-spend series a commissioner supplied, and two capital-project cost changes. Each of those is already labelled where it appears. (The masthead was not the only place: the page's meta description carried the same claim and was corrected separately.) Changed rather than left, because the strongest sentence on the page is the worst one to have to walk back.",
+      "why_it_matters": "The original sentence was not quite true and a sceptical reader could catch it: 32 of the 86 documents concern Orange County rather than the town, and 14 of the 83 published figures come from the initiative's own request workbook — the administrative-spend series a commissioner supplied, and two capital-project cost changes. Each of those is already labelled where it appears. (The masthead was not the only place: the page's meta description carried the same claim and was corrected separately.) Changed rather than left, because the strongest sentence on the page is the worst one to have to walk back.",
       "raised_by": "site audit 2026-07-28; enforced by tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from",
       "answer": "David settled it on 2026-07-29: the corrected wording stands and is live. Kept here because it is a change to the most prominent sentence on the site and to how the project describes its own sourcing — if you would put it differently, say so and it changes. Nothing about it is expensive to revisit.",
       "raised": null,
@@ -254,7 +256,7 @@
       "status": "answered",
       "why_it_matters": "The sentence was superseded because the site now publishes the audited record recovered from those scans. Since this was first raised, a second audit widened it: the narration itself says at ~49s that \"Every figure names the document and the page it came from\", which overpromises the same way the old masthead did (14 figures come from spreadsheet cells that have no page); and the film's \"2 governments / 6 documents / 1,031 pages\" hold shows counts that changed when the archive's duplicate county budget stopped being counted twice (now 5 documents, 679 pages — the masthead card was switched to the film's opening question so the stale figures no longer sit on the front page, but they remain inside the film). Re-cutting means regenerating machine narration and music, so it is a cost and an ownership question rather than a fix this project should make unasked.",
       "raised_by": "site audit 2026-07-28; widened by the second-pass audit 2026-07-28",
-      "answer": "David settled it on 2026-07-29, and the reasoning is worth keeping: a film is a snapshot of the day it was cut, not a view onto live data. The archive will keep moving — documents get deduplicated, figures get re-checked — and the film cannot be re-recorded every time it does, so the sensible thing is to let it be a film. It is left exactly as cut, and no correction is carried on the page beside it either: the site's own figures are the ones that must be right and are checked on every build, and annotating a 62-second introduction with the archive's revision history would tell a resident nothing they came for. Anyone reading a figure off the film and wanting to rely on it will find the current one, sourced, on the page it is advertising.",
+      "answer": "David settled it on 2026-07-29, and the reasoning is worth keeping: a film is a snapshot of the day it was cut, not a view onto live data. The archive will keep moving — documents get deduplicated, figures get re-checked — and the film cannot be re-recorded every time it does, so the sensible thing is to let it be a film. It is left exactly as cut, and no correction is carried on the page beside it either: the site's own figures are the ones that must be right and are checked on every build, and annotating a 62-second introduction with the archive's revision history would tell a resident nothing they came for. Anyone reading a figure off the film and wanting to rely on it will find the current one, sourced, on the page it is advertising. Amy added on 2026-07-29 that she does want to do some work on the video and likes it overall, with marketing in mind (TikTok, X, NextDoor) — so any future cut is hers to drive, and the film-making pipeline is ready when she is.",
       "raised": null,
       "blocks": null
     },
@@ -562,11 +564,11 @@
       "id": "Q044",
       "owner": "amy",
       "topic": "Wording — who adopts the budget",
-      "question": "The speak-up section used to say the budget is adopted by \"the mayor and Board of Commissioners\". No document in the archive states the adoption mechanics, and in NC towns the board ordinarily adopts with the mayor voting only to break ties — so the sentence now says \"the town's governing board\", which is true on any reading. Should it name the Board of Commissioners alone, or is the mayor part of adoption here?",
-      "status": "open",
-      "why_it_matters": "A claim about who exercises a power is the kind a resident can check against the town charter, and the archive cannot settle it either way — so it is flagged rather than silently rewritten.",
-      "raised_by": "second-pass audit 2026-07-28",
-      "answer": null,
+      "question": "The speak-up section used to say the budget is adopted by \"the mayor and Board of Commissioners\". No document in the archive states the adoption mechanics — so it was flagged rather than silently rewritten.",
+      "status": "answered",
+      "why_it_matters": "A claim about who exercises a power is the kind a resident can check against the town charter.",
+      "raised_by": "second-pass audit 2026-07-28; answered by Amy 2026-07-29",
+      "answer": "Answered by her research, 2026-07-29: Hillsborough's Board of Commissioners is officially defined as the mayor plus five commissioners, and on budget adoption the mayor votes only to break a tie. The site now says \"adopted by the town's Board of Commissioners\" — precise, and correct on her reading since the mayor is part of that board. Note: this rests on her research, not on a document in the archive; the town charter would settle it permanently.",
       "raised": null,
       "blocks": null
     },
@@ -614,6 +616,42 @@
       "status": "open",
       "why_it_matters": "She asked \"I suppose you will need me to upload the Chapel Hill financials?\" — yes, but not yet: steps 3-4 are built, step 5 (marts reading from the warehouse) comes first. Digital originals matter: the scanned Hillsborough reports cost this project the detail beneath a decade of audited statements.",
       "raised_by": "her email 2026-07-29",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q049",
+      "owner": "amy",
+      "topic": "Warehouse — projection horizon",
+      "question": "How far forward do projections go — FY29 (the budget's) or FY35 (your v5's)?",
+      "status": "answered",
+      "why_it_matters": null,
+      "raised_by": "Amy's email 2026-07-29; docs/WAREHOUSE_DESIGN.md question 4",
+      "answer": "Her rule, 2026-07-29: \"as far out as is meaningful\" — for a single capital project, analysis runs to the end of that project's debt; across projects, a long horizon means less because new needs always emerge. Adopted as the marts' rule: per-project views extend to debt maturity; portfolio views stay inside the town's own published window, and anything beyond it is labelled scenario rather than projection.",
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q050",
+      "owner": "amy",
+      "topic": "Workbook B waterfall — the plug is a formula artifact",
+      "question": "In '1 Budget Waterfall', cell C11 reads =C5+9229686-SUM(C6:C10), but C5 is an EMPTY cell and 9,229,686 is a hardcoded intermediate — so the famous −$8,628,296 plug is a formula slip, not a measured presentation gap. Against your own stated totals (B5 = $10,076,945 FY18, C12 = $19,476,631 FY27), the residual the bridge actually needs is +$1,618,649. Separately: your B5 differs by exactly $100,000 from the page-proven FY2018 audited figure — the ACFR's own p.46 column sums to $10,176,945. Worth correcting both in the workbook when convenient.",
+      "status": "open",
+      "why_it_matters": "You asked for the source document and pages behind the −$8.6M difference; the honest answer is that no document carries it — the plug row is computed inside the workbook, and its formula points at an empty cell. The genuine presentation-gap residual (~$1.6M) is far smaller than the plug suggested, though the crosswalk is still needed: three of your six rows are marked 'Needs mapping' or 'Not comparable'. (An apology is owed here too: this project quoted the −$8.6M twice without checking its arithmetic.)",
+      "raised_by": "measured 2026-07-29 from Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx, tab '1 Budget Waterfall', row 11; corroborating FY2018 figure from the FY2018 ACFR p.46 (ocr-arithmetic-verified)",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q051",
+      "owner": "amy",
+      "topic": "Adopted FY2027 budget ordinance",
+      "question": "The archive holds the FY27 RECOMMENDED plan only, but the town's own news summary reports the board approved the FY2027 budget ordinance before July 1. Could you download the adopted ordinance (and any amended financial summary) from the town site and add it to the Drive folder?",
+      "status": "awaiting upload",
+      "why_it_matters": "It upgrades every FY2027 figure from Scenario=Recommended to Adopted — your own extensibility test #1 — and closes the gap between what the site can honestly call 'this year's plan' and 'this year's budget'.",
+      "raised_by": "lead found 2026-07-29 in the town news links referenced by the rates note",
       "answer": null,
       "raised": null,
       "blocks": null

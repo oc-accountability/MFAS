@@ -88,8 +88,10 @@ def main() -> None:
         why="It is part of the total cost of ownership and currently has no source.",
         source="Amy's request; gap reported by etl/s92_total_cost.py",
         status="awaiting upload",
-        answer="Amy states she has uploaded OC Sales Tax information. Not yet present in "
-               "sources/ — needs a fresh Drive export.")
+        answer="Partially landed 2026-07-29: 'White Paper-Basics of Local Sales Taxes.pdf' "
+               "is now in the archive — it explains the NC local-option articles (Article 40 "
+               "and 42 carry the school earmarks) but contains no Orange County figures. "
+               "Still needed: the county's own rate and proceeds.")
 
     add("town", "Utility rate history",
         "Water and sewer rate schedules for years before FY2026.",
@@ -98,8 +100,14 @@ def main() -> None:
             "schedules. The rate studies held are slide decks without the underlying tables.",
         source="gap reported by etl/s93_utility_rates.py",
         status="awaiting upload",
-        answer="Amy states she has uploaded Water and Sewer historical rates. Not yet "
-               "present in sources/ — needs a fresh Drive export.")
+        answer="A file landed 2026-07-29 ('water and sewer historical rates.docx') and is "
+               "archived — but its own first line says 'Source: Gemini AI', so under the one "
+               "rule its figures cannot be published: an AI answer is not a source document. "
+               "Its reference links are real leads, though — the town's water-and-sewer-rates "
+               "page and three town news posts are recorded in this item. Still needed: the "
+               "town's PUBLISHED rate schedules for years before FY2026 "
+               "(hillsboroughnc.gov/about-us/budget-and-finances/water-and-sewer-rates is the "
+               "place to start).")
 
     if proj.get("data_quality_findings"):
         f = proj["data_quality_findings"][0]
@@ -127,10 +135,17 @@ def main() -> None:
     if org.get("still_needed"):
         add("amy", "Organization vs Government",
             org["still_needed"],
+            status="in progress",
+            answer="Her direction, 2026-07-29: the county-funded bodies could be BOTH — "
+                   "elements of an Organization, and elements of Funds where they receive "
+                   "separately tracked funding — \"if this is the case, we should have both "
+                   "views\". Confirmed: the dimensional design supports exactly that (an "
+                   "organization view and a fund view over the same rows). Final modelling "
+                   "waits until the county data is extracted at that grain.",
             why="Your project scope defines two Governments with nine domains each, so the "
                 "structure is known. Which level the county-funded bodies belong to is a "
                 "modelling choice rather than something a document can settle.",
-            source="etl/s97_context.py")
+            source="etl/s97_context.py; her direction 2026-07-29")
 
     for gap in mfas.get("what_would_close_the_gaps", []):
         if gap.lower().startswith("project:"):
@@ -227,7 +242,10 @@ def main() -> None:
                "every build, and annotating a 62-second introduction with the archive's revision "
                "history would tell a resident nothing they came for. Anyone reading a figure off "
                "the film and wanting to rely on it will find the current one, sourced, on the "
-               "page it is advertising.")
+               "page it is advertising. Amy added on 2026-07-29 that she does want to do some "
+               "work on the video and likes it overall, with marketing in mind (TikTok, X, "
+               "NextDoor) — so any future cut is hers to drive, and the film-making pipeline "
+               "is ready when she is.")
 
     # ---- work this project owes ----------------------------------------------
     add("pipeline", "Revenue by source",
@@ -333,15 +351,18 @@ def main() -> None:
 
     add("amy", "Wording — who adopts the budget",
         "The speak-up section used to say the budget is adopted by \"the mayor and Board of "
-        "Commissioners\". No document in the archive states the adoption mechanics, and in NC "
-        "towns the board ordinarily adopts with the mayor voting only to break ties — so the "
-        "sentence now says \"the town's governing board\", which is true on any reading. "
-        "Should it name the Board of Commissioners alone, or is the mayor part of adoption "
-        "here?",
+        "Commissioners\". No document in the archive states the adoption mechanics — so it "
+        "was flagged rather than silently rewritten.",
+        status="answered",
+        answer="Answered by her research, 2026-07-29: Hillsborough's Board of Commissioners "
+               "is officially defined as the mayor plus five commissioners, and on budget "
+               "adoption the mayor votes only to break a tie. The site now says \"adopted by "
+               "the town's Board of Commissioners\" — precise, and correct on her reading "
+               "since the mayor is part of that board. Note: this rests on her research, not "
+               "on a document in the archive; the town charter would settle it permanently.",
         why="A claim about who exercises a power is the kind a resident can check against the "
-            "town charter, and the archive cannot settle it either way — so it is flagged "
-            "rather than silently rewritten.",
-        source="second-pass audit 2026-07-28")
+            "town charter.",
+        source="second-pass audit 2026-07-28; answered by Amy 2026-07-29")
 
     add("pipeline", "Stormwater Fund reconciliation checks",
         "The spending explorer's reconciliation gate covers the General Fund and Water & Sewer "
@@ -390,6 +411,49 @@ def main() -> None:
             "scanned Hillsborough reports cost this project the detail beneath a "
             "decade of audited statements.",
         source="her email 2026-07-29", status="open")
+
+    # ---- from her 2026-07-29 replies and the files that arrived with them ----
+    add("amy", "Warehouse — projection horizon",
+        "How far forward do projections go — FY29 (the budget's) or FY35 (your v5's)?",
+        status="answered",
+        answer="Her rule, 2026-07-29: \"as far out as is meaningful\" — for a single capital "
+               "project, analysis runs to the end of that project's debt; across projects, a "
+               "long horizon means less because new needs always emerge. Adopted as the "
+               "marts' rule: per-project views extend to debt maturity; portfolio views stay "
+               "inside the town's own published window, and anything beyond it is labelled "
+               "scenario rather than projection.",
+        source="Amy's email 2026-07-29; docs/WAREHOUSE_DESIGN.md question 4")
+
+    add("amy", "Workbook B waterfall — the plug is a formula artifact",
+        "In '1 Budget Waterfall', cell C11 reads =C5+9229686-SUM(C6:C10), but C5 is an EMPTY "
+        "cell and 9,229,686 is a hardcoded intermediate — so the famous −$8,628,296 plug is "
+        "a formula slip, not a measured presentation gap. Against your own stated totals "
+        "(B5 = $10,076,945 FY18, C12 = $19,476,631 FY27), the residual the bridge actually "
+        "needs is +$1,618,649. Separately: your B5 differs by exactly $100,000 from the "
+        "page-proven FY2018 audited figure — the ACFR's own p.46 column sums to $10,176,945. "
+        "Worth correcting both in the workbook when convenient.",
+        why="You asked for the source document and pages behind the −$8.6M difference; the "
+            "honest answer is that no document carries it — the plug row is computed inside "
+            "the workbook, and its formula points at an empty cell. The genuine "
+            "presentation-gap residual (~$1.6M) is far smaller than the plug suggested, "
+            "though the crosswalk is still needed: three of your six rows are marked 'Needs "
+            "mapping' or 'Not comparable'. (An apology is owed here too: this project quoted "
+            "the −$8.6M twice without checking its arithmetic.)",
+        source="measured 2026-07-29 from Hillsborough_Workbook_B_Fiscal_Sustainability_"
+               "Risk_Model.xlsx, tab '1 Budget Waterfall', row 11; corroborating FY2018 "
+               "figure from the FY2018 ACFR p.46 (ocr-arithmetic-verified)")
+
+    add("amy", "Adopted FY2027 budget ordinance",
+        "The archive holds the FY27 RECOMMENDED plan only, but the town's own news summary "
+        "reports the board approved the FY2027 budget ordinance before July 1. Could you "
+        "download the adopted ordinance (and any amended financial summary) from the town "
+        "site and add it to the Drive folder?",
+        status="awaiting upload",
+        why="It upgrades every FY2027 figure from Scenario=Recommended to Adopted — your own "
+            "extensibility test #1 — and closes the gap between what the site can honestly "
+            "call 'this year's plan' and 'this year's budget'.",
+        source="lead found 2026-07-29 in the town news links referenced by the rates note")
+
 
 
     # ---- resolve items the archive already answers ---------------------------

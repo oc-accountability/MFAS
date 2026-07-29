@@ -1,10 +1,10 @@
 {
   "generated_by": "etl/s00_manifest.py",
   "summary": {
-    "unique_documents": 84,
+    "unique_documents": 86,
     "duplicate_copies_in_archive": 42,
-    "total_bytes": 879089907,
-    "pdf_digital_text": 46,
+    "total_bytes": 879420905,
+    "pdf_digital_text": 47,
     "pdf_scanned_ocr": 10,
     "oversize_for_github": [
       "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf"
@@ -744,6 +744,20 @@
       "values_extractable": true
     },
     {
+      "id": "water-and-sewer-historical-rates",
+      "filename": "water and sewer historical rates.docx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/water and sewer historical rates.docx",
+      "duplicate_paths": [],
+      "format": "docx",
+      "bytes": 61284,
+      "sha256": "03f089fa35b243907eea5c00bcee7d1161d763701788b4d2e93e2d5c071d5bec",
+      "category": "financial-report",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": false
+    },
+    {
       "id": "redatarequestlongtermfiscaltrendandsustainability",
       "filename": "redatarequestlongtermfiscaltrendandsustainability.zip",
       "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis/redatarequestlongtermfiscaltrendandsustainability.zip",
@@ -1280,6 +1294,27 @@
       "full_page_images": 0,
       "sampled_pages": 6,
       "chars_per_page": 1688,
+      "values_extractable": true
+    },
+    {
+      "id": "white-paper-basics-of-local-sales-taxes",
+      "filename": "White Paper-Basics of Local Sales Taxes.pdf",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/06b Budget & Fin. Analysis - OC/White Paper-Basics of Local Sales Taxes.pdf",
+      "duplicate_paths": [],
+      "format": "pdf",
+      "bytes": 269714,
+      "sha256": "6267bb72294caaa1fea4ec7875a00d4e54b9e0efc48f91c05fbc916fb7768f08",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "pages": 7,
+      "text_layer": "digital",
+      "embedded_fonts": 1,
+      "total_fonts": 6,
+      "full_page_images": 0,
+      "sampled_pages": 6,
+      "chars_per_page": 3194,
       "values_extractable": true
     },
     {

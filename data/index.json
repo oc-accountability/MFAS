@@ -33,9 +33,9 @@
   "counts": {
     "facts": 83,
     "metrics": 42,
-    "documents": 84,
+    "documents": 86,
     "documents_cited": 19,
-    "documents_with_trustworthy_text": 46,
+    "documents_with_trustworthy_text": 47,
     "documents_scanned_needing_transcription": 10,
     "figures_read_from_scan_text": 0,
     "ocr_figures_published": 42,
