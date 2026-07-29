@@ -10,9 +10,9 @@
     "pipeline": "Work this project can do without anyone else."
   },
   "summary": {
-    "total": 45,
-    "open": 35,
-    "answered": 10,
+    "total": 48,
+    "open": 36,
+    "answered": 12,
     "by_owner": {
       "town": {
         "open": 19,
@@ -24,8 +24,8 @@
         "open": 1
       },
       "amy": {
-        "open": 8,
-        "answered": 7
+        "open": 9,
+        "answered": 9
       },
       "pipeline": {
         "in progress": 2,
@@ -578,6 +578,42 @@
       "status": "open",
       "why_it_matters": "A fund with no checks is indistinguishable on screen from a fund that failed them. The explorer now says so explicitly, but the honest fix is to run the checks.",
       "raised_by": "second-pass audit 2026-07-28; measured from data/datasets/lineitem_validation.json",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q046",
+      "owner": "amy",
+      "topic": "Warehouse — system of record",
+      "question": "Is Excel the system of record, or the window onto it?",
+      "status": "answered",
+      "why_it_matters": null,
+      "raised_by": "Amy's email 2026-07-29; docs/WAREHOUSE_DESIGN.md question 1",
+      "answer": "Answered 2026-07-29. Her interpretation, confirmed: \"a process where the website has the warehouse, which is loaded from source (municipal documents), and transferred into Excel... I strongly support a process that is 'closed' and has the best controls over the integrity of the data.\" The pipeline is the store; the Excel export is a generated view, always current, never hand-edited. Her authored workbooks remain authored — read, never written.",
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q047",
+      "owner": "amy",
+      "topic": "Warehouse — which file is the parent",
+      "question": "Which of the four Hillsborough database files is the real parent?",
+      "status": "answered",
+      "why_it_matters": null,
+      "raised_by": "Amy's email 2026-07-29; docs/WAREHOUSE_DESIGN.md question 5",
+      "answer": "Answered 2026-07-29: \"These are all working files. In most cases only FY2025 was loaded in order to help visualize the design.\" No file is the parent — the DESIGN is, and one warehouse structure serves Hillsborough and Orange County alike. The warehouse (etl/s87) builds from the pipeline's verified datasets, not from any working file's sample data; the working files' conventions live on through the Decisions_Inventory.",
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q048",
+      "owner": "amy",
+      "topic": "Chapel Hill financials",
+      "question": "When step 6 (Chapel Hill as the extensibility proof) approaches: gather their adopted budget and ACFR as DIGITAL PDFs — not scans. Two or three recent years is enough to prove the load.",
+      "status": "open",
+      "why_it_matters": "She asked \"I suppose you will need me to upload the Chapel Hill financials?\" — yes, but not yet: steps 3-4 are built, step 5 (marts reading from the warehouse) comes first. Digital originals matter: the scanned Hillsborough reports cost this project the detail beneath a decade of audited statements.",
+      "raised_by": "her email 2026-07-29",
       "answer": null,
       "raised": null,
       "blocks": null

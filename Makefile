@@ -36,6 +36,7 @@ etl:
 	$(PY) etl/s97_context.py
 	$(PY) etl/s99_revenue.py
 	$(PY) etl/s100_structure.py
+	$(PY) etl/s87_fact_financial.py   # the warehouse core — needs s50/s60/s75/s85/s99 outputs
 	$(PY) etl/s98_questions.py
 	$(PY) etl/s102_workbook_audit.py
 	$(PY) etl/s101_workbook.py

@@ -353,6 +353,45 @@ def main() -> None:
             "checks.",
         source="second-pass audit 2026-07-28; measured from data/datasets/lineitem_validation.json")
 
+    # ---- the warehouse decisions, answered by Amy 2026-07-29 -----------------
+    # Recorded here so the decisions live in the register, not only in an email
+    # thread. Her words, verbatim where they are the answer.
+    add("amy", "Warehouse — system of record",
+        "Is Excel the system of record, or the window onto it?",
+        status="answered",
+        answer="Answered 2026-07-29. Her interpretation, confirmed: \"a process where the "
+               "website has the warehouse, which is loaded from source (municipal "
+               "documents), and transferred into Excel... I strongly support a process "
+               "that is 'closed' and has the best controls over the integrity of the "
+               "data.\" The pipeline is the store; the Excel export is a generated view, "
+               "always current, never hand-edited. Her authored workbooks remain "
+               "authored — read, never written.",
+        source="Amy's email 2026-07-29; docs/WAREHOUSE_DESIGN.md question 1")
+
+    add("amy", "Warehouse — which file is the parent",
+        "Which of the four Hillsborough database files is the real parent?",
+        status="answered",
+        answer="Answered 2026-07-29: \"These are all working files. In most cases only "
+               "FY2025 was loaded in order to help visualize the design.\" No file is "
+               "the parent — the DESIGN is, and one warehouse structure serves "
+               "Hillsborough and Orange County alike. The warehouse (etl/s87) builds "
+               "from the pipeline's verified datasets, not from any working file's "
+               "sample data; the working files' conventions live on through the "
+               "Decisions_Inventory.",
+        source="Amy's email 2026-07-29; docs/WAREHOUSE_DESIGN.md question 5")
+
+    add("amy", "Chapel Hill financials",
+        "When step 6 (Chapel Hill as the extensibility proof) approaches: gather their "
+        "adopted budget and ACFR as DIGITAL PDFs — not scans. Two or three recent years "
+        "is enough to prove the load.",
+        why="She asked \"I suppose you will need me to upload the Chapel Hill "
+            "financials?\" — yes, but not yet: steps 3-4 are built, step 5 (marts "
+            "reading from the warehouse) comes first. Digital originals matter: the "
+            "scanned Hillsborough reports cost this project the detail beneath a "
+            "decade of audited statements.",
+        source="her email 2026-07-29", status="open")
+
+
     # ---- resolve items the archive already answers ---------------------------
     # The first run of this register showed two of her standing questions to the town as
     # open when documents already in sources/ answer them. That is precisely what a

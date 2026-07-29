@@ -1221,6 +1221,117 @@ def test_the_tab_map_has_a_column_per_tab():
         wb.close()
 
 
+# ---------------------------------------------------------------------------
+# The warehouse core (s87) — Amy's 2026-07-29 decisions, held to
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def wh():
+    return load("warehouse.json")
+
+
+def test_the_warehouse_grain_is_unique_and_written_down(wh):
+    """Most warehouse pain is a grain nobody wrote down. This one is written down
+    AND enforced: the first build collided on the town's own repeated FICA lines,
+    which is what the Line ordinal exists for."""
+    assert "one row per" in wh["grain"]
+    C = {c: i for i, c in enumerate(wh["columns"])}
+    keys = [(r[C["Organization_ID"]], r[C["Fiscal_Year_ID"]], r[C["Scenario"]],
+             r[C["Fund_ID"]], r[C["Flow"]], r[C["Department"]], r[C["Account"]],
+             r[C["Line"]], r[C["Measure"]]) for r in wh["rows"]]
+    assert len(keys) == len(set(keys)), "duplicate grain keys in Fact_Financial"
+
+
+def test_the_government_is_a_column_and_both_are_loaded(wh):
+    """Her rule, agreed 100%: the government is a COLUMN. Both governments must sit
+    in the ONE table with the ONE schema — step 4's proof, re-derived here rather
+    than trusted from the stage's own flag."""
+    C = {c: i for i, c in enumerate(wh["columns"])}
+    orgs = {r[C["Organization_ID"]] for r in wh["rows"]}
+    assert {"ORG_HB", "ORG_OC"} <= orgs, f"both governments must be loaded: {orgs}"
+    widths = {len(r) for r in wh["rows"]}
+    assert widths == {len(wh["columns"])}, (
+        "rows of differing width — the single-schema claim is false")
+    assert wh["step4_proof"]["schema_changed_by_county_load"] is False
+    assert wh["step4_proof"]["orange_county_rows"] == sum(
+        1 for r in wh["rows"] if r[C["Organization_ID"]] == "ORG_OC")
+
+
+def test_warehouse_scenarios_are_frozen_and_estimates_survive(wh):
+    """Dim_Scenario is frozen at five values, and appending an Actual must never
+    cost an Estimate: what the town projected versus what happened is the history
+    nobody else keeps (her extensibility test #2)."""
+    frozen = {s["Scenario"] for s in wh["dim_scenario"]}
+    assert frozen == {"Actual", "Adopted", "Recommended", "Estimate", "Projection"}
+    C = {c: i for i, c in enumerate(wh["columns"])}
+    used = {r[C["Scenario"]] for r in wh["rows"]}
+    assert used <= frozen, f"scenarios outside the frozen dimension: {used - frozen}"
+    # FY2025 carries budget AND actual readings side by side today — the
+    # never-overwrite property as data, not as a promise.
+    fy25 = {r[C["Scenario"]] for r in wh["rows"] if r[C["Fiscal_Year_ID"]] == "FY2025"
+            and r[C["Organization_ID"]] == "ORG_HB"}
+    assert {"Actual", "Adopted"} <= fy25, fy25
+
+
+def test_warehouse_flows_never_sum_across(wh):
+    """Revenue plus expenditure is not a number. The first build of s87 produced
+    exactly that ($38.9M for the GF), which is why Flow exists — and why each
+    flow must reconcile to its source on its own."""
+    C = {c: i for i, c in enumerate(wh["columns"])}
+    li = load("lineitems.json")
+    L = {c: i for i, c in enumerate(li["columns"])}
+    li_gf27 = round(sum(r[L["value"]] for r in li["rows"]
+                        if r[L["fund"]] == "General Fund"
+                        and r[L["fiscal_year"]] == 2027 and r[L["basis"]] == "budget"), 2)
+    wh_gf27 = round(sum(r[C["Amount"]] for r in wh["rows"]
+                        if r[C["Organization_ID"]] == "ORG_HB"
+                        and r[C["Fiscal_Year_ID"]] == "FY2027"
+                        and r[C["Scenario"]] == "Recommended"
+                        and r[C["Fund_ID"]] == "FUND_GF"
+                        and r[C["Flow"]] == "Expenditure"
+                        and r[C["Measure"]] == "amount"), 2)
+    assert wh_gf27 == li_gf27, (
+        f"warehouse GF FY2027 Recommended expenditure {wh_gf27:,} does not reconcile "
+        f"to the line items {li_gf27:,}")
+
+
+def test_warehouse_hillsborough_rows_cite_the_manifest(wh, documents):
+    C = {c: i for i, c in enumerate(wh["columns"])}
+    ids = {d["id"] for d in documents["documents"]}
+    bad = sorted({r[C["Source_ID"]] for r in wh["rows"]
+                  if r[C["Organization_ID"]] == "ORG_HB" and r[C["Source_ID"]] not in ids})
+    assert not bad, f"Hillsborough fact rows cite unknown documents: {bad}"
+
+
+def test_warehouse_recommended_is_not_called_adopted(wh):
+    """The FY27 line items come from the RECOMMENDED plan. The site once labelled
+    that year "already adopted"; the warehouse must not repeat the lie."""
+    C = {c: i for i, c in enumerate(wh["columns"])}
+    fy27_lineitem_rows = [r for r in wh["rows"]
+                          if r[C["Fiscal_Year_ID"]] == "FY2027"
+                          and r[C["Organization_ID"]] == "ORG_HB"
+                          and r[C["Source_Detail"]] == "line-item appendix"]
+    assert fy27_lineitem_rows, "the FY2027 line items are missing from the warehouse"
+    assert {r[C["Scenario"]] for r in fy27_lineitem_rows} == {"Recommended"}
+
+
+def test_the_government_is_never_a_tab_name():
+    """Her rule's other half: no warehouse tab or file may carry a municipality's
+    name. (Her authored source workbooks keep theirs — they are hers.)"""
+    openpyxl = pytest.importorskip("openpyxl")
+    xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
+    if not xl.exists():
+        pytest.skip("export not built yet")
+    wb = openpyxl.load_workbook(xl, read_only=True)
+    try:
+        bad = [n for n in wb.sheetnames
+               if any(g in n for g in ("Hillsborough", "Orange", "Chapel", "Carrboro",
+                                       "Mebane", "_HB", "_OC", "_CH"))]
+    finally:
+        wb.close()
+    assert not bad, f"government names in tab names: {bad}"
+
+
 # ------------------------------------------- the site's copy vs what it publishes
 #
 # This class of defect is invisible to every check above, and it is the one that

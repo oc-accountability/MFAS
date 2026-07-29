@@ -3,6 +3,17 @@
 *For Amy, 2026-07-28. This is a proposal, not a decision. The open questions at the end are
 genuinely open, and several of them are yours to settle rather than mine.*
 
+> **Status, 2026-07-29 — she decided, and steps 2–4 are built.** Amy agreed 100% to "one
+> warehouse, several marts" and to "the government is a COLUMN"; confirmed the pipeline as
+> the system of record with Excel as a generated view ("I strongly support a process that is
+> 'closed'"); and answered the four-files question — they are all working files with FY2025
+> sample loads, so **the design is the parent, not any file**. Register items Q046/Q047
+> carry her words. `etl/s87_fact_financial.py` now builds the frozen dimensions and
+> `Fact_Financial` — Hillsborough all years and scenarios, Orange County loaded through the
+> identical constructor with zero schema change (the `step4_proof` block in
+> `data/datasets/warehouse.json` records it). Questions 2–4 below remain genuinely open;
+> the account crosswalk remains the highest-value item outstanding with the town.
+
 You asked for suggestions on the approach. Here is what I would build, what I would change
 about the current shape, and where I think you already got it right and should not be talked
 out of it.
@@ -171,6 +182,8 @@ comparison needs the same crosswalk problem solved a second time. Loading them i
    this repository already *is* a warehouse with those properties. One option is that it
    becomes the store and Excel becomes the view — generated, always current, never hand-edited.
    That is a genuine trade of convenience against safety and it should be your call.
+   **→ ANSWERED 2026-07-29 (Q046): the pipeline is the store, Excel the generated view —
+   "I strongly support a process that is 'closed'."**
 
 2. **What grain for `Dim_Account`?** Natural account (SALARIES, GASOLINE), function (Public
    Safety), or both with a mapping? Both is more work and more truthful.
@@ -185,18 +198,29 @@ comparison needs the same crosswalk problem solved a second time. Loading them i
 5. **Which of the four Hillsborough database files is the real parent?** Three were saved
    within an hour of each other and two are 33 seconds apart. The file dates cannot tell us,
    and I would rather build on the one you *meant* than the one that happened to be saved last.
+   **→ ANSWERED 2026-07-29 (Q047): all working files, FY2025 sample loads only — the design
+   is the parent, and no file's data seeds the warehouse.**
 
 ---
 
 ## Suggested sequence
 
-1. Settle questions 1 and 5 above — they change everything downstream.
-2. Freeze `Dim_Organization`, `Dim_Fiscal_Year`, `Dim_Scenario`. Small, stable, unblocking.
-3. Build `Fact_Financial` for Hillsborough only, all years, all scenarios. One government
-   proves the shape.
-4. **Load Orange County into it without changing the schema.** If that requires a schema
-   change, the design is wrong and this is the cheapest possible moment to find out.
-5. Then the analysis marts — waterfalls and change events — reading from it.
-6. Chapel Hill last, as the final proof that step 4 worked.
+1. ~~Settle questions 1 and 5 above~~ — **done 2026-07-29** (her email; register Q046/Q047).
+2. ~~Freeze `Dim_Organization`, `Dim_Fiscal_Year`, `Dim_Scenario`~~ — **done**, in
+   `etl/s87_fact_financial.py` and the export's `Dim_*` tabs.
+3. ~~Build `Fact_Financial` for Hillsborough only, all years, all scenarios~~ — **done**:
+   3,757 rows, FY2018–FY2029, all five scenarios, from the pipeline's verified datasets.
+   Two grain lessons were paid for immediately and are recorded in the stage docstring:
+   the documents themselves repeat account labels (hence `Line`), and revenue must never
+   sum with expenditure (hence `Flow`, which also keeps the budget-vs-audited presentation
+   difference visible instead of resolving it by guesswork).
+4. ~~**Load Orange County into it without changing the schema.**~~ — **done, and the test
+   passed**: 448 county rows through the identical row constructor, zero schema change
+   (`step4_proof` in the dataset; a test pins it). Her county tables that are not
+   fund-level dollar facts are recorded as `not_loaded` rather than forced in.
+5. Then the analysis marts — waterfalls and change events — reading from it. **Next.**
+   (The waterfall still waits on the account crosswalk; the plug row is why.)
+6. Chapel Hill last, as the final proof that step 4 worked. *(Register Q048: digital
+   PDFs — adopted budget + ACFR — when this approaches.)*
 
-Step 4 is the real test, and doing it early is the point.
+Step 4 was the real test, and doing it early was the point.

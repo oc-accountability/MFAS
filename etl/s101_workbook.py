@@ -383,6 +383,38 @@ def main() -> None:
                           "amy": "Your decision",
                           "david": "Repository owner action",
                           "pipeline": "Work this project owes"}.get(r["owner"], "")])
+    # ---- the warehouse core (stage 87) — her 2026-07-29 go-ahead --------------
+    # The pipeline is the system of record and these tabs are the generated view:
+    # her decision, quoted in the register. The government is a COLUMN here — no
+    # tab or file carries a municipality's name, which is the whole point.
+    wh = ds("warehouse")
+    if wh:
+        add("Dim_Organization",
+            ["Organization_ID", "Name", "Status"],
+            [[d["Organization_ID"], d["Name"], d["Status"]]
+             for d in wh["dim_organization"]],
+            "Frozen. Future IDs reserved before their data arrives — her pattern.",
+            note="one row per organization; Status=Future means the ID is reserved, "
+                 "her Hillsborough_Municipal_Financial_Database_v1 convention")
+        add("Dim_Scenario",
+            ["Scenario", "Meaning"],
+            [[d["Scenario"], d["meaning"]] for d in wh["dim_scenario"]],
+            "Frozen. Five values; an Actual never overwrites an Estimate.",
+            note="one row per scenario; appending a year's Actual keeps its Estimate — "
+                 "what was projected vs what happened is the history nobody else keeps")
+        add("Dim_Fiscal_Year_WH",
+            ["Fiscal_Year_ID", "Scenarios loaded"],
+            [[d["Fiscal_Year_ID"], ", ".join(d["scenarios_loaded"])]
+             for d in wh["dim_fiscal_year"]],
+            "Frozen. One row per year present in Fact_Financial.",
+            note="one row per fiscal year loaded; a new budget year is one new row "
+                 "here and appended fact rows — no new columns, no new tabs")
+        add("Fact_Financial",
+            wh["columns"],
+            wh["rows"],
+            "THE warehouse core: both governments, one table, one schema.",
+            note="GRAIN: " + wh["grain"])
+
     add("Data_Quality_Gaps",
         ["Gap_ID", "Priority", "Topic", "Current Status", "Why It Matters",
          "Likely Resolution / Next Steps"], gaps, "Open gaps, in your schema")

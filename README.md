@@ -46,10 +46,13 @@ updates the live page about a minute later.
 
 ## → Want it all in one spreadsheet? **[`data/exports/MFAS_Data_Warehouse.xlsx`](data/exports/MFAS_Data_Warehouse.xlsx)**
 
-19 tabs in the schema of `Orange_County_Municipal_Financial_Information_System_v2.2_Foundation`
+23 tabs in the schema of `Orange_County_Municipal_Financial_Information_System_v2.2_Foundation`
 — every Fact tab keyed by `Fiscal_Year_ID` and ending in `Source_ID` + `Confidence`, plus
 `Source_Register` (the full document manifest with fingerprints), `Data_Quality_Gaps` and the
-open questions register.
+open questions register. Since 2026-07-29 it also carries **the warehouse core** — frozen
+`Dim_Organization` / `Dim_Scenario` / fiscal years and `Fact_Financial`, one table holding both
+governments with the government as a column, its grain stated in row 1. The workbook is a
+generated view of the pipeline (her decision, register Q046): read from it, never type into it.
 
 ⚠️ **It is generated.** `make etl` rebuilds it from the datasets, so anything typed into it is
 overwritten. It is there to read from and copy out of — the authored workbooks stay authored.
