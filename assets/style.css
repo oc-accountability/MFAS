@@ -216,9 +216,13 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   transition: color .14s, background .14s;
 }
 
-/* The phone menu. Hidden entirely on wide screens, where the row of links fits. */
+/* The section menu, for every width where the row of links does NOT fit.
+   Measured, not guessed: the six links need about 900px of nav before the last one
+   stops being cut off, so the breakpoint is 900 and not the 660 the brand label
+   uses. At 660 the tablet range still showed five and a bit links in a scroller
+   with nothing to say it scrolled. */
 .nav-toggle { display: none; }
-@media (max-width: 660px) {
+@media (max-width: 900px) {
   .nav-toggle {
     display: inline-flex; align-items: center; gap: var(--s2);
     margin-left: auto; min-height: 34px; max-width: 62vw; padding: 6px 12px;
@@ -270,7 +274,11 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 @media (min-width: 940px) {
   .masthead-grid { grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr); gap: var(--s8); }
 }
+/* Below the two-column breakpoint the side column stacks under the lede. Capped so
+   the film still reads as an offer beside the text rather than a full-bleed
+   billboard the reader has to scroll past to reach their own figures. */
 .masthead-side { display: grid; gap: var(--s4); align-content: start; }
+@media (max-width: 939px) { .masthead-side { max-width: 460px; } }
 .cta-row { display: flex; flex-wrap: wrap; gap: var(--s3); margin: var(--s6) 0 0; }
 .btn.lg { min-height: 46px; padding: 12px 20px; font-size: var(--t-sm); }
 
