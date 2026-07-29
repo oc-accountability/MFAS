@@ -4,9 +4,9 @@
   "method": "Each workbook is opened and described — sheets, row counts, which government it covers, which fiscal years it mentions, and whether it carries Source_ID/Confidence columns. Files are ordered by their Google Drive modifiedTime, which is when the work was done; the filesystem date on an export is just the export date and tells you nothing.",
   "how_supersession_is_decided": "Within a family, the most recently authored file is CURRENT and the rest are history. Nothing is deleted: a superseded workbook is the record of how the thinking developed, which her own Design Manual asks to keep.",
   "summary": {
-    "workbooks_catalogued": 20,
+    "workbooks_catalogued": 21,
     "in_amys_drive_folder": 16,
-    "held_in_this_archive": 20,
+    "held_in_this_archive": 21,
     "awaiting_export": [],
     "families": 5,
     "authoring_span": [
@@ -59,11 +59,13 @@
     },
     "Risk model": {
       "description": "Workbook B — the fiscal sustainability risk model. Not a version of anything else.",
-      "workbooks": 1,
+      "workbooks": 2,
       "first_authored": "2026-06-25",
       "latest_authored": "2026-06-25",
       "build_on": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
-      "superseded": [],
+      "superseded": [
+        "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx"
+      ],
       "same_session_ambiguity": []
     },
     "Design manual": {
@@ -2442,6 +2444,148 @@
       "has_confidence": false,
       "error": null,
       "sheet_count": 30,
+      "status": "unknown — no authoring date",
+      "recommendation": "Catalogue once exported"
+    },
+    {
+      "workbook": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx",
+      "authored": null,
+      "authored_utc": null,
+      "drive_size_bytes": null,
+      "held_locally": true,
+      "note": "In the project archive but NOT in Amy's 'Excel workbooks' folder.",
+      "family": "Risk model",
+      "family_description": "Workbook B — the fiscal sustainability risk model. Not a version of anything else.",
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "rows": 46,
+          "cols": 1
+        },
+        {
+          "name": "0 Executive Dashboard",
+          "rows": 14,
+          "cols": 15
+        },
+        {
+          "name": "1 Budget Waterfall",
+          "rows": 11,
+          "cols": 15
+        },
+        {
+          "name": "2 Policy Shifts",
+          "rows": 8,
+          "cols": 15
+        },
+        {
+          "name": "3 Structural Health",
+          "rows": 14,
+          "cols": 15
+        },
+        {
+          "name": "4 Cost Allocation Stress",
+          "rows": 17,
+          "cols": 15
+        },
+        {
+          "name": "5 Personnel Exposure",
+          "rows": 21,
+          "cols": 15
+        },
+        {
+          "name": "6 Fire Station Bridge",
+          "rows": 11,
+          "cols": 15
+        },
+        {
+          "name": "7 Ridgewalk Bridge",
+          "rows": 8,
+          "cols": 15
+        },
+        {
+          "name": "8 Rail Station Bridge",
+          "rows": 7,
+          "cols": 15
+        },
+        {
+          "name": "9 Affordable Housing Bridge",
+          "rows": 11,
+          "cols": 15
+        },
+        {
+          "name": "10 Vehicle Replacement",
+          "rows": 8,
+          "cols": 15
+        },
+        {
+          "name": "11 Debt Service Build-up",
+          "rows": 14,
+          "cols": 15
+        },
+        {
+          "name": "12 Tax Equivalent Exposure",
+          "rows": 10,
+          "cols": 15
+        },
+        {
+          "name": "13 FY29 Fiscal Cliff",
+          "rows": 9,
+          "cols": 15
+        },
+        {
+          "name": "14 Base Case",
+          "rows": 18,
+          "cols": 15
+        },
+        {
+          "name": "15 Optimistic Case",
+          "rows": 18,
+          "cols": 15
+        },
+        {
+          "name": "16 Conservative Case",
+          "rows": 18,
+          "cols": 15
+        },
+        {
+          "name": "17 Questions for Management",
+          "rows": 9,
+          "cols": 15
+        },
+        {
+          "name": "18 Sources & Assumptions",
+          "rows": 10,
+          "cols": 15
+        }
+      ],
+      "rows_total": 282,
+      "years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026,
+        2027,
+        2028,
+        2029,
+        2030,
+        2031,
+        2032,
+        2033,
+        2034,
+        2035
+      ],
+      "entities": [
+        "Hillsborough"
+      ],
+      "has_source_ids": false,
+      "has_confidence": true,
+      "error": null,
+      "sheet_count": 20,
       "status": "unknown — no authoring date",
       "recommendation": "Catalogue once exported"
     },

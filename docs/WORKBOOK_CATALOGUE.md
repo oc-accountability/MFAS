@@ -6,7 +6,7 @@ Every Excel workbook in the project, what is in it, and which one to build on.
 Ordered by when the work was actually done (Google Drive's modified date — the
 date on an exported file is just the export date and tells you nothing).
 
-**20 workbooks · 5 families**
+**21 workbooks · 5 families**
 
 ## GF Trend Schedules
 
@@ -62,6 +62,7 @@ Workbook B — the fiscal sustainability risk model. Not a version of anything e
 | Authored | Workbook | Sheets | Rows | Covers | Status |
 |---|---|---|---|---|---|
 | 2026-06-25 | `Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx` | 20 | 282 | Hillsborough · FY18–FY35 | **CURRENT** |
+| ? | `Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx` | 20 | 282 | Hillsborough · FY18–FY35 | history |
 
 ## Design manual
 
@@ -83,6 +84,7 @@ Worth deciding whether these belong there too:
 
 - `Debt Service Projections.xlsx` — 2 sheets, 52 rows
 - `Hillsborough Data Request June 2027.xlsx` — 30 sheets, 161 rows
+- `Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx` — 20 sheets, 282 rows
 - `Issues Log.xlsx` — 1 sheets, 5 rows
 - `OC Design.xlsx` — 1 sheets, 134 rows
 

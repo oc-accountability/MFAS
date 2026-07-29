@@ -91,7 +91,13 @@ def main() -> None:
         answer="Partially landed 2026-07-29: 'White Paper-Basics of Local Sales Taxes.pdf' "
                "is now in the archive — it explains the NC local-option articles (Article 40 "
                "and 42 carry the school earmarks) but contains no Orange County figures. "
-               "Still needed: the county's own rate and proceeds.")
+               "UPDATE, later 2026-07-29: Amy also uploaded RES-2022-041, the county Board "
+               "of Commissioners' resolution on continued uses of the Article 46 "
+               "one-quarter-cent sales and use tax — the county-specific document this item "
+               "wanted. Caution: its embedded text layer interleaves characters (the known "
+               "scan trap), so its figures need careful transcription from the page image "
+               "before any number from it is published. Still needed after that: the "
+               "current proceeds and the school share in dollars.")
 
     add("town", "Utility rate history",
         "Water and sewer rate schedules for years before FY2026.",
@@ -105,9 +111,13 @@ def main() -> None:
                "rule its figures cannot be published: an AI answer is not a source document. "
                "Its reference links are real leads, though — the town's water-and-sewer-rates "
                "page and three town news posts are recorded in this item. Still needed: the "
-               "town's PUBLISHED rate schedules for years before FY2026 "
-               "(hillsboroughnc.gov/about-us/budget-and-finances/water-and-sewer-rates is the "
-               "place to start).")
+               "town's PUBLISHED rate schedules for years before FY2026. UPDATE, later "
+               "2026-07-29: Amy saved the town's own rates page as PDF ('Water and Sewer "
+               "Rates _ Town of Hillsborough...') plus the Stormwater Fees page — both now "
+               "archived. They carry the CURRENT schedule (corroborating this pipeline's "
+               "extraction exactly: $13.32/1,000 gal water in-town, $26.64 minimum) and "
+               "FY2026, but not the earlier history; she plans to ask the Finance Director "
+               "to confirm the earlier years with supporting documentation. Exactly right.")
 
     if proj.get("data_quality_findings"):
         f = proj["data_quality_findings"][0]
@@ -439,9 +449,17 @@ def main() -> None:
             "though the crosswalk is still needed: three of your six rows are marked 'Needs "
             "mapping' or 'Not comparable'. (An apology is owed here too: this project quoted "
             "the −$8.6M twice without checking its arithmetic.)",
+        status="answered",
+        answer="Fixed by Amy the same afternoon, in "
+               "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx — verified "
+               "2026-07-29: B5 now reads 10,176,945 (the page-proven figure), C11 reads "
+               "=C12-SUM(C6:C10) giving +1,991,826, the residual lands at +1,518,649, and "
+               "the FY27 column sums exactly to its stated total. The pipeline now reads the "
+               "highest-versioned Workbook B automatically, so v2 supersedes.",
         source="measured 2026-07-29 from Hillsborough_Workbook_B_Fiscal_Sustainability_"
                "Risk_Model.xlsx, tab '1 Budget Waterfall', row 11; corroborating FY2018 "
-               "figure from the FY2018 ACFR p.46 (ocr-arithmetic-verified)")
+               "figure from the FY2018 ACFR p.46 (ocr-arithmetic-verified); fix verified in "
+               "her v2 the same day")
 
     add("amy", "Adopted FY2027 budget ordinance",
         "The archive holds the FY27 RECOMMENDED plan only, but the town's own news summary "
@@ -453,6 +471,21 @@ def main() -> None:
             "extensibility test #1 — and closes the gap between what the site can honestly "
             "call 'this year's plan' and 'this year's budget'.",
         source="lead found 2026-07-29 in the town news links referenced by the rates note")
+
+    add("pipeline", "Extract the audited detail from the digital originals",
+        "Amy obtained DIGITAL editions of the town's audit reports for FY2021-FY2025 "
+        "(FY2019-FY2020 pending download — the files exceed the transfer tool's size "
+        "ceiling). This is the site's own best-practice ask fulfilled: the detail beneath a "
+        "half-decade of audited statements, previously locked behind scans, is now readable "
+        "character-for-character. Extend the stage-60 reading to every digital year: full "
+        "General Fund statements, the Water & Sewer and Stormwater enterprise fund audited "
+        "outturns, debt schedules, tax levy/collection tables, and fund balance components.",
+        why="The footer currently tells residents this detail 'will not appear here until "
+            "each page proves itself' — with digital originals the proof is direct reading. "
+            "It also lets the scan-recovery method be validated wholesale: every "
+            "OCR-recovered total can now be checked against a digital original.",
+        source="files obtained by Amy 2026-07-29; survey in progress")
+
 
 
 

@@ -406,6 +406,11 @@
       "document": "fiscal-year-2024-2026-strategic-plan-20230626",
       "fiscal_year": 2024,
       "status": "no verifiable statement"
+    },
+    {
+      "document": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
+      "fiscal_year": null,
+      "status": "no verifiable statement"
     }
   ],
   "published": [
@@ -915,6 +920,7 @@
     }
   ],
   "problems": [
-    "fiscal-year-2024-2026-strategic-plan-20230626: no self-verifying budget-vs-actual page found — nothing published from this document"
+    "fiscal-year-2024-2026-strategic-plan-20230626: no self-verifying budget-vs-actual page found — nothing published from this document",
+    "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q: no self-verifying budget-vs-actual page found — nothing published from this document"
   ]
 }

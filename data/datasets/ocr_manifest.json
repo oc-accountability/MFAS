@@ -60,6 +60,13 @@
       "pages": 139,
       "chars": 388892,
       "chars_per_page": 2798
+    },
+    {
+      "document": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
+      "filename": "RES-2022-041-A Resolution regarding continued uses of revenues from a one q.pdf",
+      "pages": 2,
+      "chars": 4311,
+      "chars_per_page": 2156
     }
   ],
   "skipped": [
@@ -72,6 +79,6 @@
       "reason": "duplicate with no recoverable content"
     }
   ],
-  "total_pages": 1072,
+  "total_pages": 1074,
   "elapsed_seconds": 0
 }

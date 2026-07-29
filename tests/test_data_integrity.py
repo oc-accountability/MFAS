@@ -151,6 +151,10 @@ def test_scans_carry_an_extraction_warning(documents):
 # a manifest-regeneration bug that dropped or flipped them fails loudly here
 # instead of shipping.
 KNOWN_SCAN_IDS = {
+    # Added 2026-07-29: the county's Article 46 quarter-cent resolution arrived
+    # as a scan with an interleaved OCR layer — s00's font analysis and a manual
+    # read agree. Its figures require transcription like every other scan.
+    "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
     "fiscal-year-2024-2026-strategic-plan-20230626",
     "annual-comprehensive-financial-report-year-ended-june-30-2018",
     "annual-comprehensive-financial-report-year-ended-june-30-2019",

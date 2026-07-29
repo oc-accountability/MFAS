@@ -47,7 +47,27 @@ warnings.filterwarnings("ignore")
 FOLDER = ("Orange County Efficiency & Accountability Initiative/"
           "06 Budget & Financial Analysis - Hillsborough")
 TRENDS = "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx"
-WB_B = "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx"
+WB_B_STEM = "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model"
+
+
+def newest_wb_b() -> str:
+    """The highest-versioned Workbook B present — v2 supersedes the unsuffixed
+    original automatically, the same rule s85 uses for the design workbook.
+    She ships corrections as new versions (v2 arrived 2026-07-29 fixing the
+    waterfall plug and the FY18 total), and reading the old file after a newer
+    one exists would re-report defects she has already fixed."""
+    import re as _re
+    d = Path(__file__).resolve().parent.parent / "sources" / FOLDER
+    best, best_v = None, -1
+    for p in sorted(d.glob(WB_B_STEM + "*.xlsx")):
+        m = _re.search(r"_v(\d+)\.xlsx$", p.name)
+        v = int(m.group(1)) if m else 0
+        if v > best_v:
+            best, best_v = p.name, v
+    return best or (WB_B_STEM + ".xlsx")
+
+
+WB_B = newest_wb_b()
 
 # Where a figure in her workbooks has an independently-extracted counterpart here.
 # The comparison is the point of this stage, so the mapping is explicit rather than

@@ -153,6 +153,11 @@ def main() -> None:
     print(f"inventorying {len(files)} files under sources/ ...")
 
     for p in files:
+        # An interrupted transfer once left a 0-byte PDF in sources/, and it was
+        # catalogued as a real document with a fingerprint. An empty file is
+        # always an error, never a source.
+        if p.stat().st_size == 0:
+            sys.exit(f"EMPTY FILE in sources/ — an interrupted download? {p}")
         digest = sha256_file(p)
         rel = str(p.relative_to(SOURCES))
         if digest in by_hash:

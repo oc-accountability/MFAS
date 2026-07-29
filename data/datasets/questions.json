@@ -10,9 +10,9 @@
     "pipeline": "Work this project can do without anyone else."
   },
   "summary": {
-    "total": 51,
+    "total": 52,
     "open": 37,
-    "answered": 14,
+    "answered": 15,
     "by_owner": {
       "town": {
         "open": 19,
@@ -25,13 +25,13 @@
       },
       "amy": {
         "in progress": 1,
-        "open": 8,
-        "answered": 11,
+        "open": 7,
+        "answered": 12,
         "awaiting upload": 1
       },
       "pipeline": {
         "in progress": 2,
-        "open": 2
+        "open": 3
       },
       "david": {
         "answered": 1,
@@ -112,7 +112,7 @@
       "status": "awaiting upload",
       "why_it_matters": "It is part of the total cost of ownership and currently has no source.",
       "raised_by": "Amy's request; gap reported by etl/s92_total_cost.py",
-      "answer": "Partially landed 2026-07-29: 'White Paper-Basics of Local Sales Taxes.pdf' is now in the archive — it explains the NC local-option articles (Article 40 and 42 carry the school earmarks) but contains no Orange County figures. Still needed: the county's own rate and proceeds.",
+      "answer": "Partially landed 2026-07-29: 'White Paper-Basics of Local Sales Taxes.pdf' is now in the archive — it explains the NC local-option articles (Article 40 and 42 carry the school earmarks) but contains no Orange County figures. UPDATE, later 2026-07-29: Amy also uploaded RES-2022-041, the county Board of Commissioners' resolution on continued uses of the Article 46 one-quarter-cent sales and use tax — the county-specific document this item wanted. Caution: its embedded text layer interleaves characters (the known scan trap), so its figures need careful transcription from the page image before any number from it is published. Still needed after that: the current proceeds and the school share in dollars.",
       "raised": null,
       "blocks": null
     },
@@ -124,7 +124,7 @@
       "status": "awaiting upload",
       "why_it_matters": "The FY2026 and FY2027 structures are exact, so a bill can be computed at any consumption, but the series cannot be trended backwards without the older schedules. The rate studies held are slide decks without the underlying tables.",
       "raised_by": "gap reported by etl/s93_utility_rates.py",
-      "answer": "A file landed 2026-07-29 ('water and sewer historical rates.docx') and is archived — but its own first line says 'Source: Gemini AI', so under the one rule its figures cannot be published: an AI answer is not a source document. Its reference links are real leads, though — the town's water-and-sewer-rates page and three town news posts are recorded in this item. Still needed: the town's PUBLISHED rate schedules for years before FY2026 (hillsboroughnc.gov/about-us/budget-and-finances/water-and-sewer-rates is the place to start).",
+      "answer": "A file landed 2026-07-29 ('water and sewer historical rates.docx') and is archived — but its own first line says 'Source: Gemini AI', so under the one rule its figures cannot be published: an AI answer is not a source document. Its reference links are real leads, though — the town's water-and-sewer-rates page and three town news posts are recorded in this item. Still needed: the town's PUBLISHED rate schedules for years before FY2026. UPDATE, later 2026-07-29: Amy saved the town's own rates page as PDF ('Water and Sewer Rates _ Town of Hillsborough...') plus the Stormwater Fees page — both now archived. They carry the CURRENT schedule (corroborating this pipeline's extraction exactly: $13.32/1,000 gal water in-town, $26.64 minimum) and FY2026, but not the earlier history; she plans to ask the Finance Director to confirm the earlier years with supporting documentation. Exactly right.",
       "raised": null,
       "blocks": null
     },
@@ -230,7 +230,7 @@
       "topic": "Wording — where figures come from",
       "question": "The masthead used to read \"Every figure comes from the town's own published documents\". It now reads that every figure is shown with its document and page, and that the page says so on the spot wherever a figure comes from something other than a government's own publication. Is that the wording you want?",
       "status": "answered",
-      "why_it_matters": "The original sentence was not quite true and a sceptical reader could catch it: 32 of the 86 documents concern Orange County rather than the town, and 14 of the 83 published figures come from the initiative's own request workbook — the administrative-spend series a commissioner supplied, and two capital-project cost changes. Each of those is already labelled where it appears. (The masthead was not the only place: the page's meta description carried the same claim and was corrected separately.) Changed rather than left, because the strongest sentence on the page is the worst one to have to walk back.",
+      "why_it_matters": "The original sentence was not quite true and a sceptical reader could catch it: 33 of the 95 documents concern Orange County rather than the town, and 14 of the 83 published figures come from the initiative's own request workbook — the administrative-spend series a commissioner supplied, and two capital-project cost changes. Each of those is already labelled where it appears. (The masthead was not the only place: the page's meta description carried the same claim and was corrected separately.) Changed rather than left, because the strongest sentence on the page is the worst one to have to walk back.",
       "raised_by": "site audit 2026-07-28; enforced by tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from",
       "answer": "David settled it on 2026-07-29: the corrected wording stands and is live. Kept here because it is a change to the most prominent sentence on the site and to how the project describes its own sourcing — if you would put it differently, say so and it changes. Nothing about it is expensive to revisit.",
       "raised": null,
@@ -637,10 +637,10 @@
       "owner": "amy",
       "topic": "Workbook B waterfall — the plug is a formula artifact",
       "question": "In '1 Budget Waterfall', cell C11 reads =C5+9229686-SUM(C6:C10), but C5 is an EMPTY cell and 9,229,686 is a hardcoded intermediate — so the famous −$8,628,296 plug is a formula slip, not a measured presentation gap. Against your own stated totals (B5 = $10,076,945 FY18, C12 = $19,476,631 FY27), the residual the bridge actually needs is +$1,618,649. Separately: your B5 differs by exactly $100,000 from the page-proven FY2018 audited figure — the ACFR's own p.46 column sums to $10,176,945. Worth correcting both in the workbook when convenient.",
-      "status": "open",
+      "status": "answered",
       "why_it_matters": "You asked for the source document and pages behind the −$8.6M difference; the honest answer is that no document carries it — the plug row is computed inside the workbook, and its formula points at an empty cell. The genuine presentation-gap residual (~$1.6M) is far smaller than the plug suggested, though the crosswalk is still needed: three of your six rows are marked 'Needs mapping' or 'Not comparable'. (An apology is owed here too: this project quoted the −$8.6M twice without checking its arithmetic.)",
-      "raised_by": "measured 2026-07-29 from Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx, tab '1 Budget Waterfall', row 11; corroborating FY2018 figure from the FY2018 ACFR p.46 (ocr-arithmetic-verified)",
-      "answer": null,
+      "raised_by": "measured 2026-07-29 from Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx, tab '1 Budget Waterfall', row 11; corroborating FY2018 figure from the FY2018 ACFR p.46 (ocr-arithmetic-verified); fix verified in her v2 the same day",
+      "answer": "Fixed by Amy the same afternoon, in Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx — verified 2026-07-29: B5 now reads 10,176,945 (the page-proven figure), C11 reads =C12-SUM(C6:C10) giving +1,991,826, the residual lands at +1,518,649, and the FY27 column sums exactly to its stated total. The pipeline now reads the highest-versioned Workbook B automatically, so v2 supersedes.",
       "raised": null,
       "blocks": null
     },
@@ -652,6 +652,18 @@
       "status": "awaiting upload",
       "why_it_matters": "It upgrades every FY2027 figure from Scenario=Recommended to Adopted — your own extensibility test #1 — and closes the gap between what the site can honestly call 'this year's plan' and 'this year's budget'.",
       "raised_by": "lead found 2026-07-29 in the town news links referenced by the rates note",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q052",
+      "owner": "pipeline",
+      "topic": "Extract the audited detail from the digital originals",
+      "question": "Amy obtained DIGITAL editions of the town's audit reports for FY2021-FY2025 (FY2019-FY2020 pending download — the files exceed the transfer tool's size ceiling). This is the site's own best-practice ask fulfilled: the detail beneath a half-decade of audited statements, previously locked behind scans, is now readable character-for-character. Extend the stage-60 reading to every digital year: full General Fund statements, the Water & Sewer and Stormwater enterprise fund audited outturns, debt schedules, tax levy/collection tables, and fund balance components.",
+      "status": "open",
+      "why_it_matters": "The footer currently tells residents this detail 'will not appear here until each page proves itself' — with digital originals the proof is direct reading. It also lets the scan-recovery method be validated wholesale: every OCR-recovered total can now be checked against a digital original.",
+      "raised_by": "files obtained by Amy 2026-07-29; survey in progress",
       "answer": null,
       "raised": null,
       "blocks": null

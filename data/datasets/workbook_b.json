@@ -2,11 +2,11 @@
   "generated_by": "etl/s96_workbook_b.py",
   "imported_from": [
     "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
-    "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx"
+    "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx"
   ],
   "source_docs": [
     "hillsborough-gf-trend-schedules-fy18-fy27-v5-audit-edition",
-    "hillsborough-workbook-b-fiscal-sustainability-risk-model"
+    "hillsborough-workbook-b-fiscal-sustainability-risk-model-v2"
   ],
   "arrived": "2026-07-27",
   "contract": "Her workbooks are READ, never written — she edits them in Excel. Every figure with an independently-extracted counterpart here is compared against it, and disagreements are reported rather than resolved in this pipeline's favour.",
