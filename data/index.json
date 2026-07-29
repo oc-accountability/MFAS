@@ -11,7 +11,7 @@
   "counts": {
     "facts": 83,
     "metrics": 42,
-    "documents": 75,
+    "documents": 84,
     "documents_with_trustworthy_text": 46,
     "documents_scanned_needing_transcription": 10,
     "multi_document_comparisons": 12,

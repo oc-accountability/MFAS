@@ -10,8 +10,8 @@
     "pipeline": "Work this project can do without anyone else."
   },
   "summary": {
-    "total": 37,
-    "open": 30,
+    "total": 40,
+    "open": 33,
     "answered": 7,
     "by_owner": {
       "town": {
@@ -24,7 +24,7 @@
         "open": 1
       },
       "amy": {
-        "open": 6,
+        "open": 9,
         "answered": 4
       },
       "pipeline": {
@@ -223,6 +223,42 @@
     },
     {
       "id": "Q016",
+      "owner": "amy",
+      "topic": "Wording — where figures come from",
+      "question": "The masthead used to read \"Every figure comes from the town's own published documents\". It now reads that every figure is shown with its document and page, and that the page says so on the spot wherever a figure comes from something other than a government's own publication. Is that the wording you want?",
+      "status": "open",
+      "why_it_matters": "The original sentence was not quite true and a sceptical reader could catch it: 40 of the 75 documents are the county's rather than the town's, and 14 of the 83 published figures come from the initiative's own request workbook — the administrative-spend series a commissioner supplied, and two capital-project cost changes. Each of those is already labelled where it appears, so the masthead was the only place that overclaimed. Changed rather than left, because the strongest sentence on the page is the worst one to have to walk back.",
+      "raised_by": "site audit 2026-07-28; enforced by tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q017",
+      "owner": "amy",
+      "topic": "Resident film",
+      "question": "The 62-second film is now on the site itself, as a still image in the masthead that loads nothing until it is pressed. Should it stay an offer a reader can ignore, or lead the page?",
+      "status": "open",
+      "why_it_matters": "It only appeared in the README before, where no resident will ever look. Placed as an offer on the judgement that a reader who arrives annoyed about a tax bill wants their own number first — but it is your film and the call is yours.",
+      "raised_by": "site audit 2026-07-28",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q018",
+      "owner": "amy",
+      "topic": "Resident film",
+      "question": "At about 50 seconds the film shows a screenshot of the site carrying a sentence that has since been corrected — the old \"nothing on this page is taken from those\" line about scanned documents. Is that worth a re-cut?",
+      "status": "open",
+      "why_it_matters": "The sentence was superseded because the site now publishes the audited record recovered from those scans. Nothing in the film's narration is wrong; it is one frame of a screenshot that no longer matches the page. Re-cutting means regenerating machine narration and music, so it is a cost and an ownership question rather than a fix this project should make unasked.",
+      "raised_by": "site audit 2026-07-28",
+      "answer": null,
+      "raised": null,
+      "blocks": null
+    },
+    {
+      "id": "Q019",
       "owner": "pipeline",
       "topic": "Revenue by source",
       "question": "Build the broader revenue view she asked for — grants, state-shared revenue, other funds — not just property tax and sales tax.",
@@ -234,7 +270,7 @@
       "blocks": null
     },
     {
-      "id": "Q017",
+      "id": "Q020",
       "owner": "pipeline",
       "topic": "Stacked waterfall",
       "question": "Show the key drivers as a stacked waterfall of increases and decreases.",
@@ -246,7 +282,7 @@
       "blocks": null
     },
     {
-      "id": "Q018",
+      "id": "Q021",
       "owner": "pipeline",
       "topic": "Total cost of ownership",
       "question": "FY2028 and FY2029 do not exist as adopted rates. The town's capital plan states the tax rate its projects would require, which is a plan rather than a rate, and is reported separately as such.",
@@ -258,7 +294,7 @@
       "blocks": null
     },
     {
-      "id": "Q019",
+      "id": "Q022",
       "owner": "amy",
       "topic": "README film links if the repo moves",
       "question": "If this repository is transferred to another GitHub account, the two film links at the top of the README have to be updated — they are absolute Pages URLs.",
@@ -270,7 +306,7 @@
       "blocks": null
     },
     {
-      "id": "Q020",
+      "id": "Q023",
       "owner": "david",
       "topic": "Repository name",
       "question": "Rename the GitHub repository from `hoa-funds` to something that matches the project.",
@@ -282,7 +318,7 @@
       "blocks": null
     },
     {
-      "id": "Q021",
+      "id": "Q024",
       "owner": "amy",
       "topic": "Project dimension",
       "question": "Should Project be a real dimension?",
@@ -294,7 +330,7 @@
       "blocks": null
     },
     {
-      "id": "Q022",
+      "id": "Q025",
       "owner": "amy",
       "topic": "Recurring vs one-time",
       "question": "Add a dimension separating ongoing operations from one-time items.",
@@ -306,7 +342,7 @@
       "blocks": null
     },
     {
-      "id": "Q023",
+      "id": "Q026",
       "owner": "amy",
       "topic": "Cross-fund transfers",
       "question": "A schedule with the transfer columns going across.",
@@ -318,7 +354,7 @@
       "blocks": null
     },
     {
-      "id": "Q024",
+      "id": "Q027",
       "owner": "town",
       "topic": "Driver: Salary and benefit increases",
       "question": "Request department-by-department compensation growth and headcount/FTE history.",
@@ -330,7 +366,7 @@
       "blocks": null
     },
     {
-      "id": "Q025",
+      "id": "Q028",
       "owner": "town",
       "topic": "Driver: FY26 market pay adjustments",
       "question": "Clarify which departments received the largest pay adjustments.",
@@ -342,7 +378,7 @@
       "blocks": null
     },
     {
-      "id": "Q026",
+      "id": "Q029",
       "owner": "town",
       "topic": "Driver: Fire station reserve / future debt gap",
       "question": "Ask for full station funding model and alternatives such as renovation.",
@@ -354,7 +390,7 @@
       "blocks": null
     },
     {
-      "id": "Q027",
+      "id": "Q030",
       "owner": "town",
       "topic": "Driver: Ridgewalk Greenway reserve / future debt gap",
       "question": "Ask if scope can be phased or outside funding increased.",
@@ -366,7 +402,7 @@
       "blocks": null
     },
     {
-      "id": "Q028",
+      "id": "Q031",
       "owner": "town",
       "topic": "Driver: Passenger rail / multi-modal station town share",
       "question": "Ask for current project budget, funding agreements, and local match cap.",
@@ -378,7 +414,7 @@
       "blocks": null
     },
     {
-      "id": "Q029",
+      "id": "Q032",
       "owner": "town",
       "topic": "Driver: Affordable housing annual contribution target",
       "question": "Track commitments by project, partner, year, and restricted vs unrestricted funds.",
@@ -390,7 +426,7 @@
       "blocks": null
     },
     {
-      "id": "Q030",
+      "id": "Q033",
       "owner": "town",
       "topic": "Driver: FY26 affordable housing major expense",
       "question": "Reconcile to affordable housing reserve and project-level commitments.",
@@ -402,7 +438,7 @@
       "blocks": null
     },
     {
-      "id": "Q031",
+      "id": "Q034",
       "owner": "town",
       "topic": "Driver: Nonprofit partnership funding growth",
       "question": "Review whether increases should be frozen during projected deficits.",
@@ -414,7 +450,7 @@
       "blocks": null
     },
     {
-      "id": "Q032",
+      "id": "Q035",
       "owner": "town",
       "topic": "Driver: Public Space and Sustainability annual commitment",
       "question": "Ask for a project list and measurable ROI/savings for sustainability funds.",
@@ -426,7 +462,7 @@
       "blocks": null
     },
     {
-      "id": "Q033",
+      "id": "Q036",
       "owner": "town",
       "topic": "Driver: Community Services reorganization",
       "question": "Ask for before/after org chart, net FTE change, and total savings.",
@@ -438,7 +474,7 @@
       "blocks": null
     },
     {
-      "id": "Q034",
+      "id": "Q037",
       "owner": "town",
       "topic": "Driver: Police cameras and equipment",
       "question": "Ask for Axon/Flock contract terms and renewal schedule.",
@@ -450,7 +486,7 @@
       "blocks": null
     },
     {
-      "id": "Q035",
+      "id": "Q038",
       "owner": "town",
       "topic": "Driver: Vehicle replacement funds",
       "question": "Build a rolling vehicle replacement schedule by department.",
@@ -462,7 +498,7 @@
       "blocks": null
     },
     {
-      "id": "Q036",
+      "id": "Q039",
       "owner": "town",
       "topic": "Driver: Sales tax flatline",
       "question": "Separate normal sales tax growth from COVID-era one-time growth and refunds.",
@@ -474,7 +510,7 @@
       "blocks": null
     },
     {
-      "id": "Q037",
+      "id": "Q040",
       "owner": "town",
       "topic": "Driver: Projected FY29 deficit",
       "question": "Build deficit bridge: personnel, debt, capital, revenue, policy choices.",

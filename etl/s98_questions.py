@@ -149,6 +149,41 @@ def main() -> None:
         answer="Model check: 5,000 gal/month gives $2,044/year against her stated ~$2,100 — "
                "within 3%. Treated as corroboration of the rate structure, not as her data.")
 
+    add("amy", "Wording — where figures come from",
+        "The masthead used to read \"Every figure comes from the town's own published "
+        "documents\". It now reads that every figure is shown with its document and page, and "
+        "that the page says so on the spot wherever a figure comes from something other than a "
+        "government's own publication. Is that the wording you want?",
+        why="The original sentence was not quite true and a sceptical reader could catch it: 40 "
+            "of the 75 documents are the county's rather than the town's, and 14 of the 83 "
+            "published figures come from the initiative's own request workbook — the "
+            "administrative-spend series a commissioner supplied, and two capital-project cost "
+            "changes. Each of those is already labelled where it appears, so the masthead was "
+            "the only place that overclaimed. Changed rather than left, because the strongest "
+            "sentence on the page is the worst one to have to walk back.",
+        source="site audit 2026-07-28; enforced by "
+               "tests/test_data_integrity.py::test_the_masthead_does_not_overclaim_where_figures_come_from")
+
+    add("amy", "Resident film",
+        "The 62-second film is now on the site itself, as a still image in the masthead that "
+        "loads nothing until it is pressed. Should it stay an offer a reader can ignore, or "
+        "lead the page?",
+        why="It only appeared in the README before, where no resident will ever look. Placed as "
+            "an offer on the judgement that a reader who arrives annoyed about a tax bill wants "
+            "their own number first — but it is your film and the call is yours.",
+        source="site audit 2026-07-28")
+
+    add("amy", "Resident film",
+        "At about 50 seconds the film shows a screenshot of the site carrying a sentence that "
+        "has since been corrected — the old \"nothing on this page is taken from those\" line "
+        "about scanned documents. Is that worth a re-cut?",
+        why="The sentence was superseded because the site now publishes the audited record "
+            "recovered from those scans. Nothing in the film's narration is wrong; it is one "
+            "frame of a screenshot that no longer matches the page. Re-cutting means "
+            "regenerating machine narration and music, so it is a cost and an ownership "
+            "question rather than a fix this project should make unasked.",
+        source="site audit 2026-07-28")
+
     # ---- work this project owes ----------------------------------------------
     add("pipeline", "Revenue by source",
         "Build the broader revenue view she asked for — grants, state-shared revenue, other "

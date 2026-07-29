@@ -1,9 +1,9 @@
 {
   "generated_by": "etl/s00_manifest.py",
   "summary": {
-    "unique_documents": 75,
-    "duplicate_copies_in_archive": 35,
-    "total_bytes": 878641746,
+    "unique_documents": 84,
+    "duplicate_copies_in_archive": 42,
+    "total_bytes": 879089907,
     "pdf_digital_text": 46,
     "pdf_scanned_ocr": 10,
     "oversize_for_github": [
@@ -715,7 +715,9 @@
       "id": "hillsborough-gf-trend-schedules-fy18-fy27-v5-audit-edition",
       "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 82308,
       "sha256": "f2b817694d6dbeab55be11340c73c39fa11ff0dcdf2770432b2ce636faea79e7",
@@ -729,7 +731,9 @@
       "id": "hillsborough-workbook-b-fiscal-sustainability-risk-model",
       "filename": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/06 Budget & Financial Analysis - Hillsborough/Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 524304,
       "sha256": "f6fa0e0de53756eaef844a545f02cade9c093a7fbb3496db80f8041e96d3da9e",
@@ -1310,7 +1314,9 @@
       "id": "orange-county-municipal-finance-database-v1-0",
       "filename": "Orange_County_Municipal_Finance_Database_v1.0.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Finance_Database_v1.0.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Orange_County_Municipal_Finance_Database_v1.0.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 57333,
       "sha256": "d819f7eab876f57d592f069055eff499261b876b54d937743e2cdbbf53711712",
@@ -1324,7 +1330,9 @@
       "id": "orange-county-municipal-finance-database-v1-1",
       "filename": "Orange_County_Municipal_Finance_Database_v1.1.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Finance_Database_v1.1.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Orange_County_Municipal_Finance_Database_v1.1.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 67896,
       "sha256": "359a2e63e4d0faead6e7234c3e040c0e47316a5384d2a29edf9ee973028f8586",
@@ -1338,7 +1346,9 @@
       "id": "orange-county-municipal-financial-data-warehouse-v1-2",
       "filename": "Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 95789,
       "sha256": "8ca50c7d1d9b59ae10b8b8a4090d5b8b661999b91b5e39766cd04daadeeb344d",
@@ -1352,7 +1362,9 @@
       "id": "orange-county-municipal-financial-data-warehouse-v2-0",
       "filename": "Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 112197,
       "sha256": "d1c0019c2745468a7ebcd46bc376b119377c5b60c4a4cf50a8bf4549ab8fae62",
@@ -1366,13 +1378,141 @@
       "id": "orange-county-municipal-financial-information-system-v2-2-foundation",
       "filename": "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
       "archive_path": "Orange County Efficiency & Accountability Initiative/11 Design Documents/Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
-      "duplicate_paths": [],
+      "duplicate_paths": [
+        "Orange County Efficiency & Accountability Initiative/Excel workbooks/Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx"
+      ],
       "format": "xlsx",
       "bytes": 215919,
       "sha256": "600ff180a3e058b3767beb24b7e083d5ae034f6b2551d18155a6d6790fb03c19",
       "category": "other",
       "fiscal_year": null,
       "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-gf-trend-schedules-fy18-fy27",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 27863,
+      "sha256": "a4cff7456c4ca7f862719cfef779f8e0f5dd0118d19120641cf59a4c40771de7",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-gf-trend-schedules-fy18-fy27-v2",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 45498,
+      "sha256": "b29c95ce9728c4c8c0ad47253686f8838d9e37791450d4c46ba7e524f61d9a47",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-gf-trend-schedules-fy18-fy27-v3",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 66893,
+      "sha256": "b27792f954004d28b3c4b68c437a30667b2f20a1590382bbda3403411a9b5b8c",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-gf-trend-schedules-fy18-fy27-v4",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 96637,
+      "sha256": "fdf1cc1614ccf06193ce33b50f22e28ea0d51a87053bba4624b822a15b44b297",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-municipal-financial-database-v1",
+      "filename": "Hillsborough_Municipal_Financial_Database_v1.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_Municipal_Financial_Database_v1.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 27300,
+      "sha256": "e20884babf4cf05836fecf5064b19f2bd5c932f7b6936953c24c689e15580f97",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "hillsborough-municipal-financial-database-v2-fy18-fy29",
+      "filename": "Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 74205,
+      "sha256": "9571b92d98c927782cef463a22cf498d3d4fb2471e02281bf3f1ddf326b21d33",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "municipal-finance-database-hillsborough-v1-0",
+      "filename": "Municipal Finance Database - Hillsborough - v1.0.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Municipal Finance Database - Hillsborough - v1.0.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 60575,
+      "sha256": "f2dacd7ae4b1b77bf8c98a439baf017d8aec5026a542592f56842bfb734e122c",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "municipal-finance-project-design-manual-v1-0",
+      "filename": "Municipal Finance Project Design Manual v1.0.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Municipal Finance Project Design Manual v1.0.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 19923,
+      "sha256": "1a917f31b130a27497367f6e6456b0accc4ab62216ab3d4580210651d9befe8b",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Orange County, NC",
+      "official_url": null,
+      "values_extractable": true
+    },
+    {
+      "id": "municipal-financial-analysis-hillsborough-v1-0",
+      "filename": "Municipal Financial Analysis - Hillsborough - v1.0.xlsx",
+      "archive_path": "Orange County Efficiency & Accountability Initiative/Excel workbooks/Municipal Financial Analysis - Hillsborough - v1.0.xlsx",
+      "duplicate_paths": [],
+      "format": "xlsx",
+      "bytes": 29267,
+      "sha256": "ddcc9730385f52d7ce76441c3d37784cfe69794dde042569b6d3c5d7c8aa8d61",
+      "category": "other",
+      "fiscal_year": null,
+      "jurisdiction": "Town of Hillsborough, NC",
       "official_url": null,
       "values_extractable": true
     },
