@@ -2777,53 +2777,6 @@ function setupFilm() {
 }
 
 /**
- * What the film gets wrong, said plainly beside the film.
- *
- * The film is a fixed artefact and is staying as it was cut — David's call, and a
- * reasonable one: re-cutting means regenerating machine narration and music. But it
- * is published by this project, on this page, and two of the things it says are no
- * longer true. Doctrine here is not ambiguous. "Report a source's errors; never
- * silently correct them" applies hardest when the source is us, and the one rule is
- * that no figure appears without a way to check it — a film stating 1,031 pages
- * over a site stating 679 fails that whether or not the film is easy to edit.
- *
- * So the film's own claims are quoted as constants — they are frozen in a video and
- * cannot be derived — and everything they are compared against is read live. If the
- * data ever agrees with the film again, this renders nothing at all.
- */
-const FILM_SAYS = { documents: 6, pages: 1031 };   // as held on screen at ~0:08
-function renderFilmNote() {
-  const slot = $('#filmNote');
-  if (!slot) return;
-  const b = ((state.data.structure || {}).reading_burden) || {};
-  const bits = [];
-
-  if (b.current_cycle_documents && b.current_cycle_pages
-      && (b.current_cycle_documents !== FILM_SAYS.documents
-          || b.current_cycle_pages !== FILM_SAYS.pages)) {
-    const dropped = (b.editions_collapsed || [])[0];
-    bits.push(`It counts <em>${FILM_SAYS.documents} documents and
-      ${FILM_SAYS.pages.toLocaleString('en-US')} pages</em>.
-      ${dropped ? 'One of them turned out to be the same county budget filed twice under '
-        + 'near-identical names' : 'A duplicate was later found in the archive'}, so the checked
-      figures are <strong>${b.current_cycle_documents} documents and
-      ${b.current_cycle_pages.toLocaleString('en-US')} pages</strong>.`);
-  }
-
-  const all = (state.data.facts || {}).facts || [];
-  const pageless = all.filter(f => f.source_doc && !f.source_page).length;
-  if (pageless) {
-    bits.push(`Its closing line promises a page for every figure;
-      <strong>${pageless} of the ${all.length}</strong> come from spreadsheet cells, which have a
-      document but no page.`);
-  }
-
-  if (!bits.length) return;
-  slot.innerHTML = `<p class="film-note"><strong>Since this was filmed.</strong>
-    ${bits.join(' ')} Both are corrected on this page. The film is left exactly as it was cut.</p>`;
-}
-
-/**
  * How you can check this — the masthead's credibility column.
  *
  * Every row is measured rather than typed into the markup, including the zero.
@@ -2888,7 +2841,7 @@ function render() {
   renderVoice(main);
   renderReceipts(main);
   if (firstPaint) {
-    renderVerify(); renderFilmNote(); setupScrollSpy();
+    renderVerify(); setupScrollSpy();
     firstPaint = false;
   }
 }

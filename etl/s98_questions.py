@@ -29,7 +29,6 @@ a question that quietly vanishes is indistinguishable from one that was forgotte
 from __future__ import annotations
 
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -75,18 +74,6 @@ def main() -> None:
     n_pageless_facts = sum(1 for f in facts_all
                            if f.get("source_doc") and not f.get("source_page"))
     burden = ds("structure.json").get("reading_burden", {})
-
-    # The film's own on-screen counts are frozen in a video and cannot be derived, so
-    # the site keeps them as one constant and this register reads that constant rather
-    # than repeating it. Two copies of a number nobody can re-measure is exactly how
-    # the register's header promises not to drift.
-    app_js = (Path(__file__).resolve().parent.parent / "assets" / "app.js").read_text(
-        encoding="utf-8")
-    m = re.search(r"const FILM_SAYS = \{\s*documents:\s*(\d+),\s*pages:\s*(\d+)", app_js)
-    if not m:
-        raise SystemExit("FILM_SAYS not found in assets/app.js — the film's on-screen counts "
-                         "are quoted in the register and must come from one place")
-    film_docs, film_pages = int(m.group(1)), int(m.group(2))
 
     # ---- questions only a government can answer ------------------------------
     for q in wbb.get("her_open_questions_to_the_town", []):
@@ -231,17 +218,16 @@ def main() -> None:
             f"fix this project should make unasked.",
         source="site audit 2026-07-28; widened by the second-pass audit 2026-07-28",
         status="answered",
-        answer=f"David settled it on 2026-07-29: no re-cut, the film stays exactly as it was "
-               f"cut. That leaves two claims inside it that the data has since moved past, so "
-               f"they are now corrected in writing beside the film on the site itself — the "
-               f"{film_docs} documents / {film_pages:,} pages hold against the checked "
-               f"{burden.get('current_cycle_documents', '?')} and "
-               f"{burden.get('current_cycle_pages', 0):,}, and the closing promise of a page for "
-               f"every figure against the {n_pageless_facts} that come from spreadsheet cells. "
-               f"The correction is computed from the data rather than typed in, so it will "
-               f"disappear by itself if the film is ever re-cut to match. Reporting our own "
-               f"source's errors instead of quietly living with them is the same rule this "
-               f"project applies to the county's misprinted tax-rate table.")
+        answer="David settled it on 2026-07-29, and the reasoning is worth keeping: a film is a "
+               "snapshot of the day it was cut, not a view onto live data. The archive will keep "
+               "moving — documents get deduplicated, figures get re-checked — and the film cannot "
+               "be re-recorded every time it does, so the sensible thing is to let it be a film. "
+               "It is left exactly as cut, and no correction is carried on the page beside it "
+               "either: the site's own figures are the ones that must be right and are checked on "
+               "every build, and annotating a 62-second introduction with the archive's revision "
+               "history would tell a resident nothing they came for. Anyone reading a figure off "
+               "the film and wanting to rely on it will find the current one, sourced, on the "
+               "page it is advertising.")
 
     # ---- work this project owes ----------------------------------------------
     add("pipeline", "Revenue by source",
