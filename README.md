@@ -46,6 +46,15 @@ questions register.
 
 ⚠️ **It is generated.** `make etl` rebuilds it from the datasets, so anything typed into it is
 overwritten. It is there to read from and copy out of — the authored workbooks stay authored.
+
+
+## → Working on this with an AI agent? Start at **[`docs/AGENT_BRIEF.md`](docs/AGENT_BRIEF.md)**
+
+The rules the work follows: never publish a figure that cannot be traced to a document and page,
+pose questions rather than answer them, report a source's errors rather than silently correcting
+them, and check your own tooling before reporting anyone else as wrong. Also the operational
+traps, each of which cost real time once.
+
 Everything below is for *changing* the project, not for viewing it.
 
 **Every number carries the document and page it came from.** Nothing is presented as a finding
