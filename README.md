@@ -20,6 +20,13 @@
 What your property tax actually costs you, where it goes, and what the town said no to. The looping
 preview above is silent; the film is not.
 
+The film also sits **on the site itself**, in the masthead — residents were never going to find it
+in a README. It is offered rather than imposed: the card is a 10 KB still
+(`docs/media/mfas-commercial-card.jpg`) and the 4.5 MB file is fetched only when somebody presses
+play, so a reader on a slow connection pays nothing for a film they did not want. Captions
+(`docs/media/mfas-commercial.vtt`) are on by default and are cut to the narration's **own measured
+per-line start and end times** from the film build, not timed by ear.
+
 
 
 
@@ -110,7 +117,14 @@ Sorting by character coordinates does not fix it — the OCR layer's own positio
 
 A pipeline built on that text would publish confidently wrong figures about named public officials.
 So the manifest classifies every document, the build **refuses** to publish a value marked
-`ocr-unverified`, and none of the 62 figures on the site come from a scanned file.
+`ocr-unverified`, and **not one figure anywhere on the site is read from a scan's embedded text
+layer** — `tests/test_data_integrity.py::test_no_published_fact_comes_from_a_scanned_document`
+enforces it.
+
+The audited series is the one place a scanned *page* contributes at all, and it never goes through
+that text layer: the page is re-rendered and re-read from the image, and a figure is published only
+where its column still reconciles to the total printed beside it (`etl/s75_ocr_statements.py`).
+Columns that fail are withheld, and the site shows the resulting hole as a blank cell.
 
 ### Best practice: replace scanned PDFs with digital originals
 
@@ -129,9 +143,11 @@ and makes their own record easier for residents to check.
 **Fresh OCR does work, and that was measured rather than assumed.** One report exists in both
 digital and scanned form, so it serves as ground truth: rendering the scan at 300 DPI and running
 `tesseract --psm 6` reproduced **141 of 141 figures exactly, with none invented**
-(`etl/ocr_accuracy_probe.py`). The audited decade is therefore recoverable — that is work not yet
-done, not a wall. The caveat that matters: this proves *digit recognition*, not *row and column
-attribution*, so anything built on it must check each page against its own printed arithmetic.
+(`etl/ocr_accuracy_probe.py`). That measurement is what made the audited summary statements
+recoverable, and they now ship. The caveat that matters: it proves *digit recognition*, not *row
+and column attribution*, which is why every recovered column is still checked against its own
+printed arithmetic before publication — and why the detail *below* those summary statements has
+not been attempted yet.
 
 Full diagnosis, evidence, and the safe paths to recovering the audited history:
 **[`docs/EXTRACTION_NOTES.md`](docs/EXTRACTION_NOTES.md)**.

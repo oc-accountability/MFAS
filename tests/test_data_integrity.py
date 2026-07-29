@@ -977,3 +977,76 @@ def test_the_tab_map_has_a_column_per_tab():
             assert name in wb.sheetnames, name
     finally:
         wb.close()
+
+
+# ------------------------------------------- the site's copy vs what it publishes
+#
+# This class of defect is invisible to every check above, and it is the one that
+# does the most damage: a sentence that was true when it was written and is now
+# contradicted by the page it sits on. Three of them had accumulated — the glossary
+# told readers the site "cannot yet show" audited figures while the audited record
+# sat two sections above it, the receipts intro said nothing on the page came from a
+# scanned document, and the footer called the audited decade "work not yet done". A
+# reader who notices one of those has been given a reason to disbelieve everything
+# else, which is the only asset this project has.
+SITE_COPY = ("index.html", "assets/app.js")
+
+
+def _site_text():
+    return "\n".join((REPO / f).read_text(encoding="utf-8") for f in SITE_COPY)
+
+
+def test_the_site_never_claims_it_lacks_figures_it_publishes(ocr_statements):
+    """If the audited series ships, no copy may say it does not."""
+    if not ocr_statements["published"]:
+        pytest.skip("nothing recovered from scans in this build")
+    text = _site_text().lower()
+    for phrase in ("cannot yet show", "work not yet done", "no longer out of reach"):
+        assert phrase not in text, (
+            f"site copy still says {phrase!r} while ocr_statements.json publishes "
+            f"{len(ocr_statements['published'])} recovered figures")
+
+
+def test_the_site_never_claims_scans_contribute_nothing(ocr_statements):
+    """A scan's *hidden text* is never trusted; a scanned *page* does contribute.
+
+    Collapsing those two is what made the old sentence false. The precise claim is
+    worth more than the sweeping one, so the sweeping one must not come back.
+    """
+    if not ocr_statements["published"]:
+        pytest.skip("nothing recovered from scans in this build")
+    text = " ".join(_site_text().lower().split())
+    for phrase in ("nothing on this page is taken from those",
+                   "none of the figures on this page come from a scan"):
+        assert phrase not in text, f"site copy still says {phrase!r}"
+
+
+def test_the_masthead_does_not_overclaim_where_figures_come_from(facts, documents):
+    """14 of the published figures come from the initiative's own request workbook,
+    not from a government publication. The page labels them where they appear; the
+    masthead must not contradict that by claiming every figure is a government's."""
+    by_id = {d["id"]: d for d in documents["documents"]}
+    non_gov = {f["source_doc"] for f in facts
+               if by_id.get(f["source_doc"], {}).get("category") in {"records-request", "issues"}}
+    if not non_gov:
+        pytest.skip("every fact currently comes from a government publication")
+    html = (REPO / "index.html").read_text(encoding="utf-8")
+    assert "Every figure comes from the town's own published documents" not in html, (
+        f"the masthead claims every figure is the town's while {len(non_gov)} source "
+        f"document(s) are the initiative's own")
+
+
+def test_the_masthead_does_not_promise_a_page_every_figure_lacks(facts):
+    """14 figures come from spreadsheet cells, which have a document but no page.
+
+    "shown with the document and page it came from" was true of the 69 read out of
+    PDFs and quietly false of the rest. The claim now carries its own exception, and
+    it may only drop that exception if every fact really does carry a page.
+    """
+    pageless = [f["metric"] for f in facts if f.get("source_doc") and not f.get("source_page")]
+    if not pageless:
+        pytest.skip("every fact carries a page — the unqualified claim would be true")
+    html = (REPO / "index.html").read_text(encoding="utf-8")
+    assert "with the document and page it came from" not in html, (
+        f"the masthead promises a page for every figure while {len(pageless)} have none "
+        f"(e.g. {sorted(set(pageless))[:3]})")

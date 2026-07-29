@@ -5,9 +5,11 @@
    light theme is a first-class toggle (persisted), because some readers need it
    and because these pages get printed.
 
-   Chart colours are the dataviz method's validated palette. The dark steps were
-   re-validated against THIS surface (#15181e), not the reference one — all six
-   checks pass, and contrast clears 3:1 so no relief rule applies.
+   Chart colours are the dataviz method's validated palette. BOTH modes were run
+   through the validator against their own surface — dark against #15181e, light
+   against #fcfcfb — because a light step is not a dark step flipped, and the light
+   set failed contrast until it was re-picked. All six checks pass in both, across
+   every pair, not just adjacent ones.
 
    One type scale (1.25 ratio). One spacing unit (4px grid). No ad-hoc values.
    No webfont, no CDN: the page must work offline and on GitHub Pages.
@@ -71,6 +73,11 @@
   --success-text: #0ca30c;
 
   --accent: #3987e5;
+  /* A chart mark needs 3:1 against its surface; TEXT needs 4.5:1, and the two
+     requirements do not have to be met by the same blue. On this surface the mark
+     blue already clears 4.89:1, so here they are the same colour — in the light
+     theme they are not, and that is the whole reason this token exists. */
+  --accent-text: #3987e5;
   --accent-soft: rgba(57, 135, 229, 0.13);
   --accent-line: rgba(57, 135, 229, 0.34);
   --glow: rgba(57, 135, 229, 0.16);
@@ -93,9 +100,17 @@
   --grid: #e1e0d9;
   --axis: #c3c2b7;
 
+  /* Re-validated against THIS surface (#fcfcfb), not assumed from the dark set.
+     The old light steps failed the contrast check: #1baf7a sat at 2.74:1, under the
+     3:1 floor, and it is the colour of the smallest slice on the fund bar — the
+     worst place to be faint. Darkening the green alone then broke protan
+     separation from the orange, so both moved together. All six checks now pass
+     across every pair; re-run before changing either:
+       node scripts/validate_palette.js "#2a78d6,#d9541c,#0d8f66" \
+            --mode light --surface "#fcfcfb" --pairs all   */
   --series-1: #2a78d6;
-  --series-2: #eb6834;
-  --series-3: #1baf7a;
+  --series-2: #d9541c;
+  --series-3: #0d8f66;
   --pos: #2a78d6;
   --neg: #e34948;
   --mid: #f0efec;
@@ -104,6 +119,10 @@
   --success-text: #006300;
 
   --accent: #2a78d6;
+  /* The mark blue is 4.08:1 on this page — fine for a bar, a fail for text, and it
+     was the colour of every link, every section number and the "of yours" figures
+     in the spending explorer. This step is 5.25:1 on the page and 5.54:1 on a card. */
+  --accent-text: #1f66bd;
   --accent-soft: rgba(42, 120, 214, 0.09);
   --accent-line: rgba(42, 120, 214, 0.28);
   --glow: rgba(42, 120, 214, 0.10);
@@ -147,7 +166,7 @@ body::after {
 
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s5); }
 
-a { color: var(--accent); text-decoration: none; }
+a { color: var(--accent-text); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 :focus-visible {
@@ -196,6 +215,37 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   font-size: var(--t-xs); color: var(--text-secondary); white-space: nowrap;
   transition: color .14s, background .14s;
 }
+
+/* The phone menu. Hidden entirely on wide screens, where the row of links fits. */
+.nav-toggle { display: none; }
+@media (max-width: 660px) {
+  .nav-toggle {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    margin-left: auto; min-height: 34px; max-width: 62vw; padding: 6px 12px;
+    background: var(--surface-1); color: var(--text-primary);
+    border: 1px solid var(--hairline); border-radius: 999px;
+    font: 600 var(--t-xs)/1.3 var(--sans); cursor: pointer;
+  }
+  .nav-toggle span {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .nav-toggle svg { flex: none; transition: transform .16s; }
+  .nav-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .nav-links {
+    position: absolute; left: var(--s3); right: var(--s3); top: calc(var(--nav-h) - 4px);
+    display: none; margin: 0; padding: var(--s2);
+    background: var(--surface-2); border: 1px solid var(--hairline-firm);
+    border-radius: var(--r-md); box-shadow: 0 18px 40px -12px rgba(0,0,0,.55);
+    overflow: visible;
+  }
+  .nav-links.open { display: block; }
+  .nav-links li + li { border-top: 1px solid var(--hairline); }
+  .nav-links a {
+    padding: 12px; border-radius: var(--r-sm); font-size: var(--t-sm);
+    white-space: normal; color: var(--text-primary);
+  }
+  .nav-links a[aria-current="true"]::after { content: " ·  you are here"; color: var(--accent-text); }
+}
 .nav-links a:hover { color: var(--text-primary); background: var(--surface-2); text-decoration: none; }
 .nav-links a[aria-current="true"] {
   color: var(--text-primary); background: var(--accent-soft);
@@ -215,11 +265,54 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 /* padding-BLOCK only: these elements also carry .wrap, whose horizontal padding
    is what keeps content off the screen edge. A `padding` shorthand here would
    silently zero it out and the page would bleed to the edge on mobile. */
-.masthead { padding-block: var(--s8) var(--s6); }
-.masthead-grid { display: grid; gap: var(--s6); grid-template-columns: 1fr; align-items: end; }
+.masthead { padding-block: var(--s7) var(--s5); }
+.masthead-grid { display: grid; gap: var(--s6); grid-template-columns: 1fr; align-items: start; }
 @media (min-width: 940px) {
-  .masthead-grid { grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: var(--s8); }
+  .masthead-grid { grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr); gap: var(--s8); }
 }
+.masthead-side { display: grid; gap: var(--s4); align-content: start; }
+.cta-row { display: flex; flex-wrap: wrap; gap: var(--s3); margin: var(--s6) 0 0; }
+.btn.lg { min-height: 46px; padding: 12px 20px; font-size: var(--t-sm); }
+
+/* ---- the film, offered rather than imposed ----
+   A still and a play control, not a <video> element: the poster is 10 KB and the
+   film is 4.5 MB, so a reader who does not want it never pays for it, and one on a
+   slow connection is not left staring at a stalled player. */
+.film { border-radius: var(--r-lg); overflow: hidden; }
+.film-play {
+  display: block; position: relative; width: 100%; padding: 0; cursor: pointer;
+  background: var(--surface-1); border: 1px solid var(--hairline);
+  border-radius: var(--r-lg); overflow: hidden; color: var(--text-primary);
+  font: inherit; text-align: left; box-shadow: var(--shadow);
+  transition: border-color .16s;
+}
+.film-play:hover, .film-play:focus-visible { border-color: var(--accent-line); }
+.film-play img { display: block; width: 100%; height: auto; }
+.film-btn {
+  position: absolute; left: var(--s4); bottom: 46px;
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: #fff;
+  box-shadow: 0 6px 20px -6px rgba(0,0,0,.8);
+  transition: transform .16s;
+}
+.film-play:hover .film-btn { transform: scale(1.06); }
+.film-btn svg { margin-left: 2px; }
+.film-dur {
+  position: absolute; right: var(--s3); top: var(--s3);
+  padding: 3px 8px; border-radius: 999px;
+  background: rgba(4, 6, 10, .72); color: #fff;
+  font: 600 var(--t-2xs)/1 var(--mono); letter-spacing: .04em;
+}
+.film-label {
+  display: block; padding: var(--s3) var(--s4);
+  font: 640 var(--t-sm)/1.35 var(--sans);
+  border-top: 1px solid var(--hairline);
+}
+.film-cap { margin: var(--s3) 0 0; font-size: var(--t-2xs); color: var(--text-muted); line-height: 1.55; }
+.film-cap strong { color: var(--text-secondary); }
+.film video { display: block; width: 100%; height: auto; border-radius: var(--r-lg);
+              background: #000; border: 1px solid var(--hairline); }
+.film-alt { margin: var(--s3) 0 0; font-size: var(--t-2xs); color: var(--text-muted); }
 /* Credibility card — the site's whole thesis is that it can be checked, so the
    masthead states how, instead of leaving the column empty. */
 .verify {
@@ -284,10 +377,14 @@ section { margin: var(--s8) 0; scroll-margin-top: calc(var(--nav-h) + var(--s5))
 section:first-child { margin-top: var(--s7); }
 .sec-head { margin-bottom: var(--s6); max-width: 74ch; }
 .sec-num {
-  display: block; font-family: var(--mono); font-size: var(--t-2xs);
-  letter-spacing: .18em; color: var(--accent); margin-bottom: var(--s3);
+  display: inline-block; font-family: var(--mono); font-size: var(--t-2xs);
+  letter-spacing: .18em; color: var(--accent-text); margin-bottom: var(--s3);
   font-weight: 600;
 }
+.sec-num:hover { text-decoration: none; }
+.sec-num span { opacity: 0; margin-left: .5em; transition: opacity .14s; }
+.sec-num:hover span, .sec-num:focus-visible span { opacity: 1; }
+.sec-head h2 { clear: both; }
 .sec-head h2 {
   margin: 0 0 var(--s3); font-size: clamp(var(--t-lg), 3.6vw, var(--t-xl));
   letter-spacing: -0.022em; line-height: 1.16; font-weight: 640;
@@ -303,6 +400,37 @@ section:first-child { margin-top: var(--s7); }
 }
 .panel-pad { padding: var(--s5); }
 @media (min-width: 760px) { .panel-pad { padding: var(--s6); } }
+
+/* .card is .panel for the blocks that were appended to sections later — revenue,
+   the two-governments split, the structural question, the drivers, the tradeoffs.
+   They had no base rule at all, so they rendered as loose text on the page
+   background between two panels, which reads as content that fell out of the panel
+   above rather than as its own answer. */
+.card {
+  margin-top: var(--s5);
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow), var(--inset);
+  padding: var(--s5);
+}
+@media (min-width: 760px) { .card { padding: var(--s6); } }
+
+/* One rule for every block heading, replacing the identical inline style that had
+   been pasted into eight panels. A heading that only exists inline is a heading
+   that drifts. */
+.block-title, .card > h3 {
+  margin: 0 0 var(--s3); font-size: var(--t-base); font-weight: 640;
+  letter-spacing: -0.008em; color: var(--text-primary);
+}
+.card > p:last-child, .card > ul:last-child { margin-bottom: 0; }
+
+/* A heading for a block that owns the full section width rather than a card —
+   the capital-project list, which carries its own container. */
+.sub-head {
+  margin: var(--s7) 0 var(--s4); font-size: var(--t-md); font-weight: 640;
+  letter-spacing: -0.015em;
+}
 
 .grid2 { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
 @media (min-width: 900px) { .grid2 { grid-template-columns: 1fr 1fr; } }
@@ -553,9 +681,13 @@ tbody tr:hover { background: var(--surface-2); }
 .status.answered .ico { color: var(--good); }
 
 /* ============================== meter ============================== */
+/* Deliberately NEUTRAL. This meter shows how much of a records request has come
+   back, and the caption directly beneath it says the figure is a status snapshot
+   and *not* a finding that anyone refused to answer. It was painted alarm-red with
+   a red glow, which asserted exactly the accusation the sentence disclaimed — the
+   loudest thing on screen contradicting the careful words under it. */
 .meter .track { height: 12px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
-.meter .fill { height: 100%; background: var(--critical); border-radius: 999px;
-               box-shadow: 0 0 14px -2px var(--critical); }
+.meter .fill { height: 100%; background: var(--accent); border-radius: 999px; }
 .meter .cap { display: flex; justify-content: space-between; gap: var(--s4);
               font-size: var(--t-xs); color: var(--text-secondary); margin-top: var(--s3); }
 .meter .cap strong { color: var(--text-primary); font-variant-numeric: tabular-nums; }
@@ -575,7 +707,7 @@ tbody tr:hover { background: var(--surface-2); }
 .timeline li.bad .node { border-color: var(--critical); }
 .timeline li.bad .yr { color: var(--critical); }
 .timeline .yr { font-family: var(--mono); font-size: var(--t-2xs); letter-spacing: .1em;
-                color: var(--accent); font-weight: 640; }
+                color: var(--accent-text); font-weight: 640; }
 .timeline h4 { margin: var(--s2) 0 var(--s2); font-size: var(--t-base); font-weight: 620;
                letter-spacing: -0.01em; }
 .timeline p { margin: 0; font-size: var(--t-sm); color: var(--text-secondary); max-width: 62ch; }
@@ -707,6 +839,14 @@ details.more > .inner { margin-top: var(--s5); }
 }
 .snapshot .acts button:hover { border-color: var(--accent); }
 
+/* Shown when the clipboard is refused, so the reader can still take the text. */
+.copy-fallback {
+  width: 100%; margin-top: var(--s3); padding: var(--s3);
+  background: var(--page-2); color: var(--text-primary);
+  border: 1px solid var(--accent-line); border-radius: var(--r-md);
+  font: var(--t-xs)/1.5 var(--mono); resize: vertical;
+}
+
 /* Small reassurance line placed next to figures. */
 .reassure {
   display: flex; align-items: flex-start; gap: var(--s2);
@@ -735,7 +875,7 @@ details.more > .inner { margin-top: var(--s5); }
   color: var(--text-muted); font: inherit; font-size: var(--t-2xs);
   border-radius: 5px; text-decoration: underline; text-underline-offset: 2px;
 }
-.flag:hover { color: var(--accent); }
+.flag:hover { color: var(--accent-text); }
 
 /* ==================== spending explorer ==================== */
 /* One hue for every bar. A value-ramp across nominal categories would burn the
@@ -749,11 +889,11 @@ details.more > .inner { margin-top: var(--s5); }
   padding: var(--s3) 0; background: none; border: 0; cursor: pointer;
   font: inherit; color: inherit; text-align: left;
 }
-.spend .row:hover .nm { color: var(--accent); }
+.spend .row:hover .nm { color: var(--accent-text); }
 .spend .nm { font-weight: 600; font-size: var(--t-sm); }
 .spend .nm .caret { color: var(--text-muted); font-size: var(--t-2xs); margin-left: 6px; }
 .spend .amt { font-variant-numeric: tabular-nums; font-weight: 650; font-size: var(--t-sm); white-space: nowrap; }
-.spend .amt .yours { color: var(--accent); }
+.spend .amt .yours { color: var(--accent-text); }
 .spend .bar {
   grid-column: 1 / -1; height: 7px; border-radius: 4px;
   background: var(--surface-3); overflow: hidden;
@@ -771,15 +911,76 @@ details.more > .inner { margin-top: var(--s5); }
 .explorer-controls { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: end; margin-bottom: var(--s5); }
 .explorer-controls .f { flex: 0 1 220px; min-width: 160px; }
 
+/* At 320px — still a real phone — the amount column ("$4.6M · $612 of yours") cannot
+   shrink to fit, so the whole grid grew past the viewport and took the section with
+   it. Below 420px the amount simply sits under the department name instead. */
+@media (max-width: 420px) {
+  .spend .row { grid-template-columns: 1fr; gap: 2px var(--s3); }
+  .spend .amt { white-space: normal; }
+  .spend .accounts li { flex-wrap: wrap; gap: 0 var(--s3); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
+/* ============================== the one-page takeaway ==============================
+   Hidden on screen; revealed for exactly one print when the reader asks for a
+   summary. Ctrl+P still prints the page they are looking at, which is what that
+   shortcut means everywhere else. */
+#takeaway { display: none; }
+
 @media print {
   body::before, body::after { display: none; }
   .nav, .tabtoggle, .icon-btn, input[type="range"], .seg { display: none !important; }
   body { background: #fff; color: #000; }
+
+  body.printing-takeaway > *:not(#takeaway) { display: none !important; }
+  body.printing-takeaway #takeaway { display: block; }
+
+  /* Fixed values, not tokens: this sheet leaves the browser and has to be legible
+     in black ink on white paper whichever theme the reader happened to be using. */
+  #takeaway {
+    font: 11pt/1.45 var(--sans); color: #000; max-width: 100%;
+  }
+  #takeaway h1 { font-size: 19pt; line-height: 1.15; margin: 0 0 6pt; letter-spacing: -0.02em; }
+  #takeaway h2 {
+    font-size: 10pt; margin: 16pt 0 5pt; text-transform: uppercase;
+    letter-spacing: .1em; color: #444; border-bottom: 0.75pt solid #bbb; padding-bottom: 3pt;
+  }
+  #takeaway .sub { margin: 0 0 12pt; font-size: 9.5pt; color: #444; }
+  #takeaway .headline {
+    margin: 0 0 12pt; font-size: 30pt; font-weight: 700; letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  #takeaway .headline span {
+    display: block; font-size: 10pt; font-weight: 400; letter-spacing: 0;
+    color: #444; margin-top: 4pt;
+  }
+  #takeaway table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  /* The page's own `th` carries a dark sticky header background for the on-screen
+     tables. Left alone it printed as a solid black block behind every label. */
+  #takeaway th {
+    text-align: left; font-weight: 600; padding: 5pt 0; border-bottom: 0.5pt solid #ddd;
+    vertical-align: top; text-transform: none; letter-spacing: 0; color: #000;
+    background: none; position: static; font-size: 10pt; white-space: normal;
+  }
+  #takeaway th small { display: block; font-weight: 400; font-size: 8.5pt; color: #555; }
+  #takeaway td {
+    text-align: right; font-weight: 700; padding: 5pt 0; border-bottom: 0.5pt solid #ddd;
+    white-space: nowrap; font-variant-numeric: tabular-nums; vertical-align: top;
+  }
+  #takeaway ul { margin: 0; padding-left: 14pt; }
+  #takeaway .facts li { font-size: 10pt; margin-bottom: 4pt; }
+  #takeaway .srcs { list-style: none; padding: 0; }
+  #takeaway .srcs li { font-size: 8.5pt; color: #333; margin-bottom: 2pt; }
+  #takeaway .srcs .fp { font-family: var(--mono); color: #777; }
+  #takeaway .foot {
+    margin-top: 16pt; padding-top: 8pt; border-top: 0.75pt solid #bbb;
+    font-size: 8.5pt; color: #444;
+  }
+  @page { margin: 14mm; }
 }
 
 /* ===================== capital projects (Project dimension) ===================== */
@@ -814,9 +1015,10 @@ details.more > .inner { margin-top: var(--s5); }
   border: 1px solid var(--hairline-firm); color: var(--text-secondary);
   white-space: nowrap;
 }
-/* Text labels, never colour alone — the words carry the meaning. */
-.tag-debt { border-color: var(--series-3-line, var(--hairline-firm)); }
-.tag-ongoing { border-color: var(--warn-line, var(--hairline-firm)); }
+/* Text labels, never colour alone — the words carry the meaning, so these two
+   deliberately take the neutral border. (They used to name two custom properties
+   that were never defined; the fallback was doing all the work.) */
+.tag-debt, .tag-ongoing { border-color: var(--hairline-firm); }
 .proj-body { padding: 0 var(--s5) var(--s5); }
 .proj-body > p { margin: 0 0 var(--s3); font-size: var(--t-xs); line-height: 1.6; }
 .proj-body .rows { margin: 0 0 var(--s3); }
@@ -828,11 +1030,6 @@ details.more > .inner { margin-top: var(--s5); }
 .tag-gap { border-color: var(--serious); color: var(--text-primary); }
 
 /* ---- tradeoffs: what was asked, funded, declined ---- */
-.tradeoff, .tradeoff-named { margin-top: var(--s5); }
-.tradeoff h3, .tradeoff-named h3 {
-  margin: 0 0 var(--s3); font-size: var(--t-base); font-weight: 650;
-  color: var(--text-primary);
-}
 .tradeoff > p, .tradeoff-named > p { margin: 0 0 var(--s3); font-size: var(--t-sm); line-height: 1.65; }
 .tradeoff .rows { margin: var(--s4) 0 var(--s3); }
 /* The consequence text is long; let it wrap under the request name rather than
@@ -841,14 +1038,17 @@ details.more > .inner { margin-top: var(--s5); }
                            font-size: var(--t-2xs); line-height: 1.5; max-width: 62ch; }
 .tradeoff .rows .v small { display: block; font-weight: 400; color: var(--text-muted);
                            font-size: var(--t-2xs); margin-top: 2px; }
-.tradeoff-named { border-left: 3px solid var(--warning); }
+/* Thickens the card's own left edge rather than drawing a second rule inside it —
+   a `border-left` shorthand here stacked an accent bar against the 1px card border
+   and butted the text straight up against both. */
+.tradeoff-named { border-left-width: 3px; border-left-color: var(--warning); }
 .tradeoff-named .src { font-size: var(--t-2xs); color: var(--text-muted); margin: 0; }
 
 /* ---- drivers of the increase, in dollars and in tax cents ---- */
 .drivers .rows .k small { display: block; margin-top: 3px; color: var(--text-muted);
                           font-size: var(--t-2xs); line-height: 1.5; }
 .drivers .rows .k small.why { max-width: 64ch; color: var(--text-secondary); margin-top: 5px; }
-.drivers .rows .v small { display: block; font-weight: 500; color: var(--accent);
+.drivers .rows .v small { display: block; font-weight: 500; color: var(--accent-text);
                           font-size: var(--t-2xs); margin-top: 3px; }
 
 /* ---- two governments, one bill ---- */

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Your town, your money — Hillsborough, NC | MFAS</title>
-<meta name="description" content="See what the Town of Hillsborough costs your household, what it pays for, and whether the town's finances are healthy — using the town's own published figures, with a source for every number.">
+<meta name="description" content="See what the Town of Hillsborough and Orange County cost your household, what that money pays for, and whether the finances are healthy — built from the governments' own published budget documents, with the document and page shown for every number.">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233987e5'/%3E%3Cg fill='%23fff'%3E%3Crect x='7' y='16' width='4' height='9' rx='1'/%3E%3Crect x='14' y='11' width='4' height='14' rx='1'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
@@ -29,6 +29,18 @@
       </span>
       <span class="label">Your town, your money</span>
     </a>
+    <!-- On a phone the six links cannot fit, and they used to sit in a silent
+         horizontal scroller showing two and a half of them. This button takes their
+         place below 660px: it names the section you are currently in — useful on a
+         page this long — and opens the full list. -->
+    <button class="nav-toggle" id="navToggle" type="button"
+            aria-expanded="false" aria-controls="navLinks">
+      <span id="navHere">Sections</span>
+      <svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true">
+        <path d="M1 1.5 6 6.5l5-5" stroke="currentColor" stroke-width="1.8" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <ul class="nav-links" id="navLinks">
       <li><a href="#you">Your bill</a></li>
       <li><a href="#paysfor">What it pays for</a></li>
@@ -50,18 +62,50 @@
 
 <header class="masthead wrap" id="top">
   <div class="status-row">
-    <span class="chip accent">Town of Hillsborough, NC</span>
+    <span class="chip accent">Town of Hillsborough</span>
+    <span class="chip accent">Orange County, NC</span>
     <span class="chip"><span class="dot" aria-hidden="true"></span><span id="chipCount">Verified figures</span></span>
   </div>
-  <h1>Your town, <span class="accent">your money</span></h1>
-  <p class="lede">
-    Hillsborough publishes its budget in documents that run to hundreds of pages. This page turns
-    them into the answer you actually want: <strong>what the town costs your household</strong>,
-    what that money pays for, and whether the town's finances are in good shape.
-    <br><br>
-    Nothing here is our opinion. Every figure comes from the town's own published documents, and
-    each one shows you the document and page it came from so you can check it.
-  </p>
+  <div class="masthead-grid">
+    <div>
+      <h1>Your town, <span class="accent">your money</span></h1>
+      <p class="lede">
+        Hillsborough and Orange County publish their budgets in documents that run to hundreds of
+        pages. This page turns them into the answer you actually want:
+        <strong>what they cost your household</strong>, what that money pays for, and whether the
+        finances are in good shape.
+        <br><br>
+        Nothing here is our opinion. Every figure names the document it came from — and the page,
+        wherever the document has pages — so you can check it yourself. Where a figure comes from
+        something other than a government's own publication, the page says so on the spot.
+      </p>
+      <p class="cta-row">
+        <a class="btn primary lg" href="#you">Work out what it costs you</a>
+        <a class="btn lg" href="#receipts">See where the numbers came from</a>
+      </p>
+    </div>
+
+    <!-- The offer, not the wall. Nothing loads until the reader asks: the card is a
+         10 KB still, and the 4.5 MB film is only fetched on the press. -->
+    <aside class="masthead-side">
+      <div class="film" id="film">
+        <button class="film-play" type="button" id="filmPlay">
+          <img src="docs/media/mfas-commercial-card.jpg" alt="" width="800" height="450"
+               decoding="async">
+          <span class="film-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path d="M8 5.5v13l11-6.5z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="film-dur" aria-hidden="true">1:02</span>
+          <span class="film-label">Watch the 62-second film</span>
+        </button>
+        <p class="film-cap">For anyone who would rather be shown than read.
+          <strong>Captioned, and nothing plays until you press it.</strong></p>
+      </div>
+      <div id="verifySlot"></div>
+    </aside>
+  </div>
 </header>
 
 <main class="wrap" id="main">
@@ -77,18 +121,20 @@
     open pipeline, and rebuilding it reproduces this page byte for byte.
   </p>
   <p class="caveat">
-    <strong>What is still missing, and why.</strong> The town's audited annual reports for 2018
-    through 2024 are <em>scanned images</em>, and the text hidden inside them scrambles digits — a
-    page that plainly reads <span class="mono">4,610,003</span> comes back as
-    <span class="mono">460,100,3</span>. Nothing on this page is taken from that text.
+    <strong>What is still missing, and why.</strong> The audited annual reports for 2018 through
+    2024 were published only as <em>scanned images</em>, and the text hidden inside a scan
+    scrambles digits — a page that plainly reads <span class="mono">4,610,003</span> comes back as
+    <span class="mono">460,100,3</span>. Nothing on this page is ever taken from that hidden text.
+    FY2025 is different: it was also published as a proper digital file, so its audited figures are
+    read straight from it with no character recognition involved at all.
     <br><br>
-    FY2025 is different: it was also published as a proper digital file, so the audited figures above
-    are read directly from it with no character recognition involved. For the earlier years we have
-    now tested whether fresh recognition can read these statements reliably — on the one report that
-    exists in <em>both</em> forms it reproduced <strong>141 of 141 figures exactly</strong>. So the
-    earlier decade is no longer out of reach; it is simply work not yet done, and it will only be
-    published once each page's own arithmetic has been checked. We would rather show you less than
-    show you something wrong.
+    For the earlier years the pages are read afresh from the image instead, and a recovered figure
+    is published only where its column still adds up <em>exactly</em> to the total printed beside
+    it on the same page. Where a column did not, the cell is left blank in the audited table rather
+    than filled with a best guess. What remains out of reach is everything <em>below</em> those
+    summary statements — the detail inside a decade of annual reports — and it will not appear here
+    until each page proves itself the same way. We would rather show you less than show you
+    something wrong.
   </p>
   <p style="font-size:14px;color:var(--text-secondary)">
     <strong>Found something wrong?</strong> This is a best-effort project by residents, and

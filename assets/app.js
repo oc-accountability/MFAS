@@ -30,7 +30,8 @@ const DEFAULT_GALLONS = 4000;  // the town's own "average", so the default match
 const GAL_PRESETS = [2000, 4000, 6000, 9000, 12000];
 const state = {
   yearMin: null, yearMax: null, data: null,
-  homeValue: DEFAULT_HOME, location: 'intown', gallons: DEFAULT_GALLONS, returning: false,
+  homeValue: DEFAULT_HOME, location: 'intown', gallons: DEFAULT_GALLONS,
+  returning: false, fromLink: false,
 };
 
 /* ------------------------------------------------------- remembered settings */
@@ -55,6 +56,41 @@ function saveHome() {
       homeValue: state.homeValue, location: state.location, gallons: state.gallons,
     }));
   } catch (e) { /* nothing here is worth breaking the page over */ }
+}
+
+/** Figures carried in the address, so one resident can send another the exact view.
+ *
+ * An explicit link beats a remembered setting, so this runs after loadHome() and
+ * overrides it — but it does NOT overwrite the reader's own saved figures until
+ * they touch a control, and the page says out loud whose figures these are. The
+ * link carries three numbers the sender typed and nothing else: no address, no
+ * parcel, nothing identifying.
+ */
+function loadShared() {
+  let q;
+  try { q = new URLSearchParams(location.search); } catch (e) { return; }
+  const home = Number(q.get('home'));
+  const where = q.get('where');
+  const gal = Number(q.get('gal'));
+  let used = false;
+  if (Number.isFinite(home) && home > 0 && home <= 1e9) { state.homeValue = home; used = true; }
+  if (where === 'intown' || where === 'outoftown') { state.location = where; used = true; }
+  if (q.has('gal') && Number.isFinite(gal) && gal >= 0 && gal <= 200000) {
+    state.gallons = gal; used = true;
+  }
+  if (used) { state.fromLink = true; state.returning = false; }
+}
+
+/** The address that reproduces exactly what the reader is looking at. */
+function shareUrl() {
+  const u = new URL(location.href);
+  u.search = new URLSearchParams({
+    home: String(Math.round(state.homeValue)),
+    where: state.location,
+    gal: String(Math.round(state.gallons)),
+  }).toString();
+  u.hash = 'you';
+  return u.toString();
 }
 
 /* ---------------------------------------------------------------- formatters */
@@ -284,7 +320,11 @@ function tableOf(caption, cols, rows) {
 function section(id, num, title, blurb) {
   const s = document.createElement('section');
   s.id = id;
-  s.innerHTML = `<div class="sec-head"><span class="sec-num">${num}</span>
+  // The number doubles as the section's own permalink, so a reader can send someone
+  // straight to the part they are talking about.
+  s.innerHTML = `<div class="sec-head">
+    <a class="sec-num" href="#${id}" title="Link to this section"
+       aria-label="Link to this section">${num}<span aria-hidden="true">#</span></a>
     <h2>${title}</h2>${blurb ? `<p>${blurb}</p>` : ''}</div>`;
   return s;
 }
@@ -591,13 +631,20 @@ function renderYou(host) {
           It does <strong>not</strong> include fire district taxes, which vary by district.`
        : `This is the <strong>town's</strong> share only.`}`);
 
-  if (state.returning) {
+  if (state.fromLink || state.returning) {
     const w = document.createElement('div');
     w.className = 'welcome';
-    w.innerHTML = `<span>Welcome back — showing figures for a home assessed at
-      <strong>${usd(state.homeValue)}</strong>,
-      ${state.location === 'intown' ? 'inside town limits' : 'outside town'}.</span>
-      <button type="button" id="changeHome">Not yours? Change it</button>`;
+    const where = state.location === 'intown' ? 'inside town limits' : 'outside town';
+    /* Being explicit that these are somebody else's figures matters: a reader who
+       assumes the number is theirs has been told something untrue by the page. */
+    w.innerHTML = state.fromLink
+      ? `<span>You followed a link showing a home assessed at
+         <strong>${usd(state.homeValue)}</strong>, ${where}. These are the sender's figures,
+         not yours.</span>
+         <button type="button" id="changeHome">Use my own instead</button>`
+      : `<span>Welcome back — showing figures for a home assessed at
+         <strong>${usd(state.homeValue)}</strong>, ${where}.</span>
+         <button type="button" id="changeHome">Not yours? Change it</button>`;
     sec.appendChild(w);
   }
 
@@ -654,9 +701,12 @@ function renderYou(host) {
         <div class="hero-figure" id="heroV">—</div>
         <p class="hero-sub" id="heroN"></p>
         <ul class="rows" id="bd"></ul>
-        <div class="callout" id="calloutBox"></div>
       </div>
-    </div>`;
+    </div>
+    <!-- Full width, below both columns. Inside the readout it made the right column
+         far taller than the left and left a quarter of the panel empty, and it is the
+         one sentence in this section a reader most needs to see. -->
+    <div class="callout" id="calloutBox"></div>`;
   sec.appendChild(panel);
 
   const snap = document.createElement('div');
@@ -764,14 +814,15 @@ function renderYou(host) {
         Based on a home assessed at ${usd(state.homeValue)},
         ${state.location === 'intown' ? 'inside' : 'outside'} town limits.</p>
       <div class="acts">
-        <button type="button" id="printSnap">Print or save as PDF</button>
+        <button type="button" id="printSnap">Print a one-page summary</button>
         <button type="button" id="copySnap">Copy these figures</button>
+        <button type="button" id="linkSnap">Copy a link to them</button>
       </div>
       <p class="reassure" style="margin-top:var(--s4)"><span class="ic" aria-hidden="true">✓</span>
         <span>Estimated from the assessed value you entered and the town's published rates. Your
         actual bill depends on your county assessment.</span></p>`;
-    $('#printSnap', s).addEventListener('click', () => window.print());
-    $('#copySnap', s).addEventListener('click', async ev => {
+    $('#printSnap', s).addEventListener('click', printTakeaway);
+    $('#copySnap', s).addEventListener('click', ev => {
       const text = `Town of Hillsborough — my share, FY${rateF.fiscal_year}\n` +
         `Home assessed at ${usd(state.homeValue)} (${state.location === 'intown'
           ? 'in town' : 'out of town'})\n` +
@@ -780,20 +831,27 @@ function renderYou(host) {
           `Total property tax: ${usd(total)}/yr (${usd(total / 12)}/mo)\n` : '') +
         `Water/sewer increase: +${usd2(u.total)}/mo (about ${usd(u.total * 12)}/yr)\n` +
         `Tax rate: ${cents(rateF.value)} cents per $100 — unchanged for FY${rateF.fiscal_year}\n` +
-        `Source: ${(docsById().get(rateF.source_doc) || {}).filename || rateF.source_doc}`;
-      try {
-        await navigator.clipboard.writeText(text);
-        ev.target.textContent = 'Copied';
-        setTimeout(() => { ev.target.textContent = 'Copy these figures'; }, 1800);
-      } catch (e) {
-        // Clipboard needs a secure context and permission; never leave the user stuck.
-        ev.target.textContent = 'Copy blocked — use Print';
-      }
+        `Source: ${(docsById().get(rateF.source_doc) || {}).filename || rateF.source_doc}\n` +
+        `Check it yourself: ${shareUrl()}`;
+      offerCopy(ev.currentTarget, text, 'Copy these figures');
     });
-    saveHome();
+    $('#linkSnap', s).addEventListener('click', async ev => {
+      const url = shareUrl();
+      // On a phone the OS share sheet is what people actually use to send a link.
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'What the town and county cost this household', url });
+          return;
+        } catch (e) { /* dismissed, or unsupported for this payload — fall through */ }
+      }
+      offerCopy(ev.currentTarget, url, 'Copy a link to them');
+    });
+    /* A shared link must not quietly replace the visitor's own saved figures. It
+       only becomes theirs once they touch a control. */
+    if (!state.fromLink) saveHome();
   }
 
-  const rerender = () => { draw(false); refreshDependents(); };
+  const rerender = () => { state.fromLink = false; draw(false); refreshDependents(); };
   num.addEventListener('input', () => { rng.value = num.value; rerender(); });
   rng.addEventListener('input', () => { num.value = rng.value; rerender(); });
   $$('.seg button', sec).forEach(b => b.addEventListener('click', () => {
@@ -829,6 +887,141 @@ function renderYou(host) {
     num.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
   });
   draw(!REDUCED && !state.returning);
+}
+
+/** Copy to the clipboard, and if that is refused, show the text so it can be copied.
+ *
+ * The clipboard needs a secure context and a permission that some browsers and most
+ * privacy modes decline. The old handler reported "Copy blocked" and stopped there,
+ * which leaves the reader with no way to get the thing they asked for.
+ */
+async function offerCopy(btn, text, restoreLabel) {
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = restoreLabel; }, 1800);
+    return;
+  } catch (e) { /* fall through to the manual route */ }
+  const box = document.createElement('textarea');
+  box.className = 'copy-fallback';
+  box.readOnly = true;
+  box.rows = Math.min(8, text.split('\n').length + 1);
+  box.value = text;
+  box.setAttribute('aria-label', 'Select and copy this text');
+  btn.replaceWith(box);
+  box.focus();
+  box.select();
+}
+
+/* ==================== the one-page takeaway ====================
+ *
+ * "Print or save as PDF" used to call window.print() on the whole document — about
+ * twenty pages of charts, tables and source lists. What a resident going to a board
+ * meeting actually wants is one sheet: their own figures, the handful of facts that
+ * explain them, and the documents each came from so anyone can check it there and
+ * then.
+ *
+ * It is built into a hidden element and revealed only for that one print, so a plain
+ * Ctrl+P still prints the page the reader is looking at. Nothing here is computed
+ * differently from the screen — same helpers, same sources — because a printout that
+ * disagreed with the site would be worse than no printout.
+ */
+function takeawayHTML() {
+  const rateF = one('property_tax_rate'), cRate = one('county_property_tax_rate');
+  if (!rateF) return '';
+  const annual = annualTax(), county = countyTax(), total = totalPropertyTax();
+  const u = utilMonthly();
+  const oneCent = state.homeValue / 100 * 0.01;
+  const idx = state.data.index || {};
+
+  const row = (k, v, note) => `<tr><th>${k}${note ? `<small>${note}</small>` : ''}</th>
+    <td>${v}</td></tr>`;
+  const rows = [row('Town of Hillsborough', usd(annual) + ' / yr',
+    `${cents(rateF.value)} cents per $100 of assessed value, FY${rateF.fiscal_year}`)];
+  if (county != null) rows.push(row('Orange County', usd(county) + ' / yr',
+    `${cents(cRate.value)} cents per $100, FY${cRate.fiscal_year}`));
+  if (u.exact) {
+    /* Annual, like the rows above it — a sheet that mixes /yr and /mo down one column
+       invites the reader to add them together and get a wrong number. The two are
+       still kept apart from the tax rows and never summed: water and sewer are paid
+       by users of the service, not out of taxes, and the site says so throughout. */
+    rows.push(row('Water, sewer and stormwater', usd(u.billTotal * 12) + ' / yr',
+      `${usd2(u.billTotal)} a month at ${u.gallons.toLocaleString('en-US')} gallons, `
+      + `${state.location === 'intown' ? 'inside' : 'outside'} town limits — `
+      + `charged for the service, not out of property tax`));
+  }
+  rows.push(row('One cent on the town tax rate', usd(oneCent) + ' / yr',
+    'what a single cent of rate costs a home assessed at this value'));
+
+  /* Only facts that are on the page already, each with its document and page. */
+  const facts = [];
+  const wr = val('water_rate_increase_pct');
+  const cInc = val('county_tax_rate_increase_cents');
+  if (cInc) facts.push(`The town's rate is unchanged for FY${rateF.fiscal_year}; Orange County's
+    rose ${cents(cInc)} cents.`);
+  if (wr) facts.push(`Water and sewer rates each rise ${pctPlain(wr)}, and the town recommends the
+    same again for the two years after.`);
+  const now = forYear('general_fund_balance_pct_of_expenditures', 2027)
+    || one('general_fund_balance_pct_of_expenditures');
+  const far = latestByYear('general_fund_balance_pct_of_expenditures').slice(-1)[0];
+  if (now && far && far.fiscal_year !== now.fiscal_year) {
+    facts.push(`The town holds savings worth ${pctPlain(now.value)} of a year's spending in
+      FY${now.fiscal_year}, against a floor of 50% it sets for itself, and projects
+      ${pctPlain(far.value)} by FY${far.fiscal_year}.`);
+  }
+  const need = one('tax_rate_increase_needed_cents');
+  if (need) facts.push(`Closing the FY2029 shortfall the town projects would take a rise of over
+    ${cents(need.value)} cents — about ${usd(oneCent * need.value)} a year on this home.`);
+
+  /* One line per distinct document behind the figures above. */
+  const srcIds = [...new Set([rateF, cRate, one('water_rate_increase_pct'), now, far, need]
+    .filter(Boolean).map(f => f.source_doc))];
+  const srcs = srcIds.map(id => {
+    const d = docsById().get(id) || {};
+    return `<li>${esc(d.filename || id)}${d.sha256
+      ? ` <span class="fp">${esc(d.sha256.slice(0, 10))}</span>` : ''}</li>`;
+  }).join('');
+
+  return `
+    <h1>What local government costs this household</h1>
+    <p class="sub">Estimated for a home assessed at <strong>${usd(state.homeValue)}</strong>,
+      ${state.location === 'intown' ? 'inside' : 'outside'} Hillsborough town limits, using the
+      published FY${rateF.fiscal_year} rates. Your actual bill depends on your county assessment.</p>
+    <p class="headline">${usd(total)}<span> in property tax a year —
+      ${usd(total / 12)} a month</span></p>
+    <table>${rows.join('')}</table>
+    ${facts.length ? `<h2>What the documents say</h2>
+      <ul class="facts">${facts.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}
+    <h2>Where these numbers came from</h2>
+    <ul class="srcs">${srcs}</ul>
+    <p class="foot">Built by residents for the Orange County Efficiency &amp; Accountability
+      Initiative, not by the town or the county. Every figure on the website is shown with the
+      document and page it came from, and the whole dataset can be rebuilt from those documents.
+      ${idx.counts ? `${idx.counts.facts} published figures, drawn from an archive of
+      ${idx.counts.documents} documents. ` : ''}Check it, and report anything that looks wrong, at
+      <strong>oc-accountability.github.io/MFAS</strong></p>`;
+}
+
+function refreshTakeaway() {
+  let el = document.getElementById('takeaway');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'takeaway';
+    el.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(el);
+  }
+  el.innerHTML = takeawayHTML();
+}
+
+/** Print just the takeaway, then put the page back exactly as it was. */
+function printTakeaway() {
+  refreshTakeaway();
+  document.body.classList.add('printing-takeaway');
+  const restore = () => document.body.classList.remove('printing-takeaway');
+  // onafterprint is not fired by every browser/print path, so a timer backs it up.
+  addEventListener('afterprint', restore, { once: true });
+  setTimeout(restore, 4000);
+  window.print();
 }
 
 /* An in-flight count-up MUST be cancelled before writing a new value. Otherwise a
@@ -944,7 +1137,7 @@ function renderPaysFor(host) {
       p4.className = 'panel panel-pad';
       p4.style.marginTop = 'var(--s5)';
       p4.innerHTML = `
-        <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+        <h3 class="block-title">
           How much of it is already committed?</h3>
         <p class="answer" style="font-size:var(--t-base);margin-bottom:var(--s4)">
           About <span class="fig">${pctPlain(share)}</span> of the General Fund goes on
@@ -967,6 +1160,30 @@ function renderPaysFor(host) {
       sec.appendChild(p4);
     }
   }
+
+  // The real answer to "where does it go" is the account-level detail. Behind a
+  // disclosure so the ~790 KB dataset is only fetched if the reader wants it, and
+  // ahead of the transfer schedule because it is the question they actually have.
+  sec.appendChild(disclosure('Break it down department by department', async inner => {
+    inner.innerHTML = `<p class="loading" style="padding:var(--s5) 0">Loading the town's
+      account-level spending…</p>`;
+    try {
+      const ok = await loadLineItems();
+      inner.innerHTML = '';
+      if (!ok) {
+        inner.innerHTML = `<p class="sub">The detailed spending data is not published in this
+          build.</p>`;
+        return;
+      }
+      const panel2 = document.createElement('div');
+      panel2.className = 'panel panel-pad';
+      inner.appendChild(panel2);
+      renderExplorer(panel2);
+    } catch (err) {
+      inner.innerHTML = `<p class="sub">Could not load the detailed spending data.</p>`;
+      console.error(err);
+    }
+  }));
 
   // Cross-fund transfers: where money moves between the town's own funds.
   const tf = state.data.transfers;
@@ -997,29 +1214,6 @@ function renderPaysFor(host) {
       }));
     }
   }
-
-  // The real answer to "where does it go" is the account-level detail. Behind a
-  // disclosure so the ~790 KB dataset is only fetched if the reader wants it.
-  sec.appendChild(disclosure('Break it down department by department', async inner => {
-    inner.innerHTML = `<p class="loading" style="padding:var(--s5) 0">Loading the town's
-      account-level spending…</p>`;
-    try {
-      const ok = await loadLineItems();
-      inner.innerHTML = '';
-      if (!ok) {
-        inner.innerHTML = `<p class="sub">The detailed spending data is not published in this
-          build.</p>`;
-        return;
-      }
-      const panel2 = document.createElement('div');
-      panel2.className = 'panel panel-pad';
-      inner.appendChild(panel2);
-      renderExplorer(panel2);
-    } catch (err) {
-      inner.innerHTML = `<p class="sub">Could not load the detailed spending data.</p>`;
-      console.error(err);
-    }
-  }));
 
   revenueBlock(sec);
   whoProvidesWhat(sec);
@@ -1411,7 +1605,7 @@ function renderHealth(host) {
       p2.className = 'panel panel-pad';
       p2.style.marginTop = 'var(--s5)';
       p2.innerHTML = `
-        <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+        <h3 class="block-title">
           Did they spend what they said they would?</h3>
         <p class="answer" style="font-size:var(--t-base);margin-bottom:var(--s4)">
           In <span class="fig">FY${aud.fiscal_year}</span> — the most recent year with audited
@@ -1475,15 +1669,22 @@ function renderHealth(host) {
       p3.className = 'panel panel-pad';
       p3.style.marginTop = 'var(--s5)';
       const nDigital = yrs.filter(y => y.how === 'digital').length;
+      /* A blank cell is a column that failed its own arithmetic check and was withheld.
+         Counting them here rather than writing a number into the prose means the
+         sentence cannot drift away from the table it sits above. */
+      const blanks = yrs.reduce((n, y) =>
+        n + (y.revenues == null ? 1 : 0) + (y.expenditures == null ? 1 : 0), 0);
       p3.innerHTML = `
-        <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+        <h3 class="block-title">
           The audited record, year by year</h3>
         <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
           What the town actually took in and actually spent, from its audited annual reports.
           ${nDigital} of these ${yrs.length} years came from a digital file;
           the rest were recovered from scanned pages by character recognition and then checked —
           each figure shown here is the total that its own page's individual lines add up to
-          exactly.
+          exactly.${blanks ? ` ${blanks === 1 ? 'One cell is' : blanks + ' cells are'} blank:
+          ${blanks === 1 ? 'that column' : 'those columns'} did not add up when re-read, so the
+          figure is withheld rather than guessed.` : ''}
         </p>
         <div class="tablewrap"><table>
           <caption>Audited General Fund actuals. "Read from" shows whether the figures came from a
@@ -1637,6 +1838,15 @@ function projectsBlock(sec) {
   const d = state.data.projects;
   if (!d || !d.projects || !d.projects.length) return;
   const s = d.summary;
+
+  /* This block used to open with the paragraph alone. Immediately above it sits the
+     "A trade the town spelled out" card, so an unheaded paragraph about capital
+     projects read as that card's continuation — 27 projects filed under someone
+     else's heading. */
+  const head = document.createElement('h3');
+  head.className = 'sub-head';
+  head.textContent = 'What the town plans to build';
+  sec.appendChild(head);
 
   const h = document.createElement('p');
   h.className = 'answer';
@@ -1969,7 +2179,7 @@ function renderVoice(host) {
   if (part.length) {
     const p = document.createElement('div');
     p.className = 'panel panel-pad';
-    p.innerHTML = `<h3 style="margin:0 0 var(--s4);font-size:var(--t-base);font-weight:640">
+    p.innerHTML = `<h3 class="block-title" style="margin-bottom:var(--s4)">
         Dates named in the budget</h3>
       <ul class="rows" style="margin:0">${part.map(e =>
         `<li><span class="k">${esc(e.event)}</span>
@@ -1985,7 +2195,7 @@ function renderVoice(host) {
   const q = document.createElement('div');
   q.className = 'panel panel-pad';
   q.style.marginTop = 'var(--s5)';
-  q.innerHTML = `<h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+  q.innerHTML = `<h3 class="block-title">
       Questions residents have already asked</h3>
     <p style="margin:0 0 var(--s5);font-size:var(--t-sm);color:var(--text-secondary)">
       Because organisational changes make year-to-year comparisons hard, residents sent the town a
@@ -2028,7 +2238,7 @@ const GLOSSARY = [
   ['ERU', 'Equivalent Residential Unit — the unit the stormwater fee is charged in, based on how much hard surface sheds rain.'],
   ['Enterprise fund', 'A fund paid for by the people who use the service rather than by taxes. Water & Sewer and Stormwater are these.'],
   ['Budget vs estimate vs projection', 'A budget is the plan adopted. An estimate is where the year is expected to land. A projection is a later year in the plan, and least certain. This page never mixes them.'],
-  ['Audited', 'Checked by an outside accountant after the year ends. Audited figures are the most reliable, and are the ones this page cannot yet show — see the note at the bottom.'],
+  ['Audited', 'Checked by an outside accountant after the year ends, which makes audited figures the most reliable kind. The audited record on this page runs from FY2018 to FY2025, and each year says whether it was read from a digital file or recovered from a scanned page and checked.'],
 ];
 
 function renderReceipts(host) {
@@ -2036,11 +2246,20 @@ function renderReceipts(host) {
   const sec = section('receipts', '06', 'Where every number came from', '');
   const ans = document.createElement('p');
   ans.className = 'answer';
+  /* This paragraph used to say the scanned reports contributed nothing to the page.
+     That stopped being true when the audited record was recovered from them and
+     verified — and a claim the reader can disprove two sections up is worse than no
+     claim at all. What is still absolutely true, and is the point worth making, is
+     that the *hidden text layer* of a scan is never trusted. */
   ans.innerHTML = `Every figure on this page traces to one of
-    <span class="fig">${sum.unique_documents}</span> documents the town published.
-    <span class="soft">${sum.pdf_digital_text} of them can be read reliably by computer;
-    ${sum.pdf_scanned_ocr} are scans whose hidden text scrambles digits, so nothing on this page is
-    taken from those.</span>`;
+    <span class="fig">${sum.unique_documents}</span> documents in the archive, named where the
+    figure appears.
+    <span class="soft">${sum.pdf_scanned_ocr} of those documents are scanned images. The text
+    hidden inside a scan scrambles digits — a page that plainly reads
+    <span class="mono">4,610,003</span> comes back as <span class="mono">460,100,3</span> — so
+    <strong>nothing here is ever read from it</strong>. Where a scanned page is used at all it is
+    re-read from the image, and published only if that page's own column still adds up to the
+    total printed beside it.</span>`;
   sec.appendChild(ans);
 
   // ---- best effort, and how to tell us we got it wrong -----------------------
@@ -2048,12 +2267,12 @@ function renderReceipts(host) {
   effort.className = 'panel panel-pad';
   effort.style.marginBottom = 'var(--s5)';
   effort.innerHTML = `
-    <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+    <h3 class="block-title">
       This is a best-effort project — please tell us if something looks wrong</h3>
     <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
       This site is built and maintained by residents, not by the town. Every figure is traced to a
-      published document and checked by machine wherever the document makes that possible, but the
-      source material runs to thousands of pages and <strong>we do not claim it is
+      document and a page, and checked by machine wherever the document makes that possible, but
+      the source material runs to thousands of pages and <strong>we do not claim it is
       flawless</strong>. If a figure looks wrong, is out of date, or reads misleadingly, the fastest
       way to get it fixed is to say so — a report costs you a minute and makes the site better for
       everyone who reads it after you.
@@ -2081,7 +2300,7 @@ function renderReceipts(host) {
   clause.className = 'panel panel-pad';
   clause.style.marginBottom = 'var(--s5)';
   clause.innerHTML = `
-    <h3 style="margin:0 0 var(--s3);font-size:var(--t-base);font-weight:640">
+    <h3 class="block-title">
       How these documents were read — and what would make it safer</h3>
     <p style="margin:0 0 var(--s4);font-size:var(--t-sm);color:var(--text-secondary)">
       Some of the town's reports are published only as <strong>scanned images</strong> rather than as
@@ -2127,12 +2346,89 @@ function renderReceipts(host) {
   const g = document.createElement('div');
   g.className = 'panel panel-pad';
   g.style.marginTop = 'var(--s5)';
-  g.innerHTML = `<h3 style="margin:0 0 var(--s5);font-size:var(--t-base);font-weight:640">
+  g.innerHTML = `<h3 class="block-title" style="margin-bottom:var(--s5)">
       Budget words, in plain English</h3>
     <dl class="gloss">${GLOSSARY.map(([t, d]) =>
       `<div><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl>`;
   sec.appendChild(g);
   host.appendChild(sec);
+}
+
+/* ==================== the masthead's right column ==================== */
+/**
+ * The film, swapped in only when asked.
+ *
+ * The card is a still image; pressing it builds the real <video> and plays it.
+ * Autoplay is legitimate here precisely because it follows a press — the reader
+ * asked for it — and it is the only way the film ever starts. Captions are on by
+ * default: the narration is the whole content, and plenty of people watch a page
+ * like this muted or cannot hear it at all.
+ */
+function setupFilm() {
+  const wrap = $('#film'), btn = $('#filmPlay');
+  if (!wrap || !btn) return;
+  btn.addEventListener('click', () => {
+    const v = document.createElement('video');
+    v.controls = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    v.preload = 'metadata';
+    v.setAttribute('poster', 'docs/media/mfas-commercial-card.jpg');
+    v.innerHTML = `
+      <source src="docs/media/mfas-commercial.mp4" type="video/mp4">
+      <track kind="captions" src="docs/media/mfas-commercial.vtt" srclang="en"
+             label="English" default>`;
+    const alt = document.createElement('p');
+    alt.className = 'film-alt';
+    alt.innerHTML = `62 seconds · narration and captions ·
+      <a href="docs/media/mfas-commercial.mp4">open the file directly</a> if it will not play.`;
+    btn.replaceWith(v);
+    wrap.querySelector('.film-cap').replaceWith(alt);
+    /* A blocked autoplay must not look like a broken player. */
+    const p = v.play();
+    if (p && p.catch) p.catch(() => { v.controls = true; });
+    v.focus({ preventScroll: true });
+  });
+}
+
+/**
+ * How you can check this — the masthead's credibility column.
+ *
+ * Every row is measured from the published data at render time rather than typed
+ * into the markup, including the zero. If a figure ever did reach the page from a
+ * scan's text layer this card would say so, which is the only reason it is worth
+ * printing a zero at all.
+ */
+function renderVerify() {
+  const slot = $('#verifySlot');
+  if (!slot) return;
+  const idx = state.data.index || {};
+  const c = idx.counts || {};
+  const docs = docsById();
+  const all = state.data.facts.facts;
+  const fromScanText = all.filter(f => {
+    const d = docs.get(f.source_doc);
+    return d && d.values_extractable === false && f.extraction !== 'transcribed';
+  }).length;
+  const traced = all.filter(f => f.source_doc).length;
+
+  const rows = [
+    ['Published figures', all.length.toLocaleString('en-US')],
+    ['Traced to a named document', `${traced} of ${all.length}`, traced < all.length],
+    ['Read from a scan’s hidden text', String(fromScanText), fromScanText > 0],
+    ['Documents in the archive', (c.documents || 0).toLocaleString('en-US')],
+    ['Account-level observations', (c.line_item_observations || 0).toLocaleString('en-US')],
+  ];
+  const el = document.createElement('div');
+  el.className = 'verify';
+  el.innerHTML = `<h2>How you can check this</h2>
+    <dl>${rows.map(([k, v, warn]) => `<div class="vr"><dt>${esc(k)}</dt>
+      <dd${warn ? ' class="warn"' : ''}>${esc(v)}</dd></div>`).join('')}</dl>
+    <p class="foot-note">Every figure names its document, and its page wherever the document has
+      pages — a spreadsheet cell does not. The whole dataset is rebuilt from those documents by an
+      open pipeline, and rebuilding it reproduces this page.
+      <a href="#receipts">See the documents</a>.</p>`;
+  slot.replaceWith(el);
 }
 
 /* ================================ render =============================== */
@@ -2146,18 +2442,26 @@ function render() {
   renderComing(main);
   renderVoice(main);
   renderReceipts(main);
-  if (firstPaint) { setupScrollSpy(); firstPaint = false; }
+  if (firstPaint) {
+    renderVerify(); setupFilm(); setupScrollSpy(); setupNavMenu();
+    firstPaint = false;
+  }
 }
 
 function setupScrollSpy() {
   const links = $$('#navLinks a');
   const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const here = $('#navHere');
   const obs = new IntersectionObserver(entries => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;
       links.forEach(a => a.removeAttribute('aria-current'));
       const a = byId.get(e.target.id);
-      if (a) a.setAttribute('aria-current', 'true');
+      if (a) {
+        a.setAttribute('aria-current', 'true');
+        // The phone button doubles as a "you are here" marker on a page this long.
+        if (here) here.textContent = a.textContent;
+      }
     }
   }, { rootMargin: '-45% 0px -50% 0px' });
   byId.forEach((_, id) => {
@@ -2166,10 +2470,35 @@ function setupScrollSpy() {
   });
 }
 
+/** The phone section menu.
+ *
+ * A plain button and a class, not <details>: browsers have moved the internals of
+ * <details> around (the closed state is hidden by a UA rule that has changed shape
+ * more than once), and this page has to keep working untouched for years.
+ */
+function setupNavMenu() {
+  const btn = $('#navToggle'), list = $('#navLinks');
+  if (!btn || !list) return;
+  const close = () => { list.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = list.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  list.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  document.addEventListener('click', e => {
+    if (list.classList.contains('open') && !list.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && list.classList.contains('open')) { close(); btn.focus(); }
+  });
+}
+
 /* ================================= boot ================================ */
 async function boot() {
   try {
     loadHome();
+    loadShared();   // an explicit link wins over a remembered setting
     const idx = await (await fetch('data/index.json')).json();
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
                    'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas',
