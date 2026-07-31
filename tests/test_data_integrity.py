@@ -151,6 +151,23 @@ def test_scans_carry_an_extraction_warning(documents):
 # a manifest-regeneration bug that dropped or flipped them fails loudly here
 # instead of shipping.
 KNOWN_SCAN_IDS = {
+    # Added 2026-07-30, and the reason matters more than the entries. The email of
+    # 2026-07-29 asked Amy for DIGITAL audits for FY2018-FY2020, because those years
+    # hold 31, 28 and 197 facts against FY2025's 983. Two files then arrived named
+    # "Audit 2019.pdf" and "Audit 2020.pdf" — and they are SCANS, not the digital
+    # originals. Measured three independent ways, all agreeing:
+    #
+    #   Audit 2019.pdf   15 embedded fonts   20,369 chars over 181 pages
+    #   Audit 2020.pdf    0 embedded fonts      163 chars over 163 pages
+    #   (a real digital audit, the FY2022 stamped edition: 99 fonts, 254,119 chars)
+    #
+    # So the request stands and must NOT be reported as satisfied. They are still
+    # worth having: they are different, ten-times-smaller scans of two thin years,
+    # and Audit 2020 carries no embedded text at all, so there is no digit-transposing
+    # OCR layer to mislead anyone — they are fair candidates for the fresh-recognition
+    # path, where the per-page arithmetic gate decides what may publish.
+    "audit-2019",
+    "audit-2020",
     # Added 2026-07-29: the county's Article 46 quarter-cent resolution arrived
     # as a scan with an interleaved OCR layer — s00's font analysis and a manual
     # read agree. Its figures require transcription like every other scan.
@@ -1428,3 +1445,301 @@ def test_the_masthead_does_not_promise_a_page_every_figure_lacks(facts):
         assert phrase not in text, (
             f"site copy promises a page for every figure ({phrase!r}) while "
             f"{len(pageless)} facts have none (e.g. {sorted(set(pageless))[:3]})")
+
+
+# ---------------------------------------------------------------------------
+# The warehouse fill of 2026-07-29. Each of these guards a defect that actually
+# shipped into data during that work, which is the only reason to write a gate.
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def warehouse_full():
+    return load("warehouse.json")
+
+
+def test_no_slice_is_reported_twice_by_two_documents(warehouse_full):
+    """Every audited statement prints last year's actual as a comparative column.
+
+    Loading those alongside the prior year's own audit put 475 slices into
+    Fact_Financial twice — same organisation, year, scenario, account and measure,
+    from two documents, distinguished only by Line. Every row reconciled against its
+    own page, which is precisely what made it dangerous: nothing looked wrong, and
+    anyone summing an account across Lines would have doubled it.
+
+    A comparative column may only load for a year no document reads directly.
+    """
+    cols = {n: i for i, n in enumerate(warehouse_full["columns"])}
+    seen = {}
+    dupes = []
+    for r in warehouse_full["rows"]:
+        key = tuple(r[cols[c]] for c in ("Organization_ID", "Fiscal_Year_ID", "Scenario",
+                                         "Flow", "Department", "Account", "Measure"))
+        src = r[cols["Source_ID"]]
+        if key in seen and seen[key] != src:
+            dupes.append((key, seen[key], src))
+        seen.setdefault(key, src)
+    assert not dupes, (
+        f"{len(dupes)} slice(s) reported by two documents — a comparative prior-year "
+        f"column is loading for a year already read directly. First: {dupes[0]}")
+
+
+def test_every_fact_financial_row_states_a_basis(warehouse_full):
+    """A figure whose column meaning is unknown must NOT be in the financial table.
+
+    Stages 61 and 81 prove which column is budget and which is actual from each
+    statement's own variance identity. Where that cannot be proven the lines are
+    verified and cited but their basis is not established, and they belong in
+    Fact_Statement_Line. Letting one into Fact_Financial would publish a budget
+    figure as an outturn about a real government.
+    """
+    cols = {n: i for i, n in enumerate(warehouse_full["columns"])}
+    allowed = set(warehouse_full["dim_scenario"] and
+                  [s["Scenario"] for s in warehouse_full["dim_scenario"]])
+    bad = [r for r in warehouse_full["rows"] if r[cols["Scenario"]] not in allowed]
+    assert not bad, f"{len(bad)} row(s) carry a scenario outside Dim_Scenario"
+
+    fsl = warehouse_full.get("fact_statement_line", {})
+    for r in fsl.get("rows", []):
+        assert r.get("basis_unknown_because"), (
+            "a Fact_Statement_Line row must say why its basis is unknown — that "
+            "sentence is the only thing stopping it being read as an actual")
+
+
+def test_fact_metric_never_mixes_units(warehouse_full):
+    """Fact_Metric holds dollars-per-pupil beside dollars. Unit is load-bearing.
+
+    It exists because nine of Amy's county tables are real facts at a grain that is
+    not fund dollars. If a row loses its Unit, someone sums $5,877 per pupil into a
+    dollar total.
+    """
+    fm = warehouse_full.get("fact_metric", {})
+    for r in fm.get("rows", []):
+        assert r.get("Unit"), f"Fact_Metric row without a Unit: {r.get('Metric')}"
+        assert r.get("Metric"), f"Fact_Metric row without a Metric: {r}"
+
+
+def test_coverage_reports_the_backlog_honestly():
+    """Coverage must not count a document as read because a QUESTION names it.
+
+    The first version scanned dataset text for document ids. The questions register
+    names each unread document inside the question asking for it to be read, so the
+    measurement promoted all 23 backlog items to "read" the moment it described the
+    gap — a coverage report congratulating itself.
+    """
+    cov = load("coverage.json")
+    docs = {d["id"] for d in load("documents.json")["documents"]}
+    assert cov["documents_total"] == len(docs)
+    statuses = {r["status"] for r in cov["documents"]}
+    assert statuses <= {"read", "read-into-datasets-only", "not-yet-read", "no-figures",
+                        "design-document", "scanned-unextractable",
+                        "superseded-by-digital"}, statuses
+    for r in cov["documents"]:
+        if r["status"] != "read":
+            assert r["why"], f"{r['document']}: a non-read status must say why"
+    # The backlog is a real number and must be reported, not smoothed to zero.
+    assert cov["backlog_count"] == sum(1 for r in cov["documents"]
+                                       if r["status"] == "not-yet-read")
+
+
+def test_digital_audits_agree_with_the_independent_readings():
+    """The cross-document checks are the project's strongest evidence — keep them.
+
+    A digital reading of an audit and a character-recognition reading of the SCANNED
+    version of the same audit landing on the same figure is as close to an external
+    audit as this project gets. If a check starts disagreeing, one of the two readings
+    is wrong and both are suspect until it is resolved.
+    """
+    try:
+        ad = load("audited_digital.json")
+    except FileNotFoundError:
+        pytest.skip("audited_digital.json not built")
+    cross = ad.get("cross_document_checks", {})
+    assert cross.get("checks_run", 0) >= 4, (
+        "the cross-document checks stopped running — they are the reason these "
+        "figures are believable, so losing them silently is the failure mode")
+    bad = [c for c in cross["checks"] if not c["agree"]]
+    assert not bad, f"independent readings disagree: {bad[:2]}"
+
+
+# ---------------------------------------------------------------------------
+# Fixes for the 2026-07-31 external code audit. Each test pins a defect that
+# was live in a published artifact, not a hypothetical.
+# ---------------------------------------------------------------------------
+
+def test_no_document_is_attributed_to_the_wrong_government(documents):
+    """H-01. The export inferred the owner from a substring of the jurisdiction.
+
+    `"ORG_OC" if "Orange" in jurisdiction else "ORG_HB"` published ten
+    initiative-authored documents as Orange County government sources, and — once
+    Chapel Hill arrived — thirteen Chapel Hill documents as Town of Hillsborough,
+    because "Chapel Hill" does not contain "Orange". Ownership is now recorded
+    explicitly in the manifest; this pins it.
+    """
+    expected = {
+        "Town of Hillsborough, NC": "ORG_HB",
+        "Orange County, NC": "ORG_OC",
+        "Town of Chapel Hill, NC": "ORG_CH",
+        "Town of Carrboro, NC": "ORG_CB",
+        "City of Mebane, NC": "ORG_MB",
+        "Orange County Efficiency & Accountability Initiative": "ORG_INIT",
+    }
+    for d in documents["documents"]:
+        assert d.get("organization_id"), f"{d['id']}: no organization_id"
+        want = expected.get(d["jurisdiction"])
+        assert want, f"{d['id']}: jurisdiction {d['jurisdiction']!r} has no ORG mapping"
+        assert d["organization_id"] == want, (
+            f"{d['id']} ({d['jurisdiction']}) attributed to {d['organization_id']}, "
+            f"expected {want}")
+
+
+def test_initiative_documents_are_never_presented_as_government_records(documents):
+    """H-01. Readability is not authority.
+
+    The initiative's own request workbooks and design files are machine-readable,
+    and the export gave every machine-readable document `High` confidence — so the
+    project's own working papers carried the standing of a published audit.
+    """
+    init = [d for d in documents["documents"] if d["jurisdiction"].startswith(
+        "Orange County Efficiency")]
+    assert init, "no initiative documents found — has the jurisdiction label changed?"
+    for d in init:
+        assert d["organization_id"] == "ORG_INIT", d["id"]
+        assert d["source_authority"] == "initiative", d["id"]
+
+
+def test_the_export_agrees_with_the_json_it_was_built_from():
+    """H-04. The exports ran BEFORE s90 merged facts.json, so the downloadable
+    workbook could carry the previous run's figures while the site carried the
+    new ones — and a second build hid it by making them agree again."""
+    openpyxl = pytest.importorskip("openpyxl")
+    xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
+    if not xl.exists():
+        pytest.skip("export not built")
+    facts = load("facts.json")["facts"]
+    wb = openpyxl.load_workbook(xl, read_only=True)
+    try:
+        ws = wb["1.0 Fact_Published_Figures"]
+        rows = [r for r in ws.iter_rows(values_only=True) if r and r[0]]
+        header = next(i for i, r in enumerate(rows) if "Organization_ID" in [str(x) for x in r if x])
+        data = rows[header + 1:]
+        assert len(data) == len(facts), (
+            f"export has {len(data)} fact rows, facts.json has {len(facts)} — the "
+            f"export was built from a different run's data")
+    finally:
+        wb.close()
+
+
+def test_source_registry_gives_every_document_a_content_keyed_identity():
+    """M-04/M-01. IDs came from filenames and collisions resolved by traversal
+    order, so an ID could move to different bytes while facts kept citing it.
+    And every rebuild reset official_url to None, erasing maintainer work."""
+    path = REPO / "data" / "source_registry.json"
+    assert path.exists(), "the source registry is missing — s00 should create it"
+    reg = json.loads(path.read_text(encoding="utf-8"))["sources"]
+    docs = load("documents.json")["documents"]
+    for d in docs:
+        assert d["sha256"] in reg, f"{d['id']} is not in the source registry"
+        assert reg[d["sha256"]]["id"] == d["id"], (
+            f"{d['id']}: registry says {reg[d['sha256']]['id']} for the same bytes")
+    ids = [v["id"] for v in reg.values()]
+    assert len(ids) == len(set(ids)), "the registry assigns one ID to two hashes"
+
+
+def test_trust_documents_do_not_pin_stale_archive_counts(documents):
+    """M-07. Stale trust documentation is expensive in an accountability project.
+
+    The README claimed 84 documents and 879 MB while the manifest held 115 and
+    925 MiB; PROVENANCE.md claimed 30 documents and 726 MB. A reader checking our
+    numbers against our own prose finds a discrepancy and has no way to know which
+    is stale. Volatile counts either come from the manifest or are not stated.
+    """
+    summary = documents["summary"]
+    n = summary["unique_documents"]
+    mb = round(summary["total_bytes"] / 1048576)
+    stale = []
+    for name in ("README.md", "AGENTS.md", "docs/PROVENANCE.md",
+                 "docs/EXTRACTION_NOTES.md", "docs/AGENT_BRIEF.md"):
+        p = REPO / name
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        for m in re.finditer(r"(\d{2,4})\s*(?:unique\s+)?documents\b", text):
+            if int(m.group(1)) not in (n,) and int(m.group(1)) > 20:
+                stale.append(f"{name}: claims {m.group(1)} documents, manifest has {n}")
+        for m in re.finditer(r"\b(\d{3,4})\s*(?:MB|MiB)\b", text):
+            v = int(m.group(1))
+            # 100 MiB is GitHub's limit, quoted deliberately; anything else that
+            # looks like an archive size must match the manifest.
+            if v not in (100, mb) and v > 200:
+                stale.append(f"{name}: claims {v} MB, archive is {mb} MiB")
+    assert not stale, "stale pinned counts in trust documentation:\n  " + "\n  ".join(stale)
+
+
+def test_every_extraction_cache_is_content_addressed():
+    """H-02. A cache keyed on a name, size or mtime describes the SLOT a document
+    occupies, not the document. Replacing a PDF under the same filename then served
+    text from the old file while the manifest recorded the new hash — which severs
+    the fact-to-source chain this project presents as its trust guarantee, and a
+    routine resumable `make etl` was enough to trigger it."""
+    # Matched against CODE only. The docstrings deliberately quote the old keys to
+    # explain what went wrong, and a test that cannot tell an explanation from the
+    # defect it describes punishes writing the explanation down.
+    def code_of(name: str) -> str:
+        import ast
+        tree = ast.parse((REPO / name).read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef,
+                                 ast.AsyncFunctionDef)):
+                doc = ast.get_docstring(node, clean=False)
+                if doc and node.body and isinstance(node.body[0], ast.Expr):
+                    node.body[0].value = ast.Constant(value="")
+        return ast.unparse(tree)
+
+    banned = [
+        ("etl/s70_ocr.py", 'OCR_ROOT / d["id"]'),
+        ("etl/s50_line_items.py", "st.st_size"),
+        ("etl/s50_line_items.py", "st.st_mtime"),
+        ("etl/s85_warehouse.py", "path.stem[:60]"),
+        ("etl/s94_projects.py", "7776223-1778845438"),
+    ]
+    for name, pattern in banned:
+        src = code_of(name)
+        assert pattern not in src, (
+            f"{name} still keys a cache on {pattern!r} — use common.content_cache_dir(), "
+            f"which binds the namespace to the source sha256 and extractor version")
+    common = (REPO / "etl" / "common.py").read_text(encoding="utf-8")
+    assert "def content_cache_dir" in common, "the content-addressed cache helper is gone"
+
+
+def test_stage_diagnostics_can_actually_fail_the_build():
+    """H-03. Stages collected failures, printed them, and exited 0, so the documented
+    rebuild command succeeded while publishing partial data."""
+    common = (REPO / "etl" / "common.py").read_text(encoding="utf-8")
+    assert "def report_and_gate" in common
+    assert "sys.exit(1)" in common, "report_and_gate no longer fails the build"
+    for name in ("s30_budget_messages", "s40_household_impact", "s80_county"):
+        src = (REPO / "etl" / f"{name}.py").read_text(encoding="utf-8")
+        assert "report_and_gate(" in src, f"{name} does not gate its diagnostics"
+
+
+def test_the_release_gate_runs_the_tests():
+    """H-03. `make etl` was the documented rebuild command and never ran the tests —
+    which is how three high-severity defects coexisted with a green suite."""
+    mk = (REPO / "Makefile").read_text(encoding="utf-8")
+    assert "\nverify:" in mk, "no verify target"
+    block = mk.split("\nverify:")[1].split("\n\n")[0]
+    assert "etl" in block and "test" in block, "verify must run BOTH the ETL and the tests"
+    wf = REPO / ".github" / "workflows" / "verify.yml"
+    assert wf.exists(), "no CI workflow enforces the gate"
+    assert "pytest" in wf.read_text(encoding="utf-8")
+
+
+def test_exports_are_built_after_the_facts_are_merged():
+    """H-04. s101/s103 read facts.json; s90 writes it. Running the exports first
+    meant the downloadable workbook carried the previous run's figures."""
+    mk = (REPO / "Makefile").read_text(encoding="utf-8")
+    etl = mk.split("\netl:")[1].split("\ntest:")[0]
+    order = re.findall(r"etl/(s\w+)\.py", etl)
+    assert order.index("s90_build") < order.index("s101_workbook"), (
+        "s90_build must run BEFORE s101_workbook or the export lags the JSON by a build")
+    assert order.index("s90_build") < order.index("s103_tab_map")

@@ -6,7 +6,7 @@ charts.
 
 ## Why the source PDFs are not in this repository
 
-The source archive is **726 MB across 30 unique documents**. Two files exceed GitHub's hard
+The source archive is **925 MiB across 115 unique documents**. Two files exceed GitHub's hard
 100 MB per-file limit outright (the FY2019 and FY2020 reports, 101 MB and 98 MB), so the archive
 cannot be pushed as-is even if we wanted to. Git LFS is not a fix either: the free quota is 1 GB of
 storage and 1 GB of bandwidth per month, which a public site would exhaust in a few dozen visits.
@@ -14,7 +14,7 @@ storage and 1 GB of bandwidth per month, which a public site would exhaust in a 
 So the repository commits **extracted data plus a hash manifest**, and the documents stay out.
 Concretely, `data/datasets/documents.json` records for every source file:
 
-- `filename`, `archive_path`, and any `duplicate_paths` (the archive contains 9 duplicate copies)
+- `filename`, `archive_path`, and any `duplicate_paths` (the archive contains 43 duplicate copies)
 - `bytes`, `pages`, `format`
 - **`sha256`** — so you can prove your copy is byte-identical to the one the figures came from
 - `text_layer` (`digital` / `scan`) and `values_extractable`

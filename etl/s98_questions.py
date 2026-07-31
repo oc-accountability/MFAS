@@ -484,7 +484,107 @@ def main() -> None:
             "each page proves itself' — with digital originals the proof is direct reading. "
             "It also lets the scan-recovery method be validated wholesale: every "
             "OCR-recovered total can now be checked against a digital original.",
-        source="files obtained by Amy 2026-07-29; survey in progress")
+        source="files obtained by Amy 2026-07-29; survey in progress",
+        status="answered",
+        answer="DONE — etl/s61_audited_digital.py reads all five digital audits "
+               "(FY2021-FY2025): 187 statement pages, 459 of 576 statement groups "
+               "reconciled against their own printed totals, 2,271 verified lines. The "
+               "wholesale validation this item hoped for came out clean: FY2021, FY2022 "
+               "and FY2024 audited General Fund totals read from the digital originals "
+               "match the figures stage 75 recovered from the SCANNED versions to the "
+               "dollar, and FY2025 matches stage 60's read of the separate digital twin. "
+               "Five of five cross-document checks agree, and the stage fails the build "
+               "if any disagrees. FY2018-FY2020 digital audits are still not held — see "
+               "the item below on the thin early years.")
+
+    # ---- raised by the warehouse fill of 2026-07-29 ---------------------------
+    # APPEND ONLY, below every add() above: register ids are positional, so inserting
+    # anywhere earlier silently renumbers every later item.
+    add("pipeline", "Statement column headers — 10,275 figures with no established basis",
+        "Stages 61 and 81 verify a statement line by its page's own arithmetic, and prove "
+        "which column is budget and which is actual from the variance identity. On "
+        "statements that print no variance column — balance sheets, net position, cash "
+        "flows, combining statements — the columns are FUNDS or ACTIVITY TYPES instead, so "
+        "no identity confirms them. Those 10,275 lines are verified, cited to a document "
+        "and page, and held in Fact_Statement_Line with the basis explicitly unknown. "
+        "Resolving it means reading each statement's column HEADER band and matching header "
+        "text to the figure columns by position.",
+        why="It is the single highest-leverage piece of work left on the warehouse. The same "
+            "header-reading unlocks two things at once: it gives these 10,275 figures a "
+            "basis so they can join Fact_Financial, and it is exactly what the unread budget "
+            "documents need, because their columns are fiscal years printed in a header row. "
+            "Until then the figures are published and traceable but cannot be charted as "
+            "'actual' or 'budget' without guessing.",
+        source="measured 2026-07-29 while loading the audited statements",
+        answer="Amy 2026-07-30: 'This is a fair assumption. I agree.' Still to build.")
+
+    add("pipeline", "Budget documents for FY2025, FY2026 and the county's FY2026-27",
+        "Twenty-three documents with figures are still unread, and the substantial ones are "
+        "budget plans: the town's FY26 Adopted, FY26 Recommended, FY26 Ordinance and FY2025 "
+        "Manager's Recommended, and the county's FY25-26 Approved, FY25-26 Manager "
+        "Recommended, FY2026-27 Manager's Recommended, FY2025-26 Ordinance and FY26-27 CIP. "
+        "The FY27 plan's line-item appendix — the one structure this pipeline reads deeply — "
+        "does NOT exist in any of them (measured: nine occurrences of 'Line-Item Budget' in "
+        "the FY27 document, zero in the other five). They present budgets as narrative plus "
+        "a handful of multi-year summary tables keyed by fiscal-year column headers.",
+        why="It is why Fact_Financial holds nothing for Orange County after FY2025 and why "
+            "the town's FY2026 rows come only from the FY27 plan's comparative columns rather "
+            "than from the FY26 budget itself. The adopted-vs-recommended distinction Amy's "
+            "extensibility test #2 depends on cannot be shown for FY2026 without them.",
+        source="coverage measured 2026-07-29 by etl/s104_coverage.py",
+        status="answered",
+        answer="DEPRIORITISED by Amy, 2026-07-30, in her own words: 'The town/county budget "
+               "books - these are likely not needed, but available for reference. It is maybe "
+               "just adding confusion but I grabbed them in case there is some data elements "
+               "not found elsewhere… They are properly marked Not Read, with the understanding "
+               "there is no Action required.' Same for the studies. So do NOT read these "
+               "speculatively — go to them only when a specific figure is missing from "
+               "elsewhere, and she named the likely one: the water and sewer rate history. "
+               "This releases what looked like the bulk of the remaining backlog.")
+
+    add("amy", "The town's DIGITAL audits for FY2018, FY2019 and FY2020",
+        "Would you ask the town for digital editions of the annual financial reports for the "
+        "years ended June 30 2018, 2019 and 2020? You obtained FY2021-FY2025 and they "
+        "transformed those years — from a handful of recovered column totals to several "
+        "hundred verified lines each. For FY2018-FY2020 the archive holds only scans, whose "
+        "embedded text transposes digits, so figures are published solely where a page's own "
+        "arithmetic proves them.",
+        why="It is the clearest hole in the warehouse and it shows plainly in the coverage "
+            "table: Hillsborough FY2018 holds 31 facts and FY2019 holds 28, against 983 for "
+            "FY2025. This is not something more code can fix — the documents are the "
+            "constraint. Three files would close a decade-long series.",
+        source="coverage measured 2026-07-29; the FY2021-FY2025 digital audits proved the value")
+
+    add("amy", "122 county figures your workbook records that the audits did not corroborate",
+        "Stage 81 now reads all eight county ACFRs directly and checks every monetary figure "
+        "in your county workbook against the audited statements for that same year. 672 of "
+        "794 matched (85%). The remaining 122 could not be found — and this is a question, "
+        "not a correction. The match is on VALUE within a fiscal year, because your category "
+        "names are your own and inventing a label crosswalk would be guessing at the mapping "
+        "the town has not supplied. An absence can sit on either side: the county prints the "
+        "same slice in several statements, and this project withholds any statement group "
+        "whose arithmetic it could not prove.",
+        why="Where your figure is right and the reader missed it, that is a gap in this "
+            "project's reading worth fixing. Where a figure came from a table outside the "
+            "audited statements — a transmittal letter, an MD&A narrative — recording which "
+            "would make it citable to a page. Either way the answer improves the warehouse.",
+        source="measured 2026-07-29 by etl/s81_county_acfr.py",
+        status="answered",
+        answer="ANSWERED 2026-07-30, and the answer is that this was never a question for Amy. "
+               "Every one of the 60 sampled unmatched figures was searched for in the raw text of "
+               "that year's county ACFR: 60 of 60 are PRESENT. Her transcription is correct and "
+               "this project's reader simply failed to extract those statements — almost certainly "
+               "the groups whose arithmetic did not reconcile and were therefore withheld, so they "
+               "never entered the comparison set at all. "
+               "Two wrong explanations were offered before the measurement was taken, and both "
+               "should be a warning. Mine: 'they probably came from a transmittal letter or the "
+               "MD&A narrative rather than the audited statements' — plausible, and wrong. Hers: "
+               "'those are my learning tabs, you can ignore them' — also wrong, because the "
+               "unmatched figures come from her numbered Fact tabs (2.0/4.0/5.0/6.0), and this "
+               "pipeline never imports her lesson tabs at all (FACT_SHEET only matches sheets "
+               "beginning with a digit, and Reading_Order_v2.2 through Capital_Debt_FY25 do not). "
+               "The real work item is therefore a READER gap on the county statements, tracked as "
+               "part of the withheld-group backlog — not anything Amy needs to do.")
 
 
 

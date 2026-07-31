@@ -20,7 +20,7 @@ from pathlib import Path
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASETS, SOURCES, Fact, DIGITAL, STATED, write_json  # noqa: E402
+from common import DATASETS, SOURCES, Fact, DIGITAL, STATED, write_json, report_and_gate  # noqa: E402
 
 warnings.filterwarnings("ignore")
 
@@ -219,8 +219,7 @@ def main() -> None:
           f"quotes: {len(quotes)}")
     for q in quotes:
         print(f"      [{q['key']}] p.{q['source_page']}: {q['text'][:88]}…")
-    for p in problems:
-        print(f"      {p}")
+    report_and_gate("stage 40", problems)
 
 
 if __name__ == "__main__":

@@ -21,9 +21,26 @@ One self-checking statement per year is worth more than a hundred unverifiable
 tables, and it is exactly the series a resident wants: did the town spend what it
 said it would, every year?
 
+**What this stage used to throw away.** For years it verified each column by adding
+up its component lines — and then published only the column TOTAL, discarding the
+very lines whose arithmetic had done the proving. Seven lines per column, four
+columns, two sections, seven years: several hundred figures that were already
+proven to the same standard as the totals, withheld for no reason. A line in a
+column that sums exactly to its printed total cannot have a misread digit without
+breaking that sum, so it is publishable on exactly the argument that makes the
+total publishable. Those lines are now published too, in `published_lines`, one row
+per line per VERIFIED column — a line's value in a column that did not reconcile is
+still withheld.
+
+`published` keeps its original shape (column totals only) because the website and
+the integrity gates count on it; the lines are additive.
+
 Note the standing recommendation this stage exists under: **a digital original
-would remove the need for any of it.** Where one exists it is used instead
-(FY2025), and no recognition is involved.
+would remove the need for any of it.** Where one exists it is used instead — and
+since stage 61 that is FY2021 through FY2025, read directly from the town's own
+digital audits. Each line here therefore records whether a digital original exists
+for its year, so the warehouse can prefer the digital reading and fall back to
+recognition only for FY2018-FY2020, where no digital original has been obtained.
 """
 from __future__ import annotations
 
@@ -35,6 +52,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import BUILD, DATASETS, read_json, write_json  # noqa: E402
 
 OCR_ROOT = BUILD / "ocr"
+
+# Years for which the town's own DIGITAL audit has been obtained (stage 61 reads
+# them). Recognition from a scan is a fallback, never a preference, so a line from
+# one of these years is flagged so the warehouse can choose the digital reading.
+DIGITAL_YEARS = {2021, 2022, 2023, 2024, 2025}
 
 # The statement we want, however each year's report words its heading.
 WANTED = re.compile(r"Budget\s+and\s*\n?\s*Actual", re.I)
@@ -189,13 +211,33 @@ def main() -> None:
         sys.exit("no OCR output — run etl/s70_ocr.py first")
     docs = {d["id"]: d for d in read_json(DATASETS / "documents.json")["documents"]}
 
-    results, published, problems = [], [], []
-    for doc_dir in sorted(OCR_ROOT.iterdir()):
-        if not doc_dir.is_dir():
-            continue
-        doc = docs.get(doc_dir.name)
+    # Consume the CURRENT OCR manifest, not whatever directories happen to exist.
+    # Enumerating build/ocr meant an orphaned directory — left behind when a source
+    # was replaced or superseded by a digital original — looked exactly like a live
+    # one, and its text could be published against a document whose hash had moved on.
+    problems: list[str] = []
+    ocr_manifest = read_json(DATASETS / "ocr_manifest.json")
+    targets = []
+    for entry in ocr_manifest.get("documents", []):
+        doc = docs.get(entry["document"])
         if not doc:
+            problems.append(f"{entry['document']}: in the OCR manifest but not in the "
+                            f"document manifest — stale OCR output, skipped")
             continue
+        if doc["sha256"] != entry.get("sha256"):
+            problems.append(f"{doc['id']}: OCR text was recognised from sha256 "
+                            f"{str(entry.get('sha256'))[:16]}… but the archive now holds "
+                            f"{doc['sha256'][:16]}… — stale OCR, skipped")
+            continue
+        text_dir = BUILD / entry["text_dir"] if entry.get("text_dir") else OCR_ROOT / doc["id"]
+        if not text_dir.is_dir():
+            problems.append(f"{doc['id']}: OCR text directory {text_dir} is missing")
+            continue
+        targets.append((doc, text_dir))
+
+    results, published = [], []
+    published_lines = []
+    for doc, doc_dir in targets:
         fy = doc.get("fiscal_year")
         best = None
         for page_file in sorted(doc_dir.glob("p*.txt")):
@@ -215,14 +257,14 @@ def main() -> None:
                         "roles": column_roles(totals)}
 
         if best is None:
-            problems.append(f"{doc_dir.name}: no self-verifying budget-vs-actual page found "
+            problems.append(f"{doc['id']}: no self-verifying budget-vs-actual page found "
                             f"— nothing published from this document")
-            results.append({"document": doc_dir.name, "fiscal_year": fy,
+            results.append({"document": doc['id'], "fiscal_year": fy,
                             "status": "no verifiable statement"})
             continue
 
         cols = sorted({c for (_s, c) in best["verified"]})
-        entry = {"document": doc_dir.name, "fiscal_year": fy, "page": best["page"],
+        entry = {"document": doc['id'], "fiscal_year": fy, "page": best["page"],
                  "column_roles": {str(k): v for k, v in best["roles"].items()},
                  "column_roles_confirmed_by": (
                      "the variance column equals actual minus final budget (revenues) "
@@ -233,18 +275,41 @@ def main() -> None:
                  "status": "verified"}
         results.append(entry)
 
+        # The component lines, for the columns their own arithmetic proved. This is
+        # the same evidence that licenses the total beside them: the column adds up,
+        # so no digit in it was misread.
+        for (section, col), d in sorted(best["verified"].items()):
+            for row in best["rows"]:
+                if row["section"] != section or col >= len(row["values"]):
+                    continue
+                published_lines.append({
+                    "fiscal_year": fy, "section": section, "line": row["line"],
+                    "column_index": col, "column_role": best["roles"].get(col),
+                    "value": row["values"][col],
+                    "reconciled_column_total": d["printed"],
+                    "lines_in_column": d["lines"],
+                    "source_doc": doc['id'], "source_page": best["page"],
+                    "extraction": "ocr-arithmetic-verified",
+                    "digital_original_exists": fy in DIGITAL_YEARS,
+                    "note": ("Recovered by character recognition from a scanned page. Published "
+                             "because this line's COLUMN adds up exactly to the total printed "
+                             "beside it, so a misread digit would have broken the sum."
+                             + (" A digital original exists for this year and should be "
+                                "preferred — see stage 61." if fy in DIGITAL_YEARS else "")),
+                })
+
         for (section, col), d in sorted(best["verified"].items()):
             published.append({
                 "fiscal_year": fy, "section": section, "column_index": col,
                 "column_role": best["roles"].get(col),   # None if not confirmed
                 "total": d["printed"], "component_lines": d["lines"],
-                "source_doc": doc_dir.name, "source_page": best["page"],
+                "source_doc": doc['id'], "source_page": best["page"],
                 "extraction": "ocr-arithmetic-verified",
                 "note": ("Recovered by character recognition from a scanned page, then verified: "
                          "the individual lines add up exactly to the total printed on the same "
                          "page, so a misread digit would have broken the sum."),
             })
-        print(f"  {doc_dir.name[:52]:54} p{best['page']:<4} "
+        print(f"  {doc['id'][:52]:54} p{best['page']:<4} "
               f"{len(best['verified'])} verified column(s)")
 
     write_json(DATASETS / "ocr_statements.json", {
@@ -258,11 +323,20 @@ def main() -> None:
                           "how the FY2025 audited figures were read."),
         "documents": results,
         "published": published,
+        "published_lines": published_lines,
+        "published_lines_note": (
+            "One row per statement line per VERIFIED column. These were always proven — they "
+            "are what made each column total publishable — but were discarded until now. "
+            "Where digital_original_exists is true, stage 61 read the same statement from the "
+            "town's digital audit and that reading should be preferred."),
         "problems": problems,
     })
     ok = sum(1 for r in results if r["status"] == "verified")
     print(f"\n  {ok}/{len(results)} scanned reports yielded a self-verifying statement")
     print(f"  {len(published)} verified column totals published")
+    fallback = sum(1 for l in published_lines if not l["digital_original_exists"])
+    print(f"  {len(published_lines)} verified component LINES published "
+          f"({fallback} for years with no digital original)")
     for p in problems:
         print(f"      {p}")
 

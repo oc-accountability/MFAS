@@ -41,7 +41,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATA, DATASETS, read_json  # noqa: E402
+from common import DATA, DATASETS, read_json, build_date  # noqa: E402
 
 OUT = DATA / "exports" / "MFAS_Data_Warehouse.xlsx"
 HDR_FILL = PatternFill("solid", fgColor="1F3864")
@@ -64,6 +64,38 @@ def fy(v):
     if isinstance(v, int):
         return f"FY{v % 100:02d}"
     return v or ""
+
+
+def source_confidence(doc: dict) -> str:
+    """Confidence in Amy's vocabulary, from WHO PUBLISHED IT and how it was read.
+
+    The old rule was `"Pending" if scan else "High"` — it treated machine-readability
+    as authority, so the initiative's own request workbook and a town audit both came
+    out `High`. Readability is not authority. A perfectly parseable spreadsheet that
+    this project wrote is `Working` until an official source confirms it; a scanned
+    government audit is `Pending` because we decline to read it, not because the town
+    is unreliable.
+    """
+    if (doc.get("source_authority") or "") != "government":
+        return "Working"
+    if doc.get("text_layer") == "scan":
+        return "Pending"
+    return "High"
+
+
+def fact_confidence(fact: dict, authority_by_doc: dict) -> str:
+    """Same principle for a published figure: authority first, then extraction."""
+    auth = authority_by_doc.get(fact.get("source_doc"), "unknown")
+    if auth != "government":
+        return "Working"
+    ext = fact.get("extraction")
+    if ext == "derived":
+        return "Medium"
+    if ext == "ocr-arithmetic-verified":
+        # Proven by the page's own arithmetic, which makes an undetected misread
+        # very unlikely — but it is recognition, not a direct read.
+        return "Medium"
+    return "High"
 
 
 def sheet(wb, title, headers, rows, note=None, widths=None):
@@ -97,6 +129,7 @@ def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     facts = ds("facts").get("facts", [])
     docs = ds("documents").get("documents", [])
+    authority_by_doc = {d["id"]: d.get("source_authority") or "unknown" for d in docs}
     metrics = ds("metrics").get("metrics", {})
     wb = Workbook()
     wb.remove(wb.active)
@@ -135,7 +168,7 @@ def main() -> None:
         ("Where the numbers come from",
          "Source_Register lists every document with its SHA-256. A figure that cannot be traced "
          "to one of them is not published at all."),
-        ("Generated", date.today().isoformat()),
+        ("Generated", build_date()),
         ("Live site", "https://oc-accountability.github.io/MFAS/"),
         ("Repository", "https://github.com/oc-accountability/MFAS"),
     ]
@@ -147,7 +180,7 @@ def main() -> None:
 
     # ---- Change_Log ----------------------------------------------------------
     add("Change_Log", ["Version", "Date", "Change", "Notes"], [
-        ["v1.0 export", date.today().isoformat(),
+        ["v1.0 export", build_date(),
          "First generated export of the MFAS pipeline into the v2.2 Foundation schema",
          "Built at Amy's request. Adds the tabs that did not exist in her workbook: tax-rate "
          "history, revenue by source, capital projects, funded/declined requests, utility "
@@ -160,18 +193,24 @@ def main() -> None:
         scan = d.get("text_layer") == "scan"
         src_rows.append([
             d["id"],
-            "ORG_OC" if "Orange" in (d.get("jurisdiction") or "") else "ORG_HB",
+            # Read, never inferred. The previous rule tested for the substring
+            # "Orange" in the jurisdiction, which published ten initiative-authored
+            # documents as Orange County government sources and thirteen Chapel Hill
+            # documents as Town of Hillsborough.
+            d.get("organization_id") or "ORG_UNKNOWN",
             d["filename"],
             fy(d.get("fiscal_year")) if d.get("fiscal_year") else "",
             (d.get("category") or d.get("format") or "").title(),
             f"{d.get('pages')} pages" if d.get("pages") else "",
             "Excluded from extraction — scanned" if scan else "Machine-readable source",
-            "Pending" if scan else "High",
+            source_confidence(d),
             (d.get("sha256") or "")[:16] + "…" if d.get("sha256") else "",
+            d.get("source_authority") or "unknown",
         ])
     add("Source_Register",
         ["Source_ID", "Organization_ID", "Document", "Fiscal_Year", "Document_Type",
-         "ACFR Page / Section", "Use in Model", "Confidence", "SHA-256 (first 16)"],
+         "ACFR Page / Section", "Use in Model", "Confidence", "SHA-256 (first 16)",
+         "Published_By"],
         src_rows, "Every source document, fingerprinted",
         note="A figure is only published if it traces to a row here. Scans are excluded because "
              "their hidden text scrambles digits.")
@@ -244,7 +283,7 @@ def main() -> None:
           fy(f.get("fiscal_year")), f["metric"], f.get("value"), f.get("unit"),
           (f.get("basis") or "").title(), f.get("source_doc"), f.get("source_page"),
           f.get("extraction"),
-          "Medium" if f.get("extraction") == "derived" else "High"]
+          fact_confidence(f, authority_by_doc)]
          for f in facts],
         "Every published figure, long format",
         note="This is the spine. Every number on the website is one of these rows.")
@@ -414,6 +453,49 @@ def main() -> None:
             wh["rows"],
             "THE warehouse core: both governments, one table, one schema.",
             note="GRAIN: " + wh["grain"])
+        fm = wh.get("fact_metric") or {}
+        if fm.get("rows"):
+            add("Fact_Metric",
+                fm["columns"],
+                [[r.get(c) for c in fm["columns"]] for r in fm["rows"]],
+                "Facts that are not fund dollars — fund balance, net position, debt, "
+                "capital, schools, outlook.",
+                note="GRAIN: " + fm["grain"] + "  " + fm["why_separate"])
+        fsl = wh.get("fact_statement_line") or {}
+        if fsl.get("rows"):
+            add("Fact_Statement_Line",
+                fsl["columns"],
+                [[r.get(c) for c in fsl["columns"]] for r in fsl["rows"]],
+                "Verified and cited statement lines whose COLUMN MEANING is not yet "
+                "established — read this tab knowing the basis is unknown.",
+                note="GRAIN: " + fsl["grain"] + "  " + fsl["why_separate"])
+
+    # Coverage travels WITH the workbook. A reader who never opens the JSON should
+    # still be able to see which documents fed this and which did not — a coverage
+    # claim that lives only in a commit message is a coverage claim nobody checks.
+    cov = ds("coverage")
+    if cov:
+        add("Coverage_By_Document",
+            ["Document", "Filename", "Jurisdiction", "Format", "Fiscal_Year",
+             "Facts_Total", "Fact_Financial", "Fact_Metric", "Fact_Statement_Line",
+             "Status", "Why"],
+            [[r["document"], r["filename"], r["jurisdiction"], r["format"],
+              r["fiscal_year"], r["facts_total"], r["Fact_Financial"],
+              r["Fact_Metric"], r["Fact_Statement_Line"], r["status"], r["why"]]
+             for r in cov["documents"]],
+            f"{cov['documents_contributing']} of {cov['documents_total']} documents feed "
+            f"{cov['facts_total']:,} facts. Only status='not-yet-read' is a gap in the work.",
+            note=cov["how_to_read_this"])
+        yrs = [k for k in cov["facts_by_org_and_year"][0] if k != "Organization_ID"]
+        add("Coverage_By_Year",
+            ["Organization_ID"] + yrs,
+            [[m["Organization_ID"]] + [m[y] for y in yrs]
+             for m in cov["facts_by_org_and_year"]],
+            "Facts per government per year. A thin year is a real hole.",
+            note="Hillsborough FY2018-FY2019 are thin because no DIGITAL audit has been "
+                 "obtained for those years — only scans, whose figures are published solely "
+                 "where a page's own arithmetic proves them. The fix is obtaining the "
+                 "digital originals, not more code.")
 
     add("Data_Quality_Gaps",
         ["Gap_ID", "Priority", "Topic", "Current Status", "Why It Matters",

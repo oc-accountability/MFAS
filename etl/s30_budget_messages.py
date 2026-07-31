@@ -32,7 +32,7 @@ import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import (DATASETS, SOURCES, Fact, DIGITAL, STATED,  # noqa: E402
-                   write_json, read_json)
+                    write_json, read_json, report_and_gate)
 
 warnings.filterwarnings("ignore")
 JUR = "Town of Hillsborough, NC"
@@ -303,12 +303,7 @@ def main() -> None:
     })
 
     print(f"\n  facts: {len(facts)}")
-    for c in checks:
-        print(f"  check {c['check']}: agree={c['agree_within_5pct']}")
-    if problems:
-        print(f"  {len(problems)} extraction problem(s):")
-        for p in problems:
-            print(f"      {p}")
+    report_and_gate("stage 30", problems, checks)
 
 
 if __name__ == "__main__":

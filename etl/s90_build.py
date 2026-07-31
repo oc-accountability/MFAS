@@ -178,7 +178,13 @@ def main() -> None:
             errors.append(f"{where}: extraction={ex!r} is not trustworthy for publication")
         m = METRICS.get(f.get("metric"))
         if m and f.get("unit") != m["unit"]:
-            warnings.append(f"{where}: unit {f.get('unit')!r} != registry {m['unit']!r}")
+            # Promoted from warning to ERROR 2026-07-31. A unit mismatch is not a
+            # style problem: the registry is what the website uses to format and
+            # compare a figure, so dollars rendered as thousands, or cents-per-$100
+            # rendered as dollars, changes the meaning by orders of magnitude while
+            # the number itself looks perfectly reasonable on the page.
+            errors.append(f"{where}: unit {f.get('unit')!r} != registry {m['unit']!r} — "
+                          f"a unit mismatch changes what the number MEANS")
 
     if errors:
         print(f"\nBUILD FAILED — {len(errors)} integrity error(s):")
@@ -332,6 +338,17 @@ def main() -> None:
     # drift apart: the newest year the town has stated as an actual budget.
     headline_fy = (max(r[li["columns"].index("fiscal_year")] for r in li["rows"]
                        if r[li["columns"].index("basis")] == "budget") if li else None)
+
+    # FAIL CLOSED on the one thing this entire pipeline exists to prevent. The count
+    # used to be computed, written into index.json, and otherwise ignored — so a
+    # figure read straight off a scan's digit-transposing text layer could be
+    # published, and the only trace was a number in a JSON file nobody diffs.
+    if scan_text_figures:
+        sys.exit(f"\nBUILD FAILED — {scan_text_figures} published figure(s) trace to a "
+                 f"scanned document's embedded text layer, which transposes digits "
+                 f"(4,610,003 reads as 460,100,3). Nothing may be published from that "
+                 f"text. Use a digital original, or fresh recognition gated on the "
+                 f"page's own arithmetic (stages 61/75).")
 
     fy = [f["fiscal_year"] for f in facts if f.get("fiscal_year")]
     write_json(DATA / "index.json", {

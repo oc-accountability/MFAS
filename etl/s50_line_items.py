@@ -58,7 +58,8 @@ from pathlib import Path
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import BUILD, DATASETS, SOURCES, write_json  # noqa: E402
+from common import (BUILD, DATASETS, SOURCES, content_cache_dir,  # noqa: E402
+                    read_json, write_json)
 
 warnings.filterwarnings("ignore")
 
@@ -165,15 +166,19 @@ def _appendix_range(pages: list[str]) -> tuple[int, int] | None:
     return (start, max(ends)) if ends else None
 
 
-def page_texts(doc_id: str, path: Path) -> list[str]:
-    """Extract every page's text, cached on disk.
+def page_texts(doc_id: str, path: Path, sha256: str) -> list[str]:
+    """Extract every page's text, cached on disk under a CONTENT-keyed namespace.
 
     Extraction dominates this stage's runtime, and the cache makes iterating on
-    the parser cheap. Keyed on the file's size and mtime so editing or replacing
-    a source document invalidates it automatically. build/ is gitignored.
+    the parser cheap. It used to be keyed on size and mtime, which is very nearly
+    right and fails in the one case that matters: a corrected re-issue of the same
+    report, restored from a backup or re-downloaded, can carry the same byte length
+    while the mtime is whatever the copy gave it. Then the manifest records the new
+    hash and this cache serves the old text — the fact still cites a document, but
+    not the one the number came from. Keyed on the full source hash it cannot happen.
     """
-    st = path.stat()
-    cache = BUILD / "textcache" / f"{doc_id}-{st.st_size}-{int(st.st_mtime)}.json"
+    cache = content_cache_dir("textcache", sha256, extractor="pdfplumber",
+                              version="1") / "pages.json"
     if cache.exists():
         with open(cache, encoding="utf-8") as fh:
             return json.load(fh)
@@ -185,10 +190,11 @@ def page_texts(doc_id: str, path: Path) -> list[str]:
     return pages
 
 
-def parse_doc(doc_id: str, path: Path, problems: list[str]) -> tuple[list[dict], list[dict]]:
+def parse_doc(doc_id: str, path: Path, problems: list[str],
+              sha256: str) -> tuple[list[dict], list[dict]]:
     rows: list[dict] = []
     totals: list[dict] = []
-    pages = page_texts(doc_id, path)
+    pages = page_texts(doc_id, path, sha256)
 
     rng = _appendix_range(pages)
     if rng is None:
@@ -499,12 +505,18 @@ def main() -> None:
     all_totals: list[dict] = []
     per_doc = {}
 
+    sha_by_id = {d["id"]: d["sha256"]
+                 for d in read_json(DATASETS / "documents.json")["documents"]}
     for doc_id, fname in DOCS:
         path = SOURCES / BUDGET_DIR / fname
         if not path.exists():
             problems.append(f"missing {fname}")
             continue
-        rows, totals = parse_doc(doc_id, path, problems)
+        sha = sha_by_id.get(doc_id)
+        if not sha:
+            problems.append(f"{doc_id}: not in the document manifest — cannot cache safely")
+            continue
+        rows, totals = parse_doc(doc_id, path, problems, sha)
         for r in rows + totals:
             r["source_doc"] = doc_id
         all_rows += rows
@@ -553,7 +565,8 @@ def main() -> None:
     for doc_id, fname in DOCS:
         path = SOURCES / BUDGET_DIR / fname
         if path.exists():
-            published.update(parse_fund_summaries(page_texts(doc_id, path), problems))
+            published.update(parse_fund_summaries(
+                page_texts(doc_id, path, sha_by_id[doc_id]), problems))
     val = reconcile(all_rows, published, problems)
     write_json(DATASETS / "lineitem_validation.json", {
         "generated_by": "etl/s50_line_items.py",

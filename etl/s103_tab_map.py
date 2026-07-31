@@ -35,7 +35,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATA, DATASETS, read_json  # noqa: E402
+from common import DATA, DATASETS, read_json, build_date  # noqa: E402
 
 OUT = DATA / "exports" / "MFAS_Workbook_Tab_Map.xlsx"
 HDR = PatternFill("solid", fgColor="1F3864")
@@ -282,7 +282,7 @@ def main() -> None:
                         "is overwritten. Your own workbooks are never written to."),
         ("Row counts", "Counted by walking every row. Several of these files under-report "
                        "themselves as empty if you trust their stored dimensions."),
-        ("Generated", date.today().isoformat()),
+        ("Generated", build_date()),
     ], 1):
         ws5.cell(i, 1, k).font = Font(bold=True, size=13 if i == 1 else 10)
         ws5.cell(i, 2, v).alignment = Alignment(wrap_text=True, vertical="top")

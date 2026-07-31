@@ -1,5 +1,16 @@
 {
   "generated_by": "etl/s70_ocr.py",
+  "orphaned_caches_swept": [
+    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2018",
+    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2019",
+    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2020",
+    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2021",
+    "ocr/annual-financial-report-year-ended-june-30-2022",
+    "ocr/annual-financial-report-year-ended-june-30-2023",
+    "ocr/annual-financial-report-year-ended-june-30-2024",
+    "ocr/fiscal-year-2024-2026-strategic-plan-20230626",
+    "ocr/res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q"
+  ],
   "note": "Text recovered by character recognition from the scanned reports. Recognition quality was measured at 141/141 figures on a document that exists in both scanned and digital form, but recognition is never assumed correct: no figure reaches the website from here unless its column sums exactly to the total printed beside it (stage 75).",
   "best_practice": "Replace every scanned PDF with the town's original digital copy. A digital original removes this entire class of risk, because the figures are read directly rather than recognised from an image. Where a digital original exists it is already used in preference to the scan.",
   "engine": "tesseract 5.3.4",
@@ -8,6 +19,8 @@
     {
       "document": "fiscal-year-2024-2026-strategic-plan-20230626",
       "filename": "Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
+      "sha256": "286a81033d750f8d382319c4d4c68369dfb357c6767cf689c6c097acf06281e2",
+      "text_dir": "ocr/286a81033d750f8d-a86053cd",
       "pages": 16,
       "chars": 26826,
       "chars_per_page": 1677
@@ -15,6 +28,8 @@
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2018",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
+      "sha256": "578ef6226a5a9065970b91c12a194df34e0a2af1b31b8724fc3b1eebb677aae7",
+      "text_dir": "ocr/578ef6226a5a9065-a86053cd",
       "pages": 175,
       "chars": 396978,
       "chars_per_page": 2268
@@ -22,6 +37,8 @@
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
+      "sha256": "846b43a917b02dd134f41f06789c47f03c1e9467553aa99b056eabcbb377e36e",
+      "text_dir": "ocr/846b43a917b02dd1-a86053cd",
       "pages": 181,
       "chars": 439400,
       "chars_per_page": 2428
@@ -29,6 +46,8 @@
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
+      "sha256": "b9a958bcede6b1aa442ee344ca52748c8e7f75d11cabc4b6f2a11bdbae3d2dbe",
+      "text_dir": "ocr/b9a958bcede6b1aa-a86053cd",
       "pages": 163,
       "chars": 434279,
       "chars_per_page": 2664
@@ -36,6 +55,8 @@
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
+      "sha256": "974877e4eaf280e8c07cb61245beed686ce2bd0f33d99c78dcb9ceec1d5a16d6",
+      "text_dir": "ocr/974877e4eaf280e8-a86053cd",
       "pages": 127,
       "chars": 325154,
       "chars_per_page": 2560
@@ -43,6 +64,8 @@
     {
       "document": "annual-financial-report-year-ended-june-30-2022",
       "filename": "Annual Financial Report_ Year Ended June 30, 2022.pdf",
+      "sha256": "fa78d495e724b13638ea91aa2673e9128ed1045623653b56ac55d7c4f60640a8",
+      "text_dir": "ocr/fa78d495e724b136-a86053cd",
       "pages": 130,
       "chars": 345053,
       "chars_per_page": 2654
@@ -50,6 +73,8 @@
     {
       "document": "annual-financial-report-year-ended-june-30-2023",
       "filename": "Annual Financial Report_ Year Ended June 30, 2023.pdf",
+      "sha256": "b3413df16b3a701b619e73d0fc425df5693ea5639933450b15d931ca20b4a6fb",
+      "text_dir": "ocr/b3413df16b3a701b-a86053cd",
       "pages": 141,
       "chars": 365638,
       "chars_per_page": 2593
@@ -57,13 +82,35 @@
     {
       "document": "annual-financial-report-year-ended-june-30-2024",
       "filename": "Annual Financial Report_ Year Ended June 30, 2024.pdf",
+      "sha256": "dd2892d97a2e9ab83e37d1c1438874597d06183500057e47e07b649c88359b47",
+      "text_dir": "ocr/dd2892d97a2e9ab8-a86053cd",
       "pages": 139,
       "chars": 388892,
       "chars_per_page": 2798
     },
     {
+      "document": "audit-2019",
+      "filename": "Audit 2019.pdf",
+      "sha256": "d16728eeb8977f71762bcd05f5510bd88af335aa0aaf28c2e1d6b9f405b1d2c1",
+      "text_dir": "ocr/d16728eeb8977f71-a86053cd",
+      "pages": 181,
+      "chars": 442109,
+      "chars_per_page": 2443
+    },
+    {
+      "document": "audit-2020",
+      "filename": "Audit 2020.pdf",
+      "sha256": "2cfd3c8992367067880b981b65d20702a928652a49372fb8876b044c207e99dd",
+      "text_dir": "ocr/2cfd3c8992367067-a86053cd",
+      "pages": 163,
+      "chars": 435445,
+      "chars_per_page": 2671
+    },
+    {
       "document": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
       "filename": "RES-2022-041-A Resolution regarding continued uses of revenues from a one q.pdf",
+      "sha256": "2d696c0b614d79d4ad3f68796d617ad6757f23a7d5d95185daf409c90620536f",
+      "text_dir": "ocr/2d696c0b614d79d4-a86053cd",
       "pages": 2,
       "chars": 4311,
       "chars_per_page": 2156
@@ -79,6 +126,6 @@
       "reason": "duplicate with no recoverable content"
     }
   ],
-  "total_pages": 1074,
+  "total_pages": 1418,
   "elapsed_seconds": 0
 }

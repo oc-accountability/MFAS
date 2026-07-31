@@ -3,6 +3,19 @@
 *For Amy, 2026-07-28. This is a proposal, not a decision. The open questions at the end are
 genuinely open, and several of them are yours to settle rather than mine.*
 
+> **Status, 2026-07-29 (later) — the warehouse is LOADED.** 21,461 facts, both governments,
+> every audited year FY2018–FY2025. `Fact_Financial` 11,759 rows; `Fact_Metric` 109 (her nine
+> non-financial county tables, at their own grain, with `Unit`); `Fact_Statement_Line` 10,275
+> (verified and cited, basis not yet established — see Q053). Sources now read directly: the
+> town's five DIGITAL audits FY2021–FY2025 and all eight county ACFRs FY2018–FY2025, plus the
+> component lines stage 75 had been discarding. Coverage is measured every build in
+> `docs/COVERAGE.md` — 21 documents with figures remain unread, mostly budget plans.
+> The proof that these readings are right: five cross-document checks, each comparing a figure
+> read from one document against the same figure read from a *different* document by
+> *different* code, all agreeing to the dollar — and the build fails if one stops agreeing.
+> Design question 2 (`Dim_Account` grain) is still open and still blocked on the town's
+> crosswalk; questions 3 and 4 remain Amy's.
+>
 > **Status, 2026-07-29 — she decided, and steps 2–4 are built.** Amy agreed 100% to "one
 > warehouse, several marts" and to "the government is a COLUMN"; confirmed the pipeline as
 > the system of record with Excel as a generated view ("I strongly support a process that is

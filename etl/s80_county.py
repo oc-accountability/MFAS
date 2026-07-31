@@ -30,7 +30,7 @@ from pathlib import Path
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASETS, SOURCES, Fact, DIGITAL, STATED, write_json  # noqa: E402
+from common import DATASETS, SOURCES, Fact, DIGITAL, STATED, write_json, report_and_gate  # noqa: E402
 
 warnings.filterwarnings("ignore")
 
@@ -131,10 +131,7 @@ def main() -> None:
     print(f"  {len(facts)} county facts from {DOC_FILE}")
     for f in facts:
         print(f"      FY{f.fiscal_year} {f.metric:44} {f.value:>13,.2f} {f.unit}")
-    for c in checks:
-        print(f"  check {c['check']}: agree={c['agree']} — {c['detail']}")
-    for p in problems:
-        print(f"      {p}")
+    report_and_gate("stage 80", problems, checks)
 
 
 if __name__ == "__main__":

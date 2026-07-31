@@ -26,7 +26,8 @@ from pathlib import Path
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASETS, SOURCES, sha256_file, write_json, fiscal_year_from_text  # noqa: E402
+from common import (DATA, DATASETS, SOURCES, sha256_file, write_json,  # noqa: E402
+                    read_json, fiscal_year_from_text)
 
 warnings.filterwarnings("ignore")
 
@@ -42,6 +43,50 @@ CATEGORY_HINTS = [
     ("Taxpayer Impact", "analysis"),
     ("Public Messaging", "messaging"),
 ]
+
+
+INITIATIVE = "Orange County Efficiency & Accountability Initiative"
+
+# Jurisdiction -> (Organization_ID, authority). EXPLICIT, never inferred from a
+# substring. The export used to decide the owner with `"ORG_OC" if "Orange" in
+# jurisdiction else "ORG_HB"`, which labelled all ten of the initiative's OWN
+# documents as Orange County government publications, and — once Chapel Hill
+# arrived — labelled all thirteen Chapel Hill files as Town of Hillsborough,
+# because "Chapel Hill" does not contain the word "Orange". Twenty-three source
+# rows in a published workbook claimed the wrong government. A table is not
+# clever, and that is the point.
+#
+# `authority` answers a different question from `values_extractable`: who PUBLISHED
+# this, not whether a machine can read it. Readability is not authority — an
+# initiative spreadsheet is perfectly machine-readable and is not a government
+# record.
+ORG_BY_JURISDICTION = {
+    "Town of Hillsborough, NC": ("ORG_HB", "government"),
+    "Orange County, NC": ("ORG_OC", "government"),
+    "Town of Chapel Hill, NC": ("ORG_CH", "government"),
+    "Town of Carrboro, NC": ("ORG_CB", "government"),
+    "City of Mebane, NC": ("ORG_MB", "government"),
+    INITIATIVE: ("ORG_INIT", "initiative"),
+}
+
+# Tracked, hand-editable, keyed by FULL sha256. Solves two problems at once:
+#
+#   * Document IDs were derived from filenames and collisions were resolved by
+#     appending a number in archive traversal order, so adding a same-named file
+#     in an earlier-sorting directory could hand the unsuffixed ID to different
+#     bytes while every published fact kept citing that string.
+#   * Every rebuild rewrote `official_url` to None, silently erasing the exact
+#     contribution docs/PROVENANCE.md asks maintainers to make.
+#
+# The registry is the memory that survives a rebuild. s00 only ADDS to it and
+# never clobbers a value someone typed.
+REGISTRY_PATH = DATA / "source_registry.json"
+
+
+def load_registry() -> dict:
+    if REGISTRY_PATH.exists():
+        return read_json(REGISTRY_PATH).get("sources", {})
+    return {}
 
 
 def slugify(name: str) -> str:
@@ -106,9 +151,6 @@ def classify_pdf(path: Path) -> dict:
     return info
 
 
-INITIATIVE = "Orange County Efficiency & Accountability Initiative"
-
-
 def jurisdiction_for(name: str, text_sample: str = "") -> str:
     """Which government a document concerns — or the initiative itself.
 
@@ -127,6 +169,25 @@ def jurisdiction_for(name: str, text_sample: str = "") -> str:
     # contents are town staff answering about town finances, so it is the town's.
     if re.search(r"redatarequest", blob, re.I):
         return "Town of Hillsborough, NC"
+
+    # OTHER MUNICIPALITIES ARE TESTED FIRST, AND THE ORDER IS LOAD-BEARING.
+    # Chapel Hill, Carrboro and Mebane are all IN Orange County, so their annual
+    # reports name the county on nearly every page — testing the county first would
+    # file every Chapel Hill document as a county document. Amy reserved ORG_CH,
+    # ORG_CB and ORG_MB in her design before any of their data existed; all three are
+    # handled here so the next folder to arrive is catalogued correctly on the first
+    # run rather than after someone notices.
+    #
+    # Without this, the thirteen Chapel Hill files she uploaded on 2026-07-30 were
+    # catalogued as the INITIATIVE's own working papers — the same bucket as her
+    # design manual — because their filenames ("2023-2024-annual-comprehensive-
+    # financial-report.pdf") name no government at all.
+    for pattern, name in ((r"chapel[ _]?hill|\bCHCCS\b", "Town of Chapel Hill, NC"),
+                          (r"\bcarrboro\b", "Town of Carrboro, NC"),
+                          (r"\bmebane\b", "City of Mebane, NC")):
+        if re.search(pattern, blob, re.I):
+            return name
+
     county = bool(re.search(r"orange[ _]?county|\bOC\b", blob, re.I))
     town = bool(re.search(r"Hillsborough", blob, re.I))
     if county and not town:
@@ -137,6 +198,7 @@ def jurisdiction_for(name: str, text_sample: str = "") -> str:
 
 
 def main() -> None:
+    registry = load_registry()
     if not SOURCES.exists():
         sys.exit(f"missing {SOURCES} — unpack the source archive there first")
 
@@ -166,8 +228,13 @@ def main() -> None:
 
         ext = p.suffix.lower().lstrip(".")
         category = next((c for hint, c in CATEGORY_HINTS if hint in rel), "other")
+        jur = jurisdiction_for(rel)
+        org, authority = ORG_BY_JURISDICTION.get(jur, ("ORG_UNKNOWN", "unknown"))
+        known = registry.get(digest, {})
         doc = {
-            "id": slugify(p.name),
+            # The registry's ID wins, because it is keyed by content: the same
+            # bytes keep the same ID forever, whatever the file is renamed to.
+            "id": known.get("id") or slugify(p.name),
             "filename": p.name,
             "archive_path": rel,
             "duplicate_paths": [],
@@ -176,11 +243,17 @@ def main() -> None:
             "sha256": digest,
             "category": category,
             "fiscal_year": fiscal_year_from_text(p.name),
-            "jurisdiction": jurisdiction_for(rel),
+            "jurisdiction": jur,
+            "organization_id": known.get("organization_id") or org,
+            # WHO PUBLISHED IT, not whether it can be parsed. Downstream confidence
+            # is derived from this, so a readable initiative workbook can never be
+            # presented with the standing of a government record.
+            "source_authority": known.get("source_authority") or authority,
             # Filled in by a maintainer; the canonical public URL on the
             # issuing government's own site is stronger provenance than a
-            # copy we host. See docs/PROVENANCE.md.
-            "official_url": None,
+            # copy we host. See docs/PROVENANCE.md. Preserved across rebuilds
+            # via the registry — this line used to reset it to None every run.
+            "official_url": known.get("official_url"),
         }
         if ext == "pdf":
             doc.update(classify_pdf(p))
@@ -201,12 +274,56 @@ def main() -> None:
 
     docs = [by_hash[h] for h in order]
 
-    # id collisions would break Fact -> document joins
-    seen: dict[str, int] = defaultdict(int)
+    # ---- ID assignment: stable, content-keyed, and loud on collision ---------
+    # The old rule appended a counter in traversal order, so dropping another
+    # file of the same name into an earlier-sorting folder could silently move
+    # the unsuffixed ID onto different bytes while every published fact went on
+    # citing that string. An ID must mean one document forever.
+    claimed = {v["id"]: h for h, v in registry.items() if v.get("id")}
     for d in docs:
-        seen[d["id"]] += 1
-        if seen[d["id"]] > 1:
-            d["id"] = f"{d['id']}-{seen[d['id']]}"
+        h = d["sha256"]
+        if registry.get(h, {}).get("id"):
+            continue                       # already registered: keep its ID
+        base, n = d["id"], 1
+        while d["id"] in claimed and claimed[d["id"]] != h:
+            owner = claimed[d["id"]]
+            if owner in {x["sha256"] for x in docs}:
+                # Two documents in THIS archive want the same ID. Suffix the
+                # newcomer — the registered one keeps what it already had.
+                n += 1
+                d["id"] = f"{base}-{n}"
+            else:
+                sys.exit(
+                    f"ID COLLISION: {d['filename']} wants id {d['id']!r}, which the "
+                    f"source registry already assigns to sha256 {owner[:16]}… . "
+                    f"That other document is not in this archive, so the ID would "
+                    f"silently change meaning. Assign an explicit id in "
+                    f"{REGISTRY_PATH.name} before rebuilding.")
+        claimed[d["id"]] = h
+
+    # Grow the registry with anything new; never clobber a hand-entered value.
+    for d in docs:
+        entry = registry.setdefault(d["sha256"], {})
+        entry.setdefault("id", d["id"])
+        entry.setdefault("filename", d["filename"])
+        entry.setdefault("organization_id", d["organization_id"])
+        entry.setdefault("source_authority", d["source_authority"])
+        entry.setdefault("official_url", None)
+    write_json(REGISTRY_PATH, {
+        "generated_by": "etl/s00_manifest.py (append-only; hand-editable)",
+        "what_this_is": (
+            "The durable identity of every source document, keyed by full sha256. "
+            "IDs assigned here are permanent: the same bytes keep the same ID no "
+            "matter how the file is renamed or where it moves. official_url, "
+            "organization_id and source_authority are yours to edit — a rebuild "
+            "adds new entries and never overwrites what you typed."),
+        "sources": dict(sorted(registry.items(), key=lambda kv: kv[1].get("id", ""))),
+    })
+
+    unknown = [d["id"] for d in docs if d["organization_id"] == "ORG_UNKNOWN"]
+    if unknown:
+        sys.exit(f"{len(unknown)} document(s) have no organization mapping — add the "
+                 f"jurisdiction to ORG_BY_JURISDICTION: {unknown[:5]}")
 
     dupes = sum(len(d["duplicate_paths"]) for d in docs)
     scans = [d for d in docs if d.get("text_layer") == "scan"]

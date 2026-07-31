@@ -23,7 +23,9 @@
 
 <nav class="nav" aria-label="Sections">
   <div class="nav-in">
-    <a class="brand" href="#top">
+    <!-- aria-label because below 900px .label is display:none and .mark is
+         aria-hidden, which left this link with no accessible name at all. -->
+    <a class="brand" href="#top" aria-label="Your town, your money — top of page">
       <span class="mark" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="#fff"><rect x="4" y="17" width="5" height="11" rx="1.5"/><rect x="13.5" y="10" width="5" height="18" rx="1.5"/><rect x="23" y="4" width="5" height="24" rx="1.5"/></svg>
       </span>

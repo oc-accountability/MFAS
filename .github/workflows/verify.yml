@@ -1,0 +1,53 @@
+# The release gate, enforced.
+#
+# The 2026-07-31 audit found that nothing in the repository required the integrity
+# tests before a push to the published branch: `make etl` did not run them, and there
+# was no workflow. That is how three high-severity rebuild defects coexisted with a
+# fully green test suite for weeks.
+#
+# The source archive is deliberately not in the repository (one file exceeds GitHub's
+# 100 MiB limit), so CI cannot re-run the extraction stages. It runs everything that
+# does not need sources/: the integrity gates over the committed datasets, a syntax
+# check of every stage, and the frontend checks. That is exactly the set that would
+# have caught a bad commit.
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r etl/requirements.txt
+
+      - name: Integrity gates
+        run: python -m pytest tests/ -q
+
+      - name: Every ETL stage compiles
+        run: python -m compileall -q etl tests
+
+      - name: Frontend syntax
+        run: |
+          node --check assets/app.js
+          node scripts/validate_palette.js
+
+      - name: The export is tracked
+        # .gitignore carries *.xlsx and `git add -A` skips ignored files silently, so
+        # the workbook has shipped missing before while the README linked to it.
+        run: |
+          test -f data/exports/MFAS_Data_Warehouse.xlsx \
+            || (echo "the warehouse export is not tracked — check .gitignore" && exit 1)

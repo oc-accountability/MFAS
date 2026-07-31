@@ -29,7 +29,8 @@ import warnings
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import BUILD, DATASETS, SOURCES, read_json, write_json  # noqa: E402
+from common import (BUILD, DATASETS, SOURCES, content_cache_dir, read_json,  # noqa: E402
+                    write_json)
 
 warnings.filterwarnings("ignore")
 
@@ -96,8 +97,13 @@ def main() -> None:
         if not src.exists():
             print(f"  MISSING {d['archive_path']}")
             continue
-        out_dir = OCR_ROOT / d["id"]
-        out_dir.mkdir(parents=True, exist_ok=True)
+        # Bound to the file's CONTENT and the recogniser's configuration, so a
+        # replaced or corrected PDF can never serve text recognised from the old
+        # one. See common.content_cache_dir for why this matters more than it looks.
+        engine = subprocess.run(["tesseract", "--version"], capture_output=True,
+                                text=True).stdout.splitlines()[0]
+        out_dir = content_cache_dir("ocr", d["sha256"], extractor=f"tesseract:{engine}",
+                                    version="1", dpi=DPI, mode="gray")
         pages = d.get("pages") or 0
         done = chars = 0
         for pg in range(1, pages + 1):
@@ -108,12 +114,42 @@ def main() -> None:
                 print(f"    {d['id'][:44]:46} {done}/{pages} pages "
                       f"({time.time()-t0:.0f}s elapsed)", flush=True)
         summary.append({"document": d["id"], "filename": d["filename"],
+                        "sha256": d["sha256"],
+                        # Recorded so stage 75 reads exactly these directories rather
+                        # than enumerating whatever is left lying under build/ocr —
+                        # an orphaned directory from a superseded file used to be
+                        # indistinguishable from a current one.
+                        "text_dir": str(out_dir.relative_to(BUILD)),
                         "pages": pages, "chars": chars,
                         "chars_per_page": round(chars / pages) if pages else 0})
         print(f"  done {d['filename'][:52]:54} {pages:4}pg  {chars:>9,} chars", flush=True)
 
+    # Sweep orphans. A directory left behind by a superseded or replaced source is
+    # indistinguishable from a live one to anything that enumerates build/ocr, and it
+    # is exactly what let stale text be published against a document whose hash had
+    # moved on. Stage 75 now reads the manifest rather than the directory listing, so
+    # this is belt and braces — but a cache that quietly accumulates dead entries is
+    # also how someone later "helpfully" restores one.
+    live = {s["text_dir"] for s in summary}
+    orphans = []
+    for d in sorted(OCR_ROOT.iterdir()):
+        if not d.is_dir():
+            continue
+        rel = str(d.relative_to(BUILD))
+        if rel in live:
+            continue
+        orphans.append(rel)
+        for f in d.glob("*"):
+            f.unlink()
+        d.rmdir()
+    if orphans:
+        print(f"  swept {len(orphans)} orphaned OCR cache director(ies): "
+              f"{', '.join(o.split('/')[-1] for o in orphans[:4])}"
+              f"{' …' if len(orphans) > 4 else ''}")
+
     write_json(DATASETS / "ocr_manifest.json", {
         "generated_by": "etl/s70_ocr.py",
+        "orphaned_caches_swept": orphans,
         "note": ("Text recovered by character recognition from the scanned reports. Recognition "
                  "quality was measured at 141/141 figures on a document that exists in both "
                  "scanned and digital form, but recognition is never assumed correct: no figure "

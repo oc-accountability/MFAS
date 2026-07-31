@@ -17,7 +17,12 @@ whether to OCR the other seven annual reports, whose audited history is currentl
 locked away.
 
 A number that is *nearly* right is the dangerous outcome here, so the comparison is
-exact-match on the full set of money tokens per page.
+exact-match on the multiset of money tokens per page — both recall and precision.
+
+What this probe does NOT establish: that each figure landed in the right row and
+column. It compares the values present, not their placement. The per-page arithmetic
+check in stage 75 is what actually gates publication, and even that is strong evidence
+rather than proof — offsetting errors could in principle survive it.
 """
 from __future__ import annotations
 
@@ -25,6 +30,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from collections import Counter
 import warnings
 from pathlib import Path
 
@@ -106,28 +112,47 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)
         for pg in PAGES:
-            truth = numbers_in(digital_pages[pg])
-            got = numbers_in(ocr_page(SCAN, pg, tmp))
-            tset, gset = set(truth), set(got)
-            matched = tset & gset
-            missed = sorted(tset - gset)
-            spurious = sorted(gset - tset)
-            rate = len(matched) / len(tset) * 100 if tset else 0.0
+            # MULTISET, not set. Converting both sides to sets collapsed every
+            # duplicate amount and discarded order, so a page could score 100%
+            # while the recogniser had dropped one of two identical figures or
+            # invented values that happened to appear elsewhere on the page.
+            # Counting occurrences catches both.
+            truth = Counter(numbers_in(digital_pages[pg]))
+            got = Counter(numbers_in(ocr_page(SCAN, pg, tmp)))
+            matched = truth & got                       # per-value minimum
+            missed = truth - got
+            spurious = got - truth
+            n_t, n_g, n_m = sum(truth.values()), sum(got.values()), sum(matched.values())
+            recall = n_m / n_t * 100 if n_t else 0.0
+            precision = n_m / n_g * 100 if n_g else 0.0
             results.append({
-                "page": pg, "truth_numbers": len(tset), "ocr_numbers": len(gset),
-                "matched": len(matched), "recall_pct": round(rate, 1),
-                "missed_sample": missed[:12], "spurious_sample": spurious[:12],
+                "page": pg, "truth_numbers": n_t, "ocr_numbers": n_g,
+                "matched": n_m,
+                "recall_pct": round(recall, 1), "precision_pct": round(precision, 1),
+                # FULL counts, not just the truncated samples. Reporting
+                # len(spurious_sample) meant the headline "spurious" figure was
+                # capped at 12 per page and understated any real problem.
+                "missed_count": sum(missed.values()),
+                "spurious_count": sum(spurious.values()),
+                "missed_sample": sorted(missed.elements())[:12],
+                "spurious_sample": sorted(spurious.elements())[:12],
             })
-            print(f"  p{pg:>4}: {len(matched):4}/{len(tset):4} matched "
-                  f"({rate:5.1f}%)   {len(spurious):3} spurious")
+            print(f"  p{pg:>4}: {n_m:4}/{n_t:4} matched  recall {recall:5.1f}%  "
+                  f"precision {precision:5.1f}%   {sum(spurious.values()):3} spurious")
 
     tot_t = sum(r["truth_numbers"] for r in results)
+    tot_g = sum(r["ocr_numbers"] for r in results)
     tot_m = sum(r["matched"] for r in results)
-    tot_s = sum(len(r["spurious_sample"]) for r in results)
+    tot_s = sum(r["spurious_count"] for r in results)
     overall = tot_m / tot_t * 100 if tot_t else 0.0
+    overall_precision = tot_m / tot_g * 100 if tot_g else 0.0
 
-    verdict = ("OCR reproduces the audited figures exactly — safe to use with per-page "
-               "arithmetic checks" if overall >= 99.5 else
+    # BOTH must hold. Recall alone answers "did it find everything?" and says
+    # nothing about "did it invent anything?" — and an invented figure is the more
+    # dangerous of the two, because a missing number is visibly missing.
+    verdict = ("OCR reproduces the audited figures exactly — safe to use WITH the "
+               "per-page arithmetic check, which remains the actual gate"
+               if overall >= 99.5 and overall_precision >= 99.5 else
                "OCR is close but NOT exact — usable only with a human confirming every "
                "figure against the rendered page" if overall >= 90 else
                "OCR is not reliable enough on these documents to publish from")
@@ -144,6 +169,14 @@ def main() -> None:
         "scan_under_test": SCAN.name,
         "pages": results,
         "overall_recall_pct": round(overall, 2),
+        "overall_precision_pct": round(overall_precision, 2),
+        "spurious_values_total": tot_s,
+        "method": ("Compared as MULTISETS of money tokens per page, so a duplicated "
+                   "amount cannot be silently collapsed and an invented value cannot "
+                   "be hidden by an identical one elsewhere on the page. BOTH recall "
+                   "and precision must hold. Note the limit of the method: it checks "
+                   "that the same VALUES appear, not that each sits on the right row "
+                   "and column — attribution still needs a human sample."),
         "verdict": verdict,
     })
     print(f"\n  overall: {tot_m}/{tot_t} numbers reproduced exactly "

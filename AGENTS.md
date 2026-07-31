@@ -99,6 +99,6 @@ This is a data project, not an advocacy project. Keep it that way.
 
 ## Do not commit
 
-Source PDFs, spreadsheets, or anything under `sources/`. The archive is 726 MB and two files exceed
+Source PDFs, spreadsheets, or anything under `sources/`. The archive is 925 MiB and one file exceeds
 GitHub's hard 100 MB per-file limit, so a stray `git add -f` produces a repo that cannot be pushed.
 `tests/test_data_integrity.py` guards this.

@@ -181,8 +181,14 @@ body::after {
 
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s5); }
 
-a { color: var(--accent-text); text-decoration: none; }
-a:hover { text-decoration: underline; text-underline-offset: 2px; }
+/* Links inside prose keep an underline at rest: removing it until hover leaves them
+   distinguishable by COLOUR ALONE, which fails WCAG 1.4.1 and is invisible to a
+   reader with low colour vision. Navigation and button-like links opt out via
+   .nav a / .brand / .btn, where position and shape already carry the affordance. */
+a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+.nav a, .brand, .btn, .src-link, .chip, a.card, .tab { text-decoration: none; }
+.nav a:hover, .btn:hover, a.card:hover { text-decoration: none; }
 
 :focus-visible {
   outline: 2px solid var(--accent);

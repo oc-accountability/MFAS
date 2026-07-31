@@ -46,7 +46,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASETS, write_json  # noqa: E402
+from common import (DATASETS, write_json,  # noqa: E402
+                    content_cache_dir, read_json)
 
 TEXTCACHE = Path(__file__).resolve().parent.parent / "build" / "textcache"
 DOC_ID = "fy27-budget-and-financial-plan-recommended"
@@ -65,12 +66,22 @@ SECTION = re.compile(r"^(Project Expenditures|Project Funding|Operating Budget I
 
 
 def load_pages() -> list[str]:
-    cache = TEXTCACHE / f"{DOC_ID}-7776223-1778845438.json"
+    """Read the page text for DOC_ID from the CONTENT-keyed cache.
+
+    This used to prefer a hardcoded `<id>-7776223-1778845438.json` — a size and an
+    mtime frozen into the source — and fall back to the first alphabetically
+    matching file. Both are ways of hoping the right document is on the other end.
+    The cache is now keyed by the manifest's sha256 for this document, so it either
+    matches the file the manifest describes or it is rebuilt.
+    """
+    sha = next((d["sha256"] for d in read_json(DATASETS / "documents.json")["documents"]
+                if d["id"] == DOC_ID), None)
+    if sha is None:
+        sys.exit(f"{DOC_ID} is not in the document manifest — run etl/s00_manifest.py")
+    cache = content_cache_dir("textcache", sha, extractor="pdfplumber",
+                              version="1") / "pages.json"
     if not cache.exists():
-        matches = sorted(TEXTCACHE.glob(f"{DOC_ID}*.json"))
-        if not matches:
-            sys.exit(f"no cached text for {DOC_ID}; run etl/s30_budget_messages.py first")
-        cache = matches[0]
+        sys.exit(f"no cached text for {DOC_ID}; run etl/s50_line_items.py first")
     raw = json.loads(cache.read_text(encoding="utf-8"))
     pages = raw["pages"] if isinstance(raw, dict) and "pages" in raw else raw
     return [p if isinstance(p, str) else (p.get("text") or "") for p in pages]

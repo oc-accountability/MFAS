@@ -38,7 +38,8 @@ import openpyxl
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import BUILD, DATASETS, SOURCES, doc_id_for_filename, read_json, write_json  # noqa: E402
+from common import (BUILD, DATASETS, SOURCES, content_cache_dir,  # noqa: E402
+                    doc_id_for_filename, read_json, write_json)
 
 warnings.filterwarnings("ignore")
 
@@ -111,12 +112,29 @@ def county_pdf_for(source_id: str, register: dict[str, str]) -> Path | None:
     year = m.group(1)
     cands = [p for p in d.glob("*.pdf")
              if year in p.name and re.search(r"ACFR|CAFR", p.name, re.I)]
-    return cands[0] if len(cands) == 1 else (cands[0] if cands else None)
+    if len(cands) > 1:
+        # Taking the first match silently picked one of several plausible source
+        # documents, then verified a transcription against it and reported the
+        # result as fact. Ambiguity is a data-quality condition this stage already
+        # describes; it must behave like one.
+        sys.exit(f"AMBIGUOUS SOURCE: {len(cands)} county PDFs match year {year} for "
+                 f"{source_id!r}: {[c.name for c in cands]}. Resolve it in the "
+                 f"workbook's Source_Register before rebuilding.")
+    return cands[0] if cands else None
 
 
-def page_numbers(path: Path, page: int) -> set[float] | None:
-    """Every money-looking figure on one page of a PDF, cached."""
-    key = BUILD / "pagecache" / f"{path.stem[:60]}-{page}.txt"
+def page_numbers(path: Path, page: int, sha256: str) -> set[float] | None:
+    """Every money-looking figure on one page of a PDF, cached by CONTENT.
+
+    The key used to be the filename stem truncated to 60 characters plus the page
+    number. Two problems: a replaced file served the old page's figures, and these
+    filenames are long enough that two of them can collide after truncation and
+    quietly share a cache entry — this stage is the one that VERIFIES Amy's
+    transcriptions against the page she cited, so a wrong page here produces a
+    confident and wrong verdict about her work.
+    """
+    key = content_cache_dir("pagecache", sha256, extractor="pdfplumber",
+                            version="1") / f"p{page:05d}.txt"
     if key.exists():
         text = key.read_text(encoding="utf-8", errors="replace")
     else:
@@ -149,6 +167,10 @@ def main() -> None:
 
     notes: list[str] = []
     rows: list[dict] = []
+    # Resolve each source PDF to its manifest hash so the page cache is
+    # content-keyed rather than filename-keyed.
+    sha_by_path = {str(SOURCES / d['archive_path']): d['sha256']
+                   for d in read_json(DATASETS / 'documents.json')['documents']}
 
     for sheet in wb.sheetnames:
         if not FACT_SHEET.match(sheet):
@@ -157,33 +179,58 @@ def main() -> None:
         data = list(ws.iter_rows(values_only=True))
         if not data:
             continue
-        hdr = [str(c).strip() if c else "" for c in data[0]]
-        idx = {h: i for i, h in enumerate(hdr)}
+        # Header names are NORMALISED before lookup, because her sheets spell the
+        # same field two ways: "ACFR_Page" on the budget-vs-actual tabs and
+        # "ACFR Page" (a space) on nine others. Looking for the underscore form only
+        # meant every row on those nine tabs imported with no citation, was counted
+        # as "no citation with a PDF page", and landed in the 355 rows this stage
+        # reported as not verifiable. They were citing pages the whole time.
+        def norm(h) -> str:
+            # Any run of non-word characters becomes one underscore, so "ACFR Page"
+            # and "Purpose / Subcategory" both resolve to a usable key.
+            return re.sub(r"\W+", "_", str(h or "").strip()).strip("_")
+
+        hdr = [norm(c) for c in data[0]]
+        idx = {h: i for i, h in enumerate(hdr) if h}
         need = {"Entity_ID", "Fiscal_Year_ID"}
         if not need <= set(idx):
             continue
         get = lambda r, k: (r[idx[k]] if k in idx and len(r) > idx[k] else None)  # noqa: E731
+
+        # Every column she wrote is carried through. The previous whitelist kept
+        # eleven fields and silently dropped Metric, Metric_ID, Unit, Fund, Fund_ID,
+        # Activity_Type and Notes — which is why nine of her county tables arrived as
+        # a bare Amount with nothing to say what it measured, and were then held out
+        # of the warehouse as "not fund-level dollar facts". They were perfectly good
+        # facts; the import had thrown away their labels. A number whose label this
+        # pipeline discarded is worse than one it never read.
+        # Her label column is named differently per tab — Category on the
+        # budget-vs-actual tabs, Metric on most, Classification on the fund-balance
+        # tab. All three are first-class here; a row whose label lands in
+        # other_fields as a stringified extra is a row nothing downstream can use.
+        KNOWN = ("Scenario", "Line_Type", "Category_ID", "Category", "Metric_ID",
+                 "Metric", "Classification_ID", "Classification", "Purpose_Subcategory",
+                 "Unit", "Fund_ID", "Fund", "Activity_Type",
+                 "Original_Budget", "Final_Budget", "Actual_Amount", "Amount",
+                 "Variance", "Source_ID", "ACFR_Page", "Confidence", "Notes")
         for r in data[1:]:
             if not r or not r[0] or not str(r[0]).startswith("ORG_"):
                 continue
-            rows.append({
+            row = {
                 "table": sheet,
                 "Entity_ID": str(get(r, "Entity_ID")),
                 "Fiscal_Year_ID": str(get(r, "Fiscal_Year_ID") or ""),
-                "Scenario": get(r, "Scenario"),
-                "Line_Type": get(r, "Line_Type"),
-                "Category_ID": get(r, "Category_ID"),
-                "Category": get(r, "Category"),
-                "Original_Budget": get(r, "Original_Budget"),
-                "Final_Budget": get(r, "Final_Budget"),
-                "Actual_Amount": get(r, "Actual_Amount"),
-                "Amount": get(r, "Amount"),
-                "Variance": get(r, "Variance"),
-                "Source_ID": get(r, "Source_ID"),
-                "ACFR_Page": get(r, "ACFR_Page"),
-                "Confidence": get(r, "Confidence"),
-                "origin": "amy-workbook",
-            })
+            }
+            for k in KNOWN:
+                row[k] = get(r, k)
+            # Anything she adds later arrives here rather than being dropped.
+            extra = {h: r[i] for h, i in idx.items()
+                     if h not in KNOWN and h not in ("Entity_ID", "Fiscal_Year_ID")
+                     and len(r) > i and r[i] is not None}
+            if extra:
+                row["other_fields"] = {k: str(v) for k, v in extra.items()}
+            row["origin"] = "amy-workbook"
+            rows.append(row)
 
     # ---- verify her figures against the pages she cites ----------------------
     checked = matched = unverifiable = 0
@@ -203,7 +250,12 @@ def main() -> None:
             row["verification"] = "no citation with a PDF page, or no figures"
             unverifiable += 1
             continue
-        page_nums = page_numbers(pdf, int(m.group(1)))
+        pdf_sha = sha_by_path.get(str(pdf))
+        if pdf_sha is None:
+            row["verification"] = "source PDF not in the manifest"
+            unverifiable += 1
+            continue
+        page_nums = page_numbers(pdf, int(m.group(1)), pdf_sha)
         if page_nums is None:
             row["verification"] = "cited page not readable"
             unverifiable += 1

@@ -228,10 +228,23 @@ def main() -> None:
 
     # ---- step 4: Orange County through the SAME constructor ------------------
     # Her curated county rows, in her schema, with her Source_IDs and Confidence.
-    # Only fund-level dollar tables load; everything else is recorded as not_loaded.
-    LOADED_TABLES = ("2.0",)
-    not_loaded = sorted({str(r.get("table")) for r in county["rows"]
-                         if not str(r.get("table", "")).startswith(LOADED_TABLES)})
+    #
+    # Tables 2.0, 3.0 and 4.0 are General Fund revenue/expenditure at fund grain and
+    # load into Fact_Financial. Her remaining nine tables measure other things —
+    # fund balance, net position, debt and capital, enterprise funds, schools, the
+    # FY26 outlook — and each row carries a Metric and a Unit, so they load into
+    # Fact_Metric at their own declared grain rather than being forced into a
+    # financial fact table or, as before, left out entirely.
+    #
+    # They were left out entirely, and the reason turned out to be this pipeline's
+    # own fault: the workbook import kept a hardcoded list of eleven fields and
+    # dropped Metric, Metric_ID, Unit, Fund, Fund_ID and Activity_Type on the way in.
+    # Nine tables therefore arrived as a bare Amount with nothing to say what it
+    # measured, and were held back as "not fund-level dollar facts". They were fine;
+    # their labels had been thrown away. Stage 85 now carries every column she wrote.
+    LOADED_TABLES = ("2.0", "3.0", "4.0")
+    metric_tables = sorted({str(r.get("table")) for r in county["rows"]
+                            if not str(r.get("table", "")).startswith(LOADED_TABLES)})
     for r in county["rows"]:
         if not str(r.get("table", "")).startswith(LOADED_TABLES):
             continue
@@ -269,7 +282,189 @@ def main() -> None:
                 r["Amount"], src, f"her county workbook ({r.get('Scenario')})", page,
                 conf, "workbook-import", repeatable=True)
 
-    oc_count = len(rows) - hb_count
+    # ---- Fact_Metric: her nine non-financial county tables, at their own grain --
+    # One row per Organization · Fiscal_Year · Scenario · Metric (· Fund or Activity
+    # where she distinguishes one). Kept OUT of Fact_Financial deliberately: a
+    # per-pupil expenditure in dollars-per-pupil and a tax base in dollars must never
+    # land in a table whose rows are summed as fund dollars.
+    metric_rows: list[dict] = []
+    for r in county["rows"]:
+        if str(r.get("table", "")).startswith(LOADED_TABLES):
+            continue
+        # Her label column is Metric on most tabs, Classification on the fund-balance
+        # tab, Category on the budget tabs. Take whichever she used.
+        metric = r.get("Metric") or r.get("Classification") or r.get("Category")
+        amount = r.get("Amount") if r.get("Amount") is not None else r.get("Actual_Amount")
+        if metric is None or amount is None:
+            problems.append(f"county metric row without a metric or amount: "
+                            f"{r.get('table')} {r.get('Fiscal_Year_ID')}")
+            continue
+        qualifier = r.get("Purpose_Subcategory")
+        if qualifier and str(qualifier) != str(metric):
+            metric = f"{metric} — {qualifier}"
+        metric_rows.append({
+            "Organization_ID": r["Entity_ID"],
+            "Fiscal_Year_ID": fy_id(r["Fiscal_Year_ID"]),
+            "Scenario": r.get("Scenario"),
+            "Metric_ID": r.get("Metric_ID"),
+            "Metric": metric,
+            "Unit": r.get("Unit") or "Dollars",
+            "Fund_ID": r.get("Fund_ID"),
+            "Fund": r.get("Fund"),
+            "Activity_Type": r.get("Activity_Type"),
+            "Amount": amount,
+            "Source_ID": r.get("Source_ID"),
+            "Source_Detail": f"her county workbook, {r.get('table')}",
+            "Source_Page": r.get("ACFR_Page"),
+            "Confidence": r.get("Confidence") or "Working",
+            "Extraction": "workbook-import",
+            "Notes": r.get("Notes"),
+        })
+
+    # ---- the audited statements, both governments, every year -----------------
+    # Stages 61 and 81 read the town's digital audits (FY2021-FY2025) and the county's
+    # ACFRs (FY2018-FY2025) directly, and publish only lines their page's own
+    # arithmetic proved. Both feed this table through the same constructor.
+    #
+    # A line loads into Fact_Financial ONLY where the statement's column roles were
+    # confirmed by its own variance identity. That is not fussiness: a column index
+    # carries no meaning, and a figure loaded as "actual" when it was "budget" would
+    # be a wrong number about a real government. Lines from statements whose columns
+    # could not be proven are verified and cited but their basis is unknown, so they
+    # go to Fact_Statement_Line instead, with the gap stated rather than guessed.
+    ROLE_TO_SCENARIO = {
+        "budget": ("Adopted", "amount"),
+        "final_budget": ("Adopted", "amount"),
+        "original_budget": ("Adopted", "amount_original_budget"),
+        "actual": ("Actual", "amount"),
+        "prior_year_actual": ("Actual", "amount"),          # for fiscal_year - 1
+        "project_authorization": ("Adopted", "amount"),
+        "prior_years_actual": ("Actual", "amount_prior_years"),
+        "current_year_actual": ("Actual", "amount"),
+        "total_to_date": ("Actual", "amount_to_date"),
+    }
+    STATEMENT_FLOW = {"revenue": "Revenue", "expenditure": "Expenditure",
+                      "expense": "Expenditure"}
+
+    statement_lines: list[dict] = []
+    unproven = defaultdict(int)
+
+    def load_statements(payload, org, extraction, detail_prefix):
+        # Which years this payload reads DIRECTLY. Every one of these statements also
+        # prints the prior year's actual as a comparative column, and that column
+        # restates the very figure the prior year's own audit already gives — so
+        # loading both put 475 slices into the table twice, from two documents, under
+        # Line 1 and Line 2. Nothing about that is wrong per row and every row
+        # reconciles, which is exactly why it is dangerous: anyone summing an account
+        # across Lines would double it. A comparative column is loaded ONLY for a year
+        # this payload does not read directly — where it is genuinely the only reading
+        # available, as FY2020 is from the FY2021 audit.
+        primary_years = {p.get("fiscal_year") for p in payload.get("published", [])
+                         if p.get("fiscal_year")}
+        for p in payload.get("published", []):
+            fy = p.get("fiscal_year")
+            if not fy:
+                continue
+            roles = {int(k): v for k, v in (p.get("column_roles") or {}).items()}
+            grp = str(p.get("group") or "")
+            line = str(p.get("line") or "(unnamed)")
+            # Flow from the group the document itself printed the line under.
+            probe = f"{grp} {line}".lower()
+            flow = "(unstated)"
+            for key, val in STATEMENT_FLOW.items():
+                if key in probe:
+                    flow = val
+                    break
+            if flow == "(unstated)" and "financing" in probe:
+                flow = "Other Financing"
+            measure_base = "fund_total" if p.get("is_subtotal") else "amount"
+
+            if not roles:
+                unproven[(org, fy)] += 1
+                for ci, v in enumerate(p["values"]):
+                    if v is None:
+                        continue
+                    statement_lines.append({
+                        "Organization_ID": org, "Fiscal_Year_ID": fy_id(fy),
+                        "Statement": p.get("statement"),
+                        "Statement_Key": p.get("statement_key"),
+                        "Group": grp, "Line": line,
+                        "Column_Index": ci, "Amount": v,
+                        "Is_Subtotal": bool(p.get("is_subtotal")),
+                        "Source_ID": p["source_doc"], "Source_Page": p.get("source_page"),
+                        "Verified_By": p.get("verified_by"),
+                        # Her vocabulary, and "Working" is the honest value: the FIGURE is
+                        # proven by the page's arithmetic, but a figure you cannot label
+                        # budget-or-actual is not yet usable, and calling it High would
+                        # overstate what is known about it.
+                        "Confidence": "Working",
+                        "Extraction": p.get("extraction", extraction),
+                        "basis_unknown_because": (
+                            "this statement's column roles could not be confirmed by its own "
+                            "arithmetic, so which column is budget and which is actual is not "
+                            "established. The figure is verified and cited; its basis is not. "
+                            "Resolving it means reading each statement's column headers."),
+                    })
+                continue
+
+            for ci, v in enumerate(p["values"]):
+                if v is None or ci not in roles:
+                    continue
+                role = roles[ci]
+                if role == "variance":
+                    continue          # derived from the other columns; not a fact to sum
+                mapped = ROLE_TO_SCENARIO.get(role)
+                if mapped is None:
+                    problems.append(f"{org} {fy}: column role {role!r} unmapped")
+                    continue
+                scen, meas = mapped
+                year = fy - 1 if role == "prior_year_actual" else fy
+                if role == "prior_year_actual" and year in primary_years:
+                    continue          # that year is read from its own audit
+
+                if meas == "amount":
+                    meas = measure_base
+                elif measure_base == "fund_total":
+                    meas = meas.replace("amount", "fund_total", 1)
+                row(org, year, scen, "FUND_GF", flow, grp or "(statement)", line,
+                    p.get("statement_key") or "(statement)", meas, v,
+                    p["source_doc"], f"{detail_prefix}, {role}", p.get("source_page"),
+                    "High", p.get("extraction", extraction), repeatable=True)
+
+    ad_path = DATASETS / "audited_digital.json"
+    if ad_path.exists():
+        load_statements(read_json(ad_path), "ORG_HB", "digital-text",
+                        "audited statement, read from the digital audit")
+
+    ca_path = DATASETS / "county_acfr.json"
+    if ca_path.exists():
+        load_statements(read_json(ca_path), "ORG_OC", "digital-text",
+                        "audited statement, read from the county ACFR")
+
+    # The component LINES recovered from the scanned reports — FY2018-FY2020 only.
+    # Where a digital original exists the digital reading is already loaded above and
+    # is strictly better, so loading the recognition too would duplicate the slice
+    # and invite someone to sum both.
+    for l in ocr.get("published_lines", []):
+        if l.get("digital_original_exists") or not l.get("fiscal_year"):
+            continue
+        role = l.get("column_role")
+        mapped = ROLE_TO_SCENARIO.get(str(role))
+        if role == "variance" or mapped is None:
+            continue
+        scen, meas = mapped
+        row("ORG_HB", l["fiscal_year"], scen, "FUND_GF",
+            SECTION_FLOW.get(l["section"], "(unstated)"), "(audited statement)",
+            l["line"], l["section"], meas, l["value"], l["source_doc"],
+            f"recovered from the scanned page, column-sum proven, {role}",
+            l.get("source_page"), "High", l["extraction"], repeatable=True)
+
+    # Count by the Organization_ID actually on the row. Subtracting a high-water mark
+    # taken before the audited statements loaded credited 1,944 Hillsborough audit
+    # rows to Orange County, which made the step-4 proof read as nonsense.
+    org_i = COLUMNS.index("Organization_ID")
+    hb_count = sum(1 for r in rows if r[org_i] == "ORG_HB")
+    oc_count = sum(1 for r in rows if r[org_i] == "ORG_OC")
     if COLUMNS != schema_after_hb:
         sys.exit("STEP 4 FAILED: loading Orange County changed the schema — "
                  "the design is wrong and this is the cheapest moment to know")
@@ -362,11 +557,43 @@ def main() -> None:
             "orange_county_rows": oc_count,
             "schema_changed_by_county_load": False,
         },
-        "not_loaded": {
-            "county_tables": not_loaded,
-            "why": ("not fund-level dollar facts (staffing, tax base, ratios, debt "
-                    "schedules in other shapes) — forcing them into Fact_Financial "
-                    "would be worse than loading them deliberately later"),
+        "fact_metric": {
+            "grain": ("one row per Organization_ID · Fiscal_Year_ID · Scenario · Metric, "
+                      "with Fund or Activity_Type where the source distinguishes one. "
+                      "Amounts here are NOT fund dollars and must never be summed with "
+                      "Fact_Financial: the Unit column is load-bearing and includes "
+                      "dollars-per-pupil alongside dollars."),
+            "why_separate": ("Her nine remaining county tables measure fund balance, net "
+                             "position, debt and capital, enterprise funds, schools and the "
+                             "FY26 outlook. They are real facts with real citations, but not "
+                             "at fund revenue/expenditure grain, so they get their own table "
+                             "rather than being forced into the financial one."),
+            "source_tables": metric_tables,
+            "columns": (["Organization_ID", "Fiscal_Year_ID", "Scenario", "Metric_ID",
+                         "Metric", "Unit", "Fund_ID", "Fund", "Activity_Type", "Amount",
+                         "Source_ID", "Source_Detail", "Source_Page", "Confidence",
+                         "Extraction", "Notes"]),
+            "rows": metric_rows,
+        },
+        "fact_statement_line": {
+            "grain": ("one row per Organization_ID · Fiscal_Year_ID · Statement · Group · "
+                      "Line · Column_Index. Every figure here was proven by its page's own "
+                      "arithmetic and carries a document and page — but the STATEMENT's "
+                      "column roles could not be confirmed, so which column is budget and "
+                      "which is actual is not established."),
+            "why_separate": ("A column index means nothing on its own. Loading these as "
+                             "'actual' would risk publishing a budget figure as an outturn "
+                             "about a real government. They are held here, complete and "
+                             "cited, until each statement's column headers are read — which "
+                             "is the next piece of work on this, and it is registered as a "
+                             "question rather than left implicit."),
+            "unproven_lines_by_org_year": {f"{o} {y}": n
+                                           for (o, y), n in sorted(unproven.items())},
+            "columns": ["Organization_ID", "Fiscal_Year_ID", "Statement", "Statement_Key",
+                        "Group", "Line", "Column_Index", "Amount", "Is_Subtotal",
+                        "Source_ID", "Source_Page", "Verified_By", "Confidence",
+                        "Extraction", "basis_unknown_because"],
+            "rows": statement_lines,
         },
         "columns": COLUMNS,
         "rows": rows,
@@ -376,8 +603,9 @@ def main() -> None:
           f"({hb_count} ORG_HB + {oc_count} ORG_OC), grain unique")
     print(f"  scenarios loaded: "
           + ", ".join(f"{s}={sum(1 for r in rows if r[2] == s)}" for s in SCENARIOS))
-    print(f"  years {years[0]}–{years[-1]} · county tables not loaded: "
-          f"{len(not_loaded)}")
+    print(f"  years {years[0]}–{years[-1]}")
+    print(f"  Fact_Metric: {len(metric_rows)} rows from {len(metric_tables)} county tables")
+    print(f"  Fact_Statement_Line: {len(statement_lines)} rows awaiting column-role proof")
 
 
 if __name__ == "__main__":

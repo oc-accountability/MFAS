@@ -216,7 +216,14 @@ function cite(f) {
   const d = docsById().get(f.source_doc);
   const name = d ? d.filename : f.source_doc;
   const label = esc(name + (f.source_page ? `, p.${f.source_page}` : ''));
-  if (d && d.official_url) return `<a class="src-link" href="${esc(d.official_url)}">${label}</a>`;
+  // Escaping makes the URL safe as HTML; it does not make the SCHEME safe. These
+  // fields are contributor-supplied by design (docs/PROVENANCE.md invites them), and
+  // a `javascript:` URL would become an executable link the moment someone fills one
+  // in. Only https is rendered as a link — anything else falls through to plain text
+  // rather than being silently dropped, so a bad entry is visible instead of invisible.
+  if (d && d.official_url && /^https:\/\//i.test(String(d.official_url))) {
+    return `<a class="src-link" rel="noopener noreferrer" href="${esc(d.official_url)}">${label}</a>`;
+  }
   return `<span class="src-link" title="Source file and SHA-256 recorded in data/datasets/documents.json">${label}</span>`;
 }
 
@@ -402,7 +409,7 @@ function section(id, num, title, blurb) {
   // straight to the part they are talking about.
   s.innerHTML = `<div class="sec-head">
     <a class="sec-num" href="#${id}" title="Link to this section"
-       aria-label="Link to this section: ${esc(title)}">${num}<span aria-hidden="true">#</span></a>
+       aria-label="${num} — link to this section: ${esc(title)}">${num}<span aria-hidden="true">#</span></a>
     <h2>${title}</h2>${blurb ? `<p>${blurb}</p>` : ''}</div>`;
   return s;
 }
@@ -1337,8 +1344,10 @@ function renderPaysFor(host) {
   panel.innerHTML = `<div class="ptw" role="img"
       aria-label="${esc(parts.map(p => `${p.label} ${compact(p.value)}`).join('; '))}">${bars}</div>
     <ul class="ptw-legend">${legend}</ul>
-    <div class="gloss" style="margin-top:var(--s6)">${parts.map(p =>
-      `<div><dt>${esc(p.label)}</dt><dd>${esc(p.blurb)}</dd></div>`).join('')}</div>
+    <!-- dt/dd are only valid inside a dl (optionally wrapped in a div). This was a
+         plain div, so assistive technology saw orphaned terms with no list semantics. -->
+    <dl class="gloss" style="margin-top:var(--s6)">${parts.map(p =>
+      `<div><dt>${esc(p.label)}</dt><dd>${esc(p.blurb)}</dd></div>`).join('')}</dl>
     <p class="reassure"><span class="ic" aria-hidden="true">✓</span><span>${check}
       Source: ${cite(total)}.</span></p>`;
   sec.appendChild(panel);
@@ -2893,16 +2902,48 @@ function setupNavMenu() {
 }
 
 /* ================================= boot ================================ */
+
+/** fetch + JSON with the status actually checked, and a message that names the file.
+ *
+ *  `(await fetch(u)).json()` treats a 404 as success and then fails on the HTML error
+ *  page with "Unexpected token <", which tells a maintainer nothing about WHICH of
+ *  twenty datasets is missing. */
+async function getJSON(url, name) {
+  let res;
+  try {
+    res = await fetch(url);
+  } catch (e) {
+    throw new Error(`${name || url}: network error (${e.message})`);
+  }
+  if (!res.ok) throw new Error(`${name || url}: HTTP ${res.status} ${res.statusText} — ${url}`);
+  try {
+    return await res.json();
+  } catch (e) {
+    throw new Error(`${name || url}: served ${res.headers.get('content-type') || 'unknown type'}, not JSON`);
+  }
+}
+
 async function boot() {
   try {
     loadHome();
     loadShared();   // an explicit link wins over a remembered setting
-    const idx = await (await fetch('data/index.json')).json();
+    const idx = await getJSON('data/index.json');
     const names = ['facts', 'metrics', 'documents', 'projections', 'requests', 'issues',
                    'household', 'audited', 'ocr_statements', 'warehouse_county', 'mfas',
                    'transfers', 'utility', 'cost_of_ownership', 'projects', 'tradeoffs', 'workbook_b', 'context', 'revenue', 'structure'];
-    const loaded = await Promise.all(names.map(n => idx.datasets[n]
-      ? fetch('data/' + idx.datasets[n]).then(r => r.json()) : Promise.resolve(null)));
+    // CORE must load or the page is meaningless; everything else may fail on its own
+    // without taking the calculator down with it. Previously one missing or non-JSON
+    // dataset rejected the whole Promise.all and produced a generic "could not load"
+    // for the entire site, with no indication of which file or what status.
+    const CORE = new Set(['facts', 'metrics', 'documents']);
+    const loaded = await Promise.all(names.map(n => {
+      if (!idx.datasets[n]) return Promise.resolve(null);
+      return getJSON('data/' + idx.datasets[n], n).catch(err => {
+        if (CORE.has(n)) throw err;
+        console.error('[MFAS] optional dataset failed:', n, err.message);
+        return null;
+      });
+    }));
     state.data = Object.fromEntries(names.map((n, i) => [n, loaded[i]]));
     state.data.index = idx;
 
