@@ -198,6 +198,20 @@
       "source_authority": "government",
       "official_url": null
     },
+    "ce7c3790b49682f654b56731ef42b6bf0b2df4360df273cdbb59db5755102a5c": {
+      "id": "cafr-issued-toh-fy2018",
+      "filename": "CAFR_Issued_TOH_FY2018.pdf",
+      "organization_id": "ORG_HB",
+      "source_authority": "government",
+      "official_url": null
+    },
+    "8a3cf3df88172e25aeb189e613de0f310d418e59801ff628e58497f2ec36cc3d": {
+      "id": "cafr-issued-toh-fy2019",
+      "filename": "CAFR_Issued_TOH_FY2019.pdf",
+      "organization_id": "ORG_HB",
+      "source_authority": "government",
+      "official_url": null
+    },
     "fd9daa38d56665298f84c266f423ad64932cc66d6c699f3a8df5bebe075b3b54": {
       "id": "ch-2020-comp-plan-final-version-edits-72012",
       "filename": "ch-2020-comp-plan-final-version-edits-72012.pdf",
@@ -769,6 +783,13 @@
       "id": "tax-rate-historical-ad-valorem",
       "filename": "Tax Rate Historical - Ad Valorem.pdf",
       "organization_id": "ORG_OC",
+      "source_authority": "government",
+      "official_url": null
+    },
+    "17ad8f77ade2893ee1cd970227b68a840aa0429b8b74d4e0ff65fe864bdce822": {
+      "id": "town-of-hillsborough-issued-cafr-fy20-002",
+      "filename": "Town of HIllsborough Issued CAFR FY20 (002).pdf",
+      "organization_id": "ORG_HB",
       "source_authority": "government",
       "official_url": null
     },

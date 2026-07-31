@@ -1,0 +1,56 @@
+{
+  "generated_by": "etl/s63_ocr_ground_truth.py",
+  "question": "Having passed its own arithmetic gate, does a figure recovered from a scan match the figure the digital original prints?",
+  "method": "For every (fiscal year, statement, group, line, column) the recognition path publishes, the same cell is looked up in the digital reading and the amounts compared exactly. Both sides have already passed the reconciliation gate, so this measures what survives it, not whether recognition works.",
+  "why_this_exists": "The case for publishing anything read from a scan is that a misread digit breaks the column sum. That is strong evidence and not proof — offsetting errors would survive it — so the residual risk is measured rather than argued.",
+  "years_in_both_forms": [
+    2018,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "figures_compared": 1941,
+  "figures_identical": 1941,
+  "figures_differing": 0,
+  "agreement_pct": 100.0,
+  "coverage_note": "'only_digital' and 'only_scan' are NOT errors: the two readers reach different amounts of a document, and a cell one found and the other did not is a coverage difference. It is reported separately so it cannot be mistaken for agreement.",
+  "per_year": {
+    "2018": {
+      "agree": 131,
+      "disagree": 0,
+      "only_digital": 878,
+      "only_scan": 234,
+      "disagreements": []
+    },
+    "2021": {
+      "agree": 656,
+      "disagree": 0,
+      "only_digital": 614,
+      "only_scan": 126,
+      "disagreements": []
+    },
+    "2022": {
+      "agree": 483,
+      "disagree": 0,
+      "only_digital": 800,
+      "only_scan": 175,
+      "disagreements": []
+    },
+    "2023": {
+      "agree": 405,
+      "disagree": 0,
+      "only_digital": 844,
+      "only_scan": 121,
+      "disagreements": []
+    },
+    "2024": {
+      "agree": 266,
+      "disagree": 0,
+      "only_digital": 1238,
+      "only_scan": 282,
+      "disagreements": []
+    }
+  },
+  "verdict": "1941/1941 figures identical (100.00%) across 5 year(s) read by two independent routes"
+}

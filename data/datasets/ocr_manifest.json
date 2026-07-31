@@ -1,16 +1,6 @@
 {
   "generated_by": "etl/s70_ocr.py",
-  "orphaned_caches_swept": [
-    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2018",
-    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2019",
-    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2020",
-    "ocr/annual-comprehensive-financial-report-year-ended-june-30-2021",
-    "ocr/annual-financial-report-year-ended-june-30-2022",
-    "ocr/annual-financial-report-year-ended-june-30-2023",
-    "ocr/annual-financial-report-year-ended-june-30-2024",
-    "ocr/fiscal-year-2024-2026-strategic-plan-20230626",
-    "ocr/res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q"
-  ],
+  "orphaned_caches_swept": [],
   "note": "Text recovered by character recognition from the scanned reports. Recognition quality was measured at 141/141 figures on a document that exists in both scanned and digital form, but recognition is never assumed correct: no figure reaches the website from here unless its column sums exactly to the total printed beside it (stage 75).",
   "best_practice": "Replace every scanned PDF with the town's original digital copy. A digital original removes this entire class of risk, because the figures are read directly rather than recognised from an image. Where a digital original exists it is already used in preference to the scan.",
   "engine": "tesseract 5.3.4",
@@ -33,24 +23,6 @@
       "pages": 175,
       "chars": 396978,
       "chars_per_page": 2268
-    },
-    {
-      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
-      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
-      "sha256": "846b43a917b02dd134f41f06789c47f03c1e9467553aa99b056eabcbb377e36e",
-      "text_dir": "ocr/846b43a917b02dd1-a86053cd",
-      "pages": 181,
-      "chars": 439400,
-      "chars_per_page": 2428
-    },
-    {
-      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
-      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
-      "sha256": "b9a958bcede6b1aa442ee344ca52748c8e7f75d11cabc4b6f2a11bdbae3d2dbe",
-      "text_dir": "ocr/b9a958bcede6b1aa-a86053cd",
-      "pages": 163,
-      "chars": 434279,
-      "chars_per_page": 2664
     },
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
@@ -124,8 +96,28 @@
     {
       "document": "comprehensive-annual-financial-report-fy18",
       "reason": "duplicate with no recoverable content"
+    },
+    {
+      "document": "cafr-issued-toh-fy2019",
+      "fiscal_year": 2019,
+      "reason": "another scan of FY2019 is already recognised (audit-2019) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "fiscal_year": 2019,
+      "reason": "another scan of FY2019 is already recognised (audit-2019) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
+    },
+    {
+      "document": "town-of-hillsborough-issued-cafr-fy20-002",
+      "fiscal_year": 2020,
+      "reason": "another scan of FY2020 is already recognised (audit-2020) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "fiscal_year": 2020,
+      "reason": "another scan of FY2020 is already recognised (audit-2020) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
     }
   ],
-  "total_pages": 1418,
+  "total_pages": 1074,
   "elapsed_seconds": 0
 }

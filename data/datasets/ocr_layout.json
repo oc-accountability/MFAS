@@ -1,0 +1,85 @@
+{
+  "generated_by": "etl/s71_ocr_layout.py",
+  "what_this_is": "Word-level bounding boxes for the statement pages of every scanned document, so the same reader that handles the digital audits can read a scan. Coordinates are converted to PDF points, so nothing downstream needs to know the page came from an image.",
+  "why": "Stage 75 reaches exactly one statement per scanned report because it matches runs of whitespace in flat text. The scanned years were never limited by recognition quality — they were limited by discarding the coordinates.",
+  "safety": "Nothing here is published on its own. Stage 62 runs these boxes through the same arithmetic gate as the digital audits, and stage 63 measures the result against a digital original for the same year. Every figure that survives is marked ocr-arithmetic-verified, never digital-text.",
+  "engine": "tesseract 5.3.4",
+  "render_dpi": 300,
+  "min_word_confidence": 40,
+  "documents": [
+    {
+      "document": "fiscal-year-2024-2026-strategic-plan-20230626",
+      "filename": "Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
+      "sha256": "286a81033d750f8d382319c4d4c68369dfb357c6767cf689c6c097acf06281e2",
+      "layout_dir": "ocr-layout/286a81033d750f8d-f5bcbe85",
+      "pages_total": 16,
+      "pages_with_layout": 1
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
+      "sha256": "578ef6226a5a9065970b91c12a194df34e0a2af1b31b8724fc3b1eebb677aae7",
+      "layout_dir": "ocr-layout/578ef6226a5a9065-f5bcbe85",
+      "pages_total": 175,
+      "pages_with_layout": 73
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
+      "sha256": "974877e4eaf280e8c07cb61245beed686ce2bd0f33d99c78dcb9ceec1d5a16d6",
+      "layout_dir": "ocr-layout/974877e4eaf280e8-f5bcbe85",
+      "pages_total": 127,
+      "pages_with_layout": 62
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2022",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2022.pdf",
+      "sha256": "fa78d495e724b13638ea91aa2673e9128ed1045623653b56ac55d7c4f60640a8",
+      "layout_dir": "ocr-layout/fa78d495e724b136-f5bcbe85",
+      "pages_total": 130,
+      "pages_with_layout": 64
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2023",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2023.pdf",
+      "sha256": "b3413df16b3a701b619e73d0fc425df5693ea5639933450b15d931ca20b4a6fb",
+      "layout_dir": "ocr-layout/b3413df16b3a701b-f5bcbe85",
+      "pages_total": 141,
+      "pages_with_layout": 64
+    },
+    {
+      "document": "annual-financial-report-year-ended-june-30-2024",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2024.pdf",
+      "sha256": "dd2892d97a2e9ab83e37d1c1438874597d06183500057e47e07b649c88359b47",
+      "layout_dir": "ocr-layout/dd2892d97a2e9ab8-f5bcbe85",
+      "pages_total": 139,
+      "pages_with_layout": 67
+    },
+    {
+      "document": "audit-2019",
+      "filename": "Audit 2019.pdf",
+      "sha256": "d16728eeb8977f71762bcd05f5510bd88af335aa0aaf28c2e1d6b9f405b1d2c1",
+      "layout_dir": "ocr-layout/d16728eeb8977f71-f5bcbe85",
+      "pages_total": 181,
+      "pages_with_layout": 77
+    },
+    {
+      "document": "audit-2020",
+      "filename": "Audit 2020.pdf",
+      "sha256": "2cfd3c8992367067880b981b65d20702a928652a49372fb8876b044c207e99dd",
+      "layout_dir": "ocr-layout/2cfd3c8992367067-f5bcbe85",
+      "pages_total": 163,
+      "pages_with_layout": 72
+    },
+    {
+      "document": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
+      "filename": "RES-2022-041-A Resolution regarding continued uses of revenues from a one q.pdf",
+      "sha256": "2d696c0b614d79d4ad3f68796d617ad6757f23a7d5d95185daf409c90620536f",
+      "layout_dir": "ocr-layout/2d696c0b614d79d4-f5bcbe85",
+      "pages_total": 2,
+      "pages_with_layout": 2
+    }
+  ],
+  "problems": [],
+  "elapsed_seconds": 0
+}

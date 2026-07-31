@@ -91,6 +91,12 @@ JUR = "Town of Hillsborough, NC"
 # Deliberately a fixed list rather than a glob — a new scan appearing under a
 # similar name must not silently start feeding the pipeline unverified figures.
 WANTED_DOC_IDS = [
+    # Obtained 2026-07-31 from the town's Finance Director. FY2018 was the thinnest
+    # year in the entire warehouse — 31 facts — because only scans existed for it.
+    # Measured on arrival: 19 embedded fonts and 265,291 characters over 175 pages,
+    # against 163 characters for the FY2020 file sent in the same batch. Two of the
+    # three were scans re-sent; this one is the real thing.
+    "cafr-issued-toh-fy2018",
     "audit-2021",
     "hillsborough-2022-audit-stamped",
     "hillsborough-2023-audit-stamped",

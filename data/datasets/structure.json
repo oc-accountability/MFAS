@@ -13,6 +13,11 @@
         "kept": "FY2026-27 Managers Recommended Budget.pdf",
         "dropped": "FY2026-27 Manager_s Recommended Budget.pdf",
         "dropped_pages": 352
+      },
+      {
+        "kept": "FY2026-27 Managers Recommended Budget.pdf",
+        "dropped": "fy2026-27-managers-recommended-budget.pdf",
+        "dropped_pages": 132
       }
     ],
     "by_government": {
@@ -49,9 +54,9 @@
         ]
       }
     },
-    "whole_archive_documents": 65,
-    "whole_archive_pages": 7322,
-    "pages_counted_for": 65,
+    "whole_archive_documents": 86,
+    "whole_archive_pages": 10513,
+    "pages_counted_for": 86,
     "note": "Page counts are only available for documents this pipeline could open and measure, so these are floors rather than totals."
   },
   "already_shared": {

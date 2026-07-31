@@ -24,12 +24,18 @@ etl:
 	$(PY) etl/s50_line_items.py
 	$(PY) etl/s60_audited.py
 	$(PY) etl/s70_ocr.py        # slow; resumable, cached under build/ocr
+	$(PY) etl/s71_ocr_layout.py # recognise statement pages WITH word boxes (slow, cached)
 	$(PY) etl/s75_ocr_statements.py
 	# s61 must follow s60 AND s75: it cross-checks its digital readings against both,
 	# and those checks are the reason its figures are believable. Run earlier and the
 	# comparison files do not exist yet, so the checks silently skip — passing a build
 	# while quietly dropping its own evidence.
-	$(PY) etl/s61_audited_digital.py   # the town's digital audits, FY2021-FY2025
+	$(PY) etl/s61_audited_digital.py   # the town's digital audits
+	# s62 needs s61's output to know which years are held digitally — a scan of such a
+	# year is read for measurement but never published. s63 then compares the two
+	# routes and FAILS THE BUILD on any disagreement, so it must follow both.
+	$(PY) etl/s62_audited_scanned.py   # the same reader, applied to scans
+	$(PY) etl/s63_ocr_ground_truth.py  # digital vs recognised, cell by cell
 	$(PY) etl/s80_county.py
 	$(PY) etl/s85_warehouse.py
 	# s81 must follow s85: it verifies Amy's imported county workbook against the

@@ -349,18 +349,55 @@ def main() -> None:
     statement_lines: list[dict] = []
     unproven = defaultdict(int)
 
+    # Years read DIRECTLY by any statement source, accumulated across every payload
+    # before any of them loads. Every audited statement also prints the prior year's
+    # actual as a comparative column, restating the figure that year's own audit
+    # already gives — loading both put the same slice into the table twice, from two
+    # documents, under Line 1 and Line 2. Every row reconciles, which is exactly why
+    # it is dangerous: anyone summing an account across Lines would double it.
+    #
+    # This set was originally computed per payload, which was right while there was one
+    # statement source and silently wrong the moment there were three: the FY2021
+    # audit's comparative FY2020 column no longer knew that the FY2020 scan reads
+    # FY2020 directly, and seventeen slices came back in. Scope it globally.
+    # ONE AUTHORITATIVE STATEMENT SOURCE PER GOVERNMENT-YEAR.
+    #
+    # The guard started as "skip a comparative prior-year column for a year we read
+    # directly", which was right for one source and wrong for three. Two scans of
+    # ADJACENT years both legitimately print FY2019 — one as its own year, one as the
+    # comparative — and neither is a "prior_year_actual" role once the page headings
+    # are read, so a role-specific rule cannot catch it.
+    #
+    # The general rule is simpler and matches how the documents actually work: for each
+    # (organisation, fiscal year) exactly one document is the source, and rows for that
+    # year from any other document are dropped. Preference order, best first:
+    #   1. a DIGITAL reading of that year's own report
+    #   2. a digital reading carrying it as a comparative column
+    #   3. a RECOGNISED reading of that year's own report
+    #   4. anything else
+    _rank = {"digital-own": 0, "digital-comparative": 1, "scan-own": 2, "other": 3}
+    authority: dict[tuple, tuple] = {}
+    for _name, _org, _digital in (("audited_digital.json", "ORG_HB", True),
+                                  ("county_acfr.json", "ORG_OC", True),
+                                  ("audited_scanned.json", "ORG_HB", False)):
+        _p = DATASETS / _name
+        if not _p.exists():
+            continue
+        _blob = read_json(_p)
+        _own = {d["document"]: d.get("fiscal_year") for d in _blob.get("documents", [])}
+        for q in _blob.get("published", []):
+            y, src = q.get("fiscal_year"), q.get("source_doc")
+            if not y:
+                continue
+            own = _own.get(src) == y
+            kind = ("digital-own" if _digital and own else
+                    "digital-comparative" if _digital else
+                    "scan-own" if own else "other")
+            key = (_org, y)
+            if key not in authority or _rank[kind] < _rank[authority[key][1]]:
+                authority[key] = (src, kind)
+
     def load_statements(payload, org, extraction, detail_prefix):
-        # Which years this payload reads DIRECTLY. Every one of these statements also
-        # prints the prior year's actual as a comparative column, and that column
-        # restates the very figure the prior year's own audit already gives — so
-        # loading both put 475 slices into the table twice, from two documents, under
-        # Line 1 and Line 2. Nothing about that is wrong per row and every row
-        # reconciles, which is exactly why it is dangerous: anyone summing an account
-        # across Lines would double it. A comparative column is loaded ONLY for a year
-        # this payload does not read directly — where it is genuinely the only reading
-        # available, as FY2020 is from the FY2021 audit.
-        primary_years = {p.get("fiscal_year") for p in payload.get("published", [])
-                         if p.get("fiscal_year")}
         for p in payload.get("published", []):
             fy = p.get("fiscal_year")
             if not fy:
@@ -419,8 +456,10 @@ def main() -> None:
                     continue
                 scen, meas = mapped
                 year = fy - 1 if role == "prior_year_actual" else fy
-                if role == "prior_year_actual" and year in primary_years:
-                    continue          # that year is read from its own audit
+                # Only the authoritative source for this government-year may load it.
+                auth = authority.get((org, year))
+                if auth and auth[0] != p["source_doc"]:
+                    continue
 
                 if meas == "amount":
                     meas = measure_base
@@ -440,6 +479,20 @@ def main() -> None:
     if ca_path.exists():
         load_statements(read_json(ca_path), "ORG_OC", "digital-text",
                         "audited statement, read from the county ACFR")
+
+    # Statements recovered from SCANS by character recognition, held to the identical
+    # arithmetic gate. Loaded only for years with no digital original — stage 62 puts
+    # anything else in validation_only, which is never read here.
+    #
+    # The reason this is publishable is measured rather than argued: stage 63 compares
+    # the two routes cell by cell on the five years held in both forms and found
+    # 1,941 of 1,941 figures identical. The extraction value stays
+    # `ocr-arithmetic-verified`, so the export grades these one confidence level below
+    # a direct read and a reader can always filter them out.
+    sc_path = DATASETS / "audited_scanned.json"
+    if sc_path.exists():
+        load_statements(read_json(sc_path), "ORG_HB", "ocr-arithmetic-verified",
+                        "audited statement, recovered from the scanned report")
 
     # The component LINES recovered from the scanned reports — FY2018-FY2020 only.
     # Where a digital original exists the digital reading is already loaded above and

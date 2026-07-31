@@ -21,6 +21,7 @@ Two rules encoded here:
 """
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 import time
@@ -76,16 +77,91 @@ def ocr_page(pdf: Path, page: int, out: Path) -> str:
 def main() -> None:
     docs = read_json(DATASETS / "documents.json")["documents"]
     digital_ids = {d["id"] for d in docs if d.get("text_layer") == "digital"}
+    # kept for reporting only — see the note below on why digital years are still recognised
+    digital_years = {d.get("fiscal_year") for d in docs
+                     if d.get("text_layer") == "digital" and d.get("fiscal_year")}
     targets = [d for d in docs
                if d.get("text_layer") == "scan"
                and d["id"] not in SKIP
                and SUPERSEDED_BY_DIGITAL.get(d["id"]) not in digital_ids]
 
+    # ONE SCAN PER FISCAL YEAR, and none at all for a year we hold digitally.
+    #
+    # On 2026-07-31 the town sent three files: a genuine digital FY2018 original and
+    # re-sends of the FY2019 and FY2020 SCANS we already held under different names.
+    # Without this guard the stage cheerfully queued 344 pages of recognition to
+    # reproduce text it already had, and would then have offered the warehouse two
+    # competing scan-derived readings of the same year — which is worse than slow.
+    #
+    # Preference is deliberate and in this order: a document ALREADY recognised beats
+    # an equivalent one that is not, then the smaller file. The size tiebreak alone
+    # would have picked the newly-arrived FY2019 re-send over the byte-equivalent scan
+    # already sitting in the cache, and paid 181 pages of recognition for nothing.
+    #
+    # Note what is deliberately NOT skipped here: a scan whose year we also hold
+    # DIGITALLY. Recognising it is free once cached, and it is the ground truth stage
+    # 63 measures the recognition path against — FY2018 gained a digital original on
+    # 2026-07-31 and thereby became the second year that exists in both forms.
+    # Suppression of scan-derived FIGURES for such a year belongs in stage 62, where
+    # publishing decisions are made, not here where text is produced.
+    # TWO defects in the first version of this guard, both caught by dry-running the
+    # selection before spending an hour of recognition on it:
+    #
+    #   * It deduplicated on fiscal year ALONE, so `fiscal-year-2024-2026-strategic-plan`
+    #     — sixteen pages, not a financial statement at all — claimed FY2024 and pushed
+    #     out the actual FY2024 annual financial report. A year of audited data would
+    #     have vanished and the log would have called it a duplicate.
+    #   * The manifest parses no year from "Audit 2019.pdf" or "CAFR FY20", so the three
+    #     files that prompted this guard escaped it entirely.
+    #
+    # Hence: dedup ONLY among annual reports, and derive the year from the filename when
+    # the manifest has none. A document that is not an annual report is never a
+    # duplicate of one and is always recognised.
+    ANNUAL = re.compile(r"CAFR|ACFR|Annual\s+(Comprehensive\s+)?Financial|Audit", re.I)
+
+    def report_year(d) -> int | None:
+        if d.get("fiscal_year"):
+            return int(d["fiscal_year"])
+        # No leading \b before FY: these filenames use underscores
+        # ("CAFR_Issued_TOH_FY2019"), and an underscore is a word character, so the
+        # boundary never matched and the file escaped deduplication entirely.
+        m = re.search(r"FY[\s_]?(\d{4})|FY[\s_]?(\d{2})(?!\d)|\b(20\d{2})\b",
+                      d["filename"], re.I)
+        if not m:
+            return None
+        raw = m.group(1) or m.group(3) or m.group(2)
+        n = int(raw)
+        return n if n > 99 else 2000 + n
+
+    def already_cached(d):
+        return any((BUILD / "ocr").glob(f"{d['sha256'][:16]}-*/p0001.txt"))
+
+    chosen: dict[int, dict] = {}
+    year_dupes = []
+    for d in sorted(targets, key=lambda x: (report_year(x) or 0,
+                                            0 if already_cached(x) else 1,
+                                            x["bytes"])):
+        if not ANNUAL.search(d["filename"]):
+            continue                       # not an annual report: never a duplicate
+        fy = report_year(d)
+        if fy and fy in chosen:
+            year_dupes.append({"document": d["id"], "fiscal_year": fy,
+                               "reason": f"another scan of FY{fy} is already recognised "
+                                         f"({chosen[fy]['id']}) — same report, and "
+                                         f"recognising it twice would give the warehouse "
+                                         f"two competing scan-derived readings"})
+            continue
+        if fy:
+            chosen[fy] = d
+    dupe_ids = {y["document"] for y in year_dupes}
+    targets = [d for d in targets if d["id"] not in dupe_ids]
+
     skipped = [{"document": d["id"],
                 "reason": ("a digital original of the same report is available and is used instead"
                            if SUPERSEDED_BY_DIGITAL.get(d["id"]) in digital_ids
                            else "duplicate with no recoverable content")}
-               for d in docs if d.get("text_layer") == "scan" and d not in targets]
+               for d in docs if d.get("text_layer") == "scan" and d not in targets
+               and d["id"] not in {y["document"] for y in year_dupes}] + year_dupes
 
     OCR_ROOT.mkdir(parents=True, exist_ok=True)
     summary = []

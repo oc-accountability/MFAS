@@ -93,7 +93,7 @@ leave today's page working and make every future number unverifiable.
 You only need this to change something. Three things cannot happen on GitHub:
 
 - **`make etl`** rebuilds `data/` from the source PDFs, and those are deliberately not in the repo
-  (925 MiB; one file exceeds GitHub's hard 100 MiB limit and a second sits at 98 MiB). Only a
+  (945 MiB; one file exceeds GitHub's hard 100 MiB limit and a second sits at 98 MiB). Only a
   machine with `sources/` populated can regenerate the figures.
 - **`make test`** catches a bad figure *before* it is public. This site is about named public
   officials; a wrong number should never reach the live page.
@@ -157,7 +157,7 @@ Full diagnosis, evidence, and the safe paths to recovering the audited history:
 
 ## Why the source documents are not in this repo
 
-925 MiB across 115 unique documents, and one file exceeds GitHub's hard 100 MiB per-file limit (a
+945 MiB across 118 unique documents, and one file exceeds GitHub's hard 100 MiB per-file limit (a
 second sits at 98 MiB). Git LFS's free tier (1 GB storage, 1 GB bandwidth/month) would not survive
 public traffic either.
 
@@ -216,7 +216,7 @@ the town's scanned reports require applies to them.
   so no OCR is involved, and it agrees with the budget document's own figures for the same year
   **to within $1** across two documents and two independent parsers.
 - **83 curated headline figures**, FY2023–FY2029; the published data as a whole cites
-  **a subset of the archive's 115 documents** (the count is computed by the build and pinned by a test)
+  **a subset of the archive's 118 documents** (the count is computed by the build and pinned by a test)
 - General Fund budget, expenditures, surplus/deficit, and fund balance
 - Property tax rate, and the town's own conversion factor: **one cent on the rate raises $240,000**
 - Water/sewer/stormwater rate changes, affordable-housing and capital-project tax-rate equivalents

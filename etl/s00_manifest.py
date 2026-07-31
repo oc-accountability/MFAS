@@ -88,6 +88,42 @@ def load_registry() -> dict:
     return {}
 
 
+ANNUAL_REPORT = re.compile(r"CAFR|ACFR|Annual\s+(Comprehensive\s+)?Financial|Audit", re.I)
+
+
+def report_fiscal_year(filename: str) -> int | None:
+    """The fiscal year a document covers, including the shapes the generic parser misses.
+
+    `fiscal_year_from_text` handles "FY2027", "June 30, 2027" and "Fiscal Year 2027".
+    It returns None for two filename styles the town actually uses, and both mattered:
+
+      * `CAFR_Issued_TOH_FY2019.pdf` — the underscore before FY is a WORD character,
+        so the `\\bFY` boundary never matches.
+      * `Audit 2019.pdf` — a bare year with no marker at all.
+
+    A null year is not cosmetic here. It is what let two scans of the same report
+    escape deduplication, and what left the recognition path with figures the
+    ground-truth check could not match to any year — so the check reported
+    "not measurable" when the data to measure was sitting right there.
+
+    The bare-year fallback is deliberately scoped to annual reports. A four-digit
+    number in an arbitrary filename is not a fiscal year, and guessing one would put a
+    figure in the wrong year, which is worse than having no year at all.
+    """
+    fy = fiscal_year_from_text(filename)
+    if fy:
+        return fy
+    m = re.search(r"FY[\s_]?(\d{4})|FY[\s_]?(\d{2})(?!\d)", filename, re.I)
+    if m:
+        raw = int(m.group(1) or m.group(2))
+        return raw if raw > 99 else 2000 + raw
+    if ANNUAL_REPORT.search(filename):
+        m = re.search(r"\b(20\d{2})\b", filename)
+        if m:
+            return int(m.group(1))
+    return None
+
+
 def slugify(name: str) -> str:
     s = name.lower()
     s = re.sub(r"\.(pdf|xlsx|docx|zip)$", "", s)
@@ -241,7 +277,7 @@ def main() -> None:
             "bytes": p.stat().st_size,
             "sha256": digest,
             "category": category,
-            "fiscal_year": fiscal_year_from_text(p.name),
+            "fiscal_year": report_fiscal_year(p.name),
             "jurisdiction": jur,
             "organization_id": known.get("organization_id") or org,
             # WHO PUBLISHED IT, not whether it can be parsed. Downstream confidence

@@ -168,6 +168,14 @@ KNOWN_SCAN_IDS = {
     # path, where the per-page arithmetic gate decides what may publish.
     "audit-2019",
     "audit-2020",
+    # Added 2026-07-31. The town's Finance Director sent three files in response to the
+    # request for digital originals. ONE was genuine — CAFR_Issued_TOH_FY2018, 19 fonts
+    # and 265,291 characters, which turned the thinnest year in the warehouse into a
+    # readable one. The other two are the FY2019 and FY2020 SCANS again under new names:
+    # 15 fonts / 20,369 chars, and 0 fonts / 163 chars. Measured on arrival, as always.
+    # The request for genuine FY2019 and FY2020 originals therefore still stands.
+    "cafr-issued-toh-fy2019",
+    "town-of-hillsborough-issued-cafr-fy20-002",
     # Added 2026-07-29: the county's Article 46 quarter-cent resolution arrived
     # as a scan with an interleaved OCR layer — s00's font analysis and a manual
     # read agree. Its figures require transcription like every other scan.
