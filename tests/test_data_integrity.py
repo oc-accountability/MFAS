@@ -1743,3 +1743,25 @@ def test_exports_are_built_after_the_facts_are_merged():
     assert order.index("s90_build") < order.index("s101_workbook"), (
         "s90_build must run BEFORE s101_workbook or the export lags the JSON by a build")
     assert order.index("s90_build") < order.index("s103_tab_map")
+
+
+def test_the_workbook_exports_rebuild_byte_identically():
+    """M-02. docs/PROVENANCE.md tells a contributor to expect a clean
+    `git diff --stat data/` after a rebuild. It never was: OpenPyXL stamps both the
+    ZIP member timestamps AND `docProps/core.xml` with the current instant, so the
+    exports were dirty on every run and the one signal that would reveal a REAL data
+    change was permanently drowned out.
+
+    This checks the mechanism rather than re-running the build: both clocks pinned,
+    and the workbook's own 'Generated' cell derived from the source set instead of
+    today's date."""
+    common = (REPO / "etl" / "common.py").read_text(encoding="utf-8")
+    assert "def normalise_xlsx" in common, "the xlsx normaliser is gone"
+    assert "docProps/core.xml" in common, (
+        "normalise_xlsx no longer pins docProps/core.xml — fixing only the ZIP "
+        "timestamps leaves the file non-deterministic, which was the first attempt")
+    assert "def build_stamp" in common
+    for name in ("s101_workbook", "s103_tab_map"):
+        src = (REPO / "etl" / f"{name}.py").read_text(encoding="utf-8")
+        assert "normalise_xlsx(OUT)" in src, f"{name} does not normalise its output"
+        assert "date.today()" not in src, f"{name} still stamps the wall-clock date"

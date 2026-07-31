@@ -20,7 +20,6 @@ import re
 import subprocess
 import sys
 import warnings
-from collections import defaultdict
 from pathlib import Path
 
 import pdfplumber

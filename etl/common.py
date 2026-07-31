@@ -12,12 +12,12 @@ public officials. See docs/EXTRACTION_NOTES.md.
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import re
 import os
 import sys
-from dataclasses import dataclass, asdict, field
-from datetime import date
+from dataclasses import dataclass, asdict
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -152,28 +152,72 @@ def content_cache_dir(kind: str, sha256: str, extractor: str,
     return d
 
 
-def build_date() -> str:
-    """A date that is a property of the DATA, not of the day you ran the build.
+def build_stamp() -> str:
+    """What generated this file — a property of the DATA, not of the day you ran it.
 
     `date.today()` in a generated workbook means identical inputs produce different
     cells on different days, which contradicts docs/PROVENANCE.md's instruction to
-    expect a clean `git diff --stat data/` after a byte-identical rebuild — the
-    rebuild always dirtied the exports. Derived from the newest source document
-    instead, so re-running today reproduces what was generated last week, and
-    overridable with MFAS_BUILD_DATE for a pinned release.
+    expect a clean `git diff --stat data/` after a rebuild: the rebuild always
+    dirtied the exports, so the one signal that would reveal a real change was
+    permanently noisy.
+
+    Two honest options, and NOT a third. Set `MFAS_BUILD_DATE` for a dated release
+    and that wins. Otherwise this returns a short digest of the source set, which is
+    stable across machines and across days and changes exactly when the sources do.
+
+    The third option — deriving a date from source file mtimes — was written first and
+    is wrong for the same reason half this audit was: an mtime describes the copy, not
+    the document. Cloning the archive or restoring it from a backup changes every
+    mtime without changing a single figure. Do not reintroduce it.
     """
     override = os.environ.get("MFAS_BUILD_DATE")
     if override:
         return override
     try:
         docs = read_json(DATASETS / "documents.json")["documents"]
-        newest = max((d.get("fiscal_year") or 0) for d in docs)
-        stamp = max(
-            (SOURCES / d["archive_path"]).stat().st_mtime
-            for d in docs if (SOURCES / d["archive_path"]).exists())
-        return date.fromtimestamp(stamp).isoformat()
+        digest = hashlib.sha256(
+            "".join(sorted(d["sha256"] for d in docs)).encode()).hexdigest()[:12]
+        return f"source-set {digest}"
     except Exception:
         return "unknown"
+
+
+def normalise_xlsx(path: Path) -> None:
+    """Rewrite an .xlsx with fixed ZIP member timestamps so rebuilds are byte-identical.
+
+    An .xlsx is a ZIP, and OpenPyXL stamps every member with the wall-clock time of
+    the save. So even after the *cells* were made deterministic, two rebuilds of
+    identical data still produced different bytes — which keeps
+    `git diff --stat data/` permanently dirty and destroys the one signal that would
+    reveal a real change. docs/PROVENANCE.md promises a clean diff after a rebuild;
+    this is what makes that true rather than aspirational.
+
+    1980-01-01 is the ZIP format's own epoch — the earliest value it can store — and
+    is the conventional choice for reproducible archives.
+
+    There are TWO clocks in an .xlsx and fixing only the obvious one achieves nothing:
+    the ZIP member timestamps, and `docProps/core.xml`, into which OpenPyXL writes
+    `<dcterms:created>` and `<dcterms:modified>` as the current instant. Normalising
+    the ZIP alone still produced different bytes on every run.
+    """
+    import zipfile
+    epoch = "1980-01-01T00:00:00Z"
+    src = path.read_bytes()
+    with zipfile.ZipFile(io.BytesIO(src)) as zin:
+        items = [(i, zin.read(i.filename)) for i in zin.infolist()]
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zout:
+        for info, data in items:
+            if info.filename == "docProps/core.xml":
+                text = data.decode("utf-8")
+                text = re.sub(r"(<dcterms:(?:created|modified)[^>]*>)[^<]*(</dcterms:)",
+                              rf"\g<1>{epoch}\g<2>", text)
+                data = text.encode("utf-8")
+            fixed = zipfile.ZipInfo(info.filename, date_time=(1980, 1, 1, 0, 0, 0))
+            fixed.compress_type = info.compress_type
+            fixed.external_attr = info.external_attr
+            zout.writestr(fixed, data)
+    path.write_bytes(buf.getvalue())
 
 
 def sha256_file(p: Path) -> str:

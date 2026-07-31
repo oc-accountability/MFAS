@@ -38,7 +38,7 @@ import openpyxl
 import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import (BUILD, DATASETS, SOURCES, content_cache_dir,  # noqa: E402
+from common import (DATASETS, SOURCES, content_cache_dir,  # noqa: E402
                     doc_id_for_filename, read_json, write_json)
 
 warnings.filterwarnings("ignore")

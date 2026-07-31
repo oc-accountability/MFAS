@@ -33,7 +33,6 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import date
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -41,7 +40,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATA, DATASETS, read_json, build_date  # noqa: E402
+from common import DATA, DATASETS, read_json, build_stamp, normalise_xlsx  # noqa: E402
 
 OUT = DATA / "exports" / "MFAS_Data_Warehouse.xlsx"
 HDR_FILL = PatternFill("solid", fgColor="1F3864")
@@ -168,7 +167,7 @@ def main() -> None:
         ("Where the numbers come from",
          "Source_Register lists every document with its SHA-256. A figure that cannot be traced "
          "to one of them is not published at all."),
-        ("Generated", build_date()),
+        ("Generated", build_stamp()),
         ("Live site", "https://oc-accountability.github.io/MFAS/"),
         ("Repository", "https://github.com/oc-accountability/MFAS"),
     ]
@@ -180,7 +179,7 @@ def main() -> None:
 
     # ---- Change_Log ----------------------------------------------------------
     add("Change_Log", ["Version", "Date", "Change", "Notes"], [
-        ["v1.0 export", build_date(),
+        ["v1.0 export", build_stamp(),
          "First generated export of the MFAS pipeline into the v2.2 Foundation schema",
          "Built at Amy's request. Adds the tabs that did not exist in her workbook: tax-rate "
          "history, revenue by source, capital projects, funded/declined requests, utility "
@@ -513,6 +512,9 @@ def main() -> None:
     wb.move_sheet("README", offset=-(len(wb.sheetnames) - 1))
 
     wb.save(OUT)
+    # Fixed ZIP timestamps: without this two rebuilds of identical data still
+    # differ byte-for-byte, and `git diff --stat data/` stays permanently dirty.
+    normalise_xlsx(OUT)
     size = OUT.stat().st_size
     print(f"  wrote {OUT.relative_to(DATA.parent)}  ({size / 1024:.0f} KB, "
           f"{len(wb.sheetnames)} tabs)")

@@ -45,14 +45,13 @@ declined, and what the town itself said the consequence would be.
 """
 from __future__ import annotations
 
-import json
 import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATASETS, read_json, write_json  # noqa: E402
-from s94_projects import UNNAMED, load_pages, money_row, parse_table  # noqa: E402
+from s94_projects import UNNAMED, load_pages, parse_table  # noqa: E402
 
 SOURCE_DOC = "FY27 Budget and Financial Plan Recommended.pdf"
 DOC_ID = "fy27-budget-and-financial-plan-recommended"

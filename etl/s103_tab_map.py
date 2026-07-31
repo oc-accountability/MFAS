@@ -27,7 +27,6 @@ element — three of these workbooks under-report themselves as empty otherwise.
 from __future__ import annotations
 
 import sys
-from datetime import date
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -35,7 +34,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATA, DATASETS, read_json, build_date  # noqa: E402
+from common import DATA, DATASETS, read_json, build_stamp, normalise_xlsx  # noqa: E402
 
 OUT = DATA / "exports" / "MFAS_Workbook_Tab_Map.xlsx"
 HDR = PatternFill("solid", fgColor="1F3864")
@@ -282,7 +281,7 @@ def main() -> None:
                         "is overwritten. Your own workbooks are never written to."),
         ("Row counts", "Counted by walking every row. Several of these files under-report "
                        "themselves as empty if you trust their stored dimensions."),
-        ("Generated", build_date()),
+        ("Generated", build_stamp()),
     ], 1):
         ws5.cell(i, 1, k).font = Font(bold=True, size=13 if i == 1 else 10)
         ws5.cell(i, 2, v).alignment = Alignment(wrap_text=True, vertical="top")
@@ -290,6 +289,9 @@ def main() -> None:
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     wb.save(OUT)
+    # Fixed ZIP timestamps: without this two rebuilds of identical data still
+    # differ byte-for-byte, and `git diff --stat data/` stays permanently dirty.
+    normalise_xlsx(OUT)
     print(f"  wrote {OUT.relative_to(DATA.parent)}  "
           f"({OUT.stat().st_size / 1024:.0f} KB, {len(books)} workbooks, "
           f"{max_tabs} tab columns)")

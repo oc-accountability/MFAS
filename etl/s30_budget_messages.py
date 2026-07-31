@@ -32,7 +32,7 @@ import pdfplumber
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import (DATASETS, SOURCES, Fact, DIGITAL, STATED,  # noqa: E402
-                    write_json, read_json, report_and_gate)
+                    write_json, report_and_gate)
 
 warnings.filterwarnings("ignore")
 JUR = "Town of Hillsborough, NC"

@@ -28,7 +28,6 @@ a question that quietly vanishes is indistinguishable from one that was forgotte
 """
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -58,7 +57,6 @@ def main() -> None:
     ctx = ds("context.json")
     mfas = ds("mfas_conformance.json")
     proj = ds("projects.json")
-    trade = ds("tradeoffs.json")
     docs = ds("documents.json").get("documents", [])
     facts_all = ds("facts.json").get("facts", [])
 
