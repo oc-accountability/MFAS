@@ -252,9 +252,11 @@ def cover(wb, index_rows, facts):
             c = ws.cell(r, 2, key)
             c.font = Font(bold=True, size=10, color=text, name="Calibri")
             c.fill = PatternFill("solid", fgColor=fill)
-            c.alignment = Alignment(horizontal="center", vertical="center")
         elif key:
             ws.cell(r, 2, key).font = st.KEY_FONT
+        ws.cell(r, 2).alignment = Alignment(
+            vertical="center" if key in chip else "top",
+            horizontal="center" if key in chip else "general")
         v = ws.cell(r, 3, val)
         v.alignment = Alignment(wrap_text=True, vertical="top")
         v.font = st.LINK_FONT if val.startswith("https://") else st.BODY_FONT
