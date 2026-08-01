@@ -1773,3 +1773,76 @@ def test_the_workbook_exports_rebuild_byte_identically():
         src = (REPO / "etl" / f"{name}.py").read_text(encoding="utf-8")
         assert "normalise_xlsx(OUT)" in src, f"{name} does not normalise its output"
         assert "date.today()" not in src, f"{name} still stamps the wall-clock date"
+
+
+def test_the_cover_sheet_counts_match_reality():
+    """A cover is where a wrong number is least likely to be checked and most likely to
+    be quoted.
+
+    The first build of the MFAS cover printed "83 published figures" — it had been handed
+    `len(facts)`, which is only the Fact_Published_Figures tab — against a real total of
+    23,569, and "26 tabs" for a workbook with 28. Both were caught by looking at the
+    rendered sheet, which is not a control. This is the control: the cover's counts must
+    equal the workbook's own sheet list and the coverage dataset it claims to summarise.
+
+    This is the same defect class the 2026-07-31 audit named — a volatile count pinned in
+    prose — just relocated into a spreadsheet cell where the existing README/docs scanner
+    could not see it.
+    """
+    openpyxl = pytest.importorskip("openpyxl")
+    xl = REPO / "data" / "exports" / "MFAS_Data_Warehouse.xlsx"
+    if not xl.exists():
+        pytest.skip("export not built yet")
+    cov = json.loads((REPO / "data" / "datasets" / "coverage.json").read_text())
+    wb = openpyxl.load_workbook(xl, read_only=True)
+    try:
+        assert "MFAS" in wb.sheetnames, "the cover sheet is missing"
+        assert wb.sheetnames[0] == "MFAS", (
+            f"the cover must be the first tab, found {wb.sheetnames[0]!r}")
+        ws = wb["MFAS"]
+        vals = {}
+        for row in ws.iter_rows(values_only=True):
+            cells = [c for c in row if c is not None]
+            if len(cells) >= 2 and isinstance(cells[0], str):
+                vals[cells[0]] = str(cells[1])
+        n_tabs = len(wb.sheetnames)
+    finally:
+        wb.close()
+
+    assert "Tabs" in vals and "Facts" in vals, sorted(vals)
+    assert vals["Tabs"].startswith(f"{n_tabs} "), (
+        f"cover claims {vals['Tabs'][:12]!r} tabs, workbook has {n_tabs}")
+    assert f"{cov['facts_total']:,}" in vals["Facts"], (
+        f"cover says {vals['Facts']!r}, coverage.json says {cov['facts_total']:,} facts")
+    assert str(cov["documents_total"]) in vals["Facts"], (
+        f"cover does not carry the archive size {cov['documents_total']}")
+    if "Still unread" in vals:
+        assert str(cov["backlog_count"]) in vals["Still unread"], (
+            f"cover backlog {vals['Still unread']!r} != {cov['backlog_count']}")
+
+
+def test_the_workbook_house_style_matches_the_websites_palette():
+    """One identity. `etl/workbook_style.py` copies its colours out of the site's LIGHT
+    theme, and a copy that nobody checks drifts the first time either side is touched.
+
+    The site's values are the validated ones — `assets/style.css` records measured
+    contrast ratios and the failures that produced them — so the CSS is the authority and
+    the workbook follows it, never the reverse.
+    """
+    css = (REPO / "assets" / "style.css").read_text(encoding="utf-8")
+    style = (REPO / "etl" / "workbook_style.py").read_text(encoding="utf-8")
+    # (workbook constant, the CSS custom property it was taken from)
+    for const, prop in [("INK", "--text-primary"), ("INK_SOFT", "--text-secondary"),
+                        ("MUTED", "--text-muted"), ("PAPER", "--surface-1"),
+                        ("PAPER_ALT", "--surface-3"), ("BLUE", "--accent"),
+                        ("BLUE_TEXT", "--accent-text"), ("ORANGE", "--series-2"),
+                        ("GREEN", "--series-3")]:
+        m = re.search(rf'^{const} = "([0-9A-F]{{6}})"', style, re.M)
+        assert m, f"{const} not found in workbook_style.py"
+        # The light theme is the SECOND block; the dark set is the site's default and
+        # would be near-white on paper. Take the last definition, which is the light one.
+        hits = re.findall(rf"{re.escape(prop)}:\s*#([0-9a-fA-F]{{6}})\b", css)
+        assert hits, f"{prop} not found in assets/style.css"
+        assert m.group(1).lower() in [h.lower() for h in hits], (
+            f"workbook {const}=#{m.group(1)} is not any published value of {prop} "
+            f"({', '.join('#' + h for h in hits)}) — the workbook and the site have drifted")

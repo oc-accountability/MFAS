@@ -35,11 +35,14 @@ from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATA, DATASETS, read_json, build_stamp, normalise_xlsx  # noqa: E402
+import workbook_style as st  # noqa: E402
 
 OUT = DATA / "exports" / "MFAS_Workbook_Tab_Map.xlsx"
-HDR = PatternFill("solid", fgColor="1F3864")
-HDRF = Font(bold=True, color="FFFFFF", size=10)
-TABF = PatternFill("solid", fgColor="E8EDF5")
+# Same house style as the warehouse export — see etl/workbook_style.py for where the
+# colours come from and why they are not chosen here.
+HDR = st.HDR_FILL
+HDRF = st.HDR_FONT
+TABF = PatternFill("solid", fgColor=st.TINT_BLUE)
 
 # One line on what each workbook is FOR. Written by hand after reading them — a machine can
 # list tabs but cannot say why a file exists, and "purpose" is the column she asked for.
@@ -203,7 +206,7 @@ def main() -> None:
     ws2.cell(1, 1, "Sort by Tab to see which tabs recur across workbooks and which are "
                    "unique. A tab that appears in five files is a settled idea; one that "
                    "appears once is either a dead end or an unfinished good idea.")
-    ws2.cell(1, 1).font = Font(italic=True, size=9, color="555555")
+    ws2.cell(1, 1).font = Font(italic=True, size=9, color=st.MUTED)
     ws2.merge_cells(start_row=1, start_column=1, end_row=1, end_column=6)
     for c, h in enumerate(["Tab", "Workbook", "Family", "Authored", "Rows", "Cols"], 1):
         cell = ws2.cell(2, c, h)
@@ -229,7 +232,7 @@ def main() -> None:
     ws3.cell(1, 1, "How many workbooks each tab appears in. The top of this list is the "
                    "structure you kept coming back to — the strongest evidence of what the "
                    "final design should contain.")
-    ws3.cell(1, 1).font = Font(italic=True, size=9, color="555555")
+    ws3.cell(1, 1).font = Font(italic=True, size=9, color=st.MUTED)
     ws3.merge_cells(start_row=1, start_column=1, end_row=1, end_column=3)
     for c, h in enumerate(["Tab", "Appears in # workbooks", "Verdict"], 1):
         cell = ws3.cell(2, c, h)
@@ -248,7 +251,7 @@ def main() -> None:
     ws4 = wb.create_sheet("Decisions_Inventory")
     ws4.cell(1, 1, "Conventions and ideas already embedded in these workbooks — so the next "
                    "design carries them forward on purpose rather than by accident.")
-    ws4.cell(1, 1).font = Font(italic=True, size=9, color="555555")
+    ws4.cell(1, 1).font = Font(italic=True, size=9, color=st.MUTED)
     ws4.merge_cells(start_row=1, start_column=1, end_row=1, end_column=4)
     for c, h in enumerate(["Decision", "What it is", "Where it came from",
                            "Recommendation"], 1):
@@ -288,6 +291,19 @@ def main() -> None:
     wb.move_sheet("README", offset=-(len(wb.sheetnames) - 1))
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    for ws_ in wb.worksheets:
+        ws_.sheet_view.showGridLines = False
+        ws_.sheet_properties.tabColor = st.BLUE if ws_.title == "README" else st.INK
+        ws_.oddFooter.left.text = ("MFAS · Orange County Efficiency && Accountability "
+                                   "Initiative")
+        ws_.oddFooter.left.size = 8
+        ws_.oddFooter.left.color = st.MUTED
+        ws_.oddFooter.right.text = "Page &P of &N"
+        ws_.oddFooter.right.size = 8
+        ws_.oddFooter.right.color = st.MUTED
+    st.set_properties(wb, "MFAS Workbook Tab Map — Amy's workbook catalogue",
+                      "Every tab across every workbook in the archive, one column per tab.",
+                      build_stamp())
     wb.save(OUT)
     # Fixed ZIP timestamps: without this two rebuilds of identical data still
     # differ byte-for-byte, and `git diff --stat data/` stays permanently dirty.

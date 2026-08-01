@@ -36,16 +36,28 @@ import sys
 from pathlib import Path
 
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATA, DATASETS, read_json, build_stamp, normalise_xlsx  # noqa: E402
+import workbook_style as st  # noqa: E402
 
 OUT = DATA / "exports" / "MFAS_Data_Warehouse.xlsx"
-HDR_FILL = PatternFill("solid", fgColor="1F3864")
-HDR_FONT = Font(bold=True, color="FFFFFF", size=10)
-TITLE_FONT = Font(bold=True, size=13)
+TITLE_FONT = st.WORDMARK_FONT
+
+# Columns that are unambiguously whole dollars, named one at a time.
+# Deliberately NOT inferred from the header text: `Fact_Metric` and
+# `Fact_Published_Figures` carry a Value column of mixed units — a tax rate of 0.6264
+# cents per $100 rendered in an accounting format reads as "1", which is a published
+# falsehood rather than a cosmetic slip. A tab absent from here simply gets no format.
+MONEY_COLUMNS = {
+    "Fact_Financial": ("Amount",),
+    "Fact_Statement_Line": ("Amount",),
+    "4.0 Fact_Capital_Projects": ("Amount",),
+    "5.0 Fact_Requests_Declined": ("Amount",),
+    "6.0 Fact_Requests_Funded": ("Amount",),
+}
 
 
 def ds(name):
@@ -98,29 +110,160 @@ def fact_confidence(fact: dict, authority_by_doc: dict) -> str:
 
 
 def sheet(wb, title, headers, rows, note=None, widths=None):
-    ws = wb.create_sheet(title[:31])
-    r = 1
+    """One data tab in the house style.
+
+    The header row stays at row 1 or 2 — never lower. `tests/` looks for the row
+    carrying `Confidence` within the first three rows, and more to the point a reader
+    scrolling a 12,000-row tab needs the frozen header to be the thing at the top, not
+    a title block.
+    """
+    name = title[:31]
+    ws = wb.create_sheet(name)
+    hdr = 1
     if note:
-        ws.cell(1, 1, note).font = Font(italic=True, size=9, color="555555")
-        ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=max(len(headers), 2))
-        r = 2
+        span = max(len(headers), 2)
+        ws.cell(1, 1, note).font = st.NOTE_FONT
+        ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=span)
+        ws.cell(1, 1).alignment = Alignment(vertical="top", wrap_text=True)
+        hdr = 2
     for c, h in enumerate(headers, 1):
-        cell = ws.cell(r, c, h)
-        cell.fill, cell.font = HDR_FILL, HDR_FONT
-        cell.alignment = Alignment(vertical="center", wrap_text=True)
-    ws.freeze_panes = ws.cell(r + 1, 1)
+        ws.cell(hdr, c, h)
+    st.style_header(ws, hdr, len(headers))
+
+    r = hdr
     for row in rows:
         r += 1
         for c, v in enumerate(row, 1):
             if isinstance(v, (dict, list)):
                 v = json.dumps(v, ensure_ascii=False)
             ws.cell(r, c, v)
+    last = r
+
     for c, h in enumerate(headers, 1):
         w = widths[c - 1] if widths and c - 1 < len(widths) else min(
             42, max(12, len(str(h)) + 4,
                     *(len(str(row[c - 1])) + 2 for row in rows[:60]
                       if c - 1 < len(row) and row[c - 1] is not None) or [12]))
         ws.column_dimensions[get_column_letter(c)].width = w
+
+    if note:
+        # Excel does not auto-fit a MERGED cell, so a fixed height silently clips a long
+        # note — and these notes carry the caveats, which is the worst thing to crop.
+        # Measured from the REAL column widths, which is why this runs after the sizer:
+        # the first attempt assumed every column was at the 42-unit cap, computed one
+        # line for a note that wrapped to three, and clipped exactly as before.
+        total_w = sum(ws.column_dimensions[get_column_letter(c)].width or 12
+                      for c in range(1, len(headers) + 1))
+        per_line = max(40, int(total_w * 1.15))   # ~1.15 chars per width unit at 9pt
+        lines = min(6, max(1, -(-len(note) // per_line)))
+        ws.row_dimensions[1].height = 12.5 * lines + 6
+
+    st.band(ws, hdr, last, len(headers))
+    # The provenance vocabulary, coloured wherever it appears. This is the one piece of
+    # decoration that is also doctrine: how a figure was obtained and how far it is
+    # trusted should be legible without reading the column.
+    for label, mapping in (("Extraction", st.PROVENANCE_CHIPS),
+                           ("Confidence", st.CONFIDENCE_CHIPS)):
+        if label in headers:
+            st.chips(ws, get_column_letter(headers.index(label) + 1), hdr, last, mapping)
+    for col in MONEY_COLUMNS.get(name, ()):
+        if col in headers:
+            st.money(ws, hdr, last, headers.index(col) + 1)
+
+    st.finish(ws, hdr, last, len(headers), landscape=len(headers) >= 8)
+    ws.sheet_properties.tabColor = st.tab_colour(name)
+    return ws
+
+
+def cover(wb, index_rows, facts):
+    """The first thing anyone sees — and the only sheet here that is purely identity.
+
+    It earns its place by carrying the three things a reader needs before they trust a
+    single cell: what this is, how big it is, and the KEY to the provenance colours used
+    on every other tab. A cover that is only a logo is a wasted sheet.
+
+    ⚠ THE COUNTS ON A COVER ARE STILL PUBLISHED FIGURES. The first draft printed
+    "83 published figures" — `len(facts)`, which is only the Fact_Published_Figures tab —
+    against a real total of 23,569, and "26 tabs" for a workbook with 28. A cover is
+    exactly where a wrong number is least likely to be checked and most likely to be
+    quoted, so both now come from the same places the rest of the file does: the
+    coverage dataset, and the workbook's own sheet list.
+    """
+    cov = ds("coverage")
+    ws = wb.create_sheet("MFAS")
+    # Two columns only. An earlier version put the values in D with a spacer at C, and
+    # the sheet then ran wider than a printable page — the entire right-hand column fell
+    # off page 1 of the PDF and the cover rendered as a list of labels with no values.
+    ws.column_dimensions["B"].width = 28
+    ws.column_dimensions["C"].width = 84
+
+    ws.cell(2, 2, "MFAS").font = st.WORDMARK_FONT
+    ws.cell(3, 2, "Municipal Financial Analysis System").font = st.SUB_FONT
+    ws.cell(4, 2, "Town of Hillsborough  ·  Orange County, North Carolina").font = st.SUB_FONT
+    for c in (2, 3):
+        ws.cell(6, c).border = Border(bottom=Side(style="medium", color=st.BLUE))
+    ws.row_dimensions[2].height = 36
+
+    rows = [
+        ("What this is", "Every figure this project publishes, in one file — each one "
+                         "traceable to a named document and, where the source prints one, "
+                         "a page."),
+        ("The rule", "A figure that cannot be traced to a source document is not published "
+                     "at all. The build fails rather than guess."),
+        ("Tabs", f"{len(wb.sheetnames)} — see Index. Colour-coded: blue dimensions, black "
+                 f"facts, green sources, orange coverage and open questions."),
+        ("Facts", (f"{cov.get('facts_total'):,} published figures, from "
+                   f"{cov.get('documents_contributing')} of "
+                   f"{cov.get('documents_total')} documents in the archive"
+                   if cov.get("facts_total") else
+                   f"{len(facts):,} in Fact_Published_Figures")),
+        ("Still unread", (f"{cov.get('backlog_count')} documents — listed in "
+                          f"Coverage_By_Document. A gap is published, not hidden."
+                          if cov.get("backlog_count") else "")),
+        ("Build", build_stamp()),
+        ("", ""),
+        ("KEY — how a figure was read", ""),
+        ("digital-text", "Read straight from a document with real text. No character "
+                         "recognition involved."),
+        ("ocr-arithmetic-verified", "Recovered from a photograph of paper, and published "
+                                    "only where its column adds up exactly to the total "
+                                    "printed beside it."),
+        ("workbook-import", "Imported from an analysis workbook and checked against an "
+                            "official source."),
+        ("", ""),
+        ("KEY — how far it is trusted", ""),
+        ("High", "An official published document."),
+        ("Medium", "Derived here from official figures, or recovered by recognition."),
+        ("Working", "From an analysis workbook, pending official confirmation."),
+        ("Pending", "Awaiting a source. Not publishable on its own."),
+        ("", ""),
+        ("Website", "https://oc-accountability.github.io/MFAS/"),
+        ("Everything", "https://github.com/oc-accountability/MFAS"),
+    ]
+    chip = {k: (fill, text)
+            for k, fill, text in (*st.PROVENANCE_CHIPS, *st.CONFIDENCE_CHIPS)}
+    r = 8
+    for key, val in rows:
+        if key.startswith("KEY —"):
+            ws.cell(r, 2, key).font = Font(bold=True, size=10, color=st.BLUE_TEXT,
+                                           name="Calibri")
+        elif key in chip:
+            fill, text = chip[key]
+            c = ws.cell(r, 2, key)
+            c.font = Font(bold=True, size=10, color=text, name="Calibri")
+            c.fill = PatternFill("solid", fgColor=fill)
+            c.alignment = Alignment(horizontal="center", vertical="center")
+        elif key:
+            ws.cell(r, 2, key).font = st.KEY_FONT
+        v = ws.cell(r, 3, val)
+        v.alignment = Alignment(wrap_text=True, vertical="top")
+        v.font = st.LINK_FONT if val.startswith("https://") else st.BODY_FONT
+        if val.startswith("https://"):
+            v.hyperlink = val
+        if len(val) > 84:
+            ws.row_dimensions[r].height = 30
+        r += 1
+    st.narrative(ws, r, cols=3)
     return ws
 
 
@@ -140,8 +283,6 @@ def main() -> None:
 
     # ---- README — the warning has to be the first thing read ------------------
     ws = wb.create_sheet("README")
-    ws.column_dimensions["A"].width = 26
-    ws.column_dimensions["B"].width = 112
     lines = [
         ("MFAS Data Warehouse", ""),
         ("", ""),
@@ -171,10 +312,24 @@ def main() -> None:
         ("Live site", "https://oc-accountability.github.io/MFAS/"),
         ("Repository", "https://github.com/oc-accountability/MFAS"),
     ]
+    # Column A is the mark bar, so the content shifts one right. `narrative()` fills it.
+    ws.column_dimensions["B"].width = 26
+    ws.column_dimensions["C"].width = 104
     for i, (k, v) in enumerate(lines, 1):
-        ws.cell(i, 1, k).font = TITLE_FONT if i == 1 else Font(bold=True, size=10)
-        c = ws.cell(i, 2, v)
+        cell = ws.cell(i, 2, k)
+        cell.font = TITLE_FONT if i == 1 else st.KEY_FONT
+        cell.alignment = Alignment(vertical="top")
+        c = ws.cell(i, 3, v)
         c.alignment = Alignment(wrap_text=True, vertical="top")
+        c.font = st.BODY_FONT
+        if k.startswith("⚠"):
+            cell.font = Font(bold=True, size=10, color=st.CRITICAL, name="Calibri")
+        if v.startswith("https://"):
+            c.font = st.LINK_FONT
+            c.hyperlink = v
+        ws.row_dimensions[i].height = 34 if len(v) > 120 else None
+    ws.row_dimensions[1].height = 36
+    st.narrative(ws, len(lines), cols=3)
     index_rows.append(["README", "What this file is, and the warning that it is generated", len(lines)])
 
     # ---- Change_Log ----------------------------------------------------------
@@ -368,9 +523,9 @@ def main() -> None:
              "reproduces all eight increase figures the town states in prose.")
 
     # ---- 8.0 the structural measures ----------------------------------------
-    st = ds("structure")
-    b = st.get("reading_burden", {})
-    sep = st.get("run_separately", {})
+    structure = ds("structure")
+    b = structure.get("reading_burden", {})
+    sep = structure.get("run_separately", {})
     add("8.0 Fact_Structure_Measures",
         ["Measure", "Value", "Unit", "Notes", "Source_ID", "Confidence"], [
             ["Governments a resident must read", b.get("governments_a_resident_must_read"),
@@ -491,10 +646,12 @@ def main() -> None:
             [[m["Organization_ID"]] + [m[y] for y in yrs]
              for m in cov["facts_by_org_and_year"]],
             "Facts per government per year. A thin year is a real hole.",
-            note="Hillsborough FY2018-FY2019 are thin because no DIGITAL audit has been "
-                 "obtained for those years — only scans, whose figures are published solely "
-                 "where a page's own arithmetic proves them. The fix is obtaining the "
-                 "digital originals, not more code.")
+            note="A thin year is a real hole. This note used to say Hillsborough FY2018-"
+                 "FY2019 were thin for want of a digital audit and that the fix was not more "
+                 "code — wrong twice: the town had sent everything it holds, and the gap was "
+                 "two defects in this pipeline (a scan-selection rule that preferred the "
+                 "smallest file, and line-banding that could not survive a 0.4° page "
+                 "rotation). Fixing them took FY2019 from 81 verified statement lines to 464.")
 
     add("Data_Quality_Gaps",
         ["Gap_ID", "Priority", "Topic", "Current Status", "Why It Matters",
@@ -507,10 +664,18 @@ def main() -> None:
 
     # ---- Index (her convention: last, listing every tab) ---------------------
     sheet(wb, "Index", ["Tab", "Purpose", "Rows"], index_rows,
-          note="Every tab in this workbook.")
+          note="Every tab in this workbook. Tab colours group them: blue = dimensions, "
+               "black = facts, green = sources, orange = coverage and open questions.",
+          widths=[32, 78, 9])
     wb.move_sheet("Index", offset=-(len(wb.sheetnames) - 1))
     wb.move_sheet("README", offset=-(len(wb.sheetnames) - 1))
+    cover(wb, index_rows, facts)
+    wb.move_sheet("MFAS", offset=-(len(wb.sheetnames) - 1))
 
+    st.set_properties(
+        wb, "MFAS Data Warehouse — Hillsborough & Orange County, NC",
+        "Every figure this project publishes, each traceable to a document and page.",
+        build_stamp())
     wb.save(OUT)
     # Fixed ZIP timestamps: without this two rebuilds of identical data still
     # differ byte-for-byte, and `git diff --stat data/` stays permanently dirty.
