@@ -253,10 +253,17 @@ def main() -> None:
         md.append(f"| {m['Organization_ID']} | "
                   + " | ".join(f"{m[y]:,}" for y in years) + " |")
     md += ["",
-           "A thin year is a real hole, not noise. Hillsborough FY2018-FY2019 are thin "
-           "because no DIGITAL audit has been obtained for those years — only scans, whose "
-           "figures are published solely where a page's own arithmetic proves them. The fix "
-           "is not more code: it is asking the town for the digital originals.",
+           "A thin year is a real hole, not noise. Hillsborough FY2017-FY2020 carry less "
+           "than the later years because they exist only as SCANS, whose figures are "
+           "published solely where a page's own arithmetic proves them. This paragraph "
+           "used to say the fix was not more code but asking the town for digital "
+           "originals — that was wrong twice over, and the correction is worth keeping. "
+           "The town HAD sent everything it has, and the gap was two defects here: a "
+           "scan-selection rule that preferred the smallest file (picking 1-bit fax "
+           "copies over 8-bit colour copies of the same report) and a fixed-grid line "
+           "banding that could not survive a 0.4-degree page rotation. Fixing both took "
+           "FY2019 from 81 verified statement lines to 464 and FY2020 from 95 to 460. "
+           "Before blaming a source, measure your own reader.",
            "",
            "## What is not read, and why", ""]
     for status, n in by_status.most_common():
