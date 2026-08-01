@@ -10,47 +10,47 @@
     2023,
     2024
   ],
-  "figures_compared": 1941,
-  "figures_identical": 1941,
+  "figures_compared": 5394,
+  "figures_identical": 5394,
   "figures_differing": 0,
   "agreement_pct": 100.0,
   "coverage_note": "'only_digital' and 'only_scan' are NOT errors: the two readers reach different amounts of a document, and a cell one found and the other did not is a coverage difference. It is reported separately so it cannot be mistaken for agreement.",
   "per_year": {
     "2018": {
-      "agree": 131,
+      "agree": 744,
       "disagree": 0,
-      "only_digital": 878,
-      "only_scan": 234,
+      "only_digital": 265,
+      "only_scan": 55,
       "disagreements": []
     },
     "2021": {
-      "agree": 656,
+      "agree": 1110,
       "disagree": 0,
-      "only_digital": 614,
-      "only_scan": 126,
+      "only_digital": 160,
+      "only_scan": 7,
       "disagreements": []
     },
     "2022": {
-      "agree": 483,
+      "agree": 1208,
       "disagree": 0,
-      "only_digital": 800,
-      "only_scan": 175,
+      "only_digital": 75,
+      "only_scan": 70,
       "disagreements": []
     },
     "2023": {
-      "agree": 405,
+      "agree": 1049,
       "disagree": 0,
-      "only_digital": 844,
-      "only_scan": 121,
+      "only_digital": 200,
+      "only_scan": 51,
       "disagreements": []
     },
     "2024": {
-      "agree": 266,
+      "agree": 1283,
       "disagree": 0,
-      "only_digital": 1238,
-      "only_scan": 282,
+      "only_digital": 221,
+      "only_scan": 89,
       "disagreements": []
     }
   },
-  "verdict": "1941/1941 figures identical (100.00%) across 5 year(s) read by two independent routes"
+  "verdict": "5394/5394 figures identical (100.00%) across 5 year(s) read by two independent routes"
 }

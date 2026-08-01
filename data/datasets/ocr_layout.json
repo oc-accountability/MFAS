@@ -24,6 +24,22 @@
       "pages_with_layout": 73
     },
     {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
+      "sha256": "846b43a917b02dd134f41f06789c47f03c1e9467553aa99b056eabcbb377e36e",
+      "layout_dir": "ocr-layout/846b43a917b02dd1-f5bcbe85",
+      "pages_total": 181,
+      "pages_with_layout": 77
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
+      "sha256": "b9a958bcede6b1aa442ee344ca52748c8e7f75d11cabc4b6f2a11bdbae3d2dbe",
+      "layout_dir": "ocr-layout/b9a958bcede6b1aa-f5bcbe85",
+      "pages_total": 163,
+      "pages_with_layout": 72
+    },
+    {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
       "sha256": "974877e4eaf280e8c07cb61245beed686ce2bd0f33d99c78dcb9ceec1d5a16d6",
@@ -54,22 +70,6 @@
       "layout_dir": "ocr-layout/dd2892d97a2e9ab8-f5bcbe85",
       "pages_total": 139,
       "pages_with_layout": 67
-    },
-    {
-      "document": "audit-2019",
-      "filename": "Audit 2019.pdf",
-      "sha256": "d16728eeb8977f71762bcd05f5510bd88af335aa0aaf28c2e1d6b9f405b1d2c1",
-      "layout_dir": "ocr-layout/d16728eeb8977f71-f5bcbe85",
-      "pages_total": 181,
-      "pages_with_layout": 77
-    },
-    {
-      "document": "audit-2020",
-      "filename": "Audit 2020.pdf",
-      "sha256": "2cfd3c8992367067880b981b65d20702a928652a49372fb8876b044c207e99dd",
-      "layout_dir": "ocr-layout/2cfd3c8992367067-f5bcbe85",
-      "pages_total": 163,
-      "pages_with_layout": 72
     },
     {
       "document": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",

@@ -63,6 +63,85 @@ JUR = "Town of Hillsborough, NC"
 BAND = 3.0
 
 
+def estimate_skew(words: list[dict]) -> float:
+    """Slope (dy/dx) of the page's text lines. Paper on a scanner is never square.
+
+    THIS IS THE SINGLE BIGGEST LIMIT ON READING A SCAN, and it took a while to see
+    because it does not look like a recognition problem at all — every word comes back
+    correct, and the page still yields nothing.
+
+    A digital PDF puts every word of a line at the same `top`, so bucketing by
+    `round(top / 3pt)` rebuilds rows perfectly. A scanned page is rotated by a fraction
+    of a degree, so `top` DRIFTS across the page: on FY2019 p46 the title row runs from
+    y=52.3 at the left margin to y=48.7 at the right, 3.6pt of drift over 490pt. Bucket
+    that on a fixed 3pt grid and one printed row lands in two or three different rows —
+    its label in one, half its figures in another. No group can then reconcile, because
+    the components and the printed total are no longer on the same row.
+
+    That is why FY2019 published 11 of 115 groups while its recognition was fine. The
+    symptom (`Exhibit Town of Hillsborough, North Carolina 5 of Revenues...` as a page
+    title) reads like garbled OCR and is actually a correct word list sorted by a y that
+    slopes.
+
+    Measured by projection profile: rotate by each candidate slope, histogram the word
+    centres onto horizontal lines, and keep the slope whose histogram is most PEAKED —
+    when the rotation is right, every word of a line falls in one bin. Scoring by sum of
+    squares (weighted by word width, so a long label counts more than a stray mark)
+    because that is maximised exactly when mass concentrates. On FY2019 p46 this finds
+    -0.401 deg and more than doubles the profile score.
+    """
+    if len(words) < 12:
+        return 0.0
+
+    def score(slope: float) -> float:
+        h: dict[int, float] = defaultdict(float)
+        for w in words:
+            xc = (w["x0"] + w["x1"]) / 2.0
+            yc = (w["top"] + w["bottom"]) / 2.0
+            h[round(yc - slope * xc)] += (w["x1"] - w["x0"])
+        return sum(v * v for v in h.values())
+
+    # +-0.03 rad (~1.7 deg) in 0.0005 steps: wider than any scanner feed produces,
+    # fine enough that the residual drift across a page is under a point.
+    return max((i / 2000.0 for i in range(-60, 61)), key=score)
+
+
+def deskew(words: list[dict]) -> list[dict]:
+    """Words with `top`/`bottom` corrected so a printed line is horizontal."""
+    slope = estimate_skew(words)
+    if not slope:
+        return words
+    out = []
+    for w in words:
+        shift = slope * ((w["x0"] + w["x1"]) / 2.0)
+        out.append({**w, "top": w["top"] - shift, "bottom": w["bottom"] - shift})
+    return out
+
+
+def line_bands(words: list[dict]) -> list[list[dict]]:
+    """Cluster words into printed lines by proximity, not by a fixed grid.
+
+    Even on a deskewed page a fixed `round(top / BAND)` grid splits any line that
+    happens to straddle a bucket boundary. Clustering on the gap between successive
+    word centres has no boundaries to straddle: a new line starts only where the
+    vertical gap exceeds BAND.
+    """
+    if not words:
+        return []
+    ordered = sorted(words, key=lambda w: (w["top"] + w["bottom"]) / 2.0)
+    bands, cur = [], [ordered[0]]
+    prev = (ordered[0]["top"] + ordered[0]["bottom"]) / 2.0
+    for w in ordered[1:]:
+        yc = (w["top"] + w["bottom"]) / 2.0
+        if yc - prev > BAND:
+            bands.append(cur)
+            cur = []
+        cur.append(w)
+        prev = yc
+    bands.append(cur)
+    return bands
+
+
 def page_from_words(words: list[dict]):
     """Rebuild the (words, char-tokens) band structure statement_parser expects.
 
@@ -72,13 +151,9 @@ def page_from_words(words: list[dict]):
     also what repairs the single most common recognition artefact in these documents,
     a thousands separator read as a space ("8,940 238" for 8,940,238).
     """
-    bands: dict[int, list] = defaultdict(list)
-    for w in words:
-        bands[round(w["top"] / BAND)].append(w)
-
     out = []
-    for key in sorted(bands):
-        ws = sorted(bands[key], key=lambda w: w["x0"])
+    for band in line_bands(deskew(words)):
+        ws = sorted(band, key=lambda w: w["x0"])
         toks: list[dict] = []
         for w in ws:
             digit_x1 = w["x1"] if any(c.isdigit() for c in w["text"]) else None
@@ -116,9 +191,18 @@ def parse_layout_page(words: list[dict], page_no: int):
 
 
 def page_title(words: list[dict]) -> str:
-    """The top-of-page text, for statement identification."""
-    top = sorted(words, key=lambda w: (round(w["top"] / BAND), w["x0"]))[:40]
-    return " ".join(w["text"] for w in top)
+    """The top-of-page text, for statement identification.
+
+    Deskewed for the same reason as the rows: on a sloping page a plain (top, x0) sort
+    interleaves the right-hand exhibit number into the left-hand title, and the title is
+    what decides whether a page is read at all.
+    """
+    out: list[str] = []
+    for band in line_bands(deskew(words)):
+        out.extend(w["text"] for w in sorted(band, key=lambda w: w["x0"]))
+        if len(out) >= 40:
+            break
+    return " ".join(out[:40])
 
 
 def main() -> None:

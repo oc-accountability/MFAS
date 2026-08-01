@@ -93,10 +93,29 @@ def main() -> None:
     # reproduce text it already had, and would then have offered the warehouse two
     # competing scan-derived readings of the same year — which is worse than slow.
     #
-    # Preference is deliberate and in this order: a document ALREADY recognised beats
-    # an equivalent one that is not, then the smaller file. The size tiebreak alone
-    # would have picked the newly-arrived FY2019 re-send over the byte-equivalent scan
-    # already sitting in the cache, and paid 181 pages of recognition for nothing.
+    # Preference is by SCAN FIDELITY first, and this is the part that was wrong.
+    #
+    # The first version preferred the SMALLEST file, to save recognition time. That is
+    # the "slot not thing" bug again — file size describes the encoding, not the
+    # document — and it cost two fiscal years of data. We hold FY2019 twice: a 9.6 MB
+    # copy whose pages are 1-bit CCITT fax images, and a 101 MB copy whose pages are
+    # 8-bit colour at the same 300 dpi. The size rule picked the fax copy. Measured on
+    # page 46 (Exhibit 5, budget and actual) the fax copy misreads three figures the
+    # colour copy gets right:
+    #
+    #     Total revenues, final budget      9,319,110  ->  9,349,110
+    #     Transportation, final budget      1,106,124  -> 41,106,124
+    #     Community activities, original      308,161  ->    308,164
+    #
+    # The arithmetic gate caught all three and withheld their columns, exactly as
+    # designed — so the damage was silent and looked like a bad scan rather than a bad
+    # choice of scan. FY2019 published 81 verified lines where a digital year publishes
+    # 570-970. Bitonal fax compression throws away the greyscale that separates a 1 from
+    # a 4 in a thin serif digit; no amount of recognition tuning gets it back.
+    #
+    # So: rank on bits-per-pixel actually stored in the page images, then on pixel area,
+    # and only then prefer an already-cached copy. Fidelity is measured from the file's
+    # own images rather than inferred from its size.
     #
     # Note what is deliberately NOT skipped here: a scan whose year we also hold
     # DIGITALLY. Recognising it is free once cached, and it is the ground truth stage
@@ -136,20 +155,63 @@ def main() -> None:
     def already_cached(d):
         return any((BUILD / "ocr").glob(f"{d['sha256'][:16]}-*/p0001.txt"))
 
+    _fidelity_cache: dict[str, tuple[int, int]] = {}
+
+    def scan_fidelity(d) -> tuple[int, int]:
+        """(bits stored per pixel, pixels per page) sampled from the file's own images.
+
+        Read from the PDF rather than guessed from its size: a 1-bit CCITT page and an
+        8-bit colour page of the same statement can differ 10x in bytes and 0x in dpi,
+        and it is the BIT DEPTH that decides whether a thin '1' survives as a 1.
+        Sampled over a mid-document window because front matter is often a different
+        scan from the statements. Returns (0, 0) when the probe fails, which ranks the
+        candidate last without crashing the build.
+        """
+        h = d["sha256"]
+        if h in _fidelity_cache:
+            return _fidelity_cache[h]
+        src = SOURCES / d["archive_path"]
+        best = (0, 0)
+        try:
+            out = subprocess.run(["pdfimages", "-list", "-f", "40", "-l", "50", str(src)],
+                                 capture_output=True, text=True, timeout=120).stdout
+            for line in out.splitlines()[2:]:
+                f = line.split()
+                if len(f) < 8:
+                    continue
+                try:
+                    w, ht, comps, bpc = int(f[3]), int(f[4]), int(f[6]), int(f[7])
+                except ValueError:
+                    continue
+                best = max(best, (comps * bpc, w * ht))
+        except Exception:
+            pass
+        _fidelity_cache[h] = best
+        return best
+
     chosen: dict[int, dict] = {}
     year_dupes = []
+    # Negated fidelity so that ascending sort puts the HIGHEST-fidelity copy first;
+    # already_cached is only a tiebreak between copies of equal fidelity, never a
+    # reason to keep reading a worse one.
     for d in sorted(targets, key=lambda x: (report_year(x) or 0,
+                                            tuple(-v for v in scan_fidelity(x)),
                                             0 if already_cached(x) else 1,
                                             x["bytes"])):
         if not ANNUAL.search(d["filename"]):
             continue                       # not an annual report: never a duplicate
         fy = report_year(d)
         if fy and fy in chosen:
+            kept, drop = scan_fidelity(chosen[fy]), scan_fidelity(d)
             year_dupes.append({"document": d["id"], "fiscal_year": fy,
-                               "reason": f"another scan of FY{fy} is already recognised "
-                                         f"({chosen[fy]['id']}) — same report, and "
-                                         f"recognising it twice would give the warehouse "
-                                         f"two competing scan-derived readings"})
+                               "chosen_instead": chosen[fy]["id"],
+                               "chosen_bits_per_pixel": kept[0],
+                               "this_bits_per_pixel": drop[0],
+                               "reason": f"a higher-fidelity scan of FY{fy} is used instead "
+                                         f"({chosen[fy]['id']}, {kept[0]} bits/pixel vs "
+                                         f"{drop[0]}) — same report, and recognising both "
+                                         f"would give the warehouse two competing "
+                                         f"scan-derived readings"})
             continue
         if fy:
             chosen[fy] = d

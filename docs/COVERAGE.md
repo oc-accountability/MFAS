@@ -4,14 +4,14 @@
 
 - **118** documents in the archive
 - **24** contribute facts to the warehouse
-- **22,474** facts, traceable to a document and (where the source prints one) a page
+- **23,569** facts, traceable to a document and (where the source prints one) a page
 - **37** documents remain genuinely unread — the backlog below
 
 ## Facts by government and year
 
 | Organization | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 | 2028 | 2029 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| ORG_HB | 129 | 275 | 14 | 103 | 313 | 265 | 241 | 354 | 983 | 760 | 760 | 752 | 752 |
+| ORG_HB | 129 | 275 | 209 | 255 | 313 | 265 | 241 | 354 | 983 | 760 | 760 | 752 | 752 |
 | ORG_OC | 0 | 811 | 811 | 794 | 134 | 820 | 884 | 1,045 | 1,024 | 0 | 0 | 0 | 0 |
 
 A thin year is a real hole, not noise. Hillsborough FY2018-FY2019 are thin because no DIGITAL audit has been obtained for those years — only scans, whose figures are published solely where a page's own arithmetic proves them. The fix is not more code: it is asking the town for the digital originals.

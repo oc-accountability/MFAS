@@ -4,7 +4,7 @@
   "how_to_read_this": "facts_total is what a document actually contributes. A zero is explained by status, and only 'not-yet-read' is a gap in the work — the others are documents with nothing to load, Amy's own design files, or scans superseded by a digital original.",
   "documents_total": 118,
   "documents_contributing": 24,
-  "facts_total": 22474,
+  "facts_total": 23569,
   "by_status": {
     "not-yet-read": 37,
     "no-figures": 30,
@@ -243,8 +243,8 @@
       "Organization_ID": "ORG_HB",
       "FY2017": 129,
       "FY2018": 275,
-      "FY2019": 14,
-      "FY2020": 103,
+      "FY2019": 209,
+      "FY2020": 255,
       "FY2021": 313,
       "FY2022": 265,
       "FY2023": 241,
@@ -277,16 +277,6 @@
       "Organization_ID": "ORG_HB",
       "Fiscal_Year_ID": "FY2017",
       "facts": 129
-    },
-    {
-      "Organization_ID": "ORG_HB",
-      "Fiscal_Year_ID": "FY2019",
-      "facts": 14
-    },
-    {
-      "Organization_ID": "ORG_HB",
-      "Fiscal_Year_ID": "FY2020",
-      "facts": 103
     },
     {
       "Organization_ID": "ORG_OC",
@@ -1347,13 +1337,13 @@
       "fiscal_year": 2019,
       "values_extractable": false,
       "official_url": null,
-      "facts_total": 0,
-      "Fact_Financial": 0,
+      "facts_total": 667,
+      "Fact_Financial": 203,
       "Fact_Metric": 0,
-      "Fact_Statement_Line": 0,
-      "other_datasets_citing": 1,
-      "status": "no-figures",
-      "why": "no extractable figures — nothing in it to load"
+      "Fact_Statement_Line": 464,
+      "other_datasets_citing": 4,
+      "status": "read",
+      "why": ""
     },
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
@@ -1363,13 +1353,13 @@
       "fiscal_year": 2020,
       "values_extractable": false,
       "official_url": null,
-      "facts_total": 0,
-      "Fact_Financial": 0,
+      "facts_total": 709,
+      "Fact_Financial": 249,
       "Fact_Metric": 0,
-      "Fact_Statement_Line": 0,
-      "other_datasets_citing": 1,
-      "status": "no-figures",
-      "why": "no extractable figures — nothing in it to load"
+      "Fact_Statement_Line": 460,
+      "other_datasets_citing": 4,
+      "status": "read",
+      "why": ""
     },
     {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
@@ -1459,13 +1449,13 @@
       "fiscal_year": 2019,
       "values_extractable": false,
       "official_url": null,
-      "facts_total": 89,
-      "Fact_Financial": 8,
+      "facts_total": 0,
+      "Fact_Financial": 0,
       "Fact_Metric": 0,
-      "Fact_Statement_Line": 81,
-      "other_datasets_citing": 4,
-      "status": "read",
-      "why": ""
+      "Fact_Statement_Line": 0,
+      "other_datasets_citing": 1,
+      "status": "no-figures",
+      "why": "no extractable figures — nothing in it to load"
     },
     {
       "document": "audit-2020",
@@ -1475,13 +1465,13 @@
       "fiscal_year": 2020,
       "values_extractable": false,
       "official_url": null,
-      "facts_total": 192,
-      "Fact_Financial": 97,
+      "facts_total": 0,
+      "Fact_Financial": 0,
       "Fact_Metric": 0,
-      "Fact_Statement_Line": 95,
-      "other_datasets_citing": 4,
-      "status": "read",
-      "why": ""
+      "Fact_Statement_Line": 0,
+      "other_datasets_citing": 1,
+      "status": "no-figures",
+      "why": "no extractable figures — nothing in it to load"
     },
     {
       "document": "audit-2021",

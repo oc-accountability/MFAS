@@ -25,6 +25,24 @@
       "chars_per_page": 2268
     },
     {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
+      "sha256": "846b43a917b02dd134f41f06789c47f03c1e9467553aa99b056eabcbb377e36e",
+      "text_dir": "ocr/846b43a917b02dd1-a86053cd",
+      "pages": 181,
+      "chars": 439400,
+      "chars_per_page": 2428
+    },
+    {
+      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
+      "sha256": "b9a958bcede6b1aa442ee344ca52748c8e7f75d11cabc4b6f2a11bdbae3d2dbe",
+      "text_dir": "ocr/b9a958bcede6b1aa-a86053cd",
+      "pages": 163,
+      "chars": 434279,
+      "chars_per_page": 2664
+    },
+    {
       "document": "annual-comprehensive-financial-report-year-ended-june-30-2021",
       "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
       "sha256": "974877e4eaf280e8c07cb61245beed686ce2bd0f33d99c78dcb9ceec1d5a16d6",
@@ -61,24 +79,6 @@
       "chars_per_page": 2798
     },
     {
-      "document": "audit-2019",
-      "filename": "Audit 2019.pdf",
-      "sha256": "d16728eeb8977f71762bcd05f5510bd88af335aa0aaf28c2e1d6b9f405b1d2c1",
-      "text_dir": "ocr/d16728eeb8977f71-a86053cd",
-      "pages": 181,
-      "chars": 442109,
-      "chars_per_page": 2443
-    },
-    {
-      "document": "audit-2020",
-      "filename": "Audit 2020.pdf",
-      "sha256": "2cfd3c8992367067880b981b65d20702a928652a49372fb8876b044c207e99dd",
-      "text_dir": "ocr/2cfd3c8992367067-a86053cd",
-      "pages": 163,
-      "chars": 435445,
-      "chars_per_page": 2671
-    },
-    {
       "document": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
       "filename": "RES-2022-041-A Resolution regarding continued uses of revenues from a one q.pdf",
       "sha256": "2d696c0b614d79d4ad3f68796d617ad6757f23a7d5d95185daf409c90620536f",
@@ -98,24 +98,36 @@
       "reason": "duplicate with no recoverable content"
     },
     {
-      "document": "cafr-issued-toh-fy2019",
+      "document": "audit-2019",
       "fiscal_year": 2019,
-      "reason": "another scan of FY2019 is already recognised (audit-2019) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
+      "chosen_instead": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "chosen_bits_per_pixel": 24,
+      "this_bits_per_pixel": 1,
+      "reason": "a higher-fidelity scan of FY2019 is used instead (annual-comprehensive-financial-report-year-ended-june-30-2019, 24 bits/pixel vs 1) — same report, and recognising both would give the warehouse two competing scan-derived readings"
     },
     {
-      "document": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "document": "cafr-issued-toh-fy2019",
       "fiscal_year": 2019,
-      "reason": "another scan of FY2019 is already recognised (audit-2019) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
+      "chosen_instead": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "chosen_bits_per_pixel": 24,
+      "this_bits_per_pixel": 1,
+      "reason": "a higher-fidelity scan of FY2019 is used instead (annual-comprehensive-financial-report-year-ended-june-30-2019, 24 bits/pixel vs 1) — same report, and recognising both would give the warehouse two competing scan-derived readings"
+    },
+    {
+      "document": "audit-2020",
+      "fiscal_year": 2020,
+      "chosen_instead": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "chosen_bits_per_pixel": 24,
+      "this_bits_per_pixel": 1,
+      "reason": "a higher-fidelity scan of FY2020 is used instead (annual-comprehensive-financial-report-year-ended-june-30-2020, 24 bits/pixel vs 1) — same report, and recognising both would give the warehouse two competing scan-derived readings"
     },
     {
       "document": "town-of-hillsborough-issued-cafr-fy20-002",
       "fiscal_year": 2020,
-      "reason": "another scan of FY2020 is already recognised (audit-2020) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
-    },
-    {
-      "document": "annual-comprehensive-financial-report-year-ended-june-30-2020",
-      "fiscal_year": 2020,
-      "reason": "another scan of FY2020 is already recognised (audit-2020) — same report, and recognising it twice would give the warehouse two competing scan-derived readings"
+      "chosen_instead": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "chosen_bits_per_pixel": 24,
+      "this_bits_per_pixel": 1,
+      "reason": "a higher-fidelity scan of FY2020 is used instead (annual-comprehensive-financial-report-year-ended-june-30-2020, 24 bits/pixel vs 1) — same report, and recognising both would give the warehouse two competing scan-derived readings"
     }
   ],
   "total_pages": 1074,
