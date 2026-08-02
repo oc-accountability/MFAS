@@ -175,7 +175,7 @@ def sheet(wb, title, headers, rows, note=None, widths=None):
     return ws
 
 
-def cover(wb, index_rows, facts):
+def cover(wb, index_rows, facts, exported_facts, FACT_TABS):
     """The first thing anyone sees — and the only sheet here that is purely identity.
 
     It earns its place by carrying the three things a reader needs before they trust a
@@ -212,11 +212,17 @@ def cover(wb, index_rows, facts):
                      "at all. The build fails rather than guess."),
         ("Tabs", f"{len(wb.sheetnames)} — see Index. Colour-coded: blue dimensions, black "
                  f"facts, green sources, orange coverage and open questions."),
-        ("Facts", (f"{cov.get('facts_total'):,} published figures, from "
+        # COUNTED FROM THE TABS THIS FILE ACTUALLY CONTAINS.
+        #
+        # This used to print coverage.json's `facts_total`, which counts only rows whose
+        # source resolves to an archive document — so the cover said 23,569 while the
+        # three fact tabs held 24,251. And the test compared the cover with coverage.json,
+        # which made two partial views agree with each other instead of either agreeing
+        # with the workbook. A cover total must be a count of what is in the file.
+        ("Facts", (f"{exported_facts:,} published figures across "
+                   f"{len(FACT_TABS)} fact tabs, from "
                    f"{cov.get('documents_contributing')} of "
-                   f"{cov.get('documents_total')} documents in the archive"
-                   if cov.get("facts_total") else
-                   f"{len(facts):,} in Fact_Published_Figures")),
+                   f"{cov.get('documents_total')} documents in the archive")),
         ("Still unread", (f"{cov.get('backlog_count')} documents — listed in "
                           f"Coverage_By_Document. A gap is published, not hidden."
                           if cov.get("backlog_count") else "")),
@@ -671,7 +677,16 @@ def main() -> None:
           widths=[32, 78, 9])
     wb.move_sheet("Index", offset=-(len(wb.sheetnames) - 1))
     wb.move_sheet("README", offset=-(len(wb.sheetnames) - 1))
-    cover(wb, index_rows, facts)
+    # The three tabs whose rows ARE the published facts.
+    #
+    # Counted from `index_rows`, which records what `add()` actually wrote, NOT from
+    # `worksheet.max_row`: every one of these tabs carries a caveat note on row 1 and its
+    # header on row 2, so `max_row - 1` counts the header as data and overstated the
+    # total by exactly one per tab. A cover three too high is the same class of error as
+    # one 682 too low.
+    FACT_TABS = ('Fact_Financial', 'Fact_Metric', 'Fact_Statement_Line')
+    exported_facts = sum(n for t, _purpose, n in index_rows if t in FACT_TABS)
+    cover(wb, index_rows, facts, exported_facts, FACT_TABS)
     wb.move_sheet("MFAS", offset=-(len(wb.sheetnames) - 1))
 
     st.set_properties(

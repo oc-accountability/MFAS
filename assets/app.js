@@ -688,7 +688,42 @@ function utilMonthly() {
   return { exact: false, gallons: level === 'min' ? 2000 : 4000,
            water: w, sewer: s, total: (w || 0) + (s || 0) };
 }
-function annualTax() {
+/* Removing the town tax from an out-of-town bill fixes an OVERSTATEMENT and must not
+   quietly create an UNDERSTATEMENT in its place. An Orange County bill outside a
+   municipality still carries a fire district tax, and in part of the county a school
+   district tax as well. Those vary by district and this page does not resolve an address
+   to a district, so the rates are not applied — the gap is named instead of guessed,
+   which is the same rule the rest of the site runs on. */
+const OUT_OF_TOWN_CAVEAT =
+  `<span class="soft">This is the county levy only. An Orange County bill outside a
+   municipality also carries a <strong>fire district tax</strong>, and in the
+   Chapel Hill-Carrboro school district a <strong>special district tax</strong> as well —
+   both vary by where the property sits, and this page does not work out which district an
+   address falls in, so neither is included above.</span>`;
+
+/** The TOWN's share — charged only to a home inside the town limits.
+ *
+ * This returned the town tax unconditionally until 2026-08-01, so a household that
+ * answered "No, outside" was still shown the town's levy: at a $500,000 assessment the
+ * page said $5,944 when the answer was $3,379, an overstatement of $2,565 a year (76%).
+ * The page asks where the home is, promises "what your property tax actually costs you",
+ * and then ignored the answer — on its primary trust surface.
+ *
+ * Orange County's own explainer is the authority for the rule, in its words:
+ * "all taxpayers in the county will pay the Orange County tax due. Taxpayers who live
+ * within the municipal boundaries of Chapel Hill, Carrboro, Hillsborough, and Mebane
+ * will ALSO have a tax due to one of those municipalities."
+ * (Understanding Your Property Tax Bill, Orange County, 1 Aug 2025.)
+ */
+function townTax() {
+  if (state.location !== 'intown') return 0;
+  const rate = val('property_tax_rate');
+  return rate == null ? null : state.homeValue / 100 * (rate / 100);
+}
+/* Kept as the unconditional town levy, for the "one cent on the tax rate" and FY-scenario
+   rows, which are town POLICY comparisons rather than components of this household's
+   bill. Never use it for the headline — that is the bug above. */
+function townLevyIfInTown() {
   const rate = val('property_tax_rate');
   return rate == null ? null : state.homeValue / 100 * (rate / 100);
 }
@@ -698,7 +733,7 @@ function countyTax() {
   return rate == null ? null : state.homeValue / 100 * (rate / 100);
 }
 function totalPropertyTax() {
-  const t = annualTax(), c = countyTax();
+  const t = townTax(), c = countyTax();
   if (t == null) return null;
   return c == null ? t : t + c;
 }
@@ -861,7 +896,7 @@ function renderYou(host) {
   function draw(animate) {
     state.homeValue = Math.min(1e9, Math.max(0, +num.value || 0));
     drawWelcome();
-    const annual = annualTax();
+    const annual = townTax();
     const county = countyTax();
     const oneCent = state.homeValue / 100 * 0.01;
     const u = utilMonthly();
@@ -872,13 +907,23 @@ function renderYou(host) {
     const countyR = county != null ? Math.round(county) : null;
     const total = annualR + (countyR || 0);
 
+    const inTown = state.location === 'intown';
     setFigure($('#heroV', sec), total, animate);
-    $('#heroN', sec).innerHTML = county != null
-      ? `That is <strong>${usd(total / 12)} a month</strong> — ${usd(annualR)} to the town at
-         ${cents(rateF.value)} cents per $100, plus ${usd(countyR)} to Orange County at
-         ${cents(cRate.value)} cents. Sources: ${cite(rateF)} and ${cite(cRate)}.`
-      : `That is <strong>${usd(annualR / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
-         ${cents(rateF.value)} cents per $100 of value. Source: ${cite(rateF)}.`;
+    $('#heroN', sec).innerHTML = !inTown
+      ? (county != null
+        ? `That is <strong>${usd(countyR / 12)} a month</strong>, all of it to Orange County at
+           ${cents(cRate.value)} cents per $100. <strong>No town property tax</strong> — the
+           county's own bill explainer puts it plainly: every taxpayer in the county pays the
+           county tax, and only those inside Chapel Hill, Carrboro, Hillsborough or Mebane
+           <em>also</em> pay a municipal tax. Source: ${cite(cRate)}.
+           ${OUT_OF_TOWN_CAVEAT}`
+        : '')
+      : county != null
+        ? `That is <strong>${usd(total / 12)} a month</strong> — ${usd(annualR)} to the town at
+           ${cents(rateF.value)} cents per $100, plus ${usd(countyR)} to Orange County at
+           ${cents(cRate.value)} cents. Sources: ${cite(rateF)} and ${cite(cRate)}.`
+        : `That is <strong>${usd(annualR / 12)} a month</strong>, at the FY${rateF.fiscal_year} rate of
+           ${cents(rateF.value)} cents per $100 of value. Source: ${cite(rateF)}.`;
 
     /* "The town rate did not change" is measured against the prior year's published
        rate, never asserted: when the two years are not both in the data, the claim
@@ -890,8 +935,10 @@ function renderYou(host) {
         : rc.delta > 0 ? ` — the town rate rose ${cents(rc.delta)} cents`
           : ` — the town rate fell ${cents(-rc.delta)} cents`;
     const rows = [];
-    rows.push(['Town of Hillsborough', `<small>FY${rateF.fiscal_year}${rateNote}</small>`,
-      usd(annualR) + ' / yr']);
+    if (inTown) {
+      rows.push(['Town of Hillsborough', `<small>FY${rateF.fiscal_year}${rateNote}</small>`,
+        usd(annualR) + ' / yr']);
+    }
     if (county != null) {
       const inc = val('county_tax_rate_increase_cents');
       rows.push(['Orange County',
@@ -1115,7 +1162,7 @@ async function offerCopy(btn, text, restoreLabel) {
 function takeawayHTML() {
   const rateF = one('property_tax_rate'), cRate = one('county_property_tax_rate');
   if (!rateF) return '';
-  const annual = annualTax(), county = countyTax();
+  const annual = townTax(), county = countyTax();
   /* Headline = sum of the rounded rows below it. The sheet invites checking with a
      calculator, and rounding the exact total separately handed over a $1
      self-inconsistency at many home values. */
@@ -1129,8 +1176,13 @@ function takeawayHTML() {
 
   const row = (k, v, note) => `<tr><th>${k}${note ? `<small>${note}</small>` : ''}</th>
     <td>${v}</td></tr>`;
-  const rows = [row('Town of Hillsborough', usd(annualR) + ' / yr',
-    `${cents(rateF.value)} cents per $100 of assessed value, FY${rateF.fiscal_year}`)];
+  /* The printout must match the screen exactly. When the town row is suppressed on
+     screen and kept here, the sheet a reader carries into a meeting is the wrong one —
+     which is worse than no sheet. */
+  const rows = state.location === 'intown'
+    ? [row('Town of Hillsborough', usd(annualR) + ' / yr',
+        `${cents(rateF.value)} cents per $100 of assessed value, FY${rateF.fiscal_year}`)]
+    : [];
   if (county != null) rows.push(row('Orange County', usd(countyR) + ' / yr',
     `${cents(cRate.value)} cents per $100, FY${cRate.fiscal_year}`));
   if (u.exact) {
@@ -1273,9 +1325,15 @@ function setFigure(el, target, animate) {
  * re-rendering everything on each keystroke would tear down the input the reader
  * is currently typing into and lose focus and caret position. */
 let _refreshTimer = null;
+let _explorerRepaint = null;
 function refreshDependents() {
   const pf = $('#paysforAnswer');
   if (pf) pf.innerHTML = paysForAnswer();
+  /* The spending explorer prints a "of yours" share against every department, computed
+     from the town tax. Changing the in/out-of-town answer changes that to
+     not-applicable, and without this the explorer kept the previous answer's figures
+     until the reader happened to touch one of its own controls. */
+  if (typeof _explorerRepaint === 'function') _explorerRepaint();
   clearTimeout(_refreshTimer);
   _refreshTimer = setTimeout(() => {
     const old = document.getElementById('coming');
@@ -1290,8 +1348,18 @@ function refreshDependents() {
 /* ==================== 02 — what it pays for ==================== */
 function paysForAnswer() {
   const gf = one('general_fund_expenditures'), total = one('total_budget');
-  const annual = annualTax();
+  const annual = townTax();
   if (!gf || !total || annual == null) return '';
+  /* Out of town this sentence used to open "Your $2,565 in town property tax", to a
+     household that pays the town nothing. */
+  if (state.location !== 'intown') {
+    return `You pay <strong>no town property tax</strong> — the home is outside the town
+      limits. The town's <strong>General Fund</strong> is
+      <span class="fig">${compact(gf.value)}</span> of its
+      <span class="fig">${compact(total.value)}</span> total budget, funded by the
+      households and businesses inside the limits. <span class="soft">Your water, sewer and
+      stormwater bills are charged separately and are not tax money.</span>`;
+  }
   return `Your <span class="fig">${usd(annual)}</span> in town property tax goes into the
     <strong>General Fund</strong> — <span class="fig">${compact(gf.value)}</span> of the town's
     <span class="fig">${compact(total.value)}</span> total. <span class="soft">Your water, sewer and
@@ -1690,7 +1758,7 @@ function renderExplorer(host) {
     }
     const depts = [...byDept.entries()].sort((a, b) => b[1].total - a[1].total);
     const max = depts.length ? depts[0][1].total : 1;
-    const yourTax = annualTax() || 0;
+    const yourTax = townTax() || 0;
     const verified = sliceVerified(st.fund, st.fy, st.basis);
     const taxFunded = st.fund === 'General Fund';
 
@@ -1723,7 +1791,10 @@ function renderExplorer(host) {
       </p>
       <ul class="spend">${depts.map(([name, e]) => {
         const pct = total ? e.total / total * 100 : 0;
-        const yours = taxFunded && total ? yourTax * (e.total / total) : null;
+        /* yourTax is 0 outside the town limits; without the guard every department
+           row rendered "$0 of yours", which reads as a measurement rather than as
+           not-applicable. */
+        const yours = taxFunded && total && yourTax ? yourTax * (e.total / total) : null;
         const isOpen = st.open === name;
         const accounts = [...e.rows].sort((a, b) => b[C.value] - a[C.value]);
         return `<li>
@@ -1802,6 +1873,7 @@ function renderExplorer(host) {
     wrap.appendChild(fr);
   }
   draw();
+  _explorerRepaint = draw;
 }
 
 /* ==================== 03 — is the money healthy? ==================== */

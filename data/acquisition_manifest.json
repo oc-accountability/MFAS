@@ -1,0 +1,2143 @@
+{
+  "generated_by": "etl/s105_acquisition_manifest.py",
+  "purpose": "Everything a third party needs to assemble and PROVE the identical source archive this project's figures were read from.",
+  "why_the_sources_are_not_in_the_repository": "945 MiB across 118 documents; one file exceeds GitHub's 100 MiB per-file limit and Git LFS's free tier would not survive public traffic. The manifest is the substitute: assemble the files, hash them, and a match proves your copy is the one the figures came from.",
+  "honesty_note": "No URL here is inferred. A plausible link that resolves to a different revision of the same report would be worse than a blank, because a reader who followed it and found different numbers would have been actively misled. Documents with no recorded address are counted, not filled in.",
+  "documents_total": 118,
+  "documents_with_official_url": 0,
+  "documents_needing_official_url": 118,
+  "archive_bytes": 991167169,
+  "verify": "sha256sum -c after placing files in sources/; `make etl` then reproduces data/ byte-for-byte.",
+  "needs_official_url_by_authority": {
+    "Orange County Efficiency & Accountability Initiative": 10,
+    "Orange County, North Carolina": 38,
+    "Town of Chapel Hill, North Carolina": 13,
+    "Town of Hillsborough, North Carolina": 57
+  },
+  "documents": [
+    {
+      "source_id": "1-d-historical-chccs-district-tax",
+      "filename": "1-D - Historical CHCCS District Tax.pdf",
+      "sha256": "65e97bd05aac233f30fd5dcc18717eb73ec6654e08618de0ee64804d5d6ab35c",
+      "bytes": 15534,
+      "media_type": "application/pdf",
+      "pages": 1,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2017-2018-comprehensive-annual-financial-report",
+      "filename": "2017-2018-comprehensive-annual-financial-report.pdf",
+      "sha256": "f58521fc67fcfd7cab63f636a191141195304cf13725a1a73fe53c2d372bf602",
+      "bytes": 1560252,
+      "media_type": "application/pdf",
+      "pages": 210,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2018-2019-comprehensive-annual-financial-report",
+      "filename": "2018-2019-comprehensive-annual-financial-report.pdf",
+      "sha256": "2c83dd4af5e5cf06af9199db698e513f64570468595b8c95ad297d3eaf5d8128",
+      "bytes": 1848655,
+      "media_type": "application/pdf",
+      "pages": 210,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2019-2020-comprehensive-annual-financial-report",
+      "filename": "2019-2020-comprehensive-annual-financial-report.pdf",
+      "sha256": "85ce7a1da9ba84f288d315f0e1629c0de0496efea84c8c0267f2dd09ed0c880d",
+      "bytes": 2219971,
+      "media_type": "application/pdf",
+      "pages": 210,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2020-2021-annual-comprehensive-financial-report",
+      "filename": "2020-2021-annual-comprehensive-financial-report.pdf",
+      "sha256": "63f94a2ca97e89b180aba0bcbf3d7710b83cfea7118ae09e755ff8737329003d",
+      "bytes": 3477441,
+      "media_type": "application/pdf",
+      "pages": 214,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2021-2022-annual-comprehensive-financial-report",
+      "filename": "2021-2022-annual-comprehensive-financial-report.pdf",
+      "sha256": "120764813feed4c12cf3559936f32fec3fde2047d995d55f4ab0235ed7f00469",
+      "bytes": 3013641,
+      "media_type": "application/pdf",
+      "pages": 226,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2022-2023-annual-comprehensive-financial-report",
+      "filename": "2022-2023-annual-comprehensive-financial-report.pdf",
+      "sha256": "10b0d940c8b7a80af7c9f34cfe66508f34760609dea80e8f6bd9f5cbe8174332",
+      "bytes": 2998094,
+      "media_type": "application/pdf",
+      "pages": 230,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2023-2024-annual-comprehensive-financial-report",
+      "filename": "2023-2024-annual-comprehensive-financial-report.pdf",
+      "sha256": "372443505b48cdbccd75c4aafa0830ea32fa28262bd687f270473bb469c27a28",
+      "bytes": 2934065,
+      "media_type": "application/pdf",
+      "pages": 226,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "2024-2025-annual-comprehensive-financial-report",
+      "filename": "2024-2025-annual-comprehensive-financial-report.pdf",
+      "sha256": "8733b8ca7090603496f1563700e1a4044c164d541d18e2d2d2b57df732ff95b1",
+      "bytes": 2754757,
+      "media_type": "application/pdf",
+      "pages": 216,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "202526-adopted-budget",
+      "filename": "202526-adopted-budget.pdf",
+      "sha256": "de46eb03dab78b19ccd22cc33d66d2cf58ad2a2f09b40ab8a4a58bc592739fd4",
+      "bytes": 15034245,
+      "media_type": "application/pdf",
+      "pages": 335,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "chapel-hill-public-library-funding-transition-key-facts",
+      "filename": "Chapel Hill Public Library Funding Transition- Key Facts.pdf",
+      "sha256": "aaa08161b9823a6bb86b9f57d7181d75c2daf119c32e5c3ac72db28704f71c39",
+      "bytes": 79990,
+      "media_type": "application/pdf",
+      "pages": 1,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "ch-2020-comp-plan-final-version-edits-72012",
+      "filename": "ch-2020-comp-plan-final-version-edits-72012.pdf",
+      "sha256": "fd9daa38d56665298f84c266f423ad64932cc66d6c699f3a8df5bebe075b3b54",
+      "bytes": 4383082,
+      "media_type": "application/pdf",
+      "pages": 104,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy2026-27-managers-recommended-budget-2",
+      "filename": "fy2026-27-managers-recommended-budget.pdf",
+      "sha256": "29e4f6874469345436371e89f0ed7dba73a9ad6c0948885686b59c19b41ed8d7",
+      "bytes": 4570135,
+      "media_type": "application/pdf",
+      "pages": 132,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Chapel Hill, North Carolina",
+      "organization_id": "ORG_CH",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "affordable-housing-fy18-fy29-in-pdf",
+      "filename": "Affordable Housing (FY18-FY29) in pdf.pdf",
+      "sha256": "7846cdb939c763c1de379d1f71892057a621ea6721705b6ac3cc9def781999b6",
+      "bytes": 66132,
+      "media_type": "application/pdf",
+      "pages": 1,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-comprehensive-financial-report-year-ended-june-30-2018",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2018.pdf",
+      "sha256": "578ef6226a5a9065970b91c12a194df34e0a2af1b31b8724fc3b1eebb677aae7",
+      "bytes": 5380359,
+      "media_type": "application/pdf",
+      "pages": 175,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-comprehensive-financial-report-year-ended-june-30-2019",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2019.pdf",
+      "sha256": "846b43a917b02dd134f41f06789c47f03c1e9467553aa99b056eabcbb377e36e",
+      "bytes": 106353011,
+      "media_type": "application/pdf",
+      "pages": 181,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2019,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-comprehensive-financial-report-year-ended-june-30-2020",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2020.pdf",
+      "sha256": "b9a958bcede6b1aa442ee344ca52748c8e7f75d11cabc4b6f2a11bdbae3d2dbe",
+      "bytes": 103002449,
+      "media_type": "application/pdf",
+      "pages": 163,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2020,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-comprehensive-financial-report-year-ended-june-30-2021",
+      "filename": "Annual Comprehensive Financial Report Year Ended June 30, 2021.pdf",
+      "sha256": "974877e4eaf280e8c07cb61245beed686ce2bd0f33d99c78dcb9ceec1d5a16d6",
+      "bytes": 81298975,
+      "media_type": "application/pdf",
+      "pages": 127,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2021,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-financial-report-year-ended-june-30-2022",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2022.pdf",
+      "sha256": "fa78d495e724b13638ea91aa2673e9128ed1045623653b56ac55d7c4f60640a8",
+      "bytes": 67574491,
+      "media_type": "application/pdf",
+      "pages": 130,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2022,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-financial-report-year-ended-june-30-2023",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2023.pdf",
+      "sha256": "b3413df16b3a701b619e73d0fc425df5693ea5639933450b15d931ca20b4a6fb",
+      "bytes": 72314408,
+      "media_type": "application/pdf",
+      "pages": 141,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2023,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-financial-report-year-ended-june-30-2024",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2024.pdf",
+      "sha256": "dd2892d97a2e9ab83e37d1c1438874597d06183500057e47e07b649c88359b47",
+      "bytes": 67667635,
+      "media_type": "application/pdf",
+      "pages": 139,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2024,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "annual-financial-report-year-ended-june-30-2025",
+      "filename": "Annual Financial Report_ Year Ended June 30, 2025.pdf",
+      "sha256": "8a18342afb8bd4a429e557d9f0d8a03dbbb43a61d5e55dc19f33df8df32622e2",
+      "bytes": 63463532,
+      "media_type": "application/pdf",
+      "pages": 131,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "audit-2019",
+      "filename": "Audit 2019.pdf",
+      "sha256": "d16728eeb8977f71762bcd05f5510bd88af335aa0aaf28c2e1d6b9f405b1d2c1",
+      "bytes": 10059934,
+      "media_type": "application/pdf",
+      "pages": 181,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2019,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "audit-2020",
+      "filename": "Audit 2020.pdf",
+      "sha256": "2cfd3c8992367067880b981b65d20702a928652a49372fb8876b044c207e99dd",
+      "bytes": 10631696,
+      "media_type": "application/pdf",
+      "pages": 163,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2020,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "audit-2021",
+      "filename": "Audit 2021.pdf",
+      "sha256": "dda5da6d08004c85b1535cb23094def4ccf27bdb0428c92043f188dc80df7e58",
+      "bytes": 5824175,
+      "media_type": "application/pdf",
+      "pages": 127,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2021,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "cafr-issued-toh-fy2018",
+      "filename": "CAFR_Issued_TOH_FY2018.pdf",
+      "sha256": "ce7c3790b49682f654b56731ef42b6bf0b2df4360df273cdbb59db5755102a5c",
+      "bytes": 925828,
+      "media_type": "application/pdf",
+      "pages": 175,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "cafr-issued-toh-fy2019",
+      "filename": "CAFR_Issued_TOH_FY2019.pdf",
+      "sha256": "8a3cf3df88172e25aeb189e613de0f310d418e59801ff628e58497f2ec36cc3d",
+      "bytes": 10082314,
+      "media_type": "application/pdf",
+      "pages": 181,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2019,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "comprehensive-annual-financial-report-fy18",
+      "filename": "Comprehensive Annual Financial Report (FY18).pdf",
+      "sha256": "c05c734930d3101b12f5c956c89f6a5c67148b6a453e0c072970d46248c216ef",
+      "bytes": 5187638,
+      "media_type": "application/pdf",
+      "pages": 175,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "comprehensive-sustainability-plan-community-visioning-survey-summary-20230530",
+      "filename": "Comprehensive Sustainability Plan Community Visioning Survey Summary 20230530.pdf",
+      "sha256": "57fda6b9e4a80a364f093aac55bbd0807eb6aaac750842a9661ca827a39b80e5",
+      "bytes": 3717211,
+      "media_type": "application/pdf",
+      "pages": 22,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "debt-schedules-from-hillsborough-fd",
+      "filename": "Debt Schedules from Hillsborough FD.docx",
+      "sha256": "4066745db57ba17d84417fa135158f341a22a3e8a63ba0050332b80f57a1d6fc",
+      "bytes": 9812,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "debt-service-projections",
+      "filename": "Debt Service Projections.xlsx",
+      "sha256": "efc644db8b5d2c5271e7fcaa06986621abaf2a64221333b8ef94ab0f8158bc86",
+      "bytes": 27508,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "effect-of-debt-management",
+      "filename": "Effect of Debt Management.pdf",
+      "sha256": "229261477c537e38eca6a9ec26111f27d78c75fb5ac9bc87533539f46e53f74f",
+      "bytes": 335868,
+      "media_type": "application/pdf",
+      "pages": 2,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy26-budget-message",
+      "filename": "FY26 Budget Message.pdf",
+      "sha256": "104b3ff80f163a6ed3aa6d0d65542b8621b111bd54d38fa80f9ab87a3382af8a",
+      "bytes": 431456,
+      "media_type": "application/pdf",
+      "pages": 14,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy26-budget-ordinance",
+      "filename": "FY26 Budget Ordinance.pdf",
+      "sha256": "fbfbdcff2347705b1c3561e3c6601aa00a2bc8181b2d7c2d91cabe53e90138ec",
+      "bytes": 1339325,
+      "media_type": "application/pdf",
+      "pages": 3,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy26-budget-and-financial-plan-adopted",
+      "filename": "FY26 Budget and Financial Plan Adopted.pdf",
+      "sha256": "24e90511ef2250daf24a3855a48e71d70f98829f31c56d5e07d12815a15280ef",
+      "bytes": 20611457,
+      "media_type": "application/pdf",
+      "pages": 234,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy26-recommended-budget-and-financial-plan",
+      "filename": "FY26 Recommended Budget and Financial Plan.pdf",
+      "sha256": "2efdb212759e171b42c4c398bcba81be0366491a1cbe55c6b3a33b679c25e859",
+      "bytes": 32247863,
+      "media_type": "application/pdf",
+      "pages": 295,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy27-budget-message",
+      "filename": "FY27 Budget Message.pdf",
+      "sha256": "bea2836db7541b06e9c40e1ea322d4bfb117548df51b172fec6948b9bd8d4610",
+      "bytes": 536809,
+      "media_type": "application/pdf",
+      "pages": 7,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2027,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy27-budget-and-financial-plan-recommended",
+      "filename": "FY27 Budget and Financial Plan Recommended.pdf",
+      "sha256": "9e6747e1ce1448b872dd3ae42b171de072415d18036b5e3022ccfbaba5aed9a6",
+      "bytes": 7776223,
+      "media_type": "application/pdf",
+      "pages": 280,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2027,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fiscal-year-2024-2026-strategic-plan-20230626",
+      "filename": "Fiscal Year 2024 2026 Strategic Plan 20230626.pdf",
+      "sha256": "286a81033d750f8d382319c4d4c68369dfb357c6767cf689c6c097acf06281e2",
+      "bytes": 19846126,
+      "media_type": "application/pdf",
+      "pages": 16,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2024,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fiscal-year-2025-budget-message",
+      "filename": "Fiscal Year 2025 Budget Message.pdf",
+      "sha256": "fdf8217b826b6e0648a0324752245ec12a541f4e3739e7aa8da556e14926fdf9",
+      "bytes": 610603,
+      "media_type": "application/pdf",
+      "pages": 18,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fiscal-year-2025-financial-report",
+      "filename": "Fiscal Year 2025 Financial Report.pdf",
+      "sha256": "8b60dad6367d4d3b31df552ed637d3a250deb6f9c6a5d5af729812ea22f490b7",
+      "bytes": 2509390,
+      "media_type": "application/pdf",
+      "pages": 131,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fiscal-year-2025-managers-recommended-budget-and-financial-work-plan",
+      "filename": "Fiscal Year 2025 Managers Recommended Budget and Financial Work Plan.pdf",
+      "sha256": "1e6ac56bed6a61197e61aa664961f9ea7952932d1f89c7cc469afb973cb9da94",
+      "bytes": 14347727,
+      "media_type": "application/pdf",
+      "pages": 274,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-data-request-june-2027",
+      "filename": "Hillsborough Data Request June 2027.xlsx",
+      "sha256": "290fca8aac4dd0f3f39fba1f8429e455b62e3e249462b8a4733d44374a549fbd",
+      "bytes": 34147,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-gf-trend-schedules-fy18-fy27",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx",
+      "sha256": "a4cff7456c4ca7f862719cfef779f8e0f5dd0118d19120641cf59a4c40771de7",
+      "bytes": 27863,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-gf-trend-schedules-fy18-fy27-v2",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx",
+      "sha256": "b29c95ce9728c4c8c0ad47253686f8838d9e37791450d4c46ba7e524f61d9a47",
+      "bytes": 45498,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-gf-trend-schedules-fy18-fy27-v3",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx",
+      "sha256": "b27792f954004d28b3c4b68c437a30667b2f20a1590382bbda3403411a9b5b8c",
+      "bytes": 66893,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-gf-trend-schedules-fy18-fy27-v4",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx",
+      "sha256": "fdf1cc1614ccf06193ce33b50f22e28ea0d51a87053bba4624b822a15b44b297",
+      "bytes": 96637,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-gf-trend-schedules-fy18-fy27-v5-audit-edition",
+      "filename": "Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx",
+      "sha256": "f2b817694d6dbeab55be11340c73c39fa11ff0dcdf2770432b2ce636faea79e7",
+      "bytes": 82308,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-municipal-financial-database-v1",
+      "filename": "Hillsborough_Municipal_Financial_Database_v1.xlsx",
+      "sha256": "e20884babf4cf05836fecf5064b19f2bd5c932f7b6936953c24c689e15580f97",
+      "bytes": 27300,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-municipal-financial-database-v2-fy18-fy29",
+      "filename": "Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx",
+      "sha256": "9571b92d98c927782cef463a22cf498d3d4fb2471e02281bf3f1ddf326b21d33",
+      "bytes": 74205,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-rateoptions-22326-1",
+      "filename": "Hillsborough_RateOptions_22326 1.pdf",
+      "sha256": "f680cee67b8863372ee101f688f6186b539b3a10dd62d35c7e99c85a36653ce2",
+      "bytes": 969013,
+      "media_type": "application/pdf",
+      "pages": 30,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-workbook-b-fiscal-sustainability-risk-model",
+      "filename": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx",
+      "sha256": "f6fa0e0de53756eaef844a545f02cade9c093a7fbb3496db80f8041e96d3da9e",
+      "bytes": 524304,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-workbook-b-fiscal-sustainability-risk-model-v2",
+      "filename": "Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx",
+      "sha256": "4f420bf036529606e99e44877d37fe9299241b75363e1f4ed90bbf00cd94f756",
+      "bytes": 524376,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "item-attachment-003-f0fc06314ce6427399e71e8d4d799c09",
+      "filename": "ITEM-Attachment-003-f0fc06314ce6427399e71e8d4d799c09.pdf",
+      "sha256": "6decc5fca848a1be1f11aea1cbf26d16d1a03e61053230c7e4a8f97e84cc95b7",
+      "bytes": 2503238,
+      "media_type": "application/pdf",
+      "pages": 72,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "municipal-finance-database-hillsborough-v1-0",
+      "filename": "Municipal Finance Database - Hillsborough - v1.0.xlsx",
+      "sha256": "f2dacd7ae4b1b77bf8c98a439baf017d8aec5026a542592f56842bfb734e122c",
+      "bytes": 60575,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "municipal-financial-analysis-hillsborough-v1-0",
+      "filename": "Municipal Financial Analysis - Hillsborough - v1.0.xlsx",
+      "sha256": "ddcc9730385f52d7ce76441c3d37784cfe69794dde042569b6d3c5d7c8aa8d61",
+      "bytes": 29267,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "organizational-chart-of-town-services-and-administration-20230106",
+      "filename": "Organizational Chart of Town Services and Administration 20230106.pdf",
+      "sha256": "0ea1fa2f88125d044112ae0ed123b5f464b6d9559e0ce579053010ca07d03ede",
+      "bytes": 204792,
+      "media_type": "application/pdf",
+      "pages": 1,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "recommended-fy27budgetataglanceflyer",
+      "filename": "Recommended FY27BudgetAtAGlanceFlyer.pdf",
+      "sha256": "b1aef110d4229f1d8afca6e20e318ec4de51b929d9ab71d59b78a4ecca71aa38",
+      "bytes": 1882279,
+      "media_type": "application/pdf",
+      "pages": 1,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2027,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "sales-tax-information",
+      "filename": "Sales Tax Information.docx",
+      "sha256": "60ec376a43d363075f350fd0dced063bec8b9cef19e7ccb5d963d1ad507489ae",
+      "bytes": 27135,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "stormwater-fees-town-of-hillsborough-north-carolina",
+      "filename": "Stormwater Fees _ Town of Hillsborough, North Carolina.pdf",
+      "sha256": "1474292bf8ed25467a7f23a15df4cbb81713a8e6b9f78748387788a6f95bdf3a",
+      "bytes": 128719,
+      "media_type": "application/pdf",
+      "pages": 3,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "stormwater-presentation-202404",
+      "filename": "Stormwater Presentation 202404.pdf",
+      "sha256": "816c7eaa0623fddd9399dcb1f97b74a4bfc488241ba7e94c09c2672c548eb81b",
+      "bytes": 4762190,
+      "media_type": "application/pdf",
+      "pages": 14,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "town-of-hillsborough-issued-cafr-fy20-002",
+      "filename": "Town of HIllsborough Issued CAFR FY20 (002).pdf",
+      "sha256": "17ad8f77ade2893ee1cd970227b68a840aa0429b8b74d4e0ff65fe864bdce822",
+      "bytes": 10673367,
+      "media_type": "application/pdf",
+      "pages": 163,
+      "text_layer": "scan",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2020,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "water-and-sewer-rates-town-of-hillsborough-north-carolina",
+      "filename": "Water and Sewer Rates _ Town of Hillsborough, North Carolina.pdf",
+      "sha256": "e41c4c16c34361c72c2d49bbb0927036a13d61a1c6f4d7d43632a370d42ad42a",
+      "bytes": 768936,
+      "media_type": "application/pdf",
+      "pages": 4,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "water-and-sewer-utility-rate-study-20240531",
+      "filename": "Water and Sewer Utility Rate Study 20240531.pdf",
+      "sha256": "d113a20dca03f82e18c29be08d7d21146cb8c90af80faa303456a570a04cb55b",
+      "bytes": 462498,
+      "media_type": "application/pdf",
+      "pages": 27,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-2022-audit-stamped",
+      "filename": "_Hillsborough 2022 Audit - Stamped.pdf",
+      "sha256": "d688c0ba85852c1a29b0286b7657e73d003a7b7b44a6fe2019b62af77b2b3e34",
+      "bytes": 5796390,
+      "media_type": "application/pdf",
+      "pages": 130,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2022,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-2023-audit-stamped",
+      "filename": "_Hillsborough 2023 Audit - Stamped.pdf",
+      "sha256": "c190913a231f9e94d3be883d68219c5c8f0aa6f315d78816be943176cabc1e7f",
+      "bytes": 5321728,
+      "media_type": "application/pdf",
+      "pages": 141,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2023,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-2024-audit-stamped",
+      "filename": "_Hillsborough 2024 Audit - Stamped.pdf",
+      "sha256": "254013a466cb7b698d972e0002d5429b6f2f216a6a556907b674f1c368167189",
+      "bytes": 2643600,
+      "media_type": "application/pdf",
+      "pages": 139,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2024,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "hillsborough-2025-audit-stamped",
+      "filename": "_Hillsborough 2025 Audit - Stamped.pdf",
+      "sha256": "218853ec377adf5dd59819163054022341eb0f9ae64e4da94c3b10750dbefd23",
+      "bytes": 2603126,
+      "media_type": "application/pdf",
+      "pages": 131,
+      "text_layer": "digital",
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "redatarequestlongtermfiscaltrendandsustainability",
+      "filename": "redatarequestlongtermfiscaltrendandsustainability.zip",
+      "sha256": "c7b6ae4934174283c596bd36240637e6aff5811bde5c6bb5f1edb8b762602f18",
+      "bytes": 4129352,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "water-and-sewer-historical-rates",
+      "filename": "water and sewer historical rates.docx",
+      "sha256": "03f089fa35b243907eea5c00bcee7d1161d763701788b4d2e93e2d5c071d5bec",
+      "bytes": 61284,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Town of Hillsborough, North Carolina",
+      "organization_id": "ORG_HB",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "architecture-design-specification",
+      "filename": "Architecture & Design Specification.docx",
+      "sha256": "cffc8ba7be2578fa754fd6d506f2e6eafe6e8af1522a5787a730c7097903f57f",
+      "bytes": 30896,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "architecture-design-specification-2",
+      "filename": "Architecture & Design Specification.pdf",
+      "sha256": "adc8c4ccfb6ac00be179709e4e0dcdce2b682db2b51db7b78793e1e0861843c3",
+      "bytes": 254419,
+      "media_type": "application/pdf",
+      "pages": 13,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "decision-context-model-pptx",
+      "filename": "Decision Context Model.pptx",
+      "sha256": "42c67c7ff8bd7ed26e87fae125ca05b7fc40010153df1fa58d0c02c885d490eb",
+      "bytes": 151491,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "issues-log",
+      "filename": "Issues Log.xlsx",
+      "sha256": "e43269868eb341b3401df737002c63827ac5c13bb1dc04bdbe6945bc34c73415",
+      "bytes": 9002,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "mfas-architecture-notebook",
+      "filename": "MFAS Architecture Notebook.docx",
+      "sha256": "545f29f4d95ffec5d6619a53069b6935d063e483360e4e125dc82de68bce4201",
+      "bytes": 35023,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "mfas-architecture-notebook-2",
+      "filename": "MFAS Architecture Notebook.pdf",
+      "sha256": "c2ad4c28ca659cc18eca3dd0d44865f3c687c2f145a5024bf10b50c9856f6dd5",
+      "bytes": 256340,
+      "media_type": "application/pdf",
+      "pages": 18,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "mfas-conceptual-architecture",
+      "filename": "MFAS Conceptual Architecture.docx",
+      "sha256": "7fc6ceb2b9492b20684a0731c6c65e9aaba5c4c7fd2a15243d46d45a481caae8",
+      "bytes": 36908,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "mfas-conceptual-architecture-2",
+      "filename": "MFAS Conceptual Architecture.pdf",
+      "sha256": "6071c5d487b22b703066f70536bd4df6a286778295fb21d531b2d0de0365ba9f",
+      "bytes": 283201,
+      "media_type": "application/pdf",
+      "pages": 19,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "municipal-finance-project-design-manual-v1-0",
+      "filename": "Municipal Finance Project Design Manual v1.0.xlsx",
+      "sha256": "1a917f31b130a27497367f6e6456b0accc4ab62216ab3d4580210651d9befe8b",
+      "bytes": 19923,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "oc-hillsborough-fiscal-analysis-project",
+      "filename": "OC & Hillsborough Fiscal Analysis Project.docx",
+      "sha256": "7ff6409f36a3503b133079b309f6bb9ae33e68851d7b9a571721439f25ee788a",
+      "bytes": 26561,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County Efficiency & Accountability Initiative",
+      "organization_id": "ORG_INIT",
+      "fiscal_year": null,
+      "source_authority": "initiative",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": false
+      }
+    },
+    {
+      "source_id": "4-b-cip-presentation",
+      "filename": "4-b - CIP Presentation.pdf",
+      "sha256": "3dc0fef3cdf0c2a8358f2b29b014b150ce82e0fd3518ca48fee8ec64cf828836",
+      "bytes": 435090,
+      "media_type": "application/pdf",
+      "pages": 22,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "4-b-1-county-managers-cip-transmittal-letter-final",
+      "filename": "4-b 1 - County Managers CIP Transmittal Letter - FINAL.pdf",
+      "sha256": "5f2158d47bc5d5a06d34add421460890622f48cb9597f6be934d6369b91aba68",
+      "bytes": 343054,
+      "media_type": "application/pdf",
+      "pages": 16,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "appendix-a-county-profile-data-element-pdf",
+      "filename": "Appendix A_ County Profile (Data) Element (PDF).pdf",
+      "sha256": "1de901e83a325591eed8114a7fe54e9ebb5fa954a3414e2af8d79810c7e1eddd",
+      "bytes": 31608333,
+      "media_type": "application/pdf",
+      "pages": 100,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "budget-ordinance-fy2025-26",
+      "filename": "Budget Ordinance FY2025-26.pdf",
+      "sha256": "5048fa9fae4e63139836ac1fd7ef19fab8e562c02f27f4fe8109945c729ad2b7",
+      "bytes": 295438,
+      "media_type": "application/pdf",
+      "pages": 14,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy-2018-19-annual-financial-report",
+      "filename": "FY 2018-19 Annual Financial Report.pdf",
+      "sha256": "606601997980895e0d25a3edbb8ee05222b672d2d2fd161fc2a5bf04bb0bb9f2",
+      "bytes": 4775234,
+      "media_type": "application/pdf",
+      "pages": 182,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy-2018-19-popular-annual-financial-report",
+      "filename": "FY 2018-19 Popular Annual Financial Report.pdf",
+      "sha256": "8beb9b82d9a9c15f314aedecf501a09d4e7e2ca06c8688ea902f15f54b32186b",
+      "bytes": 1603481,
+      "media_type": "application/pdf",
+      "pages": 20,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy-26-27-cip-online-version",
+      "filename": "FY 26-27 CIP Online Version.pdf",
+      "sha256": "9a788a792b641c01d2e6090bb740557758deaaf2a07121c801225adf849fa7b2",
+      "bytes": 9566788,
+      "media_type": "application/pdf",
+      "pages": 184,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy2025-26-operating-budget-introduction",
+      "filename": "FY2025-26 Operating Budget Introduction.pdf",
+      "sha256": "bb7ec5fb47c0362b4e834c0006d06dc7513d6ebcc17e2e34bdc8f25b4a78d598",
+      "bytes": 528183,
+      "media_type": "application/pdf",
+      "pages": 31,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy2025-26-operating-budget-transmittal-letter",
+      "filename": "FY2025-26 Operating Budget Transmittal Letter.pdf",
+      "sha256": "0a9e59e868511cd493f422058453b802679424d776ec33f6a7f9dc725e02f60e",
+      "bytes": 404904,
+      "media_type": "application/pdf",
+      "pages": 17,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy2026-27-manager-s-recommended-budget",
+      "filename": "FY2026-27 Manager_s Recommended Budget.pdf",
+      "sha256": "f2366d5e1da1315f70c88eb38af767e684e7f9f1c30c68502ac3ef1e3fb15641",
+      "bytes": 21054314,
+      "media_type": "application/pdf",
+      "pages": 352,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy2026-27-managers-recommended-budget",
+      "filename": "FY2026-27 Managers Recommended Budget.pdf",
+      "sha256": "6d5892a97ae1d0b670dd5e4a48e295c0b1b44c1b054dfb1d6507915ca655c211",
+      "bytes": 21494294,
+      "media_type": "application/pdf",
+      "pages": 357,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy2026-27-operating-budget-introduction2",
+      "filename": "FY2026-27 Operating Budget Introduction2.pdf",
+      "sha256": "39e3cf008d9289e15784088e0ec12e8897773d904e476080cdba767c35507614",
+      "bytes": 676085,
+      "media_type": "application/pdf",
+      "pages": 34,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy202627-managers-messager",
+      "filename": "FY202627 Managers MessageR.pdf",
+      "sha256": "a7130e803d941c1a8ff676b9bcca1fb3d07a2a4a82c693406caad8ed455a3fd4",
+      "bytes": 682556,
+      "media_type": "application/pdf",
+      "pages": 12,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy25-26-approved-budget-web-version",
+      "filename": "FY25-26 Approved Budget (Web Version).pdf",
+      "sha256": "304d36fe692ed0b7af5116c0947c2833258f98e5c21b09f47a2162971c579a05",
+      "bytes": 14005655,
+      "media_type": "application/pdf",
+      "pages": 508,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy25-26-manager-recommended-budget",
+      "filename": "FY25-26 Manager Recommended Budget.pdf",
+      "sha256": "ea0aa8476f0a46491cdf52622cb9864db85bf06b2a4436af82369e35b4032e7b",
+      "bytes": 12143066,
+      "media_type": "application/pdf",
+      "pages": 336,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "fy26-27-commissioner-approved-fee-schedule",
+      "filename": "FY26-27 Commissioner Approved Fee Schedule.pdf",
+      "sha256": "8bde8171532483239d586232691616f05b1e6540ed3d56616f5952ab10d1adc6",
+      "bytes": 1800977,
+      "media_type": "application/pdf",
+      "pages": 95,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2026,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "oc-design",
+      "filename": "OC Design.xlsx",
+      "sha256": "f66c9479c9ee950467a6e50cb72d530a711a1b6e2bd4fd88e5e920a246bab1d7",
+      "bytes": 12397,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "oc-pafr-2020",
+      "filename": "OC_PAFR_2020.pdf",
+      "sha256": "7f2bd6697b7d855079c87580bb3abbe0ceb5c4586753ba9b718f4a9ec63a13af",
+      "bytes": 13857465,
+      "media_type": "application/pdf",
+      "pages": 20,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-co-acfr-6-30-25final",
+      "filename": "Orange Co ACFR 6.30.25Final.pdf",
+      "sha256": "e962e7674ecad847cedbc995b1d13a3b4f7784a2d31947334176d1800c685a25",
+      "bytes": 5412771,
+      "media_type": "application/pdf",
+      "pages": 231,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-co-acfr-6-30-24-final",
+      "filename": "Orange Co ACFR 6_30_24 Final_.pdf",
+      "sha256": "cfb25d100dfe45b42d765368312398aea35afed97e076644f1f0f2135e172743",
+      "bytes": 5832897,
+      "media_type": "application/pdf",
+      "pages": 227,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-2018-cafr",
+      "filename": "Orange County 2018 CAFR.pdf",
+      "sha256": "1146f1d25c6ea129066769683b4c4daad2444691d1c66e0e48f85a3030885e8f",
+      "bytes": 8344849,
+      "media_type": "application/pdf",
+      "pages": 173,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2018,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-6-30-21-acfr-client-1",
+      "filename": "Orange County 6-30-21 ACFR - client_1.pdf",
+      "sha256": "0793cd4978c0dab76515f236ef1ca84c7a58b53f5571183fc6b7098270f9a1f9",
+      "bytes": 7054708,
+      "media_type": "application/pdf",
+      "pages": 189,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-6-30-21-compliance-report-client",
+      "filename": "Orange County 6-30-21 Compliance Report - client.pdf",
+      "sha256": "6b4b31542848aa8db17585f74bccd613a9ecdf0f2746cf115f0bd77428154985",
+      "bytes": 926029,
+      "media_type": "application/pdf",
+      "pages": 30,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-acfr-6-30-22-final-2",
+      "filename": "Orange County ACFR 6.30.22 Final_2.pdf",
+      "sha256": "f2bafc61c092921607e355f00558df92a7f61e2e72390f37890578aa690afff3",
+      "bytes": 5124115,
+      "media_type": "application/pdf",
+      "pages": 226,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-cafr-6-30-20",
+      "filename": "Orange County CAFR 6.30.20.pdf",
+      "sha256": "e41a2c234f9d9a19babc3555671bffbfa159913fa7b8ba55ff2ac234466dbfe2",
+      "bytes": 5000942,
+      "media_type": "application/pdf",
+      "pages": 181,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-nc-acfr-6-30-23",
+      "filename": "Orange County NC ACFR 6.30.23.pdf",
+      "sha256": "de96f5845a9ddc7afc8ea1f3337c3dbbff394e985a0e6463276ba1c39d0f7eb5",
+      "bytes": 11787882,
+      "media_type": "application/pdf",
+      "pages": 227,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-municipal-finance-database-v1-0",
+      "filename": "Orange_County_Municipal_Finance_Database_v1.0.xlsx",
+      "sha256": "d819f7eab876f57d592f069055eff499261b876b54d937743e2cdbbf53711712",
+      "bytes": 57333,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-municipal-finance-database-v1-1",
+      "filename": "Orange_County_Municipal_Finance_Database_v1.1.xlsx",
+      "sha256": "359a2e63e4d0faead6e7234c3e040c0e47316a5384d2a29edf9ee973028f8586",
+      "bytes": 67896,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-municipal-financial-data-warehouse-v1-2",
+      "filename": "Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx",
+      "sha256": "8ca50c7d1d9b59ae10b8b8a4090d5b8b661999b91b5e39766cd04daadeeb344d",
+      "bytes": 95789,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-municipal-financial-data-warehouse-v2-0",
+      "filename": "Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx",
+      "sha256": "d1c0019c2745468a7ebcd46bc376b119377c5b60c4a4cf50a8bf4549ab8fae62",
+      "bytes": 112197,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "orange-county-municipal-financial-information-system-v2-2-foundation",
+      "filename": "Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx",
+      "sha256": "600ff180a3e058b3767beb24b7e083d5ae034f6b2551d18155a6d6790fb03c19",
+      "bytes": 215919,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "public-library-services-in-orange-county",
+      "filename": "Public library services in Orange County.docx",
+      "sha256": "bd61770d45b74058c5888bde82f5def66e884b63adb3757ca1c49ef6320e4a28",
+      "bytes": 85191,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "res-2022-041-a-resolution-regarding-continued-uses-of-revenues-from-a-one-q",
+      "filename": "RES-2022-041-A Resolution regarding continued uses of revenues from a one q.pdf",
+      "sha256": "2d696c0b614d79d4ad3f68796d617ad6757f23a7d5d95185daf409c90620536f",
+      "bytes": 169336,
+      "media_type": "application/pdf",
+      "pages": 2,
+      "text_layer": "scan",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "revenue-neutral-rate-fy2025-26-oc",
+      "filename": "Revenue Neutral Rate FY2025-26 (OC).pdf",
+      "sha256": "949a4a3e057f2f9c3da76b0148e2af93fbf126c7d3f778426df394ac84994f5f",
+      "bytes": 360160,
+      "media_type": "application/pdf",
+      "pages": 10,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": 2025,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "services-in-orange-county",
+      "filename": "Services In Orange County.docx",
+      "sha256": "32e2bc461b03b91cf74ca8de66bc5aa4230ff86eb42ef8316a01f746774ef4b4",
+      "bytes": 17399,
+      "media_type": null,
+      "pages": null,
+      "text_layer": null,
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "tax-rate-historical-ad-valorem",
+      "filename": "Tax Rate Historical - Ad Valorem.pdf",
+      "sha256": "0c4a63a7bea1ef1858a6ab92edac136b125104e545c67156e284585fcb85c704",
+      "bytes": 15615,
+      "media_type": "application/pdf",
+      "pages": 1,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "understanding-tax-bill-8-5x11-1",
+      "filename": "UNDERSTANDING TAX BILL 8.5X11_1.pdf",
+      "sha256": "a2b8c0650764f16a5b54f148706f9b379348f50e5a96b801ba52e2a95318ca53",
+      "bytes": 224512,
+      "media_type": "application/pdf",
+      "pages": 2,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    },
+    {
+      "source_id": "white-paper-basics-of-local-sales-taxes",
+      "filename": "White Paper-Basics of Local Sales Taxes.pdf",
+      "sha256": "6267bb72294caaa1fea4ec7875a00d4e54b9e0efc48f91c05fbc916fb7768f08",
+      "bytes": 269714,
+      "media_type": "application/pdf",
+      "pages": 7,
+      "text_layer": "digital",
+      "issuing_authority": "Orange County, North Carolina",
+      "organization_id": "ORG_OC",
+      "fiscal_year": null,
+      "source_authority": "government",
+      "retrieval": {
+        "official_url": null,
+        "status": "needs_official_url",
+        "public_record": true
+      }
+    }
+  ]
+}

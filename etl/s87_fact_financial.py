@@ -61,6 +61,7 @@ What is deliberately NOT here yet:
 """
 from __future__ import annotations
 
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -71,6 +72,35 @@ from common import DATASETS, read_json, write_json  # noqa: E402
 COLUMNS = ["Organization_ID", "Fiscal_Year_ID", "Scenario", "Fund_ID", "Flow",
            "Department", "Account", "Line", "Category", "Measure", "Amount",
            "Source_ID", "Source_Detail", "Source_Page", "Confidence", "Extraction"]
+
+# Confidence is a FUNCTION OF EXTRACTION, applied in one place.
+#
+# It used to be an argument at each call site, and every one of them passed "High" —
+# including the two that load character recognition and the ones that load Amy's research
+# workbook. That put 1,110 rows at `High` whose extraction the workbook's own cover
+# defines as Medium or Working: 488 OCR rows, 522 workbook imports, and 100 metric rows.
+# Filtering the warehouse to Confidence=High therefore did not give a reader what the
+# cover promises, which is worse than having no label — a caveat that is present but
+# wrong is one a careful person relies on.
+#
+# The ceiling here can only lower a caller's claim, never raise it: a caller that already
+# knows a row is weaker (an unconfirmed workbook value it grades `Working`) keeps its own
+# assessment. Promoting someone else's stated doubt would be the same defect inverted.
+CONFIDENCE_CEILING = {
+    "digital-text": "High",              # read from a document's own text layer
+    "derived": "Medium",                 # computed here from High inputs
+    "ocr-arithmetic-verified": "Medium",  # recognition, proven by the page's arithmetic
+    "workbook-import": "Working",        # an analysis workbook, pending official confirmation
+}
+_RANK = {"High": 3, "Medium": 2, "Working": 1, "Pending": 0}
+
+
+def confidence_for(extraction: str, claimed: str) -> str:
+    """The weaker of what the caller claims and what the extraction method supports."""
+    ceiling = CONFIDENCE_CEILING.get(str(extraction), "Working")
+    if claimed not in _RANK:
+        return ceiling
+    return claimed if _RANK[claimed] < _RANK[ceiling] else ceiling
 
 SCENARIOS = ["Actual", "Adopted", "Recommended", "Estimate", "Projection"]
 
@@ -124,6 +154,54 @@ def main() -> None:
     seen: dict[tuple, str] = {}
     problems: list[str] = []
 
+    # The years Hillsborough is held DIGITALLY, read from the live inventory each build.
+    # Every guard against publishing recognition for such a year asks THIS SET — never a
+    # boolean another stage stamped on a row earlier, which is a fact about the world
+    # with no expiry date on it.
+    #
+    # Defined here, at the top, because there are THREE separate loaders that can emit a
+    # recognised figure and they are 300 lines apart. Two were guarded and the third —
+    # the recovered audited TOTALS, the one that runs first — had no guard at all,
+    # because the set used to be defined below it. A rule that only some of the paths
+    # can reach is not a rule.
+    _ad = DATASETS / "audited_digital.json"
+    digital_years_hb: set[int] = (
+        {int(d["fiscal_year"]) for d in read_json(_ad).get("documents", [])
+         if d.get("fiscal_year")} if _ad.exists() else set())
+
+    # Amy's county workbook cites HER register's keys — OC_CAFR_2018, OC_ACFR_2021,
+    # SRC_OC_ACFR_2025 — and those are not ids in this archive. Publishing them verbatim
+    # left 682 of 24,251 exported fact rows citing a Source_ID that appears nowhere in
+    # the exported Source_Register, so a reader who took the workbook at its word and
+    # joined the two tables lost 2.9% of the rows with no error to tell them why.
+    #
+    # They are not unknown documents, though: we hold every one of them. The county ACFR
+    # reader records which file it read for each fiscal year, so the mapping is DERIVED
+    # from that rather than hand-written — a hand-written alias table would be one more
+    # thing to keep in step with the archive.
+    #
+    # Her identifier is not discarded; it moves into Source_Detail, which is already the
+    # free-text provenance field. Normalising Source_ID and keeping her key visible costs
+    # no schema change, which matters because she joins on these columns.
+    _ca = DATASETS / "county_acfr.json"
+    county_doc_by_year: dict[int, str] = {}
+    if _ca.exists():
+        for d in read_json(_ca).get("documents", []):
+            if d.get("fiscal_year") and d.get("document"):
+                county_doc_by_year[int(d["fiscal_year"])] = d["document"]
+
+    def canonical_source(src, fy):
+        """(canonical Source_ID, note) for a workbook-supplied source key."""
+        src = str(src or "")
+        if not src or src in doc_ids:
+            return src, ""
+        m = re.search(r"(20\d{2})", src)
+        year = int(m.group(1)) if m else (int(str(fy).replace("FY", "")) if fy else None)
+        doc = county_doc_by_year.get(year) if year else None
+        if doc:
+            return doc, f" (her register key {src})"
+        return src, ""
+
     line_counter: dict[tuple, int] = defaultdict(int)
 
     def row(org, fy, scenario, fund, flow, dept, account, category, measure, amount,
@@ -158,7 +236,8 @@ def main() -> None:
         seen[key] = source_id
         rows.append([org, fy_id(fy), scenario, fund, flow, dept, account, line,
                      category, measure, round(float(amount), 2), source_id,
-                     source_detail, source_page, confidence, extraction])
+                     source_detail, source_page, confidence_for(extraction, confidence),
+                     extraction])
 
     # ---- step 3: Hillsborough, all years, all scenarios ----------------------
 
@@ -217,6 +296,8 @@ def main() -> None:
     for p in ocr.get("published", []):
         if p.get("column_role") != "actual" or not p.get("fiscal_year"):
             continue
+        if int(p["fiscal_year"]) in digital_years_hb:
+            continue          # read directly from the digital audit; see digital_years_hb
         row("ORG_HB", p["fiscal_year"], "Actual", "FUND_GF",
             SECTION_FLOW.get(p["section"], "Other Financing"), "(audited statement)",
             f"Total {p['section']}", p["section"], "fund_total", p["total"],
@@ -254,22 +335,22 @@ def main() -> None:
         flow = COUNTY_FLOW.get(str(r.get("Line_Type")), "(unstated)")
         is_total = str(acct).lower().startswith("total") or cat == "Net"
         base_measure = "fund_total" if is_total else "amount"
-        src = r.get("Source_ID")
         conf = r.get("Confidence") or "Working"
         page = r.get("ACFR_Page")
         fy = r["Fiscal_Year_ID"]
+        src, src_note = canonical_source(r.get("Source_ID"), fy)
         if r.get("Original_Budget") is not None:
             row("ORG_OC", fy, "Adopted", "FUND_GF", flow, dept, acct, cat,
                 base_measure + "_original_budget", r["Original_Budget"], src,
-                "her county workbook, original budget", page, conf,
+                "her county workbook, original budget" + src_note, page, conf,
                 "workbook-import", repeatable=True)
         if r.get("Final_Budget") is not None:
             row("ORG_OC", fy, "Adopted", "FUND_GF", flow, dept, acct, cat, base_measure,
-                r["Final_Budget"], src, "her county workbook, final budget", page,
+                r["Final_Budget"], src, "her county workbook, final budget" + src_note, page,
                 conf, "workbook-import", repeatable=True)
         if r.get("Actual_Amount") is not None:
             row("ORG_OC", fy, "Actual", "FUND_GF", flow, dept, acct, cat, base_measure,
-                r["Actual_Amount"], src, "her county workbook, actual", page, conf,
+                r["Actual_Amount"], src, "her county workbook, actual" + src_note, page, conf,
                 "workbook-import", repeatable=True)
         if r.get("Amount") is not None and r.get("Actual_Amount") is None \
                 and r.get("Final_Budget") is None:
@@ -279,7 +360,7 @@ def main() -> None:
                                 f"({fy} {acct})")
                 continue
             row("ORG_OC", fy, scen, "FUND_GF", flow, dept, acct, cat, base_measure,
-                r["Amount"], src, f"her county workbook ({r.get('Scenario')})", page,
+                r["Amount"], src, f"her county workbook ({r.get('Scenario')}){src_note}", page,
                 conf, "workbook-import", repeatable=True)
 
     # ---- Fact_Metric: her nine non-financial county tables, at their own grain --
@@ -313,10 +394,18 @@ def main() -> None:
             "Fund": r.get("Fund"),
             "Activity_Type": r.get("Activity_Type"),
             "Amount": amount,
-            "Source_ID": r.get("Source_ID"),
-            "Source_Detail": f"her county workbook, {r.get('table')}",
+            "Source_ID": canonical_source(r.get("Source_ID"),
+                                          r.get("Fiscal_Year_ID"))[0],
+            "Source_Detail": (f"her county workbook, {r.get('table')}"
+                              + canonical_source(r.get("Source_ID"),
+                                                 r.get("Fiscal_Year_ID"))[1]),
             "Source_Page": r.get("ACFR_Page"),
-            "Confidence": r.get("Confidence") or "Working",
+            # Through the SAME ceiling as Fact_Financial. These rows are built as dicts
+            # rather than through `row()`, so they bypassed it and 100 of them shipped
+            # `High` — her own workbook's assessment, honestly recorded, but a level
+            # above what a workbook import can support without official confirmation.
+            "Confidence": confidence_for("workbook-import",
+                                         r.get("Confidence") or "Working"),
             "Extraction": "workbook-import",
             "Notes": r.get("Notes"),
         })
@@ -397,7 +486,8 @@ def main() -> None:
             if key not in authority or _rank[kind] < _rank[authority[key][1]]:
                 authority[key] = (src, kind)
 
-    def load_statements(payload, org, extraction, detail_prefix):
+    def load_statements(payload, org, extraction, detail_prefix,
+                        exclude_years=frozenset()):
         for p in payload.get("published", []):
             fy = p.get("fiscal_year")
             if not fy:
@@ -456,6 +546,8 @@ def main() -> None:
                     continue
                 scen, meas = mapped
                 year = fy - 1 if role == "prior_year_actual" else fy
+                if year in exclude_years:
+                    continue
                 # Only the authoritative source for this government-year may load it.
                 auth = authority.get((org, year))
                 if auth and auth[0] != p["source_doc"]:
@@ -482,24 +574,43 @@ def main() -> None:
 
     # Statements recovered from SCANS by character recognition, held to the identical
     # arithmetic gate. Loaded only for years with no digital original — stage 62 puts
-    # anything else in validation_only, which is never read here.
+    # anything else in validation_only, and `exclude_years` enforces it again here.
     #
     # The reason this is publishable is measured rather than argued: stage 63 compares
     # the two routes cell by cell on the five years held in both forms and found
-    # 1,941 of 1,941 figures identical. The extraction value stays
+    # 5,394 of 5,394 figures identical. The extraction value stays
     # `ocr-arithmetic-verified`, so the export grades these one confidence level below
     # a direct read and a reader can always filter them out.
     sc_path = DATASETS / "audited_scanned.json"
     if sc_path.exists():
         load_statements(read_json(sc_path), "ORG_HB", "ocr-arithmetic-verified",
-                        "audited statement, recovered from the scanned report")
+                        "audited statement, recovered from the scanned report",
+                        # Belt as well as braces. The authority map below already prefers
+                        # a digital reading, but it ranks by (source, role) and a scan's
+                        # COMPARATIVE column for a digitally-held year is neither
+                        # "digital-own" nor "scan-own" — eight rows slipped through that
+                        # gap. A recognised figure is never published for a year read
+                        # directly, whatever column it came out of.
+                        exclude_years=digital_years_hb)
 
-    # The component LINES recovered from the scanned reports — FY2018-FY2020 only.
+    # The component LINES recovered from the scanned reports.
     # Where a digital original exists the digital reading is already loaded above and
     # is strictly better, so loading the recognition too would duplicate the slice
     # and invite someone to sum both.
+    #
+    # This tested `l["digital_original_exists"]`, a flag stamped on the row by an EARLIER
+    # stage — and stamped before the town sent its digital audits, so it still said
+    # "no digital original" for years that now have one. 28 FY2018 rows loaded from a
+    # scan of a year read digitally, and 16 of them duplicated a digital row exactly on
+    # organization, year, scenario, flow, account, measure AND amount. Every one
+    # reconciled against its own page; an aggregate over them was still double-counted,
+    # which is the warehouse failure mode that looks trustworthy row by row.
+    #
+    # A cached boolean about the world is a fact that expires. Ask the live set instead.
     for l in ocr.get("published_lines", []):
-        if l.get("digital_original_exists") or not l.get("fiscal_year"):
+        if not l.get("fiscal_year"):
+            continue
+        if int(l["fiscal_year"]) in digital_years_hb:
             continue
         role = l.get("column_role")
         mapped = ROLE_TO_SCENARIO.get(str(role))
@@ -522,14 +633,24 @@ def main() -> None:
         sys.exit("STEP 4 FAILED: loading Orange County changed the schema — "
                  "the design is wrong and this is the cheapest moment to know")
 
-    # Note: her county Source_IDs (OC_CAFR_2018...) are HER register's keys, not this
-    # archive's ids — s85 already reports which resolve to held files. Hillsborough
-    # rows must all cite the manifest.
-    bad_src = sorted({r[COLUMNS.index("Source_ID")] for r in rows
-                      if r[COLUMNS.index("Organization_ID")] == "ORG_HB"
-                      and r[COLUMNS.index("Source_ID")] not in doc_ids})
+    # EVERY published fact must cite a document in this archive — both governments.
+    #
+    # This checked Hillsborough only, on the grounds that Amy's county rows carried her
+    # own register's keys rather than archive ids. That exemption is what let 682 rows
+    # ship citing OC_CAFR_2018 and friends, which resolve to nothing in the exported
+    # Source_Register. `canonical_source` now maps them to the documents we actually
+    # hold, so the exemption has no reason to exist and the gate covers everything.
+    src_i, org_i = COLUMNS.index("Source_ID"), COLUMNS.index("Organization_ID")
+    bad_src = sorted({r[src_i] for r in rows if r[src_i] not in doc_ids})
     if bad_src:
-        sys.exit(f"Hillsborough fact rows cite unknown documents: {bad_src}")
+        sys.exit(f"fact rows cite documents not in the archive: {bad_src}\n"
+                 f"Every published figure must join to Source_Register. If this is a new "
+                 f"workbook identifier, teach `canonical_source` to resolve it — do not "
+                 f"widen the gate.")
+    bad_metric = sorted({m["Source_ID"] for m in metric_rows
+                         if m.get("Source_ID") and m["Source_ID"] not in doc_ids})
+    if bad_metric:
+        sys.exit(f"Fact_Metric rows cite documents not in the archive: {bad_metric}")
     if problems:
         print(f"\nBUILD FAILED — {len(problems)} problem(s):")
         for p in problems[:20]:

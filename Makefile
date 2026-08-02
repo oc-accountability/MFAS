@@ -65,6 +65,7 @@ etl:
 	$(PY) etl/s102_workbook_audit.py
 	$(PY) etl/s101_workbook.py
 	$(PY) etl/s103_tab_map.py
+	$(PY) etl/s105_acquisition_manifest.py   # how a third party assembles the sources
 
 test:
 	$(PY) -m pytest tests/ -q

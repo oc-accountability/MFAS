@@ -7,8 +7,12 @@ Run with: make test
 """
 from __future__ import annotations
 
+import collections
+import functools
 import json
+import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -1806,14 +1810,36 @@ def test_the_cover_sheet_counts_match_reality():
             if len(cells) >= 2 and isinstance(cells[0], str):
                 vals[cells[0]] = str(cells[1])
         n_tabs = len(wb.sheetnames)
+        # Each fact tab carries a caveat note on row 1 and its header on row 2, so the
+        # data starts at row 3 — `max_row - 1` would count the header and inflate every
+        # tab by one, which is how the cover briefly read three too high.
+        fact_rows = 0
+        for t in ("Fact_Financial", "Fact_Metric", "Fact_Statement_Line"):
+            if t not in wb.sheetnames:
+                continue
+            ws_t = wb[t]
+            hdr = 1
+            for r_i, r_vals in enumerate(ws_t.iter_rows(min_row=1, max_row=3,
+                                                        values_only=True), 1):
+                if "Source_ID" in [str(v) for v in r_vals if v is not None]:
+                    hdr = r_i
+                    break
+            fact_rows += max(0, ws_t.max_row - hdr)
     finally:
         wb.close()
 
     assert "Tabs" in vals and "Facts" in vals, sorted(vals)
     assert vals["Tabs"].startswith(f"{n_tabs} "), (
         f"cover claims {vals['Tabs'][:12]!r} tabs, workbook has {n_tabs}")
-    assert f"{cov['facts_total']:,}" in vals["Facts"], (
-        f"cover says {vals['Facts']!r}, coverage.json says {cov['facts_total']:,} facts")
+    # AGAINST THE TABS THEMSELVES, not against coverage.json.
+    #
+    # The first version of this test compared the cover with coverage.json and passed
+    # while the cover said 23,569 and the three fact tabs held 24,251 — it had made two
+    # partial views of the data agree with each other, and neither agreed with the
+    # workbook. A test that compares a claim with a second copy of the same claim is
+    # not a control. Count the rows.
+    assert f"{fact_rows:,}" in vals["Facts"], (
+        f"cover says {vals['Facts']!r}, but the fact tabs hold {fact_rows:,} rows")
     assert str(cov["documents_total"]) in vals["Facts"], (
         f"cover does not carry the archive size {cov['documents_total']}")
     if "Still unread" in vals:
@@ -1846,3 +1872,165 @@ def test_the_workbook_house_style_matches_the_websites_palette():
         assert m.group(1).lower() in [h.lower() for h in hits], (
             f"workbook {const}=#{m.group(1)} is not any published value of {prop} "
             f"({', '.join('#' + h for h in hits)}) — the workbook and the site have drifted")
+
+
+# ---------------------------------------------------------------------------
+# The calculator's location rule. C-01 in the 2026-08-01 external audit: the page
+# asked where the home was and then charged town property tax either way.
+# ---------------------------------------------------------------------------
+
+def _chromium():
+    for exe in ("chromium", "chromium-browser", "google-chrome"):
+        p = shutil.which(exe)
+        if p:
+            return p
+    return None
+
+
+def test_town_tax_is_conditional_on_being_in_town_in_the_source():
+    """The cheap gate, so the rule is enforced even where no browser exists.
+
+    `annualTax()` returned the town levy unconditionally and every caller — the hero,
+    the printable takeaway, the "what it pays for" line and the spending explorer —
+    used it. A $500,000 home outside the limits was shown $5,944 instead of $3,379.
+    """
+    js = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    m = re.search(r"function townTax\(\)\s*\{(.*?)\n\}", js, re.S)
+    assert m, "townTax() is gone — the location rule lives there"
+    assert "state.location !== 'intown'" in m.group(1), (
+        "townTax() no longer checks the location; an out-of-town home would be charged "
+        "town property tax again")
+    assert "function annualTax(" not in js, (
+        "annualTax() is back. It was the unconditional town levy and every caller "
+        "treated it as 'the town tax this household pays' — rename it or gate it, but "
+        "do not reintroduce the name")
+    # townLevyIfInTown is the deliberate unconditional one, for town POLICY rows only.
+    for call in re.findall(r"\btownLevyIfInTown\(\)", js):
+        pass
+    assert js.count("townTax()") >= 4, "callers should route through townTax()"
+
+
+@pytest.mark.skipif(_chromium() is None, reason="no chromium available")
+def test_out_of_town_pages_never_show_the_town_levy():
+    """The real gate: render the page in a browser, both answers, and read the DOM.
+
+    Asserting on the source alone would have missed the three surfaces that kept their
+    own copy of the calculation — the printable takeaway built its own row list, and the
+    explorer computed a share per department. This drives the actual share-link path a
+    reader would use.
+    """
+    import http.server
+    import socketserver
+    import threading
+
+    os.chdir(REPO)
+    handler = functools.partial(http.server.SimpleHTTPRequestHandler,
+                                directory=str(REPO))
+    with socketserver.TCPServer(("127.0.0.1", 0), handler) as httpd:
+        port = httpd.server_address[1]
+        t = threading.Thread(target=httpd.serve_forever, daemon=True)
+        t.start()
+        try:
+            doms = {}
+            for where in ("intown", "outoftown"):
+                url = f"http://127.0.0.1:{port}/index.html?home=500000&where={where}"
+                r = subprocess.run(
+                    [_chromium(), "--headless", "--disable-gpu", "--no-sandbox",
+                     "--virtual-time-budget=8000", "--dump-dom", url],
+                    capture_output=True, text=True, timeout=180)
+                doms[where] = r.stdout
+        finally:
+            httpd.shutdown()
+
+    town, county, both = "2,565", "3,379", "5,944"
+    assert town in doms["intown"], (
+        "in town, the town levy should appear — the fixture or the rates changed")
+    assert county in doms["intown"]
+
+    # The whole finding, in two assertions.
+    assert town not in doms["outoftown"], (
+        "OUT OF TOWN: the town property tax is still shown. The page asks where the "
+        "home is and must not charge the town's levy to a home outside its limits.")
+    assert both not in doms["outoftown"], (
+        "OUT OF TOWN: the town+county total is still shown somewhere on the page")
+    assert county in doms["outoftown"], (
+        "OUT OF TOWN: the county levy should still be charged — every taxpayer in the "
+        "county pays it")
+    assert "No town property tax" in doms["outoftown"], (
+        "OUT OF TOWN: removing the row silently is not enough; say why it is absent")
+    assert "fire district tax" in doms["outoftown"], (
+        "OUT OF TOWN: county-only is not the whole bill — a fire district tax applies "
+        "and must be named, or the fix trades an overstatement for an understatement")
+
+
+def test_every_published_fact_cites_a_document_in_the_archive():
+    """Both governments. The gate in s87 used to exempt Orange County because Amy's
+    workbook carried her own register's keys, and 682 of 24,251 exported rows shipped
+    citing IDs absent from the exported Source_Register — a reader joining the two
+    tables lost 2.9% of the rows with nothing to tell them why."""
+    wh = json.loads((REPO / "data" / "datasets" / "warehouse.json").read_text())
+    ids = {d["id"] for d in json.loads(
+        (REPO / "data" / "datasets" / "documents.json").read_text())["documents"]}
+    col = {n: i for i, n in enumerate(wh["columns"])}
+    orphans = collections.Counter()
+    for r in wh["rows"]:
+        if r[col["Source_ID"]] not in ids:
+            orphans[r[col["Source_ID"]]] += 1
+    metric = wh.get("fact_metric")
+    for r in (metric.get("rows") if isinstance(metric, dict) else metric) or []:
+        if r.get("Source_ID") and r["Source_ID"] not in ids:
+            orphans[r["Source_ID"]] += 1
+    for r in wh["fact_statement_line"]["rows"]:
+        if r.get("Source_ID") and r["Source_ID"] not in ids:
+            orphans[r["Source_ID"]] += 1
+    assert not orphans, (
+        f"{sum(orphans.values())} published fact(s) cite a Source_ID that is not in the "
+        f"archive: {dict(orphans)}")
+
+
+def test_confidence_never_outranks_the_extraction_method():
+    """The workbook cover defines OCR as Medium and workbook imports as Working, and the
+    warehouse labelled 1,110 such rows `High` — 488 OCR, 522 workbook, 100 metric.
+    Filtering to High therefore did not give a reader what the cover promises, which is
+    worse than no label at all: a caveat that is present but wrong gets relied on."""
+    wh = json.loads((REPO / "data" / "datasets" / "warehouse.json").read_text())
+    col = {n: i for i, n in enumerate(wh["columns"])}
+    ceiling = {"digital-text": 3, "derived": 2, "ocr-arithmetic-verified": 2,
+               "workbook-import": 1}
+    rank = {"High": 3, "Medium": 2, "Working": 1, "Pending": 0}
+    bad = collections.Counter()
+    rows = [(r[col["Extraction"]], r[col["Confidence"]]) for r in wh["rows"]]
+    metric = wh.get("fact_metric")
+    rows += [(r.get("Extraction"), r.get("Confidence"))
+             for r in ((metric.get("rows") if isinstance(metric, dict) else metric) or [])]
+    for ext, conf in rows:
+        cap = ceiling.get(str(ext))
+        if cap is not None and rank.get(str(conf), 0) > cap:
+            bad[(ext, conf)] += 1
+    assert not bad, (f"{sum(bad.values())} row(s) claim a confidence their extraction "
+                     f"method does not support: {dict(bad)}")
+
+
+def test_recognition_is_never_published_for_a_year_read_digitally():
+    """A digital original wins. Three separate loaders in s87 can emit a recognised
+    figure; two were guarded by a stale per-row flag and the third by nothing, so 36 OCR
+    rows shipped for digitally-held years and 16 duplicated a digital row exactly on
+    organization, year, scenario, flow, account, measure AND amount. Each reconciled
+    against its own page; an aggregate over them was still double-counted."""
+    ds = REPO / "data" / "datasets"
+    dig_path = ds / "audited_digital.json"
+    if not dig_path.exists():
+        pytest.skip("no digital audits held")
+    digital_years = {int(d["fiscal_year"])
+                     for d in json.loads(dig_path.read_text()).get("documents", [])
+                     if d.get("fiscal_year")}
+    wh = json.loads((ds / "warehouse.json").read_text())
+    col = {n: i for i, n in enumerate(wh["columns"])}
+    offenders = [r for r in wh["rows"]
+                 if r[col["Extraction"]] == "ocr-arithmetic-verified"
+                 and r[col["Organization_ID"]] == "ORG_HB"
+                 and int(str(r[col["Fiscal_Year_ID"]]).replace("FY", "")) in digital_years]
+    assert not offenders, (
+        f"{len(offenders)} recognised row(s) published for a year held digitally "
+        f"({sorted(digital_years)}): "
+        f"{sorted({r[col['Fiscal_Year_ID']] for r in offenders})}")
