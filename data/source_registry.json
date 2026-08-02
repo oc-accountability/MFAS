@@ -14,49 +14,63 @@
       "filename": "2017-2018-comprehensive-annual-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2017-2018-comprehensive-annual-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115175754id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2017-2018-comprehensive-annual-financial-report.pdf"
     },
     "2c83dd4af5e5cf06af9199db698e513f64570468595b8c95ad297d3eaf5d8128": {
       "id": "2018-2019-comprehensive-annual-financial-report",
       "filename": "2018-2019-comprehensive-annual-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2018-2019-comprehensive-annual-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115180757id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2018-2019-comprehensive-annual-financial-report.pdf"
     },
     "85ce7a1da9ba84f288d315f0e1629c0de0496efea84c8c0267f2dd09ed0c880d": {
       "id": "2019-2020-comprehensive-annual-financial-report",
       "filename": "2019-2020-comprehensive-annual-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2019-2020-comprehensive-annual-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115175649id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2019-2020-comprehensive-annual-financial-report.pdf"
     },
     "63f94a2ca97e89b180aba0bcbf3d7710b83cfea7118ae09e755ff8737329003d": {
       "id": "2020-2021-annual-comprehensive-financial-report",
       "filename": "2020-2021-annual-comprehensive-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2020-2021-annual-comprehensive-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115174729id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2020-2021-annual-comprehensive-financial-report.pdf"
     },
     "120764813feed4c12cf3559936f32fec3fde2047d995d55f4ab0235ed7f00469": {
       "id": "2021-2022-annual-comprehensive-financial-report",
       "filename": "2021-2022-annual-comprehensive-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2021-2022-annual-comprehensive-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115175240id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2021-2022-annual-comprehensive-financial-report.pdf"
     },
     "10b0d940c8b7a80af7c9f34cfe66508f34760609dea80e8f6bd9f5cbe8174332": {
       "id": "2022-2023-annual-comprehensive-financial-report",
       "filename": "2022-2023-annual-comprehensive-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2022-2023-annual-comprehensive-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115174718id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2022-2023-annual-comprehensive-financial-report.pdf"
     },
     "372443505b48cdbccd75c4aafa0830ea32fa28262bd687f270473bb469c27a28": {
       "id": "2023-2024-annual-comprehensive-financial-report",
       "filename": "2023-2024-annual-comprehensive-financial-report.pdf",
       "organization_id": "ORG_CH",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2023-2024-annual-comprehensive-financial-report.pdf",
+      "url_verified_by": "sha256 match on download (2026-08-01)",
+      "archival_url": "https://web.archive.org/web/20260115175127id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2023-2024-annual-comprehensive-financial-report.pdf"
     },
     "8733b8ca7090603496f1563700e1a4044c164d541d18e2d2d2b57df732ff95b1": {
       "id": "2024-2025-annual-comprehensive-financial-report",
@@ -301,14 +315,16 @@
       "filename": "FY 2018-19 Annual Financial Report.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/Archive.aspx?ADID=552",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "8beb9b82d9a9c15f314aedecf501a09d4e7e2ca06c8688ea902f15f54b32186b": {
       "id": "fy-2018-19-popular-annual-financial-report",
       "filename": "FY 2018-19 Popular Annual Financial Report.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/Archive.aspx?ADID=553",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "9a788a792b641c01d2e6090bb740557758deaaf2a07121c801225adf849fa7b2": {
       "id": "fy-26-27-cip-online-version",
@@ -616,56 +632,64 @@
       "filename": "OC_PAFR_2020.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/15399",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "cfb25d100dfe45b42d765368312398aea35afed97e076644f1f0f2135e172743": {
       "id": "orange-co-acfr-6-30-24-final",
       "filename": "Orange Co ACFR 6_30_24 Final_.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/30477/Annual-Comprehensive-Financial-Report-for-Fiscal-Year-Ending-June-30-2024",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "e962e7674ecad847cedbc995b1d13a3b4f7784a2d31947334176d1800c685a25": {
       "id": "orange-co-acfr-6-30-25final",
       "filename": "Orange Co ACFR 6.30.25Final.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/36506/Orange-Co-ACFR-63025Final",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "1146f1d25c6ea129066769683b4c4daad2444691d1c66e0e48f85a3030885e8f": {
       "id": "orange-county-2018-cafr",
       "filename": "Orange County 2018 CAFR.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/Archive.aspx?ADID=410",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "0793cd4978c0dab76515f236ef1ca84c7a58b53f5571183fc6b7098270f9a1f9": {
       "id": "orange-county-6-30-21-acfr-client-1",
       "filename": "Orange County 6-30-21 ACFR - client_1.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/19139",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "6b4b31542848aa8db17585f74bccd613a9ecdf0f2746cf115f0bd77428154985": {
       "id": "orange-county-6-30-21-compliance-report-client",
       "filename": "Orange County 6-30-21 Compliance Report - client.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/18880",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "f2bafc61c092921607e355f00558df92a7f61e2e72390f37890578aa690afff3": {
       "id": "orange-county-acfr-6-30-22-final-2",
       "filename": "Orange County ACFR 6.30.22 Final_2.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/23668",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "e41a2c234f9d9a19babc3555671bffbfa159913fa7b8ba55ff2ac234466dbfe2": {
       "id": "orange-county-cafr-6-30-20",
       "filename": "Orange County CAFR 6.30.20.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/14315",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "d819f7eab876f57d592f069055eff499261b876b54d937743e2cdbbf53711712": {
       "id": "orange-county-municipal-finance-database-v1-0",
@@ -707,7 +731,8 @@
       "filename": "Orange County NC ACFR 6.30.23.pdf",
       "organization_id": "ORG_OC",
       "source_authority": "government",
-      "official_url": null
+      "official_url": "https://www.orangecountync.gov/DocumentCenter/View/26108",
+      "url_verified_by": "sha256 match on download (2026-08-01)"
     },
     "0ea1fa2f88125d044112ae0ed123b5f464b6d9559e0ce579053010ca07d03ede": {
       "id": "organizational-chart-of-town-services-and-administration-20230106",

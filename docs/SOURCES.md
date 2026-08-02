@@ -6,8 +6,10 @@ The archive is **945 MiB across 118 documents** and is not committed — one fil
 
 ## Status
 
-- **0** of 118 documents have a recorded official URL
-- **118** still need one — listed below
+- **18** documents have a recorded official URL, each **verified by downloading it and matching the sha256** — not by the title looking right
+- **65** are published government documents that still need one — listed below
+- **25** were supplied on request (workbooks, spreadsheets, emailed files) and have no public address
+- **10** are the initiative's own design and analysis files — there is no official URL to find
 
 No URL in this file is inferred. A plausible link that resolved to a different revision of the same report would be worse than a blank: a reader who followed it and found different numbers would have been actively misled. So the gap is counted rather than filled, the same way `COVERAGE.md` counts unread documents.
 
@@ -18,13 +20,6 @@ No URL in this file is inferred. A plausible link that resolved to a different r
 | Issuing authority | FY | Document | SHA-256 (first 16) |
 |---|---|---|---|
 | Town of Chapel Hill, North Carolina | — | 1-D - Historical CHCCS District Tax.pdf | `65e97bd05aac233f` |
-| Town of Chapel Hill, North Carolina | — | 2017-2018-comprehensive-annual-financial-report.pdf | `f58521fc67fcfd7c` |
-| Town of Chapel Hill, North Carolina | — | 2018-2019-comprehensive-annual-financial-report.pdf | `2c83dd4af5e5cf06` |
-| Town of Chapel Hill, North Carolina | — | 2019-2020-comprehensive-annual-financial-report.pdf | `85ce7a1da9ba84f2` |
-| Town of Chapel Hill, North Carolina | — | 2020-2021-annual-comprehensive-financial-report.pdf | `63f94a2ca97e89b1` |
-| Town of Chapel Hill, North Carolina | — | 2021-2022-annual-comprehensive-financial-report.pdf | `120764813feed4c1` |
-| Town of Chapel Hill, North Carolina | — | 2022-2023-annual-comprehensive-financial-report.pdf | `10b0d940c8b7a80a` |
-| Town of Chapel Hill, North Carolina | — | 2023-2024-annual-comprehensive-financial-report.pdf | `372443505b48cdbc` |
 | Town of Chapel Hill, North Carolina | — | 2024-2025-annual-comprehensive-financial-report.pdf | `8733b8ca70906034` |
 | Town of Chapel Hill, North Carolina | — | 202526-adopted-budget.pdf | `de46eb03dab78b19` |
 | Town of Chapel Hill, North Carolina | — | Chapel Hill Public Library Funding Transition- Key Facts.pdf | `aaa08161b9823a6b` |
@@ -46,8 +41,6 @@ No URL in this file is inferred. A plausible link that resolved to a different r
 | Town of Hillsborough, North Carolina | 2019 | CAFR_Issued_TOH_FY2019.pdf | `8a3cf3df88172e25` |
 | Town of Hillsborough, North Carolina | 2018 | Comprehensive Annual Financial Report (FY18).pdf | `c05c734930d3101b` |
 | Town of Hillsborough, North Carolina | — | Comprehensive Sustainability Plan Community Visioning Survey Summary 20230530.pdf | `57fda6b9e4a80a36` |
-| Town of Hillsborough, North Carolina | — | Debt Schedules from Hillsborough FD.docx | `4066745db57ba17d` |
-| Town of Hillsborough, North Carolina | — | Debt Service Projections.xlsx | `efc644db8b5d2c52` |
 | Town of Hillsborough, North Carolina | — | Effect of Debt Management.pdf | `229261477c537e38` |
 | Town of Hillsborough, North Carolina | 2026 | FY26 Budget Message.pdf | `104b3ff80f163a6e` |
 | Town of Hillsborough, North Carolina | 2026 | FY26 Budget Ordinance.pdf | `fbfbdcff2347705b` |
@@ -59,23 +52,10 @@ No URL in this file is inferred. A plausible link that resolved to a different r
 | Town of Hillsborough, North Carolina | 2025 | Fiscal Year 2025 Budget Message.pdf | `fdf8217b826b6e06` |
 | Town of Hillsborough, North Carolina | 2025 | Fiscal Year 2025 Financial Report.pdf | `8b60dad6367d4d3b` |
 | Town of Hillsborough, North Carolina | 2025 | Fiscal Year 2025 Managers Recommended Budget and Financial Work Plan.pdf | `1e6ac56bed6a6119` |
-| Town of Hillsborough, North Carolina | — | Hillsborough Data Request June 2027.xlsx | `290fca8aac4dd0f3` |
-| Town of Hillsborough, North Carolina | 2018 | Hillsborough_GF_Trend_Schedules_FY18_FY27.xlsx | `a4cff7456c4ca7f8` |
-| Town of Hillsborough, North Carolina | 2018 | Hillsborough_GF_Trend_Schedules_FY18_FY27_v2.xlsx | `b29c95ce9728c4c8` |
-| Town of Hillsborough, North Carolina | 2018 | Hillsborough_GF_Trend_Schedules_FY18_FY27_v3.xlsx | `b27792f954004d28` |
-| Town of Hillsborough, North Carolina | 2018 | Hillsborough_GF_Trend_Schedules_FY18_FY27_v4.xlsx | `fdf1cc1614ccf061` |
-| Town of Hillsborough, North Carolina | 2018 | Hillsborough_GF_Trend_Schedules_FY18_FY27_v5_Audit_Edition.xlsx | `f2b817694d6dbeab` |
-| Town of Hillsborough, North Carolina | — | Hillsborough_Municipal_Financial_Database_v1.xlsx | `e20884babf4cf058` |
-| Town of Hillsborough, North Carolina | 2018 | Hillsborough_Municipal_Financial_Database_v2_FY18_FY29.xlsx | `9571b92d98c92778` |
 | Town of Hillsborough, North Carolina | — | Hillsborough_RateOptions_22326 1.pdf | `f680cee67b886337` |
-| Town of Hillsborough, North Carolina | — | Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model.xlsx | `f6fa0e0de53756ea` |
-| Town of Hillsborough, North Carolina | — | Hillsborough_Workbook_B_Fiscal_Sustainability_Risk_Model_v2.xlsx | `4f420bf036529606` |
 | Town of Hillsborough, North Carolina | — | ITEM-Attachment-003-f0fc06314ce6427399e71e8d4d799c09.pdf | `6decc5fca848a1be` |
-| Town of Hillsborough, North Carolina | — | Municipal Finance Database - Hillsborough - v1.0.xlsx | `f2dacd7ae4b1b77b` |
-| Town of Hillsborough, North Carolina | — | Municipal Financial Analysis - Hillsborough - v1.0.xlsx | `ddcc9730385f52d7` |
 | Town of Hillsborough, North Carolina | — | Organizational Chart of Town Services and Administration 20230106.pdf | `0ea1fa2f88125d04` |
 | Town of Hillsborough, North Carolina | 2027 | Recommended FY27BudgetAtAGlanceFlyer.pdf | `b1aef110d4229f1d` |
-| Town of Hillsborough, North Carolina | — | Sales Tax Information.docx | `60ec376a43d36307` |
 | Town of Hillsborough, North Carolina | — | Stormwater Fees _ Town of Hillsborough, North Carolina.pdf | `1474292bf8ed2546` |
 | Town of Hillsborough, North Carolina | — | Stormwater Presentation 202404.pdf | `816c7eaa0623fddd` |
 | Town of Hillsborough, North Carolina | 2020 | Town of HIllsborough Issued CAFR FY20 (002).pdf | `17ad8f77ade2893e` |
@@ -85,24 +65,10 @@ No URL in this file is inferred. A plausible link that resolved to a different r
 | Town of Hillsborough, North Carolina | 2023 | _Hillsborough 2023 Audit - Stamped.pdf | `c190913a231f9e94` |
 | Town of Hillsborough, North Carolina | 2024 | _Hillsborough 2024 Audit - Stamped.pdf | `254013a466cb7b69` |
 | Town of Hillsborough, North Carolina | 2025 | _Hillsborough 2025 Audit - Stamped.pdf | `218853ec377adf5d` |
-| Town of Hillsborough, North Carolina | — | redatarequestlongtermfiscaltrendandsustainability.zip | `c7b6ae4934174283` |
-| Town of Hillsborough, North Carolina | — | water and sewer historical rates.docx | `03f089fa35b24390` |
-| Orange County Efficiency & Accountability Initiative | — | Architecture & Design Specification.docx | `cffc8ba7be2578fa` |
-| Orange County Efficiency & Accountability Initiative | — | Architecture & Design Specification.pdf | `adc8c4ccfb6ac00b` |
-| Orange County Efficiency & Accountability Initiative | — | Decision Context Model.pptx | `42c67c7ff8bd7ed2` |
-| Orange County Efficiency & Accountability Initiative | — | Issues Log.xlsx | `e43269868eb341b3` |
-| Orange County Efficiency & Accountability Initiative | — | MFAS Architecture Notebook.docx | `545f29f4d95ffec5` |
-| Orange County Efficiency & Accountability Initiative | — | MFAS Architecture Notebook.pdf | `c2ad4c28ca659cc1` |
-| Orange County Efficiency & Accountability Initiative | — | MFAS Conceptual Architecture.docx | `7fc6ceb2b9492b20` |
-| Orange County Efficiency & Accountability Initiative | — | MFAS Conceptual Architecture.pdf | `6071c5d487b22b70` |
-| Orange County Efficiency & Accountability Initiative | — | Municipal Finance Project Design Manual v1.0.xlsx | `1a917f31b130a274` |
-| Orange County Efficiency & Accountability Initiative | — | OC & Hillsborough Fiscal Analysis Project.docx | `7ff6409f36a3503b` |
 | Orange County, North Carolina | — | 4-b - CIP Presentation.pdf | `3dc0fef3cdf0c2a8` |
 | Orange County, North Carolina | — | 4-b 1 - County Managers CIP Transmittal Letter - FINAL.pdf | `5f2158d47bc5d5a0` |
 | Orange County, North Carolina | — | Appendix A_ County Profile (Data) Element (PDF).pdf | `1de901e83a325591` |
 | Orange County, North Carolina | 2025 | Budget Ordinance FY2025-26.pdf | `5048fa9fae4e6313` |
-| Orange County, North Carolina | 2018 | FY 2018-19 Annual Financial Report.pdf | `606601997980895e` |
-| Orange County, North Carolina | 2018 | FY 2018-19 Popular Annual Financial Report.pdf | `8beb9b82d9a9c15f` |
 | Orange County, North Carolina | 2026 | FY 26-27 CIP Online Version.pdf | `9a788a792b641c01` |
 | Orange County, North Carolina | 2025 | FY2025-26 Operating Budget Introduction.pdf | `bb7ec5fb47c0362b` |
 | Orange County, North Carolina | 2025 | FY2025-26 Operating Budget Transmittal Letter.pdf | `0a9e59e868511cd4` |
@@ -113,25 +79,8 @@ No URL in this file is inferred. A plausible link that resolved to a different r
 | Orange County, North Carolina | 2025 | FY25-26 Approved Budget (Web Version).pdf | `304d36fe692ed0b7` |
 | Orange County, North Carolina | 2025 | FY25-26 Manager Recommended Budget.pdf | `ea0aa8476f0a4649` |
 | Orange County, North Carolina | 2026 | FY26-27 Commissioner Approved Fee Schedule.pdf | `8bde817153248323` |
-| Orange County, North Carolina | — | OC Design.xlsx | `f66c9479c9ee9504` |
-| Orange County, North Carolina | — | OC_PAFR_2020.pdf | `7f2bd6697b7d8550` |
-| Orange County, North Carolina | — | Orange Co ACFR 6.30.25Final.pdf | `e962e7674ecad847` |
-| Orange County, North Carolina | — | Orange Co ACFR 6_30_24 Final_.pdf | `cfb25d100dfe45b4` |
-| Orange County, North Carolina | 2018 | Orange County 2018 CAFR.pdf | `1146f1d25c6ea129` |
-| Orange County, North Carolina | — | Orange County 6-30-21 ACFR - client_1.pdf | `0793cd4978c0dab7` |
-| Orange County, North Carolina | — | Orange County 6-30-21 Compliance Report - client.pdf | `6b4b31542848aa8d` |
-| Orange County, North Carolina | — | Orange County ACFR 6.30.22 Final_2.pdf | `f2bafc61c0929216` |
-| Orange County, North Carolina | — | Orange County CAFR 6.30.20.pdf | `e41a2c234f9d9a19` |
-| Orange County, North Carolina | — | Orange County NC ACFR 6.30.23.pdf | `de96f5845a9ddc7a` |
-| Orange County, North Carolina | — | Orange_County_Municipal_Finance_Database_v1.0.xlsx | `d819f7eab876f57d` |
-| Orange County, North Carolina | — | Orange_County_Municipal_Finance_Database_v1.1.xlsx | `359a2e63e4d0faea` |
-| Orange County, North Carolina | — | Orange_County_Municipal_Financial_Data_Warehouse_v1.2.xlsx | `8ca50c7d1d9b59ae` |
-| Orange County, North Carolina | — | Orange_County_Municipal_Financial_Data_Warehouse_v2.0.xlsx | `d1c0019c2745468a` |
-| Orange County, North Carolina | — | Orange_County_Municipal_Financial_Information_System_v2.2_Foundation.xlsx | `600ff180a3e058b3` |
-| Orange County, North Carolina | — | Public library services in Orange County.docx | `bd61770d45b74058` |
 | Orange County, North Carolina | — | RES-2022-041-A Resolution regarding continued uses of revenues from a one q.pdf | `2d696c0b614d79d4` |
 | Orange County, North Carolina | 2025 | Revenue Neutral Rate FY2025-26 (OC).pdf | `949a4a3e057f2f9c` |
-| Orange County, North Carolina | — | Services In Orange County.docx | `32e2bc461b03b91c` |
 | Orange County, North Carolina | — | Tax Rate Historical - Ad Valorem.pdf | `0c4a63a7bea1ef18` |
 | Orange County, North Carolina | — | UNDERSTANDING TAX BILL 8.5X11_1.pdf | `a2b8c0650764f16a` |
 | Orange County, North Carolina | — | White Paper-Basics of Local Sales Taxes.pdf | `6267bb72294caaa1` |

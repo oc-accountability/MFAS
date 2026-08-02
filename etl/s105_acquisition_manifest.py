@@ -54,10 +54,44 @@ AUTHORITY = {
 }
 
 
+# Office-suite files from a government are almost always a records-request response or an
+# emailed working file, not something published at an address. PDFs are the opposite.
+_REQUEST_FORMATS = (".xlsx", ".docx", ".pptx", ".zip", ".csv")
+
+
+def retrieval_status(doc: dict, url: str | None) -> str:
+    """How a third party could obtain this document — and whether that is still open.
+
+    Counting all 118 as "needs a URL" overstated the gap and, worse, made it
+    unclosable: ten of them are the initiative's OWN architecture and design files, and
+    a couple of dozen more are workbooks and records-request responses that were never
+    published at an address and never will be. A backlog that cannot reach zero stops
+    being read as a backlog.
+
+    The split is made on `source_authority`, which `s00` RECORDS from an explicit table
+    rather than inferring, and on file format. It is a judgement about the world and it
+    can be wrong at the margin — a government PDF supplied only by email will sit in
+    `needs_official_url` until someone establishes it was never published. That is the
+    right way round: it stays visible.
+    """
+    if url:
+        return "url_recorded"
+    if (doc.get("source_authority") or "") != "government":
+        # The initiative's own work — a design manual, a data warehouse workbook. There
+        # is no official URL to find, and pretending otherwise inflates the gap.
+        return "authored_by_the_initiative"
+    if doc["filename"].lower().endswith(_REQUEST_FORMATS):
+        return "supplied_on_request"
+    return "needs_official_url"
+
+
 def main() -> None:
     docs = read_json(DATASETS / "documents.json")["documents"]
+    # The registry nests its entries under "sources"; reading the top level gave a dict
+    # whose keys are "generated_by"/"what_this_is"/"sources", so every lookup missed and
+    # the manifest reported 0 recorded URLs while 18 were sitting in the file.
     registry = read_json(DATA / "source_registry.json")
-    reg_by_sha = registry if isinstance(registry, dict) else {}
+    reg_by_sha = registry.get("sources", {}) if isinstance(registry, dict) else {}
 
     entries, need_url = [], []
     for d in sorted(docs, key=lambda x: (x.get("organization_id") or "", x["filename"])):
@@ -81,19 +115,19 @@ def main() -> None:
             "source_authority": d.get("source_authority"),
             "retrieval": {
                 "official_url": url,
-                # A public record either way; the distinction is whether it is currently
-                # DOWNLOADABLE from a published address, which is what a third party
-                # needs to reconstruct the archive without asking anyone.
-                "status": "url_recorded" if url else "needs_official_url",
+                "archival_url": reg.get("archival_url"),
+                "verified": reg.get("url_verified_by"),
+                "status": retrieval_status(d, url),
                 "public_record": d.get("source_authority") == "government",
             },
         }
         entries.append(e)
-        if not url:
+        if e["retrieval"]["status"] == "needs_official_url":
             need_url.append(e)
 
     total_bytes = sum(e["bytes"] or 0 for e in entries)
     by_org = Counter(e["issuing_authority"] for e in need_url)
+    by_status = Counter(e["retrieval"]["status"] for e in entries)
 
     out = {
         "generated_by": "etl/s105_acquisition_manifest.py",
@@ -110,11 +144,35 @@ def main() -> None:
             "who followed it and found different numbers would have been actively "
             "misled. Documents with no recorded address are counted, not filled in."),
         "documents_total": len(entries),
-        "documents_with_official_url": len(entries) - len(need_url),
+        # COUNTED, not derived by subtraction. This was `len(entries) - len(need_url)`,
+        # and the moment `need_url` stopped meaning "everything without a URL" it read
+        # 53 recorded when 18 were. Subtracting one count from another is how a total
+        # goes wrong silently.
+        "documents_with_official_url": by_status.get("url_recorded", 0),
         "documents_needing_official_url": len(need_url),
+        "by_retrieval_status": dict(sorted(by_status.items())),
         "archive_bytes": total_bytes,
         "verify": ("sha256sum -c after placing files in sources/; `make etl` then "
                    "reproduces data/ byte-for-byte."),
+        "how_the_recorded_urls_were_established": (
+            "Each was downloaded and its sha256 compared with the copy held here; only an "
+            "exact match was recorded. Guessing sequential document IDs on the county's "
+            "archive produced a plausible-looking hit that was a different document, and "
+            "the hash check is what caught it."),
+        "known_access_barriers": {
+            "hillsboroughnc.gov": ("Akamai edge returns 403 to automated clients — curl, "
+                                   "WebFetch and headless Chromium alike. Its documents "
+                                   "are also largely absent from the Wayback Machine, so "
+                                   "the 40 outstanding town URLs need a human browser "
+                                   "session."),
+            "chapelhillnc.gov": ("Also 403 to automated clients. Its annual financial "
+                                 "reports WERE recoverable through the Wayback Machine, "
+                                 "which is where the recorded Chapel Hill URLs and their "
+                                 "archival copies came from."),
+            "orangecountync.gov": ("Reachable. Some DocumentCenter IDs return HTTP 500 "
+                                   "from the county's own server — those are broken links "
+                                   "on their side, not a fetch problem here."),
+        },
         "needs_official_url_by_authority": dict(sorted(by_org.items())),
         "documents": entries,
     }
@@ -133,9 +191,15 @@ def main() -> None:
         "",
         "## Status",
         "",
-        f"- **{len(entries) - len(need_url)}** of {len(entries)} documents have a "
-        f"recorded official URL",
-        f"- **{len(need_url)}** still need one — listed below",
+        f"- **{by_status.get('url_recorded', 0)}** documents have a recorded official "
+        f"URL, each **verified by downloading it and matching the sha256** — not by the "
+        f"title looking right",
+        f"- **{len(need_url)}** are published government documents that still need one "
+        f"— listed below",
+        f"- **{by_status.get('supplied_on_request', 0)}** were supplied on request "
+        f"(workbooks, spreadsheets, emailed files) and have no public address",
+        f"- **{by_status.get('authored_by_the_initiative', 0)}** are the initiative's "
+        f"own design and analysis files — there is no official URL to find",
         "",
         "No URL in this file is inferred. A plausible link that resolved to a different "
         "revision of the same report would be worse than a blank: a reader who followed "
@@ -166,7 +230,10 @@ def main() -> None:
     OUT_MD.write_text("\n".join(md), encoding="utf-8")
 
     print(f"  wrote {OUT_JSON.relative_to(DATA.parent)} and docs/SOURCES.md")
-    print(f"  {len(entries) - len(need_url)}/{len(entries)} documents have an official URL")
+    print(f"  {by_status.get('url_recorded', 0)}/{len(entries)} documents have a "
+          f"VERIFIED official URL")
+    for st, n in sorted(by_status.items()):
+        print(f"      {n:4}  {st}")
     if need_url:
         print(f"  {len(need_url)} still need one — NOT inferred, see docs/SOURCES.md:")
         for auth, n in sorted(by_org.items()):

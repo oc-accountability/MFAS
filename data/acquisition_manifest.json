@@ -4,15 +4,26 @@
   "why_the_sources_are_not_in_the_repository": "945 MiB across 118 documents; one file exceeds GitHub's 100 MiB per-file limit and Git LFS's free tier would not survive public traffic. The manifest is the substitute: assemble the files, hash them, and a match proves your copy is the one the figures came from.",
   "honesty_note": "No URL here is inferred. A plausible link that resolves to a different revision of the same report would be worse than a blank, because a reader who followed it and found different numbers would have been actively misled. Documents with no recorded address are counted, not filled in.",
   "documents_total": 118,
-  "documents_with_official_url": 0,
-  "documents_needing_official_url": 118,
+  "documents_with_official_url": 18,
+  "documents_needing_official_url": 65,
+  "by_retrieval_status": {
+    "authored_by_the_initiative": 10,
+    "needs_official_url": 65,
+    "supplied_on_request": 25,
+    "url_recorded": 18
+  },
   "archive_bytes": 991167169,
   "verify": "sha256sum -c after placing files in sources/; `make etl` then reproduces data/ byte-for-byte.",
+  "how_the_recorded_urls_were_established": "Each was downloaded and its sha256 compared with the copy held here; only an exact match was recorded. Guessing sequential document IDs on the county's archive produced a plausible-looking hit that was a different document, and the hash check is what caught it.",
+  "known_access_barriers": {
+    "hillsboroughnc.gov": "Akamai edge returns 403 to automated clients — curl, WebFetch and headless Chromium alike. Its documents are also largely absent from the Wayback Machine, so the 40 outstanding town URLs need a human browser session.",
+    "chapelhillnc.gov": "Also 403 to automated clients. Its annual financial reports WERE recoverable through the Wayback Machine, which is where the recorded Chapel Hill URLs and their archival copies came from.",
+    "orangecountync.gov": "Reachable. Some DocumentCenter IDs return HTTP 500 from the county's own server — those are broken links on their side, not a fetch problem here."
+  },
   "needs_official_url_by_authority": {
-    "Orange County Efficiency & Accountability Initiative": 10,
-    "Orange County, North Carolina": 38,
-    "Town of Chapel Hill, North Carolina": 13,
-    "Town of Hillsborough, North Carolina": 57
+    "Orange County, North Carolina": 19,
+    "Town of Chapel Hill, North Carolina": 6,
+    "Town of Hillsborough, North Carolina": 40
   },
   "documents": [
     {
@@ -29,6 +40,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -46,8 +59,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2017-2018-comprehensive-annual-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115175754id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2017-2018-comprehensive-annual-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -64,8 +79,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2018-2019-comprehensive-annual-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115180757id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2018-2019-comprehensive-annual-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -82,8 +99,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2019-2020-comprehensive-annual-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115175649id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2019-2020-comprehensive-annual-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -100,8 +119,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2020-2021-annual-comprehensive-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115174729id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2020-2021-annual-comprehensive-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -118,8 +139,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2021-2022-annual-comprehensive-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115175240id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2021-2022-annual-comprehensive-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -136,8 +159,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2022-2023-annual-comprehensive-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115174718id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2022-2023-annual-comprehensive-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -154,8 +179,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2023-2024-annual-comprehensive-financial-report.pdf",
+        "archival_url": "https://web.archive.org/web/20260115175127id_/https://www.chapelhillnc.gov/files/assets/town/v/1/bmd/documents/annual-fs/2023-2024-annual-comprehensive-financial-report.pdf",
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -173,6 +200,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -191,6 +220,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -209,6 +240,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -227,6 +260,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -245,6 +280,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -263,6 +300,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -281,6 +320,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -299,6 +340,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -317,6 +360,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -335,6 +380,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -353,6 +400,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -371,6 +420,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -389,6 +440,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -407,6 +460,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -425,6 +480,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -443,6 +500,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -461,6 +520,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -479,6 +540,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -497,6 +560,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -515,6 +580,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -533,6 +600,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -551,7 +620,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -569,7 +640,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -587,6 +660,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -605,6 +680,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -623,6 +700,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -641,6 +720,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -659,6 +740,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -677,6 +760,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -695,6 +780,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -713,6 +800,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -731,6 +820,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -749,6 +840,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -767,6 +860,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -785,7 +880,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -803,7 +900,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -821,7 +920,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -839,7 +940,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -857,7 +960,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -875,7 +980,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -893,7 +1000,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -911,7 +1020,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -929,6 +1040,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -947,7 +1060,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -965,7 +1080,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -983,6 +1100,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1001,7 +1120,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1019,7 +1140,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1037,6 +1160,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1055,6 +1180,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1073,7 +1200,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1091,6 +1220,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1109,6 +1240,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1127,6 +1260,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1145,6 +1280,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1163,6 +1300,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1181,6 +1320,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1199,6 +1340,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1217,6 +1360,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1235,6 +1380,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1253,7 +1400,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1271,7 +1420,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1289,7 +1440,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1307,7 +1460,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1325,7 +1480,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1343,7 +1500,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1361,7 +1520,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1379,7 +1540,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1397,7 +1560,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1415,7 +1580,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1433,7 +1600,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1451,7 +1620,9 @@
       "source_authority": "initiative",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "authored_by_the_initiative",
         "public_record": false
       }
     },
@@ -1469,6 +1640,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1487,6 +1660,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1505,6 +1680,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1523,6 +1700,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1540,8 +1719,10 @@
       "fiscal_year": 2018,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/Archive.aspx?ADID=552",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1558,8 +1739,10 @@
       "fiscal_year": 2018,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/Archive.aspx?ADID=553",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1577,6 +1760,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1595,6 +1780,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1613,6 +1800,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1631,6 +1820,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1649,6 +1840,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1667,6 +1860,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1685,6 +1880,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1703,6 +1900,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1721,6 +1920,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1739,6 +1940,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -1757,7 +1960,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1774,8 +1979,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/15399",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1792,8 +1999,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/36506/Orange-Co-ACFR-63025Final",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1810,8 +2019,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/30477/Annual-Comprehensive-Financial-Report-for-Fiscal-Year-Ending-June-30-2024",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1828,8 +2039,10 @@
       "fiscal_year": 2018,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/Archive.aspx?ADID=410",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1846,8 +2059,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/19139",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1864,8 +2079,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/18880",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1882,8 +2099,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/23668",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1900,8 +2119,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/14315",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1918,8 +2139,10 @@
       "fiscal_year": null,
       "source_authority": "government",
       "retrieval": {
-        "official_url": null,
-        "status": "needs_official_url",
+        "official_url": "https://www.orangecountync.gov/DocumentCenter/View/26108",
+        "archival_url": null,
+        "verified": "sha256 match on download (2026-08-01)",
+        "status": "url_recorded",
         "public_record": true
       }
     },
@@ -1937,7 +2160,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1955,7 +2180,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1973,7 +2200,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -1991,7 +2220,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -2009,7 +2240,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -2027,7 +2260,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -2045,6 +2280,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -2063,6 +2300,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -2081,7 +2320,9 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
-        "status": "needs_official_url",
+        "archival_url": null,
+        "verified": null,
+        "status": "supplied_on_request",
         "public_record": true
       }
     },
@@ -2099,6 +2340,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -2117,6 +2360,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
@@ -2135,6 +2380,8 @@
       "source_authority": "government",
       "retrieval": {
         "official_url": null,
+        "archival_url": null,
+        "verified": null,
         "status": "needs_official_url",
         "public_record": true
       }
