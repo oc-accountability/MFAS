@@ -36,6 +36,10 @@ the reader's browser.
 
 Built for the **Orange County Efficiency & Accountability Initiative**.
 
+> **New here, or setting this up on your own Mac?** Start with
+> **[`docs/START_HERE_AMY.md`](docs/START_HERE_AMY.md)** — the complete
+> set-up guide, written for someone with no programming background.
+
 ## → Just want to look at it? **https://oc-accountability.github.io/MFAS/**
 
 That is the live site. Nothing to install, nothing to run. **This repository *is* that website** —
