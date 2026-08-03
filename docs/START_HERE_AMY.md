@@ -1,5 +1,17 @@
 # Start here, Amy — running MFAS on your Mac
 
+**▶ Watch the set-up film first** — `2026-08-03_MFAS-HANDOFF_16x9.mp4`, sent with the email this
+guide came with. Two and a half minutes, narrated, and captioned if you would rather read it. It
+shows the real thing running: the clone, the folder the documents go into, `make verify`, and the
+site it builds. Everything in it is written out below, so the film is a shortcut and never the
+only copy.
+
+> It is not in this repository on purpose. `test_repo_media_stays_small` caps the media budget at
+> 12 MB because git keeps every blob forever and a data repo people are invited to clone should
+> not carry more video than data. The resident commercial earns its place there — it is for the
+> public. This one is a set-up guide for one person doing a one-time job, so it travels by email
+> instead of in everyone's clone.
+
 This is the complete set-up guide. It assumes **no programming background** and it is written to
 be followed in order. When you are done you will have the whole project running on your own
 machine, with an AI assistant that knows the project's rules and can do the work with you.
@@ -191,14 +203,31 @@ mkdir -p ~/projects/MFAS/sources && open ~/projects/MFAS/sources
 
 ```bash
 cd ~/projects/MFAS
-find sources -type f | wc -l
+make check-sources
 ```
 
-You want a number **over 150** (there are 118 unique documents plus some duplicate copies).
-If you get `0`, the folder went to the wrong place.
+**Run this before anything else.** It takes about ten seconds and it answers the only question
+that matters at this point — *did everything arrive?* — with a list of filenames rather than a
+number:
 
-> **If some documents are missing, that is fine and the project will tell you which.** It never
-> guesses. `docs/SOURCES.md` lists every document, its fingerprint, and where it came from.
+```
+  Looking in: /Users/amy/projects/MFAS/sources
+  118 of 118 documents are here.
+
+  Nothing is missing.
+```
+
+If something is absent it says which document, how big it is, which government issued it, and
+where to get it — and it will not have guessed at anything to cover the gap.
+
+It matches documents by their **contents**, not their names. That is not fussiness: three files
+the town sent as "new" turned out to be byte-identical to files already in the archive under
+completely different names, and two files in your Drive named "…Audit Report from Treasurer.pdf"
+are the same bytes as two already held under other names. Only the fingerprint can tell.
+
+> **If some documents are missing, that is fine.** It never guesses. The figures that would have
+> come from them are simply not published, and `docs/COVERAGE.md` says so. `docs/SOURCES.md`
+> lists every document, its fingerprint, and where it came from.
 
 ---
 
@@ -346,6 +375,8 @@ In rough order of value. Say these in your own words; you do not need to be prec
 | `command not found` | Something in section 2 did not install | Re-run that step |
 | `make: command not found` | Xcode tools missing | `xcode-select --install` |
 | The build **fails** with a data error | **Working as designed** — it found something it cannot stand behind | Paste the error to your assistant |
+| Lines scrolling past while it reads PDFs | Normal. Nothing on this list is a problem unless the build **stops** | Wait for the end |
+| `make check-sources` reports missing documents | Exactly what it is for | It names each one and where to get it |
 | `0 files` in sources | The Drive folder landed in the wrong place | Section 4 |
 | A test fails after a change | The change broke a rule | Ask the assistant to explain *which* rule |
 | The site shows no numbers | You opened the file directly instead of using `make serve` | Use `make serve` |
@@ -395,7 +426,13 @@ right one.
 
 ---
 
-## The one habit worth keeping
+## The two habits worth keeping
+
+When documents arrive, run:
+
+```bash
+make check-sources
+```
 
 Before you publish anything, run:
 

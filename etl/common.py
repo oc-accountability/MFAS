@@ -14,11 +14,48 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import logging
 import re
 import os
 import sys
 from dataclasses import dataclass, asdict
 from pathlib import Path
+
+# --- keep pdfminer's noise out of the operator's terminal -----------------
+#
+# Several of these documents embed fonts with an unparseable FontBBox, and pdfminer logs
+# a WARNING about it **per page**. Across ~2,500 pages that is thousands of lines reading
+#
+#     Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
+#
+# scrolling past for minutes. Nothing is wrong — the text still extracts, and the
+# reconciliation gates would fail loudly if it did not.
+#
+# It was suppressed in FOUR stages (s61, s62, s71, s81) and in none of the others, which
+# is the same shape as every other defect this project has found: a rule written down in
+# N places, where the instance that fires is the one that was missed. It belongs in the
+# module every stage imports.
+#
+# This matters beyond tidiness. The project has been handed to someone with no programming
+# background, and `START_HERE_AMY.md` tells her a failed build is the project working as
+# designed — so the one signal she has been asked to watch for is an error at the end. A
+# wall of text containing "Could not" and "cannot be parsed" is indistinguishable from
+# that, and nothing on screen says otherwise. Found while filming the rebuild for the
+# handoff guide: the recording was unusable, and it was unusable for exactly the reason it
+# would have alarmed her.
+logging.getLogger("pdfminer").setLevel(logging.ERROR)
+logging.getLogger("pdfplumber").setLevel(logging.ERROR)
+
+# openpyxl warns per workbook that a WMF image "is being dropped". We do not read images
+# out of the workbooks — only cells — so the drop changes nothing we publish. The warning
+# is silenced for the same reason as the one above, and for one more: Python prints a
+# UserWarning with the FULL PATH of the file that raised it, so this line put
+# `/home/<user>/projects/…/.venv/lib/python3.12/site-packages/openpyxl/…` on the operator's
+# screen. That is the only absolute path a full rebuild emitted, and the privacy sweep for
+# the handoff film is what found it.
+import warnings  # noqa: E402  — deliberately after the logging setup above
+warnings.filterwarnings("ignore", message=r".*image format is not supported.*",
+                        category=UserWarning)
 
 REPO = Path(__file__).resolve().parent.parent
 SOURCES = REPO / "sources"

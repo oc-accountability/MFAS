@@ -17,6 +17,13 @@
 **▶ [Watch the 62-second film, with narration](https://oc-accountability.github.io/MFAS/docs/media/mfas-commercial.mp4)**
 &nbsp;·&nbsp; [Open the website](https://oc-accountability.github.io/MFAS/)
 
+> **Running it yourself?** Start at [docs/START_HERE_AMY.md](docs/START_HERE_AMY.md) — the
+> complete set-up for someone with no programming background. A narrated film of the same walk
+> through exists and is sent alongside it rather than committed here: the media budget is capped
+> at 12 MB (`test_repo_media_stays_small`) because git keeps every blob forever, and a set-up
+> guide for one operator should not sit in everyone's clone. Every terminal and every browser in
+> it is a real recording of the real thing.
+
 What your property tax actually costs you, where it goes, and what the town said no to. The looping
 preview above is silent; the film is not.
 

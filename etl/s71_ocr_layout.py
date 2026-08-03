@@ -50,7 +50,7 @@ from common import (BUILD, DATASETS, SOURCES, content_cache_dir, read_json,  # n
                     write_json)
 
 warnings.filterwarnings("ignore")
-logging.getLogger("pdfminer").setLevel(logging.ERROR)
+# pdfminer's per-page FontBBox noise is silenced once, in etl/common.py.
 
 DPI = 300
 

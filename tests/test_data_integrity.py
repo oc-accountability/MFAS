@@ -9,12 +9,14 @@ from __future__ import annotations
 
 import collections
 import functools
+import hashlib
 import html as html_mod
 import json
 import os
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -2535,3 +2537,67 @@ def test_the_printed_sheet_and_the_copied_text_are_covered_at_all():
     assert "Town of Hillsborough" in got["intown"][1], (
         "in town the printed sheet lost its town bill row — the fixture or the rates "
         "changed")
+
+
+# ---------------------------------------------------------------------------
+# `make check-sources` — the answer to "did everything arrive?"
+# ---------------------------------------------------------------------------
+
+def test_check_sources_names_what_is_missing_and_matches_on_content():
+    """The archive is not in the repository, so a fresh clone has the recipe and not the
+    ingredients. Until this existed the only way to learn whether the ingredients were
+    complete was to run the whole rebuild and read what it could not find — the wrong
+    shape for the person the project was handed to.
+
+    Two properties are load-bearing and both are asserted here:
+
+    1. It reports the MISSING DOCUMENTS BY NAME, not a count. "112 of 118" tells an
+       operator nothing they can act on.
+    2. It matches on CONTENT, never on filename. Three files the town sent as new were
+       byte-identical to files already held under different names, and two files in the
+       Drive folder named "…Audit Report from Treasurer.pdf" are the same bytes as two
+       already held. A name-based check reports four documents where there are two.
+    """
+    import tempfile
+
+    man = json.loads((REPO / "data" / "acquisition_manifest.json").read_text())
+    docs = man["documents"]
+    src = REPO / "sources"
+    if not src.exists():
+        pytest.skip("the source archive is not on this machine")
+
+    # Copy exactly one document in, under a DELIBERATELY WRONG NAME. If the check keyed
+    # on filenames it would report this one missing and the renamed copy as a stranger.
+    by_hash = {d["sha256"]: d for d in docs}
+    chosen = None
+    for p in sorted(src.rglob("*")):
+        if p.is_file() and not p.name.startswith(".") and p.stat().st_size < 2_000_000:
+            h = hashlib.sha256(p.read_bytes()).hexdigest()
+            if h in by_hash:
+                chosen = (p, by_hash[h])
+                break
+    assert chosen, "no small manifest document found to build the fixture from"
+    path, doc = chosen
+
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "renamed-by-somebody.bin").write_bytes(path.read_bytes())
+        r = subprocess.run(
+            [sys.executable, str(REPO / "scripts" / "check_sources.py"),
+             "--sources", tmp, "--json"],
+            capture_output=True, text=True, cwd=REPO)
+        assert r.returncode == 1, "a run with 117 documents missing must not exit 0"
+        out = json.loads(r.stdout)
+
+    assert out["documents_expected"] == len(docs)
+    assert out["documents_present"] == 1, (
+        f"the renamed copy was not recognised — this check is matching on filenames, "
+        f"which is the defect it exists to avoid (got {out['documents_present']})")
+    assert out["files_not_in_the_manifest"] == 0, (
+        "the renamed copy was reported as a stranger; content matching is not working")
+
+    names = {m["filename"] for m in out["missing"]}
+    assert doc["filename"] not in names, "the document that IS present was reported missing"
+    assert len(names) == len(docs) - 1
+    # Every missing entry is actionable: a name, and where the document comes from.
+    for m in out["missing"]:
+        assert m["filename"] and m["issuing_authority"] and m["retrieval_status"], m

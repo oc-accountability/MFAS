@@ -1,10 +1,11 @@
 PY := ./.venv/bin/python
 PORT ?= 8771
 
-.PHONY: help venv etl test test-js verify serve clean
+.PHONY: help venv etl test test-js verify serve clean check-sources
 
 help:
 	@echo "make venv    — create .venv and install etl/requirements.txt"
+	@echo "make check-sources — which documents are here and which are not. Run this FIRST."
 	@echo "make etl     — rebuild data/ from sources/ (needs the archive unpacked there)"
 	@echo "make test-js — run the calculator's unit tests (node, no install needed)"
 	@echo "make test    — run every gate: the calculator's, then the data's"
@@ -15,6 +16,21 @@ venv:
 	python3 -m venv .venv
 	$(PY) -m pip install --quiet --upgrade pip
 	$(PY) -m pip install --quiet -r etl/requirements.txt
+
+# "Did I get all the documents?" answered in ten seconds instead of at the end of a
+# fifteen-minute rebuild.
+#
+# The archive is not in the repository — 945 MiB, one file over GitHub's per-file limit,
+# and several sent privately rather than published — so a fresh clone ships the recipe and
+# the operator supplies the ingredients. Until this existed, the only way to find out
+# whether the ingredients were complete was to run `make etl` and read what it could not
+# find. That is the wrong shape for the person this project was handed to: run this first,
+# and get a list of filenames rather than a number.
+#
+# Matches on sha256, never on filename — three "new" files the town sent turned out to be
+# byte-identical to files already held under different names.
+check-sources:
+	@$(PY) scripts/check_sources.py
 
 # Stages run in order; s90 validates and fails the build on bad data.
 etl:
@@ -92,9 +108,14 @@ test: test-js
 # integrity gate had failed — the 2026-07-31 audit called this out as the reason
 # H-02 through H-04 could coexist with a green suite. Anything that publishes runs
 # this, and CI runs it on every push.
+# --no-print-directory: make's own "Entering directory '/Users/…/projects/MFAS'" lines are
+# noise the operator cannot act on, and they put an absolute path on screen twice per
+# recursive call. Found while recording a real run for the handoff guide — the take was
+# unusable because it published the operator's own home directory, which is exactly what
+# the privacy sweep exists to catch. The gate itself is unchanged.
 verify:
-	$(MAKE) etl
-	$(MAKE) test
+	$(MAKE) --no-print-directory etl
+	$(MAKE) --no-print-directory test
 	@echo ""
 	@echo "  VERIFIED — full rebuild and every integrity gate passed."
 

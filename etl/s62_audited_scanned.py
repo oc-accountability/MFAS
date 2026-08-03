@@ -52,7 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import (BUILD, DATASETS, OCR_VERIFIED, read_json, write_json)  # noqa: E402
 
 warnings.filterwarnings("ignore")
-logging.getLogger("pdfminer").setLevel(logging.ERROR)
+# pdfminer's per-page FontBBox noise is silenced once, in etl/common.py.
 
 from statement_parser import (  # noqa: E402
     FINANCIAL_TITLE, SKIP_TITLE, STATEMENT_TITLE, column_roles, detect_grid,

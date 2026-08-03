@@ -64,9 +64,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATASETS, SOURCES, DIGITAL, read_json, write_json  # noqa: E402
 
 warnings.filterwarnings("ignore")
-# pdfminer logs a FontBBox complaint per page on these documents; it is noise
-# and it buries the reconciliation report under thousands of identical lines.
-logging.getLogger("pdfminer").setLevel(logging.ERROR)
+# pdfminer's per-page FontBBox noise is silenced once, in etl/common.py.
 
 from statement_parser import (  # noqa: E402
     FY_IN_TEXT, SKIP_TITLE, STATEMENT_TITLE, FINANCIAL_TITLE, column_roles,
