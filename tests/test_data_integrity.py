@@ -699,11 +699,22 @@ def test_water_use_is_a_number_the_reader_controls():
     only the town's 2,000 and 4,000 examples. Guard against a regression to a
     two-option control."""
     app = (REPO / "assets" / "app.js").read_text(encoding="utf-8")
+    domain = (REPO / "assets" / "domain.js").read_text(encoding="utf-8")
     assert "state.gallons" in app, "water use is no longer a numeric state value"
     # id= attribute forms, not bare tokens: a comment containing the word would
     # satisfy a bare-token grep with the control itself deleted.
     assert 'id="galNum"' in app and 'id="galSel"' in app, "the custom-entry control is missing"
-    assert "blockBill" in app, "the bill is no longer computed from the rate structure"
+    # The block-rate maths moved to assets/domain.js on 2026-08-03 so it could be unit
+    # tested without a browser. Follow it rather than dropping the guard: assert BOTH
+    # that the computation still exists where it now lives, and that the page still
+    # routes through it — either half alone would pass with the bill quietly reverted
+    # to a two-option lookup.
+    assert "function blockBill" in domain, (
+        "the block-rate bill computation is gone from assets/domain.js")
+    assert "threshold_gallons" in domain and "block2_per_1000" in domain, (
+        "the bill is no longer computed from the published rate structure")
+    assert "MFAS.utilityBill(" in app, (
+        "assets/app.js no longer computes the utility bill from the rate structure")
 
 
 def test_the_coming_section_reads_the_deficit_by_year():

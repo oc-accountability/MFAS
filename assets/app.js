@@ -95,14 +95,17 @@ function loadShared() {
      the accepted range starts where an assessed value plausibly could. */
   const galRaw = q.get('gal');
   const gal = Number(galRaw);
-  if (Number.isFinite(home) && home >= 1000 && home <= 1e9) {
+  /* The SAME bounds shareUrl() emits — MFAS.LIMITS, so the accept and emit domains
+     cannot drift apart. See assets/domain.js. */
+  const L = MFAS.LIMITS;
+  if (Number.isFinite(home) && home >= L.home.min && home <= L.home.max) {
     state.homeValue = home; state.linkFields.home = true;
   }
   if (where === 'intown' || where === 'outoftown') {
     state.location = where; state.linkFields.where = true;
   }
   if (galRaw !== null && galRaw.trim() !== '' && Number.isFinite(gal)
-      && gal >= 0 && gal <= 200000) {
+      && gal >= L.gallons.min && gal <= L.gallons.max) {
     state.gallons = gal; state.linkFields.gal = true;
   }
   if (Object.keys(state.linkFields).length) { state.fromLink = true; state.returning = false; }
@@ -120,10 +123,7 @@ function senderFields() {
  * rather than asserted. Returns null when two years are not both published —
  * the claim is then withheld, not guessed. */
 function townRateChange() {
-  const seq = latestByYear('property_tax_rate');
-  if (seq.length < 2) return null;
-  const prev = seq[seq.length - 2], cur = seq[seq.length - 1];
-  return { prev, cur, delta: Math.round((cur.value - prev.value) * 100) / 100 };
+  return MFAS.rateChange(state.data.facts.facts, 'property_tax_rate', docYear);
 }
 
 /** The address that reproduces exactly what the reader is looking at.
@@ -133,12 +133,11 @@ function townRateChange() {
  * screen — and attributed that default to the sender. The two domains must match.
  */
 function shareUrl() {
-  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, Math.round(v)));
   const u = new URL(location.href);
   u.search = new URLSearchParams({
-    home: String(clamp(state.homeValue, 1000, 1e9)),
+    home: String(MFAS.clampHome(Math.round(state.homeValue))),
     where: state.location,
-    gal: String(clamp(state.gallons, 0, 200000)),
+    gal: String(MFAS.clampGallons(Math.round(state.gallons))),
   }).toString();
   u.hash = 'you';
   return u.toString();
@@ -191,22 +190,16 @@ const facts = metric => state.data.facts.facts.filter(f => f.metric === metric);
 const inRange = f => f.fiscal_year == null
   || (f.fiscal_year >= state.yearMin && f.fiscal_year <= state.yearMax);
 
-function latestByYear(metric) {
-  const by = new Map();
-  for (const f of facts(metric)) {
-    if (f.fiscal_year == null) continue;
-    const prev = by.get(f.fiscal_year);
-    if (!prev || docYear(f.source_doc) > docYear(prev.source_doc)) by.set(f.fiscal_year, f);
-  }
-  return [...by.values()].sort((a, b) => a.fiscal_year - b.fiscal_year);
-}
-function one(metric) {
-  const rows = facts(metric);
-  if (!rows.length) return null;
-  return rows.reduce((a, b) => (docYear(b.source_doc) > docYear(a.source_doc) ? b : a));
-}
+/* Which reading of a metric to publish when several documents report it. The rule
+   lives in assets/domain.js so the charts, the hero, the printed sheet and the
+   copied text cannot each answer it differently — and so it can be tested without
+   a browser. These are the page's thin bindings to it. */
+const latestByYear = metric =>
+  MFAS.latestByYear(state.data.facts.facts, metric, docYear);
+const one = metric => MFAS.latestFact(state.data.facts.facts, metric, docYear);
 const val = (metric, fb = null) => { const f = one(metric); return f ? f.value : fb; };
-const forYear = (metric, fy) => latestByYear(metric).find(f => f.fiscal_year === fy) || null;
+const forYear = (metric, fy) =>
+  MFAS.factForYear(state.data.facts.facts, metric, fy, docYear);
 function quote(key) {
   const qs = (state.data.household && state.data.household.town_statements) || [];
   return qs.find(q => q.key === key) || null;
@@ -645,48 +638,18 @@ function chartColumns(rows, title, note, fmtV) {
 }
 
 /* ==================== 01 — your bill ==================== */
-/** One block-rate bill: a fixed charge for the first N gallons, then a rate per 1,000. */
-function blockBill(set, gallons) {
-  if (!set) return null;
-  const over = Math.max(0, gallons - set.threshold_gallons);
-  return set.block1_charge + (over / 1000) * set.block2_per_1000;
-}
-/**
- * The whole monthly utility bill at the reader's own consumption.
+/** The whole monthly utility bill at the reader's own consumption.
  *
- * The town publishes the *increase* only at 2,000 and 4,000 gallons, which is why this
- * page once offered just those two. Extrapolating between them would have been unsafe
- * if the rates were tiered — but the fee schedule shows two blocks and nothing more,
- * so any consumption computes exactly. Falls back to the published increases if the
- * rate structure is unavailable, so the page degrades rather than breaking.
- */
+ *  The maths — the two-block rate structure and the fallback to the town's published
+ *  increases at 2,000 and 4,000 gallons — is in assets/domain.js, where it is unit
+ *  tested against both paths. This binds it to the reader's current answers. */
 function utilMonthly() {
-  const u = state.data && state.data.utility;
-  const g = state.gallons;
-  const loc = state.location === 'intown' ? 'inside' : 'outside';
-  if (u && u.rate_sets) {
-    const w = u.rate_sets[`water_${loc}`], s = u.rate_sets[`sewer_${loc}`];
-    if (w && s) {
-      const storm = (u.stormwater || {});
-      const sNow = (storm.residential_recommended || 0) / 12;
-      const sWas = (storm.residential_current || 0) / 12;
-      const wNow = blockBill(w.recommended, g), wWas = blockBill(w.current, g);
-      const sewNow = blockBill(s.recommended, g), sewWas = blockBill(s.current, g);
-      return {
-        exact: true, gallons: g,
-        waterBill: wNow, sewerBill: sewNow, stormBill: sNow,
-        billTotal: wNow + sewNow + sNow,
-        water: wNow - wWas, sewer: sewNow - sewWas, storm: sNow - sWas,
-        total: (wNow + sewNow + sNow) - (wWas + sewWas + sWas),
-      };
-    }
-  }
-  // Published increases are given at 2,000 and 4,000 gallons only; pick the nearer.
-  const level = Math.abs(g - 2000) < Math.abs(g - 4000) ? 'min' : 'avg';
-  const w = val(`water_bill_increase_monthly_${state.location}_${level}`);
-  const s = val(`sewer_bill_increase_monthly_${state.location}_${level}`);
-  return { exact: false, gallons: level === 'min' ? 2000 : 4000,
-           water: w, sewer: s, total: (w || 0) + (s || 0) };
+  return MFAS.utilityBill({
+    utility: state.data && state.data.utility,
+    gallons: state.gallons,
+    location: state.location,
+    increaseLookup: val,
+  });
 }
 /* Removing the town tax from an out-of-town bill fixes an OVERSTATEMENT and must not
    quietly create an UNDERSTATEMENT in its place. An Orange County bill outside a
@@ -717,25 +680,33 @@ const OUT_OF_TOWN_CAVEAT =
  */
 function townTax() {
   if (state.location !== 'intown') return 0;
-  const rate = val('property_tax_rate');
-  return rate == null ? null : state.homeValue / 100 * (rate / 100);
-}
-/* Kept as the unconditional town levy, for the "one cent on the tax rate" and FY-scenario
-   rows, which are town POLICY comparisons rather than components of this household's
-   bill. Never use it for the headline — that is the bug above. */
-function townLevyIfInTown() {
-  const rate = val('property_tax_rate');
-  return rate == null ? null : state.homeValue / 100 * (rate / 100);
+  return propertyBill().town.due;
 }
 /** Orange County's share — LARGER than the town's, and paid on top of it. */
 function countyTax() {
-  const rate = val('county_property_tax_rate');
-  return rate == null ? null : state.homeValue / 100 * (rate / 100);
+  return propertyBill().county.due;
 }
-function totalPropertyTax() {
-  const t = townTax(), c = countyTax();
-  if (t == null) return null;
-  return c == null ? t : t + c;
+
+/** The whole property-tax bill, from the domain layer.
+ *
+ * `townLevyIfInTown()` and `totalPropertyTax()` used to sit here. Both were written to
+ * be the single source for these figures and BOTH HAD ZERO CALL SITES — every surface
+ * computed its own copy instead, which is exactly how the out-of-town defect survived
+ * in four places at once. Worse, `totalPropertyTax()` used the opposite rounding rule
+ * from the two live sites, so the first surface wired to the obviously-named helper
+ * would have published a total $1 below the hero.
+ *
+ * They are gone. `MFAS.propertyTaxBill` is the single source, it is unit tested, and
+ * it distinguishes "does not apply" from "unknown" from "zero" — so a caller can tell
+ * when to withhold instead of printing a styled, sourced $0.
+ */
+function propertyBill() {
+  return MFAS.propertyTaxBill({
+    assessedValue: state.homeValue,
+    location: state.location,
+    townRateCents: val('property_tax_rate'),
+    countyRateCents: val('county_property_tax_rate'),
+  });
 }
 
 function renderYou(host) {
@@ -898,7 +869,7 @@ function renderYou(host) {
     drawWelcome();
     const annual = townTax();
     const county = countyTax();
-    const oneCent = state.homeValue / 100 * 0.01;
+    const oneCent = MFAS.oneCentOnValue(state.homeValue);
     const u = utilMonthly();
     /* The headline is the sum of the rounded rows beneath it, not a separately
        rounded exact total: at many home values the two differed by $1, on a sheet
@@ -1170,7 +1141,7 @@ function takeawayHTML() {
   const countyR = county != null ? Math.round(county) : null;
   const total = annualR + (countyR || 0);
   const u = utilMonthly();
-  const oneCent = state.homeValue / 100 * 0.01;
+  const oneCent = MFAS.oneCentOnValue(state.homeValue);
   const idx = state.data.index || {};
   const rc = townRateChange();
 
@@ -2345,7 +2316,7 @@ function renderComing(host) {
   const scenario = one('fy29_scenario_increase_on_400k_home');
   const capCents = one('capital_projects_tax_rate_equivalent_cents');
   const houseCents = one('affordable_housing_tax_rate_equivalent_cents');
-  const oneCent = state.homeValue / 100 * 0.01;
+  const oneCent = MFAS.oneCentOnValue(state.homeValue);
 
   const ans = document.createElement('p');
   ans.className = 'answer';
@@ -2476,7 +2447,7 @@ function driversBlock(sec) {
   const v = d.verification || {};
   const agreed = (v.cross_checks_against_this_pipeline || []).filter(c => c.agrees).length;
   const checks = (v.cross_checks_against_this_pipeline || []).length;
-  const oneCent = state.homeValue / 100 * 0.01;
+  const oneCent = MFAS.oneCentOnValue(state.homeValue);
 
   const card = document.createElement('div');
   card.className = 'card drivers';
@@ -2546,7 +2517,7 @@ function tradeoffBlock(sec) {
   if (!d || !d.declined) return;
   const s = d.summary;
   const rt = s.declined_in_resident_terms || {};
-  const oneCent = state.homeValue / 100 * 0.01;
+  const oneCent = MFAS.oneCentOnValue(state.homeValue);
   // The town's published figure is for a $400,000 home; scale it to the reader's.
   const onYours = rt.cents_on_the_tax_rate ? oneCent * rt.cents_on_the_tax_rate : null;
 

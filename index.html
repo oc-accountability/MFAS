@@ -163,6 +163,10 @@
   <p class="meta" id="footMeta"></p>
 </footer>
 
+<!-- The calculations, with nothing else attached. Loaded first, and separately, because
+     it is the one file that is unit tested without a browser (tests/js/, `make test-js`).
+     Same bytes in both places, so the tested code is the shipped code. -->
+<script src="assets/domain.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>
