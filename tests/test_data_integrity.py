@@ -2034,3 +2034,60 @@ def test_recognition_is_never_published_for_a_year_read_digitally():
         f"{len(offenders)} recognised row(s) published for a year held digitally "
         f"({sorted(digital_years)}): "
         f"{sorted({r[col['Fiscal_Year_ID']] for r in offenders})}")
+
+
+def test_every_accepted_column_really_does_add_up():
+    """Recompute each accepted column from its MEMBERS, not from the cached fields.
+
+    The 2026-08-01 audit's M-02. The parser stored `sum_of_lines` and `reconciles`
+    alongside the members, and every check downstream trusted them — so a column could
+    be marked reconciled and nobody ever re-derived it. Independent recomputation found
+    an accepted Orange County column whose four lines sum to $141,335 against a printed
+    $141,334, because the gate accepted `abs(got - tot) < 1.5` while the project said in
+    public that accepted columns add up "exactly".
+
+    A dollar is immaterial. The claim is not: exactness is a control, and a control that
+    is only asserted is not a control. This recomputes.
+    """
+    ds = REPO / "data" / "datasets"
+    checked = mismatched = 0
+    bad = []
+    for name in ("audited_digital.json", "county_acfr.json", "audited_scanned.json"):
+        path = ds / name
+        if not path.exists():
+            continue
+        payload = json.loads(path.read_text())
+        # documents[] -> pages[] -> groups[]. The reconciliation lives on the PAGE, not
+        # on the flat `published` list, which carries only the lines that survived it.
+        for doc in payload.get("documents") or []:
+            for page in doc.get("pages") or []:
+                for g in page.get("groups") or []:
+                    # `members`, NOT `publish_members`. The parser collapses an inner
+                    # subtotal out of the sum and then re-adds its child lines to
+                    # `publish_members` so they still get published — summing THAT list
+                    # counts the subtotal and its children both, and this test first
+                    # reported 41 "failures" whose recomputed totals were ~70% too high.
+                    # Reconciliation is computed on `members`; verify the same thing.
+                    members = g.get("members") or []
+                    for col in g.get("columns") or []:
+                        if not col.get("reconciles"):
+                            continue
+                        ci = col.get("column_index")
+                        tot = col.get("printed_total")
+                        if ci is None or tot is None:
+                            continue
+                        parts = [m["values"][ci] for m in members
+                                 if ci < len(m.get("values") or [])
+                                 and m["values"][ci] is not None]
+                        if not parts:
+                            continue
+                        checked += 1
+                        if abs(sum(parts) - tot) >= 0.005:
+                            mismatched += 1
+                            if len(bad) < 5:
+                                bad.append({"file": name, "group": str(g.get("group"))[:40],
+                                            "column": ci, "printed": tot,
+                                            "recomputed": round(sum(parts), 2)})
+    assert checked, "no accepted columns were recomputed — the shape of the data changed"
+    assert not mismatched, (
+        f"{mismatched} of {checked} ACCEPTED columns do not actually add up: {bad}")

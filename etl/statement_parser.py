@@ -419,9 +419,21 @@ def reconcile(groups, ncols: int):
                              "sum_of_lines": None, "reconciles": None})
                 continue
             got = sum(parts)
+            # EXACT means exact. This used to accept `abs(got - tot) < 1.5`, and the
+            # project says in public that an accepted column adds up "exactly" — an
+            # audit recomputed 3,409 accepted county columns and found one where four
+            # lines sum to $141,335 against a printed $141,334. A dollar is immaterial;
+            # the claim is not. Exactness is a control, not a rounding style.
+            #
+            # The tolerance is now half a cent, which is float noise on a sum of values
+            # the parser itself rounded to 2dp — not a dollar of slack. Where a real
+            # variance exists it is RECORDED rather than absorbed, so a statement that
+            # genuinely does not foot is visible instead of being quietly accepted.
+            variance = round(got - tot, 2)
             cols.append({"column_index": c, "printed_total": tot,
                          "sum_of_lines": round(got, 2), "lines": len(parts),
-                         "reconciles": abs(got - tot) < 1.5})
+                         "variance": variance,
+                         "reconciles": abs(got - tot) < 0.005})
         any_checked = [c for c in cols if c["reconciles"] is not None]
         g2 = dict(g)
         g2["members"] = members

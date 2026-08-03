@@ -1334,6 +1334,7 @@ function refreshDependents() {
      not-applicable, and without this the explorer kept the previous answer's figures
      until the reader happened to touch one of its own controls. */
   if (typeof _explorerRepaint === 'function') _explorerRepaint();
+  scheduleScrollableScan();
   clearTimeout(_refreshTimer);
   _refreshTimer = setTimeout(() => {
     const old = document.getElementById('coming');
@@ -2108,6 +2109,13 @@ function renderHealth(host) {
           .sort((a, b) => a[0].localeCompare(b[0]));
         if (cy.length >= 2) {
           const v = wc.verification || {};
+          /* The per-value record s81 writes after reading all eight county ACFRs
+             directly. The sentence below used to be driven by the OLDER page-citation
+             check, which could only test rows whose workbook Source_ID resolved to a
+             held file — so it reported 2 of 16 verified and blamed unresolvable
+             citations, when 13 of the 16 are in fact printed in the audits we hold.
+             Understating your own evidence is its own kind of inaccuracy. */
+          const dr = v.direct_reader;
           const cw = document.createElement('div');
           cw.style.marginTop = 'var(--s6)';
           /* Counted from the rows this table actually renders, not asserted: the
@@ -2126,10 +2134,16 @@ function renderHealth(host) {
               ${v.every_figure_found ? `Across the workbook, every row this build could match to a
               held county report checked out exactly (<strong>${v.every_figure_found} of
               ${v.rows_checked_against_source_pdf}</strong> checkable rows).` : ''}
-              ${cellsUnchecked ? `Of the ${cellsChecked + cellsUnchecked} summary figures shown
-              here, <strong>${cellsChecked}</strong> ${cellsChecked === 1 ? 'has' : 'have'} been
-              re-checked against the cited page; the rest cite report years whose citations do not
-              yet resolve to a file in the archive, so they are shown unverified.` : ''}
+              ${dr ? `Of the ${dr.values_checked} summary figures shown here,
+              <strong>${dr.values_found}</strong> ${dr.values_found === 1 ? 'has' : 'have'} been
+              found in the county's own annual report, read directly by this pipeline —
+              ${dr.values_not_found === 0 ? 'all of them' :
+                `the remaining ${dr.values_not_found} did not appear as a printed total for that
+                 year and section, so ${dr.values_not_found === 1 ? 'it is' : 'they are'} shown
+                 unconfirmed`}.
+              <span style="opacity:.8">That check is value-level: it confirms the amount is
+              printed in the audit, not that the workbook's label and attribution are
+              right.</span>` : ''}
             </p>
             <div class="tablewrap"><table>
               <caption>Orange County audited General Fund actuals.</caption>
@@ -3053,13 +3067,71 @@ async function boot() {
       `${idx.counts.documents} (${idx.counts.documents_with_trustworthy_text} digital PDFs, ` +
       `${idx.counts.documents_scanned_needing_transcription} scans whose hidden text is never ` +
       `used, ${nOther} spreadsheets and other files).`;
+    scheduleScrollableScan();
   } catch (err) {
-    $('#loading').textContent =
-      'Could not load the town’s figures. If you opened this file straight from your computer, your ' +
-      'browser blocks the data load — open the published web address instead.';
+    /* The old text asserted the cause — "you probably opened the file directly" —
+       which is wrong for a deployment or a partial release, and sends the reader
+       to fix something that is not broken. Describe the symptom, give both real
+       causes, and say what to do. */
+    $('#loading').innerHTML =
+      'Could not load the town’s figures. Either the data files did not load from the ' +
+      'server, or this page was opened straight from a folder rather than a web address ' +
+      '— browsers block the data load in that case. ' +
+      '<a href="https://oc-accountability.github.io/MFAS/">Open the published site</a>, ' +
+      'and if it still fails there, that is a fault worth reporting.';
     console.error(err);
   }
 }
+
+
+/* ---------------------------------------------------------------------------
+ * Keyboard access to the horizontally scrolling regions.
+ *
+ * Six table wrappers and the chart strip can overflow sideways on a phone. A
+ * region a mouse can scroll but a keyboard cannot reach is a WCAG failure
+ * (`scrollable-region-focusable`), and an audit found two SERIOUS instances at
+ * 390px and 320px. It is easy to miss because the DOCUMENT does not overflow —
+ * only these inner boxes do — so a page-width test says everything is fine.
+ *
+ * The tab stop is added ONLY where the content actually overflows. Marking every
+ * wrapper focusable would sprinkle dead tab stops through the page for keyboard
+ * users on a wide screen, which trades one accessibility problem for another, so
+ * this re-measures on resize.
+ *
+ * The name comes from the region's own caption or nearest heading. A focusable
+ * region with no accessible name is only half a fix — a screen-reader user is
+ * told "scrollable region" with no idea which one.
+ * ------------------------------------------------------------------------- */
+function markScrollableRegions() {
+  $$('.tablewrap, .chart-scroll').forEach(el => {
+    const overflows = el.scrollWidth > el.clientWidth + 1;
+    if (!overflows) {
+      el.removeAttribute('tabindex');
+      el.removeAttribute('role');
+      el.removeAttribute('aria-label');
+      return;
+    }
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'region');
+    if (!el.getAttribute('aria-label')) {
+      const cap = el.querySelector('caption, th[scope="col"]');
+      let name = cap ? cap.textContent.trim() : '';
+      if (!name) {
+        const h = el.closest('section')?.querySelector('h2, h3');
+        name = h ? h.textContent.trim() : '';
+      }
+      el.setAttribute('aria-label',
+        (name ? name.replace(/\s+/g, ' ').slice(0, 80) + ' — ' : '') + 'scrollable table');
+    }
+  });
+}
+
+let _scrollScanTimer = null;
+function scheduleScrollableScan() {
+  clearTimeout(_scrollScanTimer);
+  _scrollScanTimer = setTimeout(markScrollableRegions, 150);
+}
+window.addEventListener('resize', scheduleScrollableScan);
 
 $('#themeToggle').addEventListener('click', () => {
   const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';

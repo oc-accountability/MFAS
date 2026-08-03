@@ -4,7 +4,7 @@
 
 - **118** documents in the archive
 - **19** contribute facts to the warehouse
-- **24,215** facts, traceable to a document and (where the source prints one) a page
+- **24,205** facts, traceable to a document and (where the source prints one) a page
 - **37** documents remain genuinely unread — the backlog below
 
 ## Facts by government and year
@@ -12,7 +12,7 @@
 | Organization | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | 2027 | 2028 | 2029 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | ORG_HB | 129 | 245 | 209 | 255 | 312 | 263 | 240 | 352 | 983 | 760 | 760 | 752 | 752 |
-| ORG_OC | 0 | 811 | 811 | 794 | 134 | 820 | 884 | 1,045 | 1,024 | 0 | 0 | 0 | 0 |
+| ORG_OC | 0 | 811 | 811 | 794 | 134 | 810 | 884 | 1,045 | 1,024 | 0 | 0 | 0 | 0 |
 
 A thin year is a real hole, not noise. Hillsborough FY2017-FY2020 carry less than the later years because they exist only as SCANS, whose figures are published solely where a page's own arithmetic proves them. This paragraph used to say the fix was not more code but asking the town for digital originals — that was wrong twice over, and the correction is worth keeping. The town HAD sent everything it has, and the gap was two defects here: a scan-selection rule that preferred the smallest file (picking 1-bit fax copies over 8-bit colour copies of the same report) and a fixed-grid line banding that could not survive a 0.4-degree page rotation. Fixing both took FY2019 from 81 verified statement lines to 464 and FY2020 from 95 to 460. Before blaming a source, measure your own reader.
 

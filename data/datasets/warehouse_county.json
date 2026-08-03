@@ -13,7 +13,176 @@
     "every_figure_found": 41,
     "figures_not_found_on_cited_page": 0,
     "not_verifiable": 355,
-    "method": "For each row citing a document and PDF page we hold, every monetary figure in the row must appear on that page. This catches a transcription slip or a citation that has drifted; it does not check that a figure sits on the right LINE of the page."
+    "method": "For each row citing a document and PDF page we hold, every monetary figure in the row must appear on that page. This catches a transcription slip or a citation that has drifted; it does not check that a figure sits on the right LINE of the page.",
+    "direct_reader": {
+      "generated_by": "etl/s81_county_acfr.py",
+      "values_checked": 16,
+      "values_found": 13,
+      "values_not_found": 3,
+      "note": "One record per figure the site displays. Supersedes the older page-citation check for these values, which could only test rows whose workbook Source_ID resolved to a held file.",
+      "checks": [
+        {
+          "fiscal_year": "FY2018",
+          "section": "revenues",
+          "amount": 212979304.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-2018-cafr",
+          "source_page": 42,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2018",
+          "section": "expenditures",
+          "amount": 212019063.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": false,
+          "source_document": null,
+          "source_page": null,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2019",
+          "section": "revenues",
+          "amount": 220657030.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "fy-2018-19-annual-financial-report",
+          "source_page": 42,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2019",
+          "section": "expenditures",
+          "amount": 216357444.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": false,
+          "source_document": null,
+          "source_page": null,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2020",
+          "section": "revenues",
+          "amount": 228292446.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-cafr-6-30-20",
+          "source_page": 40,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2020",
+          "section": "expenditures",
+          "amount": 227071555.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": false,
+          "source_document": null,
+          "source_page": null,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2021",
+          "section": "revenues",
+          "amount": 240162106.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-6-30-21-acfr-client-1",
+          "source_page": 36,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2021",
+          "section": "expenditures",
+          "amount": 231143605.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-6-30-21-acfr-client-1",
+          "source_page": 36,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2022",
+          "section": "revenues",
+          "amount": 256498678.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-acfr-6-30-22-final-2",
+          "source_page": 35,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2022",
+          "section": "expenditures",
+          "amount": 241977770.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-acfr-6-30-22-final-2",
+          "source_page": 38,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2023",
+          "section": "revenues",
+          "amount": 269240284.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-nc-acfr-6-30-23",
+          "source_page": 38,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2023",
+          "section": "expenditures",
+          "amount": 214007096.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-county-nc-acfr-6-30-23",
+          "source_page": 38,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2024",
+          "section": "revenues",
+          "amount": 276514344.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-co-acfr-6-30-24-final",
+          "source_page": 37,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2024",
+          "section": "expenditures",
+          "amount": 245383805.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-co-acfr-6-30-24-final",
+          "source_page": 37,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2025",
+          "section": "revenues",
+          "amount": 289975763.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-co-acfr-6-30-25final",
+          "source_page": 35,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        },
+        {
+          "fiscal_year": "FY2025",
+          "section": "expenditures",
+          "amount": 252382707.0,
+          "method": "read directly from the county's own ACFR by this pipeline",
+          "found": true,
+          "source_document": "orange-co-acfr-6-30-25final",
+          "source_page": 35,
+          "limit": "value-level only — this confirms the amount appears as a printed total for that year and section, not that the workbook's label and attribution are right"
+        }
+      ]
+    }
   },
   "mismatches": [],
   "data_quality_notes": [

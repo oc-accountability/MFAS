@@ -284,6 +284,74 @@ def main() -> None:
         "extraction_problem_count": len(problems),
     })
 
+    # ---- the per-displayed-value verification record the site needs ------------
+    #
+    # The 2026-08-01 audit's M-01: the page reported that only two of the sixteen
+    # county summary values had been rechecked, and blamed "years that do not resolve
+    # to a held file". That was true of the OLDER s85 path and stopped being true the
+    # moment this stage began reading all eight ACFRs directly — so the site was
+    # understating its own evidence AND giving a false reason for the gap.
+    #
+    # Written back into warehouse_county.json rather than shipped as a new dataset:
+    # county_acfr.json is 8.5 MB and adding a fetch would worsen the page-weight
+    # finding in the same audit. The site already reads `verification` from that file.
+    wc_path = DATASETS / "warehouse_county.json"
+    if wc_path.exists():
+        wc = read_json(wc_path)
+        # Every total this stage read directly, by (fiscal year, section).
+        direct = {}
+        for pub in published:
+            lbl = str(pub.get("line") or "").lower()
+            grp = str(pub.get("group") or "").lower()
+            if not pub.get("fiscal_year") or not lbl.startswith("total"):
+                continue
+            sect = ("revenues" if "revenue" in lbl or "revenue" in grp
+                    else "expenditures" if "expenditure" in lbl or "expenditure" in grp
+                    else None)
+            if not sect:
+                continue
+            for v in (pub.get("values") or []):
+                if v is not None:
+                    direct.setdefault((int(pub["fiscal_year"]), sect), []).append(
+                        {"amount": round(float(v), 2), "page": pub.get("source_page"),
+                         "document": pub.get("source_doc")})
+        checks = []
+        for r in wc.get("rows", []):
+            cat = str(r.get("Category") or "").strip().lower()
+            sect = ("revenues" if cat == "total revenues"
+                    else "expenditures" if cat == "total expenditures" else None)
+            amt = r.get("Actual_Amount")
+            fy = str(r.get("Fiscal_Year_ID") or "")
+            if not sect or amt is None or not fy.startswith("FY"):
+                continue
+            year = int(fy[2:])
+            hits = [h for h in direct.get((year, sect), [])
+                    if abs(h["amount"] - float(amt)) < 0.005]
+            checks.append({
+                "fiscal_year": fy, "section": sect, "amount": float(amt),
+                "method": "read directly from the county's own ACFR by this pipeline",
+                "found": bool(hits),
+                "source_document": hits[0]["document"] if hits else None,
+                "source_page": hits[0]["page"] if hits else None,
+                "limit": ("value-level only — this confirms the amount appears as a printed "
+                          "total for that year and section, not that the workbook's label and "
+                          "attribution are right"),
+            })
+        found = sum(1 for c in checks if c["found"])
+        wc.setdefault("verification", {})["direct_reader"] = {
+            "generated_by": "etl/s81_county_acfr.py",
+            "values_checked": len(checks),
+            "values_found": found,
+            "values_not_found": len(checks) - found,
+            "note": ("One record per figure the site displays. Supersedes the older "
+                     "page-citation check for these values, which could only test rows whose "
+                     "workbook Source_ID resolved to a held file."),
+            "checks": checks,
+        }
+        write_json(wc_path, wc)
+        print(f"  site verification record: {found}/{len(checks)} displayed county values "
+              f"found in the ACFRs read directly")
+
     fin = sum(1 for p in published if p["financial_grain"])
     print(f"\n  {len(published)} verified county lines published "
           f"({fin} at fund financial grain, {len(published)-fin} companion)")

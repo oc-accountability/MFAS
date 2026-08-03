@@ -15,7 +15,9 @@ routes — pdfplumber on embedded text, and tesseract on rendered images — and
 every figure. That is a real error rate on the actual documents at the actual depth we
 publish, rather than a six-page sample of distinct values.
 
-Measured 2026-07-31: **1,941 of 1,941 figures identical, 100.00%.** Not a single
+Measured 2026-08-01, after the deskew fix: **5,394 of 5,394 figures identical,
+100.00%** (it read 1,941/1,941 before deskew — reading MORE of the scan cost no
+accuracy at all). Not a single
 recognised figure that survived the arithmetic gate disagreed with the digital
 original. That is the evidence base for publishing anything from a scan — and it is
 also why the gate stays: the figures that did NOT survive it are not in that count.
