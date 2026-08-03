@@ -381,6 +381,10 @@ function card(title, note, svg, legend, tableFn) {
       holder.hidden = !holder.hidden;
       btn.textContent = holder.hidden ? 'Show the numbers' : 'Hide the numbers';
       btn.setAttribute('aria-expanded', String(!holder.hidden));
+      // This table did not exist when the last scan ran. Without this it is a
+      // scrollable region a mouse can reach and a keyboard cannot — see the note
+      // above markScrollableRegions().
+      scheduleScrollableScan();
     });
     c.appendChild(btn);
     c.appendChild(holder);
@@ -419,6 +423,13 @@ function disclosure(label, buildInner) {
   let built = false;
   d.addEventListener('toggle', () => {
     if (d.open && !built) { buildInner(inner); built = true; }
+    /* Every table in here is created on this event, AFTER the load-time scan has
+       already run — so before this line the keyboard-reachability fix covered only
+       the two tables rendered at load, and missed the ~30 behind disclosures.
+       Measured at 390px: 5 regions overflowed, 1 was reachable, 4 were WCAG
+       scrollable-region-focusable failures. Runs on close too, which is what
+       removes the tab stop again. */
+    scheduleScrollableScan();
   });
   return d;
 }

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import collections
 import functools
+import html as html_mod
 import json
 import os
 import re
@@ -705,10 +706,10 @@ def test_water_use_is_a_number_the_reader_controls():
     # satisfy a bare-token grep with the control itself deleted.
     assert 'id="galNum"' in app and 'id="galSel"' in app, "the custom-entry control is missing"
     # The block-rate maths moved to assets/domain.js on 2026-08-03 so it could be unit
-    # tested without a browser. Follow it rather than dropping the guard: assert BOTH
-    # that the computation still exists where it now lives, and that the page still
-    # routes through it — either half alone would pass with the bill quietly reverted
-    # to a two-option lookup.
+    # tested without a browser (tests/js/domain.test.py -> blockBill / utilityBill).
+    # Follow it rather than dropping the guard: assert BOTH that the computation still
+    # exists where it now lives, and that the page still routes through it — either
+    # half alone would pass with the bill quietly reverted to a two-option lookup.
     assert "function blockBill" in domain, (
         "the block-rate bill computation is gone from assets/domain.js")
     assert "threshold_gallons" in domain and "block2_per_1000" in domain, (
@@ -1915,6 +1916,7 @@ def test_town_tax_is_conditional_on_being_in_town_in_the_source():
         "annualTax() is back. It was the unconditional town levy and every caller "
         "treated it as 'the town tax this household pays' — rename it or gate it, but "
         "do not reintroduce the name")
+
     code = _js_without_comments(js)
     # Excluding the declaration line. `js.count("townTax()")` counted it, so the
     # assertion held even if every caller had been ripped out and inlined.
@@ -2025,28 +2027,25 @@ def test_out_of_town_pages_never_show_the_town_levy():
     explorer computed a share per department. This drives the actual share-link path a
     reader would use.
     """
-    import http.server
-    import socketserver
-    import threading
+    doms = _render([(w, f"index.html?home=500000&where={w}")
+                    for w in ("intown", "outoftown")])
 
-    os.chdir(REPO)
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler,
-                                directory=str(REPO))
-    with socketserver.TCPServer(("127.0.0.1", 0), handler) as httpd:
-        port = httpd.server_address[1]
-        t = threading.Thread(target=httpd.serve_forever, daemon=True)
-        t.start()
-        try:
-            doms = {}
-            for where in ("intown", "outoftown"):
-                url = f"http://127.0.0.1:{port}/index.html?home=500000&where={where}"
-                r = subprocess.run(
-                    [_chromium(), "--headless", "--disable-gpu", "--no-sandbox",
-                     "--virtual-time-budget=8000", "--dump-dom", url],
-                    capture_output=True, text=True, timeout=180)
-                doms[where] = r.stdout
-        finally:
-            httpd.shutdown()
+    # The hero, BY ELEMENT. A whole-page substring search cannot tell the difference
+    # between the primary figure being right and some other element on the page
+    # happening to contain the same digits — which is exactly the state this gate was
+    # in until 2026-08-03.
+    def hero(dom):
+        m = re.search(r'id="heroV"[^>]*>([^<]*)', dom)
+        assert m, "the hero figure element is gone"
+        return m.group(1).strip()
+
+    assert hero(doms["intown"]) == "$5,944", (
+        f'in town the hero must read the town levy plus the county levy, '
+        f'got {hero(doms["intown"])!r}')
+    assert hero(doms["outoftown"]) == "$3,379", (
+        f'OUT OF TOWN the hero must read the COUNTY LEVY ALONE. This is the 2026-08-01 '
+        f'defect: it read $5,944 instead of $3,379, a 76% overstatement. '
+        f'got {hero(doms["outoftown"])!r}')
 
     town, county, both = "2,565", "3,379", "5,944"
     assert town in doms["intown"], (
@@ -2197,3 +2196,66 @@ def test_every_accepted_column_really_does_add_up():
     assert checked, "no accepted columns were recomputed — the shape of the data changed"
     assert not mismatched, (
         f"{mismatched} of {checked} ACCEPTED columns do not actually add up: {bad}")
+
+
+@pytest.mark.skipif(_chromium() is None, reason="no chromium available")
+def test_the_printed_sheet_and_the_copied_text_are_covered_at_all():
+    """F-04 of the 2026-08-03 frontend audit: the two artefacts that LEAVE the page
+    were in no test at all, and the test that claimed them could not have seen them.
+
+    Both are built inside click handlers, so `id="takeaway"` is simply absent from a
+    --dump-dom capture. `test_out_of_town_pages_never_show_the_town_levy` names the
+    printable takeaway in its docstring; its assertions never touched it. That matters
+    because the takeaway kept its OWN copy of the out-of-town defect — it built its own
+    row list — and it is the one artefact a resident carries into a board meeting,
+    where they cannot click a citation to check it.
+
+    tests/browser/artefacts.html loads the real app against the real datasets and
+    presses the real buttons. This asserts what came back.
+    """
+    doms = _render([
+        (w, f"tests/browser/artefacts.html?home=500000&where={w}")
+        for w in ("intown", "outoftown")
+    ])
+
+    got = {}
+    for where, dom in doms.items():
+        m = re.search(r'<pre id="ARTEFACTS">(.*?)</pre>', dom, re.S)
+        assert m, (
+            f"{where}: the harness produced no artefacts at all. If index.html gained "
+            f"an element assets/app.js needs in its static shell, tests/browser/"
+            f"artefacts.html has drifted and must be brought back into line — do not "
+            f"delete this test to make it pass.")
+        text = html_mod.unescape(m.group(1))
+        assert not text.startswith("HARNESS FAILED"), f"{where}: {text[:400]}"
+        copied, _, sheet = text.partition("=====TAKEAWAY=====")
+        got[where] = (copied, sheet)
+
+    # ---- in town: both governments appear on both artefacts --------------------
+    copied, sheet = got["intown"]
+    for name, blob in (("copied text", copied), ("printed sheet", sheet)):
+        assert "2,565" in blob, f"in town the {name} lost the town levy"
+        assert "3,379" in blob, f"in town the {name} lost the county levy"
+        assert "5,944" in blob, f"in town the {name} lost the combined total"
+
+    # ---- out of town: the town levy must appear on NEITHER ---------------------
+    copied, sheet = got["outoftown"]
+    for name, blob in (("copied text", copied), ("printed sheet", sheet)):
+        assert "2,565" not in blob, (
+            f"OUT OF TOWN the {name} still carries the town levy. A household outside "
+            f"the limits owes the town nothing, and this artefact leaves the site — "
+            f"nobody reading it can check it against the page.")
+        assert "5,944" not in blob, (
+            f"OUT OF TOWN the {name} still carries the town+county total")
+        assert "3,379" in blob, (
+            f"OUT OF TOWN the {name} lost the county levy — every taxpayer in the "
+            f"county pays it, so removing it trades an overstatement for an "
+            f"understatement")
+
+    # The sheet must say what the screen says. When the town row is suppressed on
+    # screen and kept here, the sheet a reader carries into a meeting is the wrong one.
+    assert "Town of Hillsborough" not in got["outoftown"][1], (
+        "OUT OF TOWN the printed sheet still prints a Town of Hillsborough bill row")
+    assert "Town of Hillsborough" in got["intown"][1], (
+        "in town the printed sheet lost its town bill row — the fixture or the rates "
+        "changed")

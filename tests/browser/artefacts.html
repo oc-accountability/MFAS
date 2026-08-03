@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>MFAS test harness — the artefacts that leave the page</title>
+<!-- Resolve every relative path from the SITE ROOT, not from tests/browser/. app.js
+     fetches 'data/index.json' relative to the document, so without this the harness
+     would 404 every dataset and prove nothing. The test serves the repo root. -->
+<base href="/">
+</head>
+<body>
+<!--
+  WHY THIS FILE EXISTS
+  --------------------
+  The printable takeaway and the copied snapshot are both built inside CLICK HANDLERS.
+  A `chromium --dump-dom` capture therefore contains NEITHER — `id="takeaway"` is simply
+  absent from the dump for both locations. That is finding F-04 of
+  docs/2026-08-03_FRONTEND_AUDIT.md, and it is not a theoretical gap: the printable
+  takeaway kept its own copy of the out-of-town defect, and the browser test written
+  after that incident could not see it, because its docstring claimed a coverage its
+  --dump-dom capture never had.
+
+  So this harness loads the REAL assets/domain.js and assets/app.js against the REAL
+  datasets, waits for boot, then drives the two artefacts the way a reader does — it
+  clicks the buttons — and prints what they produced into #ARTEFACTS for the test to
+  assert on. Nothing here reimplements a calculation; if it did, it would be testing
+  itself.
+
+  It is a FIXTURE, not a page. It carries the small set of elements app.js needs in the
+  static shell, and it fails loudly (#ARTEFACTS starts with "HARNESS FAILED") rather
+  than quietly producing an empty string, so a harness that has drifted away from
+  index.html cannot look like a passing test.
+-->
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="#top"><span class="mark"></span><span class="label">t</span></a>
+  <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false"
+          aria-controls="navLinks"><span id="navHere">Sections</span></button>
+  <ul class="nav-links" id="navLinks"><li><a href="#you">Your bill</a></li></ul>
+  <button class="icon-btn" id="themeToggle" type="button"></button>
+</div></nav>
+<header id="top">
+  <span id="chipCount"></span>
+  <div class="film" id="film"><button class="film-play" id="filmPlay" type="button"></button>
+    <p class="film-cap"></p></div>
+  <div id="verifySlot"></div>
+</header>
+<main class="wrap" id="main"><p class="loading" id="loading">…</p></main>
+<footer><p class="meta" id="footMeta"></p></footer>
+
+<script src="assets/domain.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(async function () {
+  const out = document.createElement('pre');
+  out.id = 'ARTEFACTS';
+  const fail = why => {
+    out.textContent = 'HARNESS FAILED: ' + why;
+    document.body.appendChild(out);
+  };
+  try {
+    /* boot() is async; wait for it rather than guessing a delay.
+       `state` is declared `const` in app.js, so it is a script-scoped lexical
+       binding and is NOT a property of window — `window.state` is undefined even
+       though `state` resolves fine from here. Testing `window.state` silently
+       falls through to a timeout, which is how the first version of this harness
+       reported "boot() never populated state.data" against a perfectly good page. */
+    const booted = () => typeof state !== 'undefined' && state && state.data;
+    for (let i = 0; i < 600 && !booted(); i++) {
+      await new Promise(r => setTimeout(r, 25));
+    }
+    if (!booted()) return fail('boot() never populated state.data');
+    if (!document.getElementById('you')) return fail('section 01 did not render');
+
+    // --- the copied snapshot -------------------------------------------------
+    // Driven through the real button, with the clipboard shimmed. offerCopy()
+    // falls back to a textarea when the write is refused, so a shim that RESOLVES
+    // keeps the button on the happy path and hands us the exact string a reader
+    // would paste into an email.
+    let copied = '(the copy button was never reached)';
+    const realWrite = navigator.clipboard && navigator.clipboard.writeText;
+    try {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText: t => { copied = t; return Promise.resolve(); } },
+      });
+    } catch (e) { /* fall through — the textarea fallback still captures it below */ }
+    const copyBtn = document.getElementById('copySnap');
+    if (!copyBtn) return fail('#copySnap is gone — the copy artefact has no entry point');
+    copyBtn.click();
+    await new Promise(r => setTimeout(r, 120));
+    if (copied.startsWith('(')) {
+      const box = document.querySelector('textarea.copy-fallback');
+      if (box) copied = box.value;
+    }
+    if (realWrite) { /* nothing to restore — the page is torn down after the dump */ }
+
+    // --- the printable takeaway ---------------------------------------------
+    // window.print() is stubbed: a real print dialog would hang a headless run.
+    window.print = () => {};
+    const printBtn = document.getElementById('printSnap');
+    if (!printBtn) return fail('#printSnap is gone — the printed sheet has no entry point');
+    printBtn.click();
+    await new Promise(r => setTimeout(r, 120));
+    const sheet = document.getElementById('takeaway');
+    if (!sheet) return fail('#takeaway was not built by pressing #printSnap');
+
+    out.textContent =
+      '=====COPIED=====\n' + copied +
+      '\n=====TAKEAWAY=====\n' +
+      sheet.innerHTML.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&')
+        .replace(/&ndash;/g, '-').replace(/[ \t]+/g, ' ') +
+      '\n=====END=====';
+    document.body.appendChild(out);
+  } catch (e) {
+    fail((e && e.message) || String(e));
+  }
+})();
+</script>
+</body>
+</html>
