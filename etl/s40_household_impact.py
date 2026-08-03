@@ -112,6 +112,23 @@ SCALARS = [
     ("nonprofit_partnership_funding", "USD", "adopted",
      r"set the FY27 funding level at \$([\d,]+)", 2027,
      "Town funding for nonprofit partners, set after a public hearing."),
+    # The town's savings floor, as a NUMBER rather than only as prose.
+    #
+    # It was hardcoded as `50` in five places in assets/app.js — one of which drove a
+    # green tick reading "Savings are above the town's own floor". The only
+    # machine-readable trace of the policy was the numeral inside the `savings_floor`
+    # QUOTATION below, so a board that revised the aim to 60% would have had the page
+    # print its new words in a blockquote and award a pass against the retired 50%
+    # directly beneath them (finding F-16, 2026-08-03 frontend audit).
+    #
+    # This pattern is deliberately the SAME sentence the quotation is taken from, so
+    # the figure and the words the page prints beside it cannot drift apart —
+    # test_the_savings_floor_metric_matches_the_quotation pins that.
+    ("fund_balance_floor_pct", "percent", "stated",
+     r"maintain fund balance levels no lower than (\d+)%", 2027,
+     "The town's own stated minimum for fund balance, as a share of a year's spending. "
+     "Read from the same sentence as the `savings_floor` quotation so the figure and the "
+     "wording beside it cannot disagree."),
 ]
 
 

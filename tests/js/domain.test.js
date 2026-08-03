@@ -347,3 +347,207 @@ test('the share link emits only what the link parser accepts', () => {
   assert.equal(D.clampGallons(-5), 0);
   assert.equal(D.clampGallons(999999), 200000);
 });
+
+/* ===========================================================================
+ * The 2026-08-03 frontend audit — one test per finding it left open.
+ *
+ * Every assertion below was written against the failure the audit DESCRIBES, then run
+ * against the pre-fix behaviour to confirm it fails, then run again after the fix. The
+ * findings are traced through code with the data held constant, so several of these
+ * simulate the roll-forward that has not happened yet — which is exactly the point:
+ * "the next fiscal roll is the real test, and these unit tests are how to run it early".
+ * ======================================================================== */
+
+/* -- F-01: town-policy dollars are withheld outside the limits ------------- */
+
+test('F-01 a town-policy cent converts to dollars only inside the limits', () => {
+  // 1 cent on a $500,000 home is $50 — a real figure, and a real cost, IN town.
+  assert.equal(D.townPolicyDollarsOnThisHome(HOME, 'intown', 1), 50);
+  assert.equal(D.townPolicyDollarsOnThisHome(HOME, 'intown', 10), 500);
+  /* Out of town every one of these is $0, and the copy around them says "costs you",
+     "on your home", "for a home like yours". null is how a caller is told to drop the
+     column rather than print $0 under a second-person sentence. */
+  assert.equal(D.townPolicyDollarsOnThisHome(HOME, 'outoftown', 1), null);
+  assert.equal(D.townPolicyDollarsOnThisHome(HOME, 'outoftown', 10), null);
+  // Not simply "falsy": a caller must be able to tell null from a genuine zero.
+  assert.notEqual(D.townPolicyDollarsOnThisHome(HOME, 'outoftown', 10), 0);
+});
+
+/* -- F-12: the year-over-year row includes every component that moved ------ */
+
+test('F-12 a town rate rise is inside "next year costs you about"', () => {
+  /* The failure, verbatim from the audit: town rate 51.3 -> 55.3 (delta 4.0), no county
+     change, in-town $500,000 home. The callout announced "The town's rate rises 4 cents"
+     while the row above still said "+$122 more" — omitting the $200 it costs. */
+  const c = D.annualBillChange({
+    assessedValue: HOME, location: 'intown',
+    townDeltaCents: 4.0, countyIncreaseCents: null, utilityMonthlyDelta: 10.21,
+  });
+  assert.equal(c.town, 200);
+  assert.equal(Math.round(c.total), Math.round(200 + 10.21 * 12));
+});
+
+test('F-12 but a town rate rise is NOT quoted to an out-of-town household', () => {
+  // Adding rc.delta unconditionally would be F-01 again with a different label.
+  const c = D.annualBillChange({
+    assessedValue: HOME, location: 'outoftown',
+    townDeltaCents: 4.0, countyIncreaseCents: 3.75, utilityMonthlyDelta: 0,
+  });
+  assert.equal(c.town, 0);
+  assert.equal(Math.round(c.county), 188);   // the county rise reaches everyone
+  assert.equal(Math.round(c.total), 188);
+});
+
+/* -- F-14: a missing divisor withholds rather than fabricates one ---------- */
+
+test('F-14 no revenue-per-cent means no cents-equivalent, not a fallback', () => {
+  // With the figure: $3,567,819 over $240,000 a cent ~= 14.87 cents.
+  assert.equal(D.centsEquivalent(3567819, 240000).toFixed(2), '14.87');
+  /* Without it, the card used `|| 240000` and published a sourced-looking 14.87 cents
+     immediately below its own honest note that the divisor was "n/a". */
+  assert.equal(D.centsEquivalent(3567819, null), null);
+  assert.equal(D.centsEquivalent(3567819, undefined), null);
+  assert.equal(D.centsEquivalent(3567819, 0), null);
+});
+
+/* -- F-11: "% of the total" means of the total the page named -------------- */
+
+test('F-11 shares divide by the published total when the parts agree with it', () => {
+  const parts = [{ value: 19480000 }, { value: 14000000 }, { value: 2940539 }];
+  const s = D.fundShares(parts, 36420539);
+  assert.equal(s.agrees, true);
+  assert.equal(s.label, 'of the total');
+  assert.equal(s.sharePct(19480000).toFixed(1), '53.5');
+});
+
+test('F-11 and say so when they do not', () => {
+  /* The audit's scenario: publish a $38.00M total against the same $36.42M of fund rows.
+     The page rendered "⚠ differs by $1.58M" directly below "53.5% of the total" — and
+     against the total it had just named, that share is 51.3%. */
+  const parts = [{ value: 19480000 }, { value: 14000000 }, { value: 2940539 }];
+  const s = D.fundShares(parts, 38000000);
+  assert.equal(s.agrees, false);
+  /* The DEFECT was the label, not the arithmetic. 53.5% is the General Fund's share of
+     the three funds and is correct; calling it "of the total" was the false part, because
+     against the $38.00M the page had just named it is 51.3%. So the number is unchanged
+     and the claim it makes is corrected — which also keeps the legend consistent with the
+     bar beside it. */
+  assert.equal(s.label, 'of the three funds');
+  assert.equal(s.sharePct(19480000).toFixed(1), '53.5');
+  assert.notEqual(s.label, 'of the total');
+  // A stacked bar still has to FILL, so widths always divide by the sum.
+  assert.equal(s.widthPct(19480000).toFixed(1), '53.5');
+  assert.equal(Math.round(s.difference), 1579461);
+  // And against the total the page named, the share really is the other number —
+  // which is why claiming "of the total" was wrong.
+  assert.equal((19480000 / 38000000 * 100).toFixed(1), '51.3');
+});
+
+/* -- F-15: the variance sentence branches on the sign --------------------- */
+
+test('F-15 an overspend is not described as spending less than planned', () => {
+  const under = D.budgetVariance(16761617, 14100000);
+  assert.equal(under.direction, 'under');
+  /* The failure: actual $17,000,000 against a final budget of $16,761,617 produced
+     "−1.4% less than planned" — a double negative most readers take as an underspend,
+     in a panel titled "Did they spend what they said they would?" about a named board. */
+  const over = D.budgetVariance(16761617, 17000000);
+  assert.equal(over.direction, 'over');
+  assert.equal(over.pct.toFixed(1), '1.4');
+  assert.ok(over.pct > 0, 'the magnitude is unsigned; the direction carries the sign');
+  assert.equal(D.budgetVariance(16761617, 16761617).direction, 'exact');
+  assert.equal(D.budgetVariance(0, 100), null);
+  assert.equal(D.budgetVariance(null, 100), null);
+});
+
+/* -- F-08: the capital split checks its own shape -------------------------- */
+
+const CIP = (cols) => ([{ expenditures_by_account: [{ amounts: cols }] }]);
+
+test('F-08 the split holds while the first column is the current project budget', () => {
+  const p = CIP([14500000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000]);
+  const s = D.splitProjectCost(p, 21500000, 8);
+  assert.equal(s.shapeOk, true);
+  assert.equal(s.already, 14500000);
+  assert.equal(s.window, 7000000);
+  assert.equal(s.reconciles, true);
+});
+
+test('F-08 and refuses to describe a plan whose columns changed', () => {
+  /* The town drops the standalone current-budget column, leaving seven entries.
+     amounts[0] is now the first PLAN year, and the page went on reporting it as money
+     "already in current project budgets" — the same $14.5M-class misattribution the
+     split was written to correct, arithmetically self-consistent and silent. */
+  const p = CIP([1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000]);
+  const s = D.splitProjectCost(p, 7000000, 8);
+  assert.equal(s.shapeOk, false, 'seven columns must not pass an eight-column split');
+  assert.equal(s.columns, 7);
+});
+
+test('F-08 and notices when the parts stop summing to the published total', () => {
+  const p = CIP([14500000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000]);
+  assert.equal(D.splitProjectCost(p, 30000000, 8).reconciles, false);
+});
+
+/* -- F-19: an artefact that leaves the page names the rates that apply ----- */
+
+test('F-19 the copied block states the rates this household actually pays', () => {
+  const inTown = D.applicableRates({ location: 'intown',
+    townRateCents: TOWN, countyRateCents: COUNTY });
+  assert.deepEqual(inTown.rates.map(r => r.key), ['town', 'county']);
+  /* In town the block said "Tax rate: 51.3 cents", which does not reconcile with the
+     total three lines above it — the household is charged 51.3 + 67.58. */
+  assert.equal(inTown.combined.toFixed(2), '118.88');
+
+  const out = D.applicableRates({ location: 'outoftown',
+    townRateCents: TOWN, countyRateCents: COUNTY });
+  assert.deepEqual(out.rates.map(r => r.key), ['county']);
+  assert.equal(out.combined, COUNTY);
+  assert.ok(!out.rates.some(r => r.key === 'town'),
+    'the town rate must not travel off the page with an out-of-town household');
+});
+
+/* -- F-18: the sentence names what the number contains -------------------- */
+
+test('F-18 the exact bill really does include stormwater', () => {
+  const u = D.utilityBill({
+    utility: {
+      rate_sets: {
+        water_inside: { current: { block1_charge: 20, block2_per_1000: 5, threshold_gallons: 2000, fiscal_year: 2026 },
+                        recommended: { block1_charge: 22, block2_per_1000: 5.5, threshold_gallons: 2000, fiscal_year: 2027 } },
+        sewer_inside: { current: { block1_charge: 30, block2_per_1000: 8, threshold_gallons: 2000, fiscal_year: 2026 },
+                        recommended: { block1_charge: 33, block2_per_1000: 8.8, threshold_gallons: 2000, fiscal_year: 2027 } },
+      },
+      stormwater: { residential_current: 105, residential_recommended: 120 },
+    },
+    gallons: 4000, location: 'intown',
+  });
+  assert.deepEqual(u.components, ['water', 'sewer', 'stormwater']);
+  assert.equal(D.componentPhrase(u.components), 'water, sewer and the stormwater fee');
+  // And the years come from the data, not from a literal in the copy (F-22).
+  assert.equal(u.fiscalYear, 2027);
+  assert.equal(u.priorFiscalYear, 2026);
+});
+
+test('F-18 the FALLBACK does not, and says so', () => {
+  /* The fallback total is water + sewer with no stormwater component at all, while four
+     surfaces each carried "water, sewer and the stormwater fee together add about $X a
+     month" about this very number. Exact path $10.21; this path $8.96; the difference is
+     exactly the omitted fee. */
+  const u = D.utilityBill({
+    utility: null, gallons: 4000, location: 'intown',
+    increaseLookup: m => (m.includes('water') ? 3.72 : m.includes('sewer') ? 5.24 : null),
+  });
+  assert.equal(u.exact, false);
+  assert.deepEqual(u.components, ['water', 'sewer']);
+  assert.ok(!D.componentPhrase(u.components).includes('stormwater'),
+    'the sentence must not name a charge the arithmetic left out');
+  assert.equal(u.total.toFixed(2), '8.96');
+});
+
+test('F-18 and with neither increase published it withholds instead of printing $0', () => {
+  const u = D.utilityBill({ utility: null, gallons: 4000, location: 'intown',
+    increaseLookup: () => null });
+  assert.equal(u.known, false);
+  assert.equal(u.total, null, 'a sourced-looking $0 is a claim; null is an absence');
+});

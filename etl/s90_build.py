@@ -51,7 +51,17 @@ METRICS = {
         description="The town's savings. Its stated floor is 50% of expenditures."),
     "general_fund_balance_pct_of_expenditures": dict(
         label="Fund balance as % of expenditures", unit="percent", category="Savings",
-        description="The town states its aim is to stay no lower than 50%."),
+        description="Measured against the town's own stated floor — see "
+                    "fund_balance_floor_pct, which is read from the document rather "
+                    "than written down."),
+    "fund_balance_floor_pct": dict(
+        label="Fund balance floor the town sets for itself", unit="percent",
+        category="Savings",
+        description="The town's stated minimum, as a number. It existed in the archive "
+                    "only inside the sentence the site quotes, so the website hardcoded "
+                    "it in five places — one of them driving a pass/fail verdict. A "
+                    "board revising the aim would have had the page print the new words "
+                    "and grade against the old figure on the same screen."),
     "general_fund_expenditures": dict(
         label="General Fund expenditures", unit="USD", category="Budget totals"),
     "water_sewer_fund_expenditures": dict(

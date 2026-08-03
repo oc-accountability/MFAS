@@ -41,36 +41,56 @@ const state = {
 
 /* ------------------------------------------------------- remembered settings */
 const STORE = 'hoa-home';
+/* STORAGE RECORDS WHAT THE READER TOLD US, AND NOTHING ELSE.
+ *
+ * It used to record the DEFAULTS. `saveHome()` ran on every `renderYou()` and wrote
+ * whatever was in `state`, so a first visit where nobody touched anything persisted
+ * `{homeValue: 400000, location: 'intown'}` — and `loadHome()` then set
+ * `state.returning` for any parseable value. Reproduced with two fresh browser
+ * profiles: visit one shows no banner, visit two says "Welcome back — showing figures
+ * for a home assessed at $400,000, inside town limits." The reader has never typed a
+ * value and has never said they live in town.
+ *
+ * Worse on the share-link route: a reader arriving on someone else's link — correctly
+ * told "These are the sender's figures, not yours" — got `{}` written on the first
+ * paint and was greeted next time as an in-town $400,000 household. The page asserted
+ * a memory it did not have, on the exact question whose mis-answer produced the
+ * original 76% overstatement (finding F-20).
+ *
+ * So: a field is written only once the reader has TOUCHED it, and "welcome back" is
+ * shown only when something was genuinely stored.
+ */
 function loadHome() {
   try {
     const raw = localStorage.getItem(STORE);
     if (!raw) return;
     const o = JSON.parse(raw);
-    if (typeof o.homeValue === 'number' && o.homeValue > 0) state.homeValue = o.homeValue;
-    if (o.location === 'intown' || o.location === 'outoftown') state.location = o.location;
-    if (typeof o.gallons === 'number' && o.gallons >= 0) state.gallons = o.gallons;
+    let adopted = 0;
+    if (typeof o.homeValue === 'number' && o.homeValue > 0) { state.homeValue = o.homeValue; adopted++; }
+    if (o.location === 'intown' || o.location === 'outoftown') { state.location = o.location; adopted++; }
+    if (typeof o.gallons === 'number' && o.gallons >= 0) { state.gallons = o.gallons; adopted++; }
     // Readers who set a level before water use became a number keep their choice.
-    else if (o.useLevel === 'min') state.gallons = 2000;
-    else if (o.useLevel === 'avg') state.gallons = 4000;
-    state.returning = true;
+    else if (o.useLevel === 'min') { state.gallons = 2000; adopted++; }
+    else if (o.useLevel === 'avg') { state.gallons = 4000; adopted++; }
+    /* Only a value we actually adopted makes this a return visit. An empty or
+       unrecognisable object is not a memory. */
+    state.returning = adopted > 0;
   } catch (e) { /* private mode, or corrupt value — defaults are fine */ }
 }
 function saveHome() {
   try {
-    /* A link-supplied value the reader never edited must not become "theirs":
-       changing the gallons dropdown used to silently persist a stranger's
-       home value, and the next visit greeted the reader with it as their own.
-       Fields still owned by the link keep whatever the reader had saved before
-       (or stay unwritten, so the default returns). */
+    /* A link-supplied value the reader never edited must not become "theirs" either:
+       changing the gallons dropdown used to silently persist a stranger's home value. */
     const prev = JSON.parse(localStorage.getItem(STORE) || '{}');
-    const keep = (field, key) =>
-      (state.linkFields[field] && !state.touched[field]) ? prev[key] : state[key];
-    const out = {
-      homeValue: keep('home', 'homeValue'),
-      location: keep('where', 'location'),
-      gallons: keep('gal', 'gallons'),
-    };
+    const own = field => state.touched[field] === true;
+    const out = { ...prev };
+    if (own('home')) out.homeValue = state.homeValue;
+    if (own('where')) out.location = state.location;
+    if (own('gal')) out.gallons = state.gallons;
     for (const k of Object.keys(out)) if (out[k] === undefined) delete out[k];
+    /* Nothing to record and nothing recorded before: write nothing at all, so the next
+       visit is a first visit rather than a fabricated return. */
+    if (!Object.keys(out).length) { localStorage.removeItem(STORE); return; }
     localStorage.setItem(STORE, JSON.stringify(out));
   } catch (e) { /* nothing here is worth breaking the page over */ }
 }
@@ -144,11 +164,28 @@ function shareUrl() {
 }
 
 /* ---------------------------------------------------------------- formatters */
-const usd = n => '$' + Math.round(n).toLocaleString('en-US');
-const usd2 = n => '$' + n.toLocaleString('en-US',
-  { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const usdSigned = n => (n < 0 ? '−' : '') + '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
+/* Every one of these takes the em dash for a value it cannot render.
+ *
+ * They used to assume a finite number. Four renderers reach into datasets by a
+ * property name containing the fiscal year (`fy2027_total_asked`, `.fy2027`,
+ * `general_fund_fy2027_budget`) and each guarded the PARENT object but not the KEY —
+ * so the first FY2028 dataset would have published "Departments asked for $NaN of new
+ * spending next year" and "declined $NaN", live, with nothing failing (finding F-02).
+ *
+ * The year-literals themselves are fixed at each site. This is the backstop: a
+ * formatter is the last thing every figure passes through, so making it refuse to
+ * print `NaN` closes the whole class rather than the instances found. `—` is already
+ * the page's established way of saying "not available" (setFigure, the audited table),
+ * so a reader meets a familiar mark rather than a broken one. */
+const fin = n => typeof n === 'number' && Number.isFinite(n);
+const DASH = '—';
+const usd = n => fin(n) ? '$' + Math.round(n).toLocaleString('en-US') : DASH;
+const usd2 = n => fin(n) ? '$' + n.toLocaleString('en-US',
+  { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : DASH;
+const usdSigned = n => fin(n)
+  ? (n < 0 ? '−' : '') + '$' + Math.abs(Math.round(n)).toLocaleString('en-US') : DASH;
 const compact = n => {
+  if (!fin(n)) return DASH;
   const a = Math.abs(n), s = n < 0 ? '−' : '';
   if (a >= 1e9) return s + '$' + (a / 1e9).toFixed(2) + 'B';
   if (a >= 1e6) return s + '$' + (a / 1e6).toFixed(a >= 1e7 ? 1 : 2) + 'M';
@@ -157,7 +194,8 @@ const compact = n => {
 };
 /* U+2212 minus, not an ASCII hyphen — matches the dollar figures and aligns in
    tabular-nums columns, where a hyphen sits visibly high and narrow. */
-const pctPlain = n => (n < 0 ? '−' : '') + Math.abs(n).toFixed(Math.abs(n) % 1 === 0 ? 0 : 1) + '%';
+const pctPlain = n => fin(n)
+  ? (n < 0 ? '−' : '') + Math.abs(n).toFixed(Math.abs(n) % 1 === 0 ? 0 : 1) + '%' : DASH;
 /* A tax rate is cents per $100 of value, NOT a percentage. Labelling 51.3 cents
    as "51.3%" would overstate the rate ~19.5x to anyone skimming.
    Precision follows the source: the county's rate is printed as 67.58 and its
@@ -165,11 +203,13 @@ const pctPlain = n => (n < 0 ? '−' : '') + Math.abs(n).toFixed(Math.abs(n) % 1
    that the documents never printed — a reader checking against the manager's
    message found figures that do not appear in it. */
 const cents = n => {
+  if (!fin(n)) return DASH;
   if (n % 1 === 0) return n.toFixed(0);
   return (Math.round(n * 10) === n * 10) ? n.toFixed(1) : n.toFixed(2);
 };
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sentenceCase = s => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');
 
 /* -------------------------------------------------------------- data access */
 let _docMap = null;
@@ -200,6 +240,51 @@ const one = metric => MFAS.latestFact(state.data.facts.facts, metric, docYear);
 const val = (metric, fb = null) => { const f = one(metric); return f ? f.value : fb; };
 const forYear = (metric, fy) =>
   MFAS.factForYear(state.data.facts.facts, metric, fy, docYear);
+
+/** The year the page is ABOUT — read from the data, never written down here.
+ *
+ * Six surfaces picked their year with the literal `2027`: the fund-balance readout in
+ * section 03 and on the printed sheet, the "What's coming" timeline, the transfer
+ * schedule and the explorer's default slice. `renderHealth` already read
+ * `index.headline_fiscal_year` thirty lines below one of them, so the page disagreed
+ * with itself about which year it was — and on the first roll-forward would have filed
+ * a closed, adopted budget year under "What's coming" and labelled it a projection
+ * (findings F-06, F-13, F-26, F-27).
+ *
+ * The suite carries a comment celebrating this exact fix being applied elsewhere:
+ * "The hardcoded 2027 this replaced would have kept testing FY2027 forever while the
+ * site auto-advanced." The lesson was written down and not applied. It is now one
+ * function, so there is nowhere for a seventh copy to hide.
+ */
+const headlineYear = () => (state.data.index || {}).headline_fiscal_year || 2027;
+
+/** The fund balance for the year the page is about — or nothing.
+ *
+ * The `|| one(...)` fallback that used to sit at both call sites is deliberately gone.
+ * `one()` breaks ties by source-document year alone, so with the headline year missing
+ * it returned whichever row happened to be first in facts.json and the page opened
+ * "Right now, yes — the town holds savings worth 71.0%" over a closed prior year's
+ * ESTIMATE. Withholding the sentence is the site's rule; guessing which year it is
+ * about is not. */
+const currentFundBalance = () =>
+  forYear('general_fund_balance_pct_of_expenditures', headlineYear());
+
+/** The town's own stated fund-balance floor, as a number, from the document.
+ *
+ * `const FLOOR = 50` was written in five places, one of them driving a ✓/! verdict and
+ * one of them a bare string on the printed sheet. The policy exists in the archive only
+ * inside the sentence the page quotes two panels below that verdict — so a board that
+ * revised it to 60% would have had the page print the new words and award a pass
+ * against the retired figure, on the same screen (F-16). `s40_household_impact.py` now
+ * publishes the numeral out of that same sentence as `fund_balance_floor_pct`.
+ *
+ * Returns null when the fact is absent, and every caller withholds rather than
+ * assuming — a verdict about somebody's finances is not a thing to default. */
+const floorPct = () => {
+  const f = one('fund_balance_floor_pct');
+  return f && Number.isFinite(f.value) ? f.value : null;
+};
+
 function quote(key) {
   const qs = (state.data.household && state.data.household.town_statements) || [];
   return qs.find(q => q.key === key) || null;
@@ -789,7 +874,14 @@ function renderYou(host) {
           can greet you with your own figures next time.</span></p>
       </div>
       <div class="readout">
-        <p class="cap">Your property tax, per year${cRate ? ' — town and county combined' : ''}</p>
+        <!-- The caption sits directly on top of the page's primary figure and LABELS it,
+             so it belongs to the redraw layer, not to this constructed-once markup. It
+             used to be written here and never touched again: clicking "No, outside"
+             dropped the town's share out of the figure and left "town and county
+             combined" sitting over a county-only number (finding F-25). draw() sets it.
+             Deliberately no worked example here — the browser gate asserts the town+county
+             total never appears in an out-of-town DOM, and a comment is part of the DOM. -->
+        <p class="cap" id="heroCap">Your property tax, per year</p>
         <div class="hero-figure" id="heroV">—</div>
         <p class="hero-sub" id="heroN"></p>
         <ul class="rows" id="bd"></ul>
@@ -880,18 +972,49 @@ function renderYou(host) {
     drawWelcome();
     const annual = townTax();
     const county = countyTax();
-    const oneCent = MFAS.oneCentOnValue(state.homeValue);
+    /* What a cent of the TOWN's rate costs this household — null outside the limits,
+       where the town's rate reaches nothing they pay. The bare `oneCent` this replaces
+       was multiplied into eighteen second-person dollar figures with no reference to
+       the answer the page had just been given (finding F-01). The CENTS are still shown
+       to everyone; only the "costs you" column is withheld. */
+    const townCentDollars = cents2 =>
+      MFAS.townPolicyDollarsOnThisHome(state.homeValue, state.location, cents2);
+    const townPolicyApplies = MFAS.townPolicyIsPartOfTheBill(state.location);
     const u = utilMonthly();
     /* The headline is the sum of the rounded rows beneath it, not a separately
        rounded exact total: at many home values the two differed by $1, on a sheet
        that invites the reader to check it with a calculator. */
+    const bill = propertyBill();
     const annualR = Math.round(annual);
     const countyR = county != null ? Math.round(county) : null;
-    const total = annualR + (countyR || 0);
+    /* `annualR + (countyR || 0)` turned an ABSENT county rate into a measured zero:
+       out of town the hero rendered $0 and the snapshot headlined "$0 in property tax
+       this year", directly beneath the page's own callout that the county rise costs
+       this household $188. bill.total is null when an applicable component is unknown,
+       which is what makes setFigure print — instead (finding F-10). */
+    const total = bill.total;
 
     const inTown = state.location === 'intown';
+    /* The caption names exactly the governments in the figure below it (F-25). */
+    const capEl = $('#heroCap', sec);
+    if (capEl) {
+      const applies = MFAS.applicableRates({
+        location: state.location,
+        townRateCents: val('property_tax_rate'),
+        countyRateCents: val('county_property_tax_rate'),
+      }).rates;
+      capEl.textContent = 'Your property tax, per year'
+        + (applies.length > 1 ? ' — town and county combined'
+          : applies.length === 1 ? ` — ${applies[0].label} only` : '');
+    }
     setFigure($('#heroV', sec), total, animate);
-    $('#heroN', sec).innerHTML = !inTown
+    $('#heroN', sec).innerHTML = !bill.complete
+      /* An applicable rate is missing. Say so rather than narrate a figure that is not
+         on screen — the hero is showing — and this is the sub-line that explains it. */
+      ? `<span class="soft">One of the rates this bill is made of is not in the published
+         data for this build, so no total is shown. Nothing here is estimated to fill the
+         gap.</span>`
+      : !inTown
       ? (county != null
         ? `That is <strong>${usd(countyR / 12)} a month</strong>, all of it to Orange County at
            ${cents(cRate.value)} cents per $100. <strong>No town property tax</strong> — the
@@ -929,17 +1052,20 @@ function renderYou(host) {
     }
     const gal = u.gallons.toLocaleString('en-US');
     const where = state.location === 'intown' ? 'in town' : 'out of town';
+    /* Years read from the rate sets, not typed into the copy (F-22). */
+    const uFy = u.fiscalYear ? `FY${u.fiscalYear} rates` : 'the current published rates';
+    const uPrior = u.priorFiscalYear ? `FY${u.priorFiscalYear}` : 'the year before';
     if (u.exact) {
       // The whole bill, not just the increase — which is the point of asking for real usage.
       rows.push(['Your water bill',
-        `<small>${gal} gal/month, ${where} · FY2027 rates</small>`,
+        `<small>${gal} gal/month, ${where} · ${uFy}</small>`,
         usd2(u.waterBill) + ' / mo']);
       rows.push(['Your sewer bill', '<small>same usage, charged separately</small>',
         usd2(u.sewerBill) + ' / mo']);
       rows.push(['Stormwater fee', '<small>flat, not based on water use</small>',
         usd2(u.stormBill) + ' / mo']);
       rows.push(['All three utility bills',
-        `<small>about ${usd(u.billTotal * 12)} a year — up ${usd2(u.total)}/mo on FY2026</small>`,
+        `<small>about ${usd(u.billTotal * 12)} a year — up ${usd2(u.total)}/mo on ${uPrior}</small>`,
         usd2(u.billTotal) + ' / mo']);
     } else {
       if (u.water != null) rows.push(['Your water bill goes up by',
@@ -947,24 +1073,44 @@ function renderYou(host) {
       if (u.sewer != null) rows.push(['Your sewer bill goes up by', '<small>same basis</small>',
         '+' + usd2(u.sewer) + ' / mo']);
     }
-    rows.push(['One cent on the tax rate costs you',
-      `<small>across the whole town it raises ${perCentF ? usd(perCentF.value) : 'n/a'}</small>`,
-      usd(oneCent) + ' / yr']);
+    /* TOWN POLICY ROWS. The cents are a real fact about the town and are shown to
+       everyone; the "costs you" dollar column is withheld outside the limits, where it
+       is $0 and the copy around it says otherwise. The heading changes with it, because
+       "costs you" is the part that is false — not the arithmetic (finding F-01). */
+    const oneCentHere = townCentDollars(1);
+    rows.push([townPolicyApplies ? 'One cent on the tax rate costs you'
+                                 : 'One cent on the town’s tax rate',
+      `<small>across the whole town it raises ${perCentF ? usd(perCentF.value) : 'n/a'}${
+        townPolicyApplies ? '' : ' — the town’s rate is not part of this household’s bill'}</small>`,
+      townPolicyApplies ? usd(oneCentHere) + ' / yr' : '—']);
     /* The town states "over N cents" — a floor, not an exact figure — so the dollar
        translation is "at least", and the row does not attribute the flat-N-cents
        arithmetic to the town (its own printed example is $440 on a $400,000 home,
        which implies ~11 cents). */
     const need = one('tax_rate_increase_needed_cents');
-    if (need) rows.push([`If the rate rose ${cents(need.value)} cents`,
-      `<small>the town says over ${cents(need.value)} cents would be needed by
-       FY${need.fiscal_year}</small>`,
-      'at least +' + usd(oneCent * need.value) + ' / yr']);
+    if (need) {
+      const onThis = townCentDollars(need.value);
+      rows.push([`If the town’s rate rose ${cents(need.value)} cents`,
+        `<small>the town says over ${cents(need.value)} cents would be needed by
+         FY${need.fiscal_year}</small>`,
+        onThis == null ? '—' : 'at least +' + usd(onThis) + ' / yr']);
+    }
 
     let html = rows.map(([k, sub, v]) =>
       `<li><span class="k">${k}${sub}</span><span class="v">${v}</span></li>`).join('');
     const cInc = val('county_tax_rate_increase_cents');
-    const addedTax = cInc ? state.homeValue / 100 * (cInc / 100) : 0;
-    const addedAll = addedTax + u.total * 12;
+    /* Every component that moved, including the TOWN's rate — which the old inline sum
+       left out entirely while the callout below it announced the rise. With a 4-cent
+       town increase this row understated the year by 62% (finding F-12). */
+    const change = MFAS.annualBillChange({
+      assessedValue: state.homeValue,
+      location: state.location,
+      townDeltaCents: rc ? rc.delta : null,
+      countyIncreaseCents: cInc,
+      utilityMonthlyDelta: u.total,
+    });
+    const addedTax = change.county;
+    const addedAll = change.total;
     if (addedAll > 0) {
       html += `<li class="total"><span class="k">So next year costs you about</span>
         <span class="v">+${usd(addedAll)} more</span></li>`;
@@ -979,19 +1125,26 @@ function renderYou(host) {
     const box = $('#calloutBox', sec);
     const wr = val('water_rate_increase_pct'), sr = val('sewer_rate_increase_pct');
     const townFlat = rc != null && rc.delta === 0;
-    if (cInc && u.total > 0 && wr && townFlat) {
+    /* The sentence names what the number actually contains. The fallback path's total is
+       water + sewer with NO stormwater component, and four surfaces each carried their
+       own hardcoded "water, sewer and the stormwater fee together" about it — a phrase
+       that is simply untrue of that arithmetic (finding F-18). */
+    const uParts = MFAS.componentPhrase(u.components);
+    const uRose = u.known && u.total > 0;
+    if (cInc && uRose && wr && townFlat) {
       box.className = 'callout warn';
       box.innerHTML = `<strong>The town's rate held steady — the rest of your bill did not.</strong>
         Orange County's rate rose ${cents(cInc)} cents, which adds
-        <strong>${usd(addedTax)} a year</strong> for a home like yours, and water, sewer and the
-        stormwater fee together add about ${usd2(u.total)} a month. "No town tax increase" is true
+        <strong>${usd(addedTax)} a year</strong> for a home like yours, and ${uParts}
+        together add about ${usd2(u.total)} a month. "No town tax increase" is true
         and is not the same as "your bill is flat".`;
-    } else if (u.total > 0 && wr && sr && townFlat) {
+    } else if (uRose && wr && sr && townFlat) {
       box.className = 'callout warn';
       box.innerHTML = `<strong>Your property tax rate did not go up — but your bill still does.</strong>
-        Water and sewer rates each rise ${pctPlain(wr)} in FY2027, and with the stormwater fee
-        that adds about <strong>${usd2(u.total)} a month</strong> for a household like yours. A
-        flat tax rate is not the same as a flat bill, and that distinction is easy to miss.`;
+        Water and sewer rates each rise ${pctPlain(wr)}${u.fiscalYear ? ` in FY${u.fiscalYear}` : ''},
+        and ${uParts} together add about <strong>${usd2(u.total)} a month</strong> for a household
+        like yours. A flat tax rate is not the same as a flat bill, and that distinction is easy
+        to miss.`;
     } else if (townFlat) {
       box.className = 'callout';
       box.innerHTML = `The property tax rate is unchanged for FY${rateF.fiscal_year}.`;
@@ -1008,13 +1161,20 @@ function renderYou(host) {
 
     // snapshot
     const s = $('#snapshot', sec);
+    /* Same withholding rule as the hero: an unknown component must not be published as
+       a measured $0, least of all in the card that carries the site's citations off the
+       page (F-10). And the utility sentence names the components its own number holds
+       rather than a fixed three (F-18). */
     s.innerHTML = `<h3>Your snapshot</h3>
-      <div class="big">${usd(total)}<span style="font-size:var(--t-md);font-weight:500;
-        letter-spacing:0;margin-left:.35em">in property tax this year</span></div>
-      <p class="cap">${county != null
-        ? `${usd(annualR)} to the town, ${usd(countyR)} to Orange County. `
-        : ''}Plus about ${usd(u.total * 12)} more over the year as water, sewer and stormwater
-        rates rise.
+      ${bill.complete
+        ? `<div class="big">${usd(total)}<span style="font-size:var(--t-md);font-weight:500;
+             letter-spacing:0;margin-left:.35em">in property tax this year</span></div>`
+        : `<div class="big">—<span style="font-size:var(--t-md);font-weight:500;
+             letter-spacing:0;margin-left:.35em">not published in this build</span></div>`}
+      <p class="cap">${bill.complete && county != null
+        ? `${inTown ? `${usd(annualR)} to the town, ` : ''}${usd(countyR)} to Orange County. `
+        : ''}${u.known && u.total > 0
+        ? `Plus about ${usd(u.total * 12)} more over the year as ${uParts} rates rise. ` : ''}
         Based on a home assessed at ${usd(state.homeValue)},
         ${state.location === 'intown' ? 'inside' : 'outside'} town limits.</p>
       <div class="acts">
@@ -1036,17 +1196,44 @@ function renderYou(host) {
           || state.data.utility.source_doc : null]
         .filter(Boolean)
         .map(id => (docsById().get(id) || {}).filename || id);
-      const text = `Town of Hillsborough — ${sender
+      /* THE THIRD hand-written row list. It had no location branch at all, so the block
+         a reader pastes into an email to a commissioner always emitted a "Town property
+         tax" line, always titled itself with the town, and always stated the TOWN's rate
+         as "Tax rate" — 51.3 cents, which out of town does not reconcile with the county
+         total three lines above it, and in town names only half of the 118.88 the
+         household is actually charged (finding F-19). It is now built from the same
+         `bill` and the same applicable-rate list as the screen. */
+      const rateLines = MFAS.applicableRates({
+        location: state.location,
+        townRateCents: rateF.value,
+        countyRateCents: cRate ? cRate.value : null,
+      });
+      const heading = state.location === 'intown'
+        ? 'Town of Hillsborough and Orange County' : 'Orange County';
+      const text = `${heading} — ${sender
           ? 'figures from a link someone shared (not this household’s own)'
           : 'my share'}, FY${rateF.fiscal_year}\n` +
         `Home assessed at ${usd(state.homeValue)} (${state.location === 'intown'
           ? 'in town' : 'out of town'})\n` +
-        `Town property tax: ${usd(annualR)}/yr\n` +
-        (county != null ? `Orange County property tax: ${usd(countyR)}/yr\n` +
-          `Total property tax: ${usd(total)}/yr (${usd(total / 12)}/mo)\n` : '') +
-        `Water/sewer/stormwater increase: +${usd2(u.total)}/mo (about ${usd(u.total * 12)}/yr)\n` +
-        `Tax rate: ${cents(rateF.value)} cents per $100${rc && rc.delta === 0
-          ? ` — unchanged for FY${rateF.fiscal_year}` : ''}\n` +
+        bill.applicable.map(c => `${c.key === 'town' ? 'Town of Hillsborough' : 'Orange County'} ` +
+          `property tax: ${usd(c.share.rounded)}/yr\n`).join('') +
+        (bill.complete
+          ? `Total property tax: ${usd(total)}/yr (${usd(total / 12)}/mo)\n`
+          : `Total property tax: not published in this build — a rate it depends on is missing\n`) +
+        (u.known && u.total != null
+          ? `${MFAS.componentPhrase(u.components)} increase: +${usd2(u.total)}/mo ` +
+            `(about ${usd(u.total * 12)}/yr)\n` : '') +
+        /* Every rate that applies to THIS household, named. */
+        rateLines.rates.map(r => `${r.label} rate: ${cents(r.cents)} cents per $100${
+          r.key === 'town' && rc && rc.delta === 0
+            ? ` — unchanged for FY${rateF.fiscal_year}` : ''}\n`).join('') +
+        (rateLines.rates.length > 1
+          ? `Combined rate: ${cents(rateLines.combined)} cents per $100\n` : '') +
+        (state.location === 'intown' ? ''
+          /* The caveat the screen shows travels with the artefact. Without it the pasted
+             block reads as a complete out-of-town bill, which it is not. */
+          : 'Not included: the fire district tax, and in the Chapel Hill-Carrboro school ' +
+            'district a special district tax — both vary by where the property sits.\n') +
         `Sources: ${[...new Set(docNames)].join('; ')}\n` +
         `Check it yourself: ${shareUrl()}`;
       offerCopy(ev.currentTarget, text, 'Copy these figures');
@@ -1148,11 +1335,14 @@ function takeawayHTML() {
   /* Headline = sum of the rounded rows below it. The sheet invites checking with a
      calculator, and rounding the exact total separately handed over a $1
      self-inconsistency at many home values. */
+  const bill = propertyBill();
   const annualR = Math.round(annual);
   const countyR = county != null ? Math.round(county) : null;
-  const total = annualR + (countyR || 0);
+  const total = bill.total;                       // null, not 0, when a rate is missing (F-10)
   const u = utilMonthly();
-  const oneCent = MFAS.oneCentOnValue(state.homeValue);
+  const townCentDollars = c =>
+    MFAS.townPolicyDollarsOnThisHome(state.homeValue, state.location, c);
+  const townPolicyApplies = MFAS.townPolicyIsPartOfTheBill(state.location);
   const idx = state.data.index || {};
   const rc = townRateChange();
 
@@ -1172,13 +1362,22 @@ function takeawayHTML() {
        invites the reader to add them together and get a wrong number. The two are
        still kept apart from the tax rows and never summed: water and sewer are paid
        by users of the service, not out of taxes, and the site says so throughout. */
-    rows.push(row('Water, sewer and stormwater', usd(u.billTotal * 12) + ' / yr',
+    rows.push(row(sentenceCase(MFAS.componentPhrase(u.components)), usd(u.billTotal * 12) + ' / yr',
       `${usd2(u.billTotal)} a month at ${u.gallons.toLocaleString('en-US')} gallons, `
       + `${state.location === 'intown' ? 'inside' : 'outside'} town limits — `
       + `charged for the service, not out of property tax`));
   }
-  rows.push(row('One cent on the town tax rate', usd(oneCent) + ' / yr',
-    'what a single cent of rate costs a home assessed at this value'));
+  /* THE SHEET A RESIDENT CARRIES INTO A BOARD MEETING, where they cannot click through.
+     It printed "One cent on the town tax rate … $50 / yr" and "at least $500 a year on
+     this home" to households the same sheet had just said pay the town nothing (F-01).
+     The cents stay — they are a real town-policy fact — and the personalised dollar
+     column is withheld. */
+  const oneCentHere = townCentDollars(1);
+  rows.push(row('One cent on the town tax rate',
+    townPolicyApplies ? usd(oneCentHere) + ' / yr' : 'n/a — outside the town limits',
+    townPolicyApplies
+      ? 'what a single cent of rate costs a home assessed at this value'
+      : 'the town’s rate is not part of this household’s bill'));
 
   /* Only facts that are on the page already, each with its document and page. */
   const facts = [];
@@ -1192,18 +1391,25 @@ function takeawayHTML() {
   }
   if (wr) facts.push(`Water and sewer rates each rise ${pctPlain(wr)}, and the town recommends the
     same again for the two years after.`);
-  const now = forYear('general_fund_balance_pct_of_expenditures', 2027)
-    || one('general_fund_balance_pct_of_expenditures');
+  const now = currentFundBalance();
   const far = latestByYear('general_fund_balance_pct_of_expenditures').slice(-1)[0];
+  const floor = floorPct();
   if (now && far && far.fiscal_year !== now.fiscal_year) {
+    /* The floor was a bare `50` in this string — no constant, no source. It now comes
+       from the same sentence the site quotes on screen (F-16), and the clause is dropped
+       rather than guessed if the town stops publishing it. */
     facts.push(`The town holds savings worth ${pctPlain(now.value)} of a year's spending in
-      FY${now.fiscal_year}, against a floor of 50% it sets for itself, and projects
+      FY${now.fiscal_year}${floor != null
+        ? `, against a floor of ${pctPlain(floor)} it sets for itself,` : ','} and projects
       ${pctPlain(far.value)} by FY${far.fiscal_year}.`);
   }
   const need = one('tax_rate_increase_needed_cents');
-  if (need) facts.push(`Closing the FY${need.fiscal_year} shortfall the town projects would take
-    a rise it puts at over ${cents(need.value)} cents — at least ${usd(oneCent * need.value)}
-    a year on this home.`);
+  if (need) {
+    const onThis = townCentDollars(need.value);
+    facts.push(`Closing the FY${need.fiscal_year} shortfall the town projects would take
+      a rise it puts at over ${cents(need.value)} cents${onThis != null
+        ? ` — at least ${usd(onThis)} a year on this home` : ''}.`);
+  }
 
   /* One line per distinct document behind the figures above — including the fee
      schedule the utility bill is computed from, which the old list omitted: the
@@ -1244,8 +1450,10 @@ function takeawayHTML() {
       published FY${rateF.fiscal_year} rates. Your actual bill depends on your county
       assessment.${sender ? ` <strong>These figures came from a link someone shared — they are
       not this household's own. Enter yours at the site for a sheet that is.</strong>` : ''}</p>
-    <p class="headline">${usd(total)}<span> in property tax a year —
-      ${usd(total / 12)} a month</span></p>
+    <p class="headline">${bill.complete
+      ? `${usd(total)}<span> in property tax a year — ${usd(total / 12)} a month</span>`
+      : `—<span> a rate this bill depends on is not published in this build, so no total
+           is shown</span>`}</p>
     <table>${rows.join('')}</table>
     ${facts.length ? `<h2>What the documents say</h2>
       <ul class="facts">${facts.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}
@@ -1316,6 +1524,18 @@ function refreshDependents() {
      not-applicable, and without this the explorer kept the previous answer's figures
      until the reader happened to touch one of its own controls. */
   if (typeof _explorerRepaint === 'function') _explorerRepaint();
+  /* "Two governments, one bill" reads state.location and was NOT registered here, so
+     toggling "No, outside" left a card telling the reader their bill funds a government
+     they pay nothing to (finding F-24). Rebuilt in place rather than re-rendering the
+     whole section, for the same reason the timeline is: re-rendering everything on each
+     keystroke tears down the input being typed into. */
+  const wp = document.getElementById('whoProvides');
+  if (wp) {
+    const holder = document.createElement('div');
+    whoProvidesWhat(holder);
+    const fresh = holder.firstElementChild;
+    if (fresh) wp.replaceWith(fresh);
+  }
   scheduleScrollableScan();
   clearTimeout(_refreshTimer);
   _refreshTimer = setTimeout(() => {
@@ -1372,19 +1592,26 @@ function renderPaysFor(host) {
   ans.innerHTML = paysForAnswer();
   sec.appendChild(ans);
 
-  const sum = parts.reduce((a, p) => a + p.value, 0);
+  /* Widths divide by the SUM — a stacked bar has to fill. The legend divides by the
+     PUBLISHED total, because "% of the total" is a claim about that number. They are the
+     same today and the page rendered both from the sum; publish a total the parts miss
+     and it would have printed "⚠ the three funds differ from the stated total by $1.58M"
+     directly below a legend reading "53.5% of the total", where against the total it had
+     just named it is 51.3% (finding F-11). */
+  const shares = MFAS.fundShares(parts, total.value);
+  const sum = shares.sum;
   const bars = parts.map(p =>
-    `<span style="background:${p.colour};width:${(p.value / sum * 100).toFixed(3)}%"
+    `<span style="background:${p.colour};width:${shares.widthPct(p.value).toFixed(3)}%"
        title="${esc(p.label)}: ${esc(compact(p.value))}"></span>`).join('');
   const legend = parts.map(p => `<li>
       <span class="sw" style="background:${p.colour}"></span>
       <span><span class="nm">${esc(p.label)}</span>
         <span class="amt">${esc(compact(p.value))}</span>
-        <span class="pc">${(p.value / sum * 100).toFixed(1)}% of the total</span></span>
+        <span class="pc">${shares.sharePct(p.value).toFixed(1)}% ${shares.label}</span></span>
     </li>`).join('');
   // A total that does not equal its parts would be its own small lie.
   const diff = Math.abs(sum - total.value);
-  const check = diff < 1
+  const check = shares.agrees
     ? `The three funds add up exactly to the stated total of ${compact(total.value)} — this page
        checks that rather than assuming it.`
     : `⚠ The three funds add to ${compact(sum)}, which differs from the stated total
@@ -1408,15 +1635,22 @@ function renderPaysFor(host) {
   const mf = state.data.mfas;
   if (mf && mf.recurrence_dimension) {
     const rd = mf.recurrence_dimension;
-    const gf = rd.general_fund_fy2027_budget || {};
+    /* YEAR-KEYED PROPERTY NAME. `rd.general_fund_fy2027_budget` was read literally while
+       only the parent was guarded, so an FY2028 rebuild would collapse it to `{}` and
+       publish a live 86.6% "already committed" (a sibling field that is NOT year-keyed
+       and does advance) above an empty row list (finding F-02). Find the key by its
+       shape instead, and withhold the whole card if there isn't one. */
+    const gfKey = Object.keys(rd).find(k => /^general_fund_fy\d{4}_budget$/.test(k));
+    const gf = gfKey ? (rd[gfKey] || {}) : null;
+    const gfFy = gfKey ? Number(gfKey.match(/fy(\d{4})/)[1]) : null;
     const share = rd.recurring_share_of_classified_general_fund_pct;
-    if (share) {
+    if (share && gf && Object.keys(gf).length) {
       const p4 = document.createElement('div');
       p4.className = 'panel panel-pad';
       p4.style.marginTop = 'var(--s5)';
       p4.innerHTML = `
         <h3 class="block-title">
-          How much of it is already committed?</h3>
+          How much of it is already committed?${gfFy ? ` <small>FY${gfFy} budget</small>` : ''}</h3>
         <p class="answer" style="font-size:var(--t-base);margin-bottom:var(--s4)">
           About <span class="fig">${pctPlain(share)}</span> of the General Fund goes on
           <strong>ongoing commitments</strong> — salaries, benefits, day-to-day operations and debt
@@ -1468,7 +1702,15 @@ function renderPaysFor(host) {
   // Cross-fund transfers: where money moves between the town's own funds.
   const tf = state.data.transfers;
   if (tf && tf.schedules) {
-    const cur = tf.schedules.find(x => x.fiscal_year === 2027 && x.basis === 'budget');
+    /* Selected by the headline year, not the literal 2027. Once the dataset advanced,
+       section 02 would have rendered normally MINUS one disclosure — nine dollar cells
+       and their sources gone, no error, no console warning, no test failure, and no way
+       for a reviewer to tell whether the town stopped publishing transfers or the page
+       stopped reading them (finding F-27). Falls back to the most recent budget schedule
+       rather than vanishing. */
+    const budgets = tf.schedules.filter(x => x.basis === 'budget')
+      .sort((a, b) => a.fiscal_year - b.fiscal_year);
+    const cur = budgets.find(x => x.fiscal_year === headlineYear()) || budgets[budgets.length - 1];
     if (cur) {
       sec.appendChild(disclosure('See money moved between the town’s own funds', inner => {
         const dests = cur.destinations.filter(d =>
@@ -1478,7 +1720,7 @@ function renderPaysFor(host) {
             Funds do not operate in isolation — each year the town moves money from its operating
             funds into its capital funds and reserves. Read one fund alone and these look like
             unexplained gaps; laid out together they show what is being set aside to build things
-            later. FY2027 budget.
+            later. FY${cur.fiscal_year} ${esc(cur.basis)}.
           </p>
           <div class="tablewrap"><table>
             <caption>Transfers out of each fund, and where they went. Reads the outgoing side
@@ -1608,11 +1850,33 @@ function structureBlock(sec) {
     ${sh ? `<h4>What is already shared</h4>
       <p>${esc(sh.arrangement || '')}</p>
       <p class="soft">So this service is <strong>not</strong> duplicated, and at
-        ${sh.current_fee_pct_of_collections}% of collections the town currently pays about a
-        third of the ${sh.county_fee_study_peer_average_pct}% average the county's own fee
+        ${sh.current_fee_pct_of_collections}% of collections the town currently pays
+        ${(() => {
+          /* "about a third" was a ratio computed by hand and written into the prose,
+             between two figures that are both live. Raise the town's fee to 0.75% and the
+             page would publish "at 0.75% … about a third of the 1.5% average" — one half
+             described as one third, in a paragraph whose whole point is the size of that
+             gap (finding F-28). Computed, in words, from the two numbers beside it. */
+          const cur = sh.current_fee_pct_of_collections, avg = sh.county_fee_study_peer_average_pct;
+          if (!Number.isFinite(cur) || !Number.isFinite(avg) || !avg) return 'a fraction of';
+          const r = cur / avg;
+          const NAMES = [[1 / 5, 'about a fifth of'], [1 / 4, 'about a quarter of'],
+                         [1 / 3, 'about a third of'], [1 / 2, 'about half of'],
+                         [2 / 3, 'about two-thirds of'], [1, 'the same as']];
+          const near = NAMES.find(([v]) => Math.abs(r - v) < 0.04);
+          return near ? near[1] : `about ${pctPlain(r * 100)} of`;
+        })()} the ${sh.county_fee_study_peer_average_pct}% average the county's own fee
         study found among its peers.${sh.proposed_increase_declined
-          ? ` A proposed increase &mdash; ${usd(sh.proposed_increase_declined.fy2027)} next year,
-             ${usd(sh.proposed_increase_declined.three_year)} over three &mdash; was not funded.`
+          ? (() => {
+              /* Year-keyed literal (F-02): read the first plan year by shape. */
+              const k = Object.keys(sh.proposed_increase_declined)
+                .find(x => /^fy\d{4}$/.test(x));
+              const first = k ? sh.proposed_increase_declined[k] : undefined;
+              const y = k ? k.slice(2) : null;
+              return ` A proposed increase &mdash; ${usd(first)}${y ? ` in FY${y}` : ''},
+                ${usd(sh.proposed_increase_declined.three_year)} over three &mdash; was not
+                funded.`;
+            })()
           : ''}${sh.source_doc
           /* These percentages sat with no citation at all — against the one rule. */
           ? ` Source: ${cite({ source_doc: sh.source_doc, source_page: sh.source_page })}.` : ''}</p>`
@@ -1657,14 +1921,31 @@ function whoProvidesWhat(sec) {
   if (!county.length || !town.length) return;
 
   const tRate = val('property_tax_rate'), cRate = val('county_property_tax_rate');
+  /* "YOUR property tax funds two separate governments" was rendered unconditionally.
+     Section 02 opens, out of town, with "You pay no town property tax — the home is
+     outside the town limits", and then this card told the same reader their bill funds
+     both and compared the two rates as shares of it. For that household the town's 51.3
+     cents is not part of the bill at all, so the comparison is not merely inclusive of a
+     rate they do not pay — it is meaningless. Their real second levy is a fire district
+     tax the page does not compute, which OUT_OF_TOWN_CAVEAT has just told them
+     (finding F-24). Registered in refreshDependents() below so it repaints on the
+     toggle, which it previously did not. */
+  const inTownW = state.location === 'intown';
   const card = document.createElement('div');
   card.className = 'card split';
+  card.id = 'whoProvides';
   card.innerHTML = `
     <h3>Two governments, one bill</h3>
-    <p>Your property tax funds two separate governments, and they buy different things.
-      ${cRate && tRate ? `Orange County charges <strong>${cents(cRate)} cents</strong> per $100
-        and the town <strong>${cents(tRate)} cents</strong> — the county's is the larger share,
-        which surprises most people until you see what each one pays for.` : ''}</p>
+    <p>${inTownW
+      ? `Your property tax funds two separate governments, and they buy different things.
+         ${cRate && tRate ? `Orange County charges <strong>${cents(cRate)} cents</strong> per $100
+           and the town <strong>${cents(tRate)} cents</strong> — the county's is the larger share,
+           which surprises most people until you see what each one pays for.` : ''}`
+      : `Inside the town limits a household's property tax funds two separate governments;
+         this one is outside them, so of these two only <strong>Orange County</strong> appears on
+         the bill${cRate ? `, at <strong>${cents(cRate)} cents</strong> per $100` : ''}. Both are
+         shown because the two buy different things, and what the town provides is still the
+         answer to what the town's share pays for.`}</p>
     <div class="split-cols">
       <div>
         <h4>Orange County provides</h4>
@@ -1718,8 +1999,11 @@ function renderExplorer(host) {
     .map(s => s.split('|')).map(([y, b]) => ({ fy: +y, basis: b }))
     .sort((a, b) => a.fy - b.fy);
 
+  /* Default to the year the page is about. Pinned to a literal 2027, every reader who
+     never touched the dropdown would have been reading last year's plan by default once
+     FY2028 slices shipped (finding F-26). */
   const st = { fund: funds.includes('General Fund') ? 'General Fund' : funds[0],
-               fy: 2027, basis: 'budget', open: null };
+               fy: headlineYear(), basis: 'budget', open: null };
   if (!slices.some(s => s.fy === st.fy && s.basis === st.basis)) {
     st.fy = slices[0].fy; st.basis = slices[0].basis;
   }
@@ -1759,16 +2043,33 @@ function renderExplorer(host) {
         <strong>This particular year does not fully add up in the source.</strong> The account
         detail for FY${st.fy} ${esc(st.basis)} differs from the total the town publishes for it, and
         we have not established why. It is shown because hiding it would be worse, but treat it as
-        provisional — the FY2027 budget figures reconcile exactly.</div>` : ''}
+        provisional.${(() => {
+          /* The reassurance named a hardcoded FY2027. If a rebuild ever flipped that
+             slice to unverified, this box would have said in one breath that FY2027
+             does not reconcile and that FY2027 reconciles exactly (finding F-26). Name
+             a slice that is actually verified, or say nothing. */
+          const ok = (_liv && _liv.verified_slices || [])
+            .filter(s2 => s2.verified && !(s2.fund === st.fund
+              && s2.fiscal_year === st.fy && s2.basis === st.basis));
+          return ok.length
+            ? ` The FY${ok[ok.length - 1].fiscal_year} ${esc(ok[ok.length - 1].basis)} figures for
+                the ${esc(ok[ok.length - 1].fund)} do reconcile exactly.` : '';
+        })()}</div>` : ''}
       ${verified == null && _liv ? `<div class="callout" style="margin:0 0 var(--s5)">
         No reconciliation checks exist for the ${esc(st.fund)} in this build, so these figures
         carry no verification either way — unlike the checked funds, where every slice is
         either proven against a published total or flagged.</div>` : ''}
       <p class="answer" style="font-size:var(--t-base)">
         ${taxFunded && yourTax
-          ? `Of the <span class="fig">${usd(yourTax)}</span> you pay the town, this is roughly how it
-             divides — using the same proportions the town divides its
-             ${esc(st.fund)} into.`
+          /* NAME THE SLICE YEAR. `yourTax` is always the CURRENT published town levy, but
+             it is apportioned by the department shares of whichever (fund, year, basis)
+             the reader selected — so switching to "FY2029 projected" carved a real
+             present-tense tax bill up by a projected future budget's proportions, with no
+             year stated anywhere in the personalised claim. The very next branch of this
+             ternary already named it (finding F-21). */
+          ? `Of the <span class="fig">${usd(yourTax)}</span> you pay the town this year, this is
+             roughly how it divides — using the proportions the town divides its
+             ${esc(st.fund)} into for <strong>FY${st.fy} ${esc(st.basis)}</strong>.`
           : `How the ${esc(st.fund)} divides for FY${st.fy}.`}
         <span class="soft">${esc(st.fund)} total: ${compact(total)}.</span>
       </p>
@@ -1863,20 +2164,25 @@ function renderExplorer(host) {
 function renderHealth(host) {
   const sec = section('health', '03', 'Is the town’s money in good shape?', '');
 
-  const now = forYear('general_fund_balance_pct_of_expenditures', 2027)
-    || one('general_fund_balance_pct_of_expenditures');
+  const now = currentFundBalance();
   const far = latestByYear('general_fund_balance_pct_of_expenditures').slice(-1)[0];
   const floorQ = quote('savings_floor');
   const dropQ = quote('savings_drop');
   const noTaxQ = quote('no_tax_increase');
-  const FLOOR = 50;
+  /* The floor comes from the document, via the same sentence the blockquote below
+     prints. Hardcoded, a board that revised its aim to 60% would have had this panel
+     award a green tick against the retired 50% directly beneath its own quotation of the
+     new words (finding F-16). Null means the verdict is withheld, not defaulted. */
+  const FLOOR = floorPct();
 
   const ans = document.createElement('p');
   ans.className = 'answer';
   ans.innerHTML = now
     ? `Right now, yes — with a warning attached. The town holds savings worth
-       <span class="fig">${pctPlain(now.value)}</span> of a year's spending, comfortably above the
-       <span class="fig">${FLOOR}%</span> floor it sets for itself.
+       <span class="fig">${pctPlain(now.value)}</span> of a year's spending in
+       FY${now.fiscal_year}${FLOOR != null
+        ? `, ${now.value >= FLOOR ? 'comfortably above' : 'below'} the
+           <span class="fig">${pctPlain(FLOOR)}</span> floor it sets for itself` : ''}.
        <span class="soft">But it plans to spend more than it collects in every year of its
        three-year plan, covering the gap from those savings — and it expects them to fall to
        ${far ? pctPlain(far.value) : 'less'} by FY${far ? far.fiscal_year : ''}.</span>`
@@ -1884,11 +2190,14 @@ function renderHealth(host) {
   sec.appendChild(ans);
 
   const items = [];
-  if (now) items.push([now.value >= FLOOR ? 'ok' : 'bad', now.value >= FLOOR ? '✓' : '!',
-    'Savings are above the town’s own floor',
-    `<span class="fig">${pctPlain(now.value)}</span> of a year's spending in FY${now.fiscal_year}.
-     The town's stated aim is no lower than ${FLOOR}%.`]);
-  if (far && far.fiscal_year !== (now && now.fiscal_year)) {
+  if (now && FLOOR != null) {
+    items.push([now.value >= FLOOR ? 'ok' : 'bad', now.value >= FLOOR ? '✓' : '!',
+      now.value >= FLOOR ? 'Savings are above the town’s own floor'
+                         : 'Savings are below the town’s own floor',
+      `<span class="fig">${pctPlain(now.value)}</span> of a year's spending in FY${now.fiscal_year}.
+       The town's stated aim is no lower than ${pctPlain(FLOOR)}.`]);
+  }
+  if (far && FLOOR != null && far.fiscal_year !== (now && now.fiscal_year)) {
     items.push([far.value >= FLOOR ? 'watch' : 'bad', far.value >= FLOOR ? '~' : '!',
       `Savings are projected to fall by FY${far.fiscal_year}`,
       `Down to <span class="fig">${pctPlain(far.value)}</span> —
@@ -1897,9 +2206,8 @@ function renderHealth(host) {
   }
   /* "Coming years" must mean coming years: FY2026 ended a month ago and its figure
      is an estimate, not a plan, so it is excluded here rather than counted. */
-  const headlineFy = (state.data.index || {}).headline_fiscal_year || 2027;
   const defs = latestByYear('general_fund_surplus_deficit')
-    .filter(f => f.value < 0 && f.fiscal_year >= headlineFy);
+    .filter(f => f.value < 0 && f.fiscal_year >= headlineYear());
   if (defs.length) {
     const worst = defs.reduce((a, b) => (b.value < a.value ? b : a));
     items.push(['watch', '~', `A planned shortfall in ${defs.length} of the coming years`,
@@ -1909,18 +2217,41 @@ function renderHealth(host) {
   /* Measured against the prior year's published rate — never asserted. If the two
      years are not both in the data the item is withheld; if the rate moved, the
      item says so instead of celebrating. */
+  /* THE TOWN'S rate, not "yours".
+   *
+   * This item derived a green ✓ purely from the town's rate and then stated it in the
+   * SECOND PERSON — "Your property tax rate is not going up this year" — which is false
+   * for every reader on the page: the county's rate rose 3.75 cents, $187.50 a year on a
+   * $500,000 home. Out of town that is the only rate they pay, and it went UP. In town
+   * the combined rate went up by the same amount. The page awarded a pass on a claim it
+   * disproves two sections earlier (finding F-09).
+   *
+   * `renderHealth` reads no reader state at all and is not in refreshDependents(), so
+   * the honest fix is to drop the possessive rather than add a location branch that
+   * would not repaint. It matches this section's own heading, "Is the TOWN'S money in
+   * good shape?", and the county's movement gets its own item below. */
   const rate = one('property_tax_rate');
   const rcH = townRateChange();
   if (rate && rcH && rcH.delta === 0) {
-    items.push(['ok', '✓', 'Your property tax rate is not going up this year',
+    items.push(['ok', '✓', 'The town’s property tax rate is not going up this year',
       `It stays at <span class="fig">${cents(rate.value)} cents</span> per $100 of value in
        FY${rate.fiscal_year}, the same as FY${rcH.prev.fiscal_year}.`]);
   } else if (rate && rcH) {
     items.push([rcH.delta > 0 ? 'watch' : 'ok', rcH.delta > 0 ? '~' : '✓',
-      `Your property tax rate ${rcH.delta > 0 ? 'rises' : 'falls'} this year`,
+      `The town’s property tax rate ${rcH.delta > 0 ? 'rises' : 'falls'} this year`,
       `From <span class="fig">${cents(rcH.prev.value)}</span> to
        <span class="fig">${cents(rate.value)} cents</span> per $100 of value in
        FY${rate.fiscal_year}.`]);
+  }
+  /* The other government on the same bill. Without this the section could show a green
+     tick about a flat rate and never mention that the rate most of these households
+     actually pay went up. */
+  const cIncH = one('county_tax_rate_increase_cents');
+  if (cIncH && cIncH.value !== 0) {
+    items.push([cIncH.value > 0 ? 'watch' : 'ok', cIncH.value > 0 ? '~' : '✓',
+      `Orange County’s rate ${cIncH.value > 0 ? 'rose' : 'fell'} this year`,
+      `By <span class="fig">${cents(Math.abs(cIncH.value))} cents</span> per $100 of value —
+       every household in the county pays this one, inside the town limits or not.`]);
   }
   const wr = val('water_rate_increase_pct');
   if (wr) items.push(['watch', '~', 'Water and sewer rates are going up',
@@ -1950,7 +2281,13 @@ function renderHealth(host) {
     const totE = aud.rows.find(r => r.section === 'expenditures' && r.is_total);
     const totR = aud.rows.find(r => r.section === 'revenues' && r.is_total);
     if (totE && totR) {
-      const underPct = totE.final_budget ? (totE.final_budget - totE.actual) / totE.final_budget * 100 : 0;
+      /* THE SIGN IS DERIVED, not assumed. The sentence interpolated a percentage into
+         wording that presumed an underspend, while the revenue figure on the very next
+         line already branched on its sign. An overspend would have published "−1.4% less
+         than planned" — a double negative most readers parse as an underspend — in a
+         panel titled "Did they spend what they said they would?", about a named board
+         (finding F-15). */
+      const varE = MFAS.budgetVariance(totE.final_budget, totE.actual);
       const overRev = totR.actual - totR.final_budget;
       const p2 = document.createElement('div');
       p2.className = 'panel panel-pad';
@@ -1961,8 +2298,12 @@ function renderHealth(host) {
         <p class="answer" style="font-size:var(--t-base);margin-bottom:var(--s4)">
           In <span class="fig">FY${aud.fiscal_year}</span> — the most recent year with audited
           accounts — the town budgeted <span class="fig">${usd(totE.final_budget)}</span> and
-          actually spent <span class="fig">${usd(totE.actual)}</span>,
-          <span class="fig">${pctPlain(underPct)}</span> less than planned.
+          actually spent <span class="fig">${usd(totE.actual)}</span>${varE
+            ? (varE.direction === 'exact'
+              ? ' — exactly what it budgeted.'
+              : ` — <span class="fig">${pctPlain(varE.pct)}</span>
+                 ${varE.direction === 'under' ? 'less' : 'MORE'} than planned.`)
+            : '.'}
           <span class="soft">Revenue came in ${usd(Math.abs(overRev))}
           ${overRev >= 0 ? 'above' : 'below'} budget.</span>
         </p>
@@ -2177,9 +2518,12 @@ function renderHealth(host) {
     function build() {
       [
         chartSurplus(),
+        /* Reference line from the published fact, not a literal — the chart used to draw
+           the old threshold after the town revised it (F-16). */
         chartLine('general_fund_balance_pct_of_expenditures',
           'How much savings the town holds', 'Measured against a year of spending.',
-          pctPlain, 50, '50% stated floor'),
+          pctPlain, floorPct(), floorPct() != null
+            ? `${pctPlain(floorPct())} stated floor` : null),
         chartLine('general_fund_balance_available_cash', 'Savings in dollars',
           'The town’s cash reserve.', compact),
         chartColumns(latestByYear('admin_spend_total').filter(inRange),
@@ -2190,7 +2534,11 @@ function renderHealth(host) {
     build();
 
     // projection drift, full width
-    const cmps = state.data.projections.comparisons.filter(c =>
+    /* `projections` is a NON-CORE dataset: boot() deliberately lets it fail alone and
+       carries on. Dereferenced unguarded, the throw escaped render() and the catch
+       handler then threw too (#loading was already gone), so the page truncated with no
+       error at all — see the guard note at boot() (finding F-17). */
+    const cmps = ((state.data.projections || {}).comparisons || []).filter(c =>
       c.metric === 'general_fund_balance_available_cash');
     if (cmps.length) {
       const note = document.createElement('p');
@@ -2250,18 +2598,33 @@ function projectsBlock(sec) {
      total: the funding tables differ from it by $54,520 (the Dam Repairs
      question in the register), and a split whose parts do not sum to the total
      beside it would be this page's own small lie. */
-  const already = d.projects.reduce((a, p) =>
-    a + p.expenditures_by_account.reduce((x, r) => x + (r.amounts[0] || 0), 0), 0);
-  const window7 = d.projects.reduce((a, p) =>
-    a + p.expenditures_by_account.reduce((x, r) =>
-      x + r.amounts.slice(1).reduce((y, v) => y + (v || 0), 0), 0), 0);
+  /* The split is POSITIONAL, so its shape is asserted rather than assumed, and the year
+     range is read from `plan_window` rather than typed into the prose. Next year's CIP
+     shifting to FY2028–FY2034 would have published correct numbers under a wrong range;
+     the town dropping the standalone current-budget column would have made `amounts[0]`
+     the first plan year while it was still reported as money "already in current project
+     budgets" — the same $14.5M-class misattribution this split was written to fix
+     (finding F-08). */
+  const split = MFAS.splitProjectCost(d.projects, s.total_planned_cost, 8);
+  const win = (d.projects.find(p => p.plan_window) || {}).plan_window || null;
+  const winLabel = win ? win.replace('-', '&ndash;') : null;
   const h = document.createElement('p');
   h.className = 'answer';
   h.innerHTML = `The town has <span class="fig">${d.projects.length}</span> capital projects
-    planned, together worth <span class="fig">${compact(s.total_planned_cost)}</span> through
-    FY2033 — <span class="fig">${compact(already)}</span> of that already in current project
-    budgets, and <span class="fig">${compact(window7)}</span> planned across
-    FY2027&ndash;FY2033. <span class="soft">Each one below is a decision, with what it costs, how
+    planned, together worth <span class="fig">${compact(s.total_planned_cost)}</span>${
+      winLabel ? ` across ${winLabel}` : ''}.${split.shapeOk
+      ? ` <span class="fig">${compact(split.already)}</span> of that is already in current
+         project budgets, and <span class="fig">${compact(split.window)}</span> is planned
+         across the years ahead.${split.reconciles === false
+           ? ` <span class="soft">Those two do not add to the total above; shown as found in
+              the source.</span>` : ''}`
+      /* The columns are not the shape the split was written for, so it is withheld
+         rather than published under a description that may no longer be true. */
+      : ` <span class="soft">The plan's column layout has changed, so this page is not
+         splitting it into already-committed and still-to-come — that split depends on the
+         first column being the current project budget, and it can no longer confirm
+         that.</span>`}
+    <span class="soft">Each one below is a decision, with what it costs, how
     it gets paid for, and the page it came from. Capital plans change; these are the town's
     current figures, not commitments.</span>`;
   sec.appendChild(h);
@@ -2327,7 +2690,13 @@ function renderComing(host) {
   const scenario = one('fy29_scenario_increase_on_400k_home');
   const capCents = one('capital_projects_tax_rate_equivalent_cents');
   const houseCents = one('affordable_housing_tax_rate_equivalent_cents');
-  const oneCent = MFAS.oneCentOnValue(state.homeValue);
+  /* Town-policy cents converted to dollars ONLY where the town's rate reaches this
+     household. Section 04 published six such figures — "at least $500 a year for a home
+     like yours", "roughly $210 a year for your home", "about $100 a year for you", the
+     FY2029 cliff's "$743 a year on a home like yours" — to readers the page had already
+     told pay the town nothing (finding F-01). */
+  const townCentDollarsComing = c =>
+    MFAS.townPolicyDollarsOnThisHome(state.homeValue, state.location, c);
 
   const ans = document.createElement('p');
   ans.className = 'answer';
@@ -2344,9 +2713,11 @@ function renderComing(host) {
         : 'The town'} projects a shortfall of
        <span class="fig">${usd(Math.abs(needYearDef.value))}</span> by
        FY${need.fiscal_year} that would need a rise of over
-       <span class="fig">${cents(need.value)} cents</span> to close —
-       at least <span class="fig">${usd(oneCent * need.value)} a year</span> for a home like
-       yours. <span class="soft">These are projections and will change.</span>`
+       <span class="fig">${cents(need.value)} cents</span> to close${
+         townCentDollarsComing(need.value) != null
+           ? ` — at least <span class="fig">${usd(townCentDollarsComing(need.value))} a year</span>
+              for a home like yours` : ''}.
+       <span class="soft">These are projections and will change.</span>`
     : '';
   sec.appendChild(ans);
 
@@ -2355,7 +2726,11 @@ function renderComing(host) {
   const bal = new Map(latestByYear('general_fund_balance_pct_of_expenditures')
     .map(f => [f.fiscal_year, f]));
 
-  const items = def.filter(f => f.fiscal_year >= 2027).map(f => {
+  /* "What's coming" starts at the year the page is about. Pinned to a literal 2027, the
+     first roll-forward would have opened this section with a closed, adopted budget year
+     LABELLED a projection, while section 03 three functions away correctly started at
+     the next one (finding F-13). */
+  const items = def.filter(f => f.fiscal_year >= headlineYear()).map(f => {
     const p = pct.get(f.fiscal_year), bl = bal.get(f.fiscal_year);
     const bad = f.value < 0 && Math.abs(p ? p.value : 0) > 8;
     let body = `The town plans to ${f.value < 0 ? 'spend' : 'take in'}
@@ -2363,33 +2738,50 @@ function renderComing(host) {
       ${f.value < 0 ? 'more than it collects' : 'more than it spends'}`;
     if (p) body += ` (${pctPlain(Math.abs(p.value))} of its budget)`;
     body += '.';
+    const flr = floorPct();
     if (bl) body += ` Savings would sit at <span class="fig">${pctPlain(bl.value)}</span> of a
-      year's spending${bl.value < 50 ? ' — below its own 50% floor.' : '.'}`;
-    if (f.fiscal_year === 2029 && need && scenario) {
+      year's spending${flr != null && bl.value < flr
+        ? ` — below its own ${pctPlain(flr)} floor.` : '.'}`;
+    /* THE CLIFF PARAGRAPH FOLLOWS THE FACT'S OWN YEAR, not a literal 2029. Bolted onto
+       whichever card happened to be FY2029, a roll-forward that moved the cliff to
+       FY2030 would have attributed FY2030's arithmetic to FY2029's smaller gap — while
+       the answer paragraph twenty lines above, already corrected, named FY2030. Two
+       statements about the same cliff, two different years, one screen (finding F-07).
+       The scenario must be about the same year too, or the town's worked example is
+       being quoted against a gap it was not computed from. */
+    if (need && scenario && f.fiscal_year === need.fiscal_year
+        && scenario.fiscal_year === need.fiscal_year) {
+      const onYours = townCentDollarsComing(need.value);
       body += ` Closing that gap would take over <span class="fig">${cents(need.value)} cents</span>
         on the rate — the town's own example is <span class="fig">${usd(scenario.value)} a year</span>
-        on a $400,000 home, and at least <span class="fig">${usd(oneCent * need.value)}</span>
-        on yours.`;
+        on a $400,000 home${onYours != null
+          ? `, and at least <span class="fig">${usd(onYours)}</span> on yours` : ''}.`;
     }
     /* "Already adopted" was false — no adopted FY2027 budget exists in the archive;
        the rate facts carry basis "recommended" and the tradeoffs caveat two cards
        down says these are the manager's recommendations, not final. */
-    const hFy = (state.data.index || {}).headline_fiscal_year || 2027;
     // h3, not h4: these sit directly under the section h2, and the jump from
     // h2 to h4 was the page's one heading-level skip.
     return `<li class="${bad ? 'bad' : ''}"><span class="node" aria-hidden="true"></span>
       <span class="yr">FY${f.fiscal_year} · ${esc(f.basis)}</span>
-      <h3>${f.fiscal_year === hFy ? 'This year’s plan' : 'Projected'}</h3>
+      <h3>${f.fiscal_year === headlineYear() ? 'This year’s plan' : 'Projected'}</h3>
       <p>${body}</p></li>`;
   });
 
   const commitments = [];
-  if (capCents) commitments.push(`the new fire station, the Ridgewalk Greenway and the train station
-    are expected to need about <span class="fig">${cents(capCents.value)} cents</span> on the tax
-    rate — roughly <span class="fig">${usd(oneCent * capCents.value)} a year</span> for your home`);
-  if (houseCents) commitments.push(`the board has committed to raising affordable-housing spending
-    until it reaches <span class="fig">${cents(houseCents.value)} cents</span>
-    (about <span class="fig">${usd(oneCent * houseCents.value)} a year</span> for you)`);
+  if (capCents) {
+    const onYours = townCentDollarsComing(capCents.value);
+    commitments.push(`the new fire station, the Ridgewalk Greenway and the train station
+      are expected to need about <span class="fig">${cents(capCents.value)} cents</span> on the tax
+      rate${onYours != null
+        ? ` — roughly <span class="fig">${usd(onYours)} a year</span> for your home` : ''}`);
+  }
+  if (houseCents) {
+    const onYours = townCentDollarsComing(houseCents.value);
+    commitments.push(`the board has committed to raising affordable-housing spending
+      until it reaches <span class="fig">${cents(houseCents.value)} cents</span>${onYours != null
+        ? ` (about <span class="fig">${usd(onYours)} a year</span> for you)` : ''}`);
+  }
   if (commitments.length) {
     items.push(`<li><span class="node" aria-hidden="true"></span>
       <span class="yr">Already promised</span><h3>Commitments on top of the above</h3>
@@ -2401,7 +2793,7 @@ function renderComing(host) {
   panel.innerHTML = `<ul class="timeline">${items.join('')}</ul>`;
   sec.appendChild(panel);
 
-  const ps = state.data.requests.projects_with_cost_changes
+  const ps = (((state.data.requests || {}).projects_with_cost_changes) || [])
     .filter(p => p.original_budget_usd != null && p.current_budget_usd != null);
   if (ps.length) {
     sec.appendChild(disclosure('See how project costs have grown', inner => {
@@ -2458,7 +2850,11 @@ function driversBlock(sec) {
   const v = d.verification || {};
   const agreed = (v.cross_checks_against_this_pipeline || []).filter(c => c.agrees).length;
   const checks = (v.cross_checks_against_this_pipeline || []).length;
-  const oneCent = MFAS.oneCentOnValue(state.homeValue);
+  /* Twelve driver rows printed "· $729/yr on your home" (then $131, $78, $77, $70, $67,
+     $67, $63, $46, $23, $16, $13) to households outside the town limits, where every one
+     of them is $0 (finding F-01). The cents stay; the dollar suffix is withheld. */
+  const townCentDollarsDrivers = c =>
+    MFAS.townPolicyDollarsOnThisHome(state.homeValue, state.location, c);
 
   const card = document.createElement('div');
   card.className = 'card drivers';
@@ -2480,7 +2876,7 @@ function driversBlock(sec) {
   const ul = card.querySelector('#driverRows');
   for (const r of rows) {
     const li = document.createElement('li');
-    const onYours = r.cents_equivalent ? oneCent * r.cents_equivalent : null;
+    const onYours = r.cents_equivalent ? townCentDollarsDrivers(r.cents_equivalent) : null;
     li.innerHTML = `<span class="k">${esc(r.driver)}
         <small>${esc(r.period || '')}${r.budget_category ? ' · ' + esc(r.budget_category) : ''}
           ${r.confidence ? `· confidence: ${esc(String(r.confidence).toLowerCase())}` : ''}</small>
@@ -2495,16 +2891,28 @@ function driversBlock(sec) {
   // The cliff is the point of the exercise: the commitments land in one year.
   if (d.fy29_fiscal_cliff && d.fy29_fiscal_cliff.length && v.fy29_cliff_total_reconciles) {
     const q = d.fy29_fiscal_cliff.filter(c => c.annual_amount);
+    /* WITHHOLD RATHER THAN FALL BACK. Both divisions used `v.her_penny_assumption ||
+       240000` — a literal transcription of one year's revenue-per-cent — while the note
+       28 lines above rendered an honest "n/a" for the same missing value. Lose the
+       metric (the repo's own test warns this exact rename has happened before) and the
+       card said "the conversion uses the town's own published figure of n/a" and, in the
+       next breath, "about 14.87 cents on the tax rate, or roughly $743 a year on a home
+       like yours" (finding F-14). */
+    const cliffCents = MFAS.centsEquivalent(v.fy29_cliff_parts_sum, v.her_penny_assumption);
+    const cliffOnYours = cliffCents == null ? null : townCentDollarsDrivers(cliffCents);
     const box = document.createElement('div');
     box.className = 'card tradeoff-named';
     box.innerHTML = `
       <h3>Why FY2029 is the year to watch</h3>
       <p>Several of those commitments start paying out at once. The initiative's workbook adds
         the quantifiable ones to <strong>${usd(v.fy29_cliff_parts_sum)}</strong> in that single
-        year &mdash; about <strong>${cents(v.fy29_cliff_parts_sum
-          / (v.her_penny_assumption || 240000))} cents</strong> on the tax rate, or roughly
-        <strong>${usd(oneCent * v.fy29_cliff_parts_sum / (v.her_penny_assumption || 240000))}
-        a year</strong> on a home like yours.</p>
+        year${cliffCents != null
+          ? ` &mdash; about <strong>${cents(cliffCents)} cents</strong> on the tax rate${
+              cliffOnYours != null
+                ? `, or roughly <strong>${usd(cliffOnYours)} a year</strong> on a home like yours`
+                : ''}`
+          : `. <span class="soft">The town's revenue-per-cent figure is not in this build, so
+             this is not converted into cents on the rate.</span>`}.</p>
       <ul class="rows">${q.map(c => `<li><span class="k">${esc(c.component)}
         <small>${esc(String(c.status || '').toLowerCase())}</small></span>
         <span class="v">${compact(c.annual_amount)}</span></li>`).join('')}</ul>
@@ -2528,17 +2936,31 @@ function tradeoffBlock(sec) {
   if (!d || !d.declined) return;
   const s = d.summary;
   const rt = s.declined_in_resident_terms || {};
-  const oneCent = MFAS.oneCentOnValue(state.homeValue);
-  // The town's published figure is for a $400,000 home; scale it to the reader's.
-  const onYours = rt.cents_on_the_tax_rate ? oneCent * rt.cents_on_the_tax_rate : null;
+  // The town's published figure is for a $400,000 home; scale it to the reader's — and
+  // only where the town's rate is part of what they pay (F-01).
+  const onYours = rt.cents_on_the_tax_rate
+    ? MFAS.townPolicyDollarsOnThisHome(state.homeValue, state.location, rt.cents_on_the_tax_rate)
+    : null;
+
+  /* YEAR-AGNOSTIC READS. `s.fy2027_total_asked`, `s.fy2027_funded`, `s.fy2027_declined`
+     and `r.fy2027` were all literal property names guarded only at the parent, so an
+     FY2028 rebuild would have published "Departments asked for $NaN of new spending next
+     year … and declined $NaN", with every declined row showing $0 beside a real
+     three-year total (finding F-02). The year-neutral form already exists in the
+     published data: `years[0]` and `amounts[0]`, written by etl/s95_tradeoffs.py. */
+  const yrs = Array.isArray(d.years) && d.years.length ? d.years : null;
+  const fy1 = yrs ? yrs[0] : null;
+  const at = k => (fy1 != null && s[`fy${fy1}_${k}`] != null) ? s[`fy${fy1}_${k}`] : undefined;
+  const asked = at('total_asked'), funded = at('funded'), declined = at('declined');
 
   const h = document.createElement('div');
   h.className = 'card tradeoff';
   h.innerHTML = `
     <h3>What didn’t get funded</h3>
-    <p>Departments asked for <span class="fig">${usd(s.fy2027_total_asked)}</span> of new
-      spending next year. The town funded <span class="fig">${usd(s.fy2027_funded)}</span> of it
-      and <strong>declined ${usd(s.fy2027_declined)}</strong> &mdash;
+    <p>Departments asked for <span class="fig">${usd(asked)}</span> of new
+      spending${fy1 ? ` in FY${fy1}` : ''}. The town funded
+      <span class="fig">${usd(funded)}</span> of it
+      and <strong>declined ${usd(declined)}</strong> &mdash;
       <span class="fig">${s.requests_declined}</span> requests.</p>
     ${rt.cents_on_the_tax_rate ? `<p class="soft">Funding all of it would have taken about
       <strong>${cents(rt.cents_on_the_tax_rate)} cents</strong> on the tax rate${onYours
@@ -2564,8 +2986,12 @@ function tradeoffBlock(sec) {
         ? 'The town’s form for this request states no consequence.'
         : 'No justification form was found for this request, so the town may have stated '
           + 'a consequence this page has not located.';
+    /* `r.amounts[0]` is the first plan year by construction (etl/s95_tradeoffs.py:119),
+       so this survives the roll-forward that `r.fy2027 || 0` would have shown as $0. */
+    const first = Array.isArray(r.amounts) ? r.amounts[0]
+      : (fy1 != null ? r[`fy${fy1}`] : undefined);
     li.innerHTML = `<span class="k">${esc(r.request)}<small>${consequence}</small></span>
-      <span class="v">${usd(r.fy2027 || 0)}<small>${r.total_three_year !== r.fy2027
+      <span class="v">${usd(first)}<small>${r.total_three_year !== first
         ? usd(r.total_three_year) + ' over three years' : 'one year only'}</small></span>`;
     ul.appendChild(li);
   }
@@ -2593,7 +3019,11 @@ function tradeoffBlock(sec) {
 function renderVoice(host) {
   const sec = section('voice', '05', 'How to be heard', '');
   const part = (state.data.household && state.data.household.civic_participation) || [];
-  const r = state.data.requests, s = r.summary;
+  /* Guarded like every other non-CORE dataset. Unguarded, a 404 on requests.json took
+     out sections 04, 05 AND 06 — including the receipts section that substantiates the
+     masthead's promise that every figure names its document — and left a 40 KB page that
+     looked finished, with no error anywhere (finding F-17). */
+  const r = state.data.requests, s = (r && r.summary) || null;
 
   const ans = document.createElement('p');
   ans.className = 'answer';
@@ -2620,6 +3050,13 @@ function renderVoice(host) {
     sec.appendChild(p);
   }
 
+  /* The whole "questions residents asked" panel depends on the optional requests
+     dataset. Without it, section 05 must still render its dates and its heading rather
+     than throwing and taking section 06 — the RECEIPTS — down with it (F-17). */
+  if (!s) {
+    host.appendChild(sec);
+    return;
+  }
   const filled = s.data_cells_requested
     ? s.data_cells_provided / s.data_cells_requested * 100 : 0;
   const q = document.createElement('div');
@@ -2658,18 +3095,52 @@ function renderVoice(host) {
 }
 
 /* ==================== 06 — the receipts ==================== */
-const GLOSSARY = [
-  ['Fiscal year (FY)', 'The town’s budget year runs 1 July to 30 June. FY2027 means the year ending 30 June 2027.'],
-  ['General Fund', 'The main account for services paid out of taxes — police, fire, streets, parks, planning, administration.'],
-  ['Fund balance', 'Savings. Money not spent in earlier years, kept for emergencies and cash flow. The town aims to hold no less than 50% of a year’s spending.'],
-  ['Property tax rate', 'Charged in cents per $100 of assessed value. At 51.3 cents, a $100,000 home pays $513 a year to the town. That is 0.513% of the value — not 51.3%.'],
-  ['Ad valorem tax', 'Latin for “according to value” — in other words, the property tax.'],
-  ['Revenue-neutral rate', 'After a revaluation raises property values, this is the rate that would bring in the same money as before. A rate above it is a real increase even if the cents figure looks lower.'],
-  ['ERU', 'Equivalent Residential Unit — the unit the stormwater fee is charged in, based on how much hard surface sheds rain.'],
-  ['Enterprise fund', 'A fund paid for by the people who use the service rather than by taxes. Water & Sewer and Stormwater are these.'],
-  ['Budget vs estimate vs projection', 'A budget is the plan adopted. An estimate is where the year is expected to land. A projection is a later year in the plan, and least certain. This page never mixes them.'],
-  ['Audited', 'Checked by an outside accountant after the year ends, which makes audited figures the most reliable kind. The audited record on this page runs from FY2018 to FY2025, and each year says whether it was read from a digital file or recovered from a scanned page and checked.'],
-];
+/* THE GLOSSARY IS BUILT FROM THE DATA, not written down.
+ *
+ * It was a module-level constant containing "At 51.3 cents, a $100,000 home pays $513 a
+ * year to the town" and "The town aims to hold no less than 50%". Adopt 54.0 cents for
+ * FY2028 and the hero, the callout and the printed sheet all move while section 06 —
+ * the section headed "Where every number came from" — still teaches the retired worked
+ * example, 5% low. A reader who used it to sanity-check their own bill would conclude
+ * the calculator was wrong (findings F-23, F-16).
+ *
+ * A live figure that cannot be read is dropped from its sentence rather than defaulted.
+ */
+function glossary() {
+  const rate = val('property_tax_rate');
+  const floor = floorPct();
+  /* The audited span, MEASURED from the two datasets that carry it rather than typed —
+     the years recovered from scans plus the fully-read digital year. */
+  const audYears = [
+    ...(((state.data.ocr_statements || {}).published) || []).map(r => r.fiscal_year),
+    (state.data.audited || {}).fiscal_year,
+  ].filter(y => Number.isFinite(y));
+  const hy = headlineYear();
+  const worked = rate != null
+    ? `At ${cents(rate)} cents, a $100,000 home pays ${usd(1000 * rate / 100)} a year to the town. `
+      + `That is ${(rate / 100).toFixed(3)}% of the value — not ${cents(rate)}%.`
+    : '';
+  return [
+    ['Fiscal year (FY)', `The town’s budget year runs 1 July to 30 June. FY${hy} means the year `
+      + `ending 30 June ${hy}.`],
+    ['General Fund', 'The main account for services paid out of taxes — police, fire, streets, parks, planning, administration.'],
+    ['Fund balance', 'Savings. Money not spent in earlier years, kept for emergencies and cash flow.'
+      + (floor != null ? ` The town aims to hold no less than ${pctPlain(floor)} of a year’s spending.` : '')],
+    ['Property tax rate', 'Charged in cents per $100 of assessed value.' + (worked ? ' ' + worked : '')],
+    ['Ad valorem tax', 'Latin for “according to value” — in other words, the property tax.'],
+    ['Revenue-neutral rate', 'After a revaluation raises property values, this is the rate that would bring in the same money as before. A rate above it is a real increase even if the cents figure looks lower.'],
+    ['ERU', 'Equivalent Residential Unit — the unit the stormwater fee is charged in, based on how much hard surface sheds rain.'],
+    ['Enterprise fund', 'A fund paid for by the people who use the service rather than by taxes. Water & Sewer and Stormwater are these.'],
+    ['Budget vs estimate vs projection', 'A budget is the plan adopted. An estimate is where the year is expected to land. A projection is a later year in the plan, and least certain. This page never mixes them.'],
+    ['Audited', 'Checked by an outside accountant after the year ends, which makes audited figures the most reliable kind.'
+      + (audYears.length
+        ? ` The audited record on this page runs from FY${Math.min(...audYears)} to `
+          + `FY${Math.max(...audYears)}, and each year says whether it was read from a digital `
+          + 'file or recovered from a scanned page and checked.'
+        : ' Each year says whether it was read from a digital file or recovered from a scanned '
+          + 'page and checked.')],
+  ];
+}
 
 function renderReceipts(host) {
   const docs = state.data.documents.documents, sum = state.data.documents.summary;
@@ -2798,7 +3269,7 @@ function renderReceipts(host) {
   g.style.marginTop = 'var(--s5)';
   g.innerHTML = `<h3 class="block-title" style="margin-bottom:var(--s5)">
       Budget words, in plain English</h3>
-    <dl class="gloss">${GLOSSARY.map(([t, d]) =>
+    <dl class="gloss">${glossary().map(([t, d]) =>
       `<div><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl>`;
   sec.appendChild(g);
   host.appendChild(sec);
@@ -3019,8 +3490,15 @@ async function boot() {
     state.yearMin = Math.min(...ys);
     state.yearMax = Math.max(...ys);
 
-    $('#loading').remove();
+    /* RENDER FIRST, THEN REMOVE THE LOADING NOTICE. It used to go the other way, so a
+       renderer that threw — which one unguarded optional dataset was enough to cause —
+       left the catch below with no `#loading` to write into. The catch then threw too,
+       and the page truncated silently: sections present, receipts gone, no error text
+       anywhere on screen (finding F-17). If render() throws now, the notice is still
+       there to carry the message. */
     render();
+    const loading = $('#loading');
+    if (loading) loading.remove();
 
     /* The browser's own fragment jump fires before these sections exist — every
        deep link (including the share feature's own #you) landed at the top of a
@@ -3055,7 +3533,15 @@ async function boot() {
        which is wrong for a deployment or a partial release, and sends the reader
        to fix something that is not broken. Describe the symptom, give both real
        causes, and say what to do. */
-    $('#loading').innerHTML =
+    /* The notice may already be gone if the failure came after a successful render, so
+       fall back to a fresh element rather than throwing inside the error handler. */
+    let box = $('#loading');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'loading';
+      document.body.prepend(box);
+    }
+    box.innerHTML =
       'Could not load the town’s figures. Either the data files did not load from the ' +
       'server, or this page was opened straight from a folder rather than a web address ' +
       '— browsers block the data load in that case. ' +

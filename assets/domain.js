@@ -160,6 +160,175 @@
    */
   const townPolicyIsPartOfTheBill = location => isInTown(location);
 
+  /**
+   * What N cents of the TOWN's rate would cost this household — or null.
+   *
+   * `const oneCent = homeValue / 100 * 0.01` was written inline five separate times and
+   * multiplied by town-rate cent figures with no reference to the reader's location, so
+   * roughly eighteen personalised dollar amounts were published to a household the same
+   * page had just told pays the town nothing: "One cent on the tax rate costs YOU ·
+   * $50 / yr", "at least $500 a year for a home like YOURS", twelve driver rows reading
+   * "$729/yr on YOUR home". Two of them printed onto the takeaway a resident carries
+   * into a board meeting, where they cannot click through (finding F-01).
+   *
+   * The distinction the fix has to keep: the CENTS figure is a real town-policy fact and
+   * is worth showing to anyone. It is the second-person DOLLAR column that is false
+   * outside the limits. So this returns null there and the caller drops the column,
+   * rather than the whole row.
+   */
+  function townPolicyDollarsOnThisHome(assessedValue, location, cents) {
+    if (!townPolicyIsPartOfTheBill(location)) return null;
+    return centsOnValue(assessedValue, cents);
+  }
+
+  /**
+   * How much more this household pays next year, from every component that moved.
+   *
+   * The row labelled "So next year costs you about +$X more" was built from the county
+   * increase plus twelve months of utility increase. `townRateChange()` had already been
+   * called eleven lines above and its delta was used only as a text label — so with a
+   * town rate rise of 4 cents the callout correctly announced it while the row directly
+   * above still omitted the $200 it costs, understating the year by 62% (finding F-12).
+   *
+   * `townDeltaCents` is a REQUIRED argument rather than an optional one, so a future
+   * caller cannot forget it the way the original did. It is location-gated: adding it
+   * unconditionally would quote a town rate rise to an out-of-town household, which is
+   * F-01 again wearing a different hat.
+   */
+  function annualBillChange(o) {
+    const opts = o || {};
+    const town = townPolicyDollarsOnThisHome(
+      opts.assessedValue, opts.location, opts.townDeltaCents) || 0;
+    const county = centsOnValue(opts.assessedValue, opts.countyIncreaseCents) || 0;
+    const utility = isNum(opts.utilityMonthlyDelta) ? opts.utilityMonthlyDelta * 12 : 0;
+    return { town: town, county: county, utility: utility, total: town + county + utility };
+  }
+
+  /**
+   * A cents-on-the-rate equivalent of a dollar amount — or nothing.
+   *
+   * Both divisions in the FY2029 cliff card fell back to `|| 240000`, a literal
+   * transcription of one year's revenue-per-cent, while the note 28 lines above
+   * rendered an honest "n/a" for the same missing value. The card could therefore say
+   * "the conversion uses the town's own published figure of n/a" and, immediately below,
+   * "about 14.87 cents on the tax rate" — a sourced-looking figure whose divisor the
+   * same card had just admitted it did not have (finding F-14).
+   */
+  function centsEquivalent(dollars, pennyYield) {
+    if (!isNum(dollars) || !isNum(pennyYield) || pennyYield === 0) return null;
+    return dollars / pennyYield;
+  }
+
+  /**
+   * Shares of a stacked total, with the denominator STATED.
+   *
+   * Every bar width and legend percentage was `part / sum * 100` labelled "% of the
+   * total", while the same function ten lines later rendered a ⚠ for exactly the case
+   * where the parts do not sum to the published total. Publish a total the parts miss
+   * and the page renders "differs from the stated total by $1.58M" directly below a
+   * legend reading "53.5% of the total" — against the total it just named, 51.3%
+   * (finding F-11).
+   *
+   * A stacked bar HAS to fill, so widths must always divide by the sum. The legend is a
+   * claim about a published total and must divide by that. Two genuinely different uses,
+   * returned separately rather than collapsed into one number that is wrong for one of
+   * them.
+   */
+  function fundShares(parts, statedTotal) {
+    const values = (parts || []).map(p => (isNum(p.value) ? p.value : 0));
+    const sum = values.reduce((a, b) => a + b, 0);
+    const agrees = isNum(statedTotal) && Math.abs(sum - statedTotal) < 1;
+    const denominator = agrees ? statedTotal : sum;
+    return {
+      sum: sum,
+      denominator: denominator,
+      agrees: agrees,
+      difference: isNum(statedTotal) ? Math.abs(sum - statedTotal) : null,
+      /* "of the total" is only true when they agree. */
+      label: agrees ? 'of the total' : 'of the three funds',
+      widthPct: v => (sum ? v / sum * 100 : 0),
+      sharePct: v => (denominator ? v / denominator * 100 : 0),
+    };
+  }
+
+  /**
+   * Budget against actual, with the DIRECTION derived rather than assumed.
+   *
+   * The sentence read "…and actually spent $X, {pct} less than planned" with no sign
+   * branch, while the revenue figure on the very next line did branch. An overspend
+   * would have published "−1.4% less than planned" — a double negative most readers
+   * parse as an underspend — in a panel titled "Did they spend what they said they
+   * would?", about a named board (finding F-15).
+   */
+  function budgetVariance(finalBudget, actual) {
+    if (!isNum(finalBudget) || !isNum(actual) || finalBudget === 0) return null;
+    const diff = finalBudget - actual;
+    return {
+      pct: Math.abs(diff / finalBudget * 100),
+      signedPct: diff / finalBudget * 100,
+      direction: diff > 0 ? 'under' : diff < 0 ? 'over' : 'exact',
+      amount: Math.abs(diff),
+    };
+  }
+
+  /**
+   * The capital plan split into money already appropriated and money in the window.
+   *
+   * `amounts[0]` is the current project budget and `amounts.slice(1)` the seven plan
+   * years; a fifth of the headline total sits in that first column, so reporting the
+   * whole figure as the coming window misattributed $14.5M. The split was written to fix
+   * that and then kept no check that it still held: drop the standalone current-budget
+   * column and `amounts[0]` silently becomes the first plan year, reported as money
+   * "already in current project budgets" — the same class of error again (finding F-08).
+   *
+   * So the shape is asserted, not assumed, and the parts are checked against the
+   * published total the sentence prints beside them.
+   */
+  function splitProjectCost(projects, statedTotal, expectedColumns) {
+    const rows = [];
+    for (const p of projects || []) {
+      for (const r of p.expenditures_by_account || []) rows.push(r.amounts || []);
+    }
+    const widths = new Set(rows.map(a => a.length));
+    const shapeOk = widths.size === 1
+      && (expectedColumns == null || widths.has(expectedColumns));
+    const already = rows.reduce((a, amounts) => a + (amounts[0] || 0), 0);
+    const window = rows.reduce(
+      (a, amounts) => a + amounts.slice(1).reduce((x, v) => x + (v || 0), 0), 0);
+    const reconciles = isNum(statedTotal)
+      ? Math.abs(already + window - statedTotal) < 1 : null;
+    return {
+      already: already, window: window, sum: already + window,
+      columns: widths.size === 1 ? [...widths][0] : null,
+      shapeOk: shapeOk, reconciles: reconciles,
+    };
+  }
+
+  /**
+   * The rate sentence for an artefact that LEAVES the page.
+   *
+   * `copySnap` built a third hand-written row list with no location branch, so the block
+   * a reader pastes into an email to a commissioner always said "Tax rate: 51.3 cents
+   * per $100" — the TOWN's rate. Out of town that does not reconcile with the county
+   * total three lines above it, and the reader's actual 67.58 cents never appeared. In
+   * town it was equally wrong the other way: the household is charged 51.3 + 67.58 and
+   * the line named only half of it (finding F-19).
+   *
+   * Returns the rates that actually apply, in order, so the caller cannot pick.
+   */
+  function applicableRates(o) {
+    const opts = o || {};
+    const out = [];
+    if (isInTown(opts.location) && isNum(opts.townRateCents)) {
+      out.push({ key: 'town', label: 'Town of Hillsborough', cents: opts.townRateCents });
+    }
+    if (isNum(opts.countyRateCents)) {
+      out.push({ key: 'county', label: 'Orange County', cents: opts.countyRateCents });
+    }
+    const combined = out.reduce((a, r) => a + r.cents, 0);
+    return { rates: out, combined: out.length ? combined : null };
+  }
+
   /* ------------------------------------------------------------- utility bill */
 
   /** One block-rate bill: a fixed charge for the first N gallons, then a rate per 1,000. */
@@ -205,18 +374,54 @@
           annualTotal: billTotal * 12,
           water: wNow - wWas, sewer: sewNow - sewWas, storm: sNow - sWas,
           total: billTotal - (wWas + sewWas + sWas),
+          /* What the total is actually made of — see the fallback below. */
+          components: ['water', 'sewer', 'stormwater'],
+          known: true,
+          /* The YEARS the rows are labelled with, read from the rate sets rather than
+             written into the copy. Three labels said "FY2027 rates" and "on FY2026"
+             from string literals, so the first re-run against a new fee schedule would
+             have shown FY2028 charges under an FY2027 heading on a page whose masthead
+             promises every figure names the document it came from (finding F-22). */
+          fiscalYear: (w.recommended || {}).fiscal_year || null,
+          priorFiscalYear: (w.current || {}).fiscal_year || null,
         };
       }
     }
+    /* THE FALLBACK NAMES WHAT IT CONTAINS, because it contains less than the callers
+       assumed. The published increases cover water and sewer only — there is no
+       stormwater component here at all — while four surfaces each carried their own
+       hardcoded sentence saying "water, sewer and the stormwater fee together add about
+       $X a month" about this very number. The exact path gives $10.21 and this one gives
+       $8.96; the two differ by exactly the omitted fee (finding F-18).
+
+       Callers render the component list rather than a fixed phrase, so the sentence can
+       never name a charge the arithmetic left out. `known` is false when neither
+       published increase is available, so a caller withholds instead of printing a
+       sourced-looking $0. */
     // Published increases are given at 2,000 and 4,000 gallons only; pick the nearer.
     const level = Math.abs(g - 2000) < Math.abs(g - 4000) ? 'min' : 'avg';
     const w = lookup('water_bill_increase_monthly_' + location + '_' + level);
     const s = lookup('sewer_bill_increase_monthly_' + location + '_' + level);
+    const parts = [];
+    if (isNum(w)) parts.push('water');
+    if (isNum(s)) parts.push('sewer');
     return {
       exact: false, gallons: level === 'min' ? 2000 : 4000,
-      water: w, sewer: s, total: (w || 0) + (s || 0),
+      water: w, sewer: s,
+      total: parts.length ? (w || 0) + (s || 0) : null,
       annualTotal: null,
+      components: parts,
+      known: parts.length > 0,
+      fiscalYear: null, priorFiscalYear: null,
     };
+  }
+
+  /** "water, sewer and the stormwater fee" — built from what the total really holds. */
+  function componentPhrase(components) {
+    const names = (components || []).map(c => (c === 'stormwater' ? 'the stormwater fee' : c));
+    if (!names.length) return '';
+    if (names.length === 1) return names[0];
+    return names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
   }
 
   /* ---------------------------------------------------------- resident total */
@@ -311,8 +516,16 @@
     isInTown: isInTown,
     propertyTaxBill: propertyTaxBill,
     townPolicyIsPartOfTheBill: townPolicyIsPartOfTheBill,
+    townPolicyDollarsOnThisHome: townPolicyDollarsOnThisHome,
+    annualBillChange: annualBillChange,
+    centsEquivalent: centsEquivalent,
+    fundShares: fundShares,
+    budgetVariance: budgetVariance,
+    splitProjectCost: splitProjectCost,
+    applicableRates: applicableRates,
     blockBill: blockBill,
     utilityBill: utilityBill,
+    componentPhrase: componentPhrase,
     residentTotal: residentTotal,
     docYearIndex: docYearIndex,
     factsFor: factsFor,

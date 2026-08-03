@@ -100,26 +100,68 @@ outranks a cosmetic one that is live today.
 
 ---
 
-## Status after the 2026-08-03 commits
+## Status: ALL 29 FINDINGS CLOSED (2026-08-03, second pass)
 
-Four commits followed this audit. What they closed, and what they deliberately did not:
+The first four commits closed the coverage findings and extracted the domain layer. The
+second pass closed the remainder. **Every finding in this audit is now fixed**, and every
+fix carries a test that was run against the pre-fix behaviour and confirmed to fail.
 
-| | Findings | State |
+| | Findings | How |
 |---|---|---|
-| **Closed** | **F-03** the gate sampled the hero mid count-up · **F-04** the gate never saw the takeaway or the copied text · **F-05** the two dead helpers and the body-less loop that policed one of them · **F-29** the a11y rescan missing from both toggle handlers | fixed, each with a test proven to fail on revert |
-| **Made one-line fixes** | **F-01**, **F-10**, **F-19**, **F-25** | the arithmetic now lives in one tested place (`assets/domain.js`), and `propertyTaxBill()` already distinguishes *does not apply* from *unknown* from *zero*. The remaining change at each site is a call and a word. |
-| **Untouched** | **F-02**, **F-06**–**F-09**, **F-11**–**F-18**, **F-20**–**F-24**, **F-26**–**F-28** | see below |
+| **First pass** | F-03 · F-04 · F-05 · F-29 | the gate sampled the hero mid count-up; the gate never saw the takeaway or the copied text; two dead helpers and a body-less loop policing one of them; the a11y rescan missing from both toggle handlers |
+| **Second pass — pure functions** | F-01 · F-08 · F-11 · F-12 · F-14 · F-15 · F-18 · F-19 | `townPolicyDollarsOnThisHome` · `splitProjectCost` · `fundShares` · `annualBillChange` · `centsEquivalent` · `budgetVariance` · `utilityBill.components` · `applicableRates`, all in `assets/domain.js` with unit tests |
+| **Second pass — one year, read from the data** | F-06 · F-13 · F-26 · F-27 | `headlineYear()` and `currentFundBalance()`; the `\|\| one(...)` fallback dropped so a missing headline year withholds |
+| **Second pass — one floor, read from the document** | F-16 | `fund_balance_floor_pct` published by `etl/s40_household_impact.py` out of the same sentence the site quotes; `floorPct()` is its only reader |
+| **Second pass — year-keyed keys** | F-02 · F-07 | read `years[0]`/`amounts[0]` and match year-keyed names by shape; the cliff paragraph follows the fact's own year; and every formatter now renders `—` rather than `$NaN` |
+| **Second pass — copy that was false as written** | F-09 · F-21 · F-22 · F-23 · F-24 · F-28 | possessive dropped; the slice year named; utility years and the glossary's worked example read from the data; "two governments" branches on location and repaints on the toggle; the hand-computed ratio computed |
+| **Second pass — degradation** | F-10 · F-17 · F-20 | withhold rather than publish a measured zero; guard the three optional dereferences and render **before** removing `#loading`; storage records what the reader told us and nothing else |
+| **Second pass — the caption layer** | F-25 | the hero caption moved into `draw()` and names exactly the governments in the figure below it |
 
-Nothing in those commits changed a published figure. That was checked rather than
-asserted: both DOMs were dumped before and after, and all 676 in-town and 671
-out-of-town dollar, percent and cents strings are identical.
+Nothing in the first pass changed a published figure. **The second pass deliberately
+does** — that was the whole point of leaving them: each is a label, a verdict, a
+sentence or a suppressed row that was false as written. What did *not* move is the
+in-town arithmetic: the hero still reads $5,944 in town and $3,379 out of it, and the
+browser gate asserts both by element.
 
-**Why the rest were left.** Every one of them changes what a reader sees — a label, a
-verdict, a sentence, a suppressed row. The brief for this work was a structural
-refactor under an explicit rule that no published figure may move, and several of these
-sit on top of an editorial question that is not the engineer's to answer (see *Not
-closed by the stated sequence*, below). They are one-line changes on top of the
-extraction, and each needs a decision, not a technique.
+### The editorial question, answered
+
+*What is a town-policy figure called when it is shown to a non-resident?*
+
+**The cents stay; the second-person dollar column goes.** "One cent on the town's tax
+rate · across the whole town it raises $240,000" is a true and useful fact about the
+town for anyone reading. "…costs **you** $50/yr" is false outside the limits. So the
+row survives with its label changed, its value rendered `—`, and a note saying the
+town's rate is not part of this household's bill — rather than the row being deleted,
+which would hide a real fact to fix a wording problem. The browser gate carries a
+**negative control** for exactly this: it asserts every one of those figures is still
+present *in town*, so a future edit cannot satisfy it by deleting them.
+
+### Tests added
+
+| Gate | Finding |
+|---|---|
+| `tests/js/domain.test.js` — 14 new cases | F-01, F-08, F-11, F-12, F-14, F-15, F-18, F-19, F-22 |
+| `test_out_of_town_pages_never_quote_a_town_policy_dollar_to_the_reader` | F-01 |
+| `test_a_missing_county_rate_withholds_the_total_instead_of_publishing_zero` | F-10 |
+| `test_one_optional_dataset_failing_does_not_amputate_the_page` | F-17 |
+| `test_a_first_visit_leaves_no_memory_to_greet_the_reader_with` | F-20 |
+| `test_the_savings_floor_metric_matches_the_town_s_own_words` | F-16 |
+| `test_the_page_reads_its_fiscal_year_from_the_data` | F-06, F-13, F-26, F-27 |
+
+⚠ **`_render_mutated()` is the new capability, and it is the one worth keeping.** Eight
+of these findings are *dormant* — they fire when a dataset rolls forward, loses a field,
+or fails to load, and this audit could only argue them from the source. That is the exact
+standard that let four surfaces keep their own copy of a broken calculation. The helper
+serves a temp copy of the site with `data/` mutated (code symlinked, so it cannot drift
+from the working tree), which makes the next fiscal roll observable **today**.
+
+⚠ **The audit's own proposed assertion for F-01 was over-broad, and measuring it proved
+so.** It suggested banning `for a home like yours` / `for you` from the out-of-town DOM.
+The same wording carries the *county* rise — "Orange County's rate rose 3.75 cents, which
+adds $188 a year for a home like yours" — and the year-over-year total, both of which an
+out-of-town household genuinely pays. Banning the phrase would have forced the page to
+stop telling a non-resident the one increase that does reach them: a false statement
+traded for a missing one. The gate names the town-policy surfaces specifically instead.
 
 ---
 

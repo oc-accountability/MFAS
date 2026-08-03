@@ -2068,6 +2068,282 @@ def test_out_of_town_pages_never_show_the_town_levy():
         "and must be named, or the fix trades an overstatement for an understatement")
 
 
+# ---------------------------------------------------------------------------
+# The 2026-08-03 frontend audit's browser-observable findings.
+#
+# The audit's own closing note: F-02, F-06, F-07, F-08, F-11, F-13, F-16 and F-22 are
+# traced through the code with the data held constant — "argued from the source and the
+# current datasets, not observed. The next fiscal roll is the real test." These gates
+# run that roll early, against a MUTATED copy of the published data, which is the only
+# way to observe a dormant defect before it fires on a live civic site.
+# ---------------------------------------------------------------------------
+
+# The eighteen personalised figures F-01 found are all `oneCent * N` — the TOWN's rate
+# applied to the reader's home. These are the phrases that carry them, measured off the
+# rendered page rather than guessed.
+#
+# ⚠ The audit proposed asserting on "for a home like yours" / "for you" generally. That
+# was over-broad, and measuring it proved so: the SAME wording carries the county rise
+# ("Orange County's rate rose 3.75 cents, which adds $188 a year for a home like yours")
+# and the year-over-year total, both of which an out-of-town household genuinely pays.
+# Banning the phrase would force the page to stop telling a non-resident the one increase
+# that does reach them — trading a false statement for a missing one. So the gate names
+# the TOWN-POLICY surfaces specifically.
+_TOWN_POLICY_MARKERS = (
+    "One cent on the tax rate costs you",   # the row label, in-town wording
+    "/yr on your home",                     # the twelve driver rows' suffix
+    "a year</span> for your home",          # the capital-commitments line
+    "a year</span> for you)",               # the affordable-housing line
+    "on a home like yours",                 # the FY2029 cliff card
+)
+
+
+@pytest.mark.skipif(_chromium() is None, reason="no chromium available")
+def test_out_of_town_pages_never_quote_a_town_policy_dollar_to_the_reader():
+    """F-01. The levy row was fixed; eighteen personalised dollar figures were not.
+
+    `?home=500000&where=outoftown` rendered a hero of $3,379 and the sub-line "No town
+    property tax", and two inches below it, in the same list: "One cent on the tax rate
+    costs you · $50 / yr" and "If the rate rose 10 cents · at least +$500 / yr". Section
+    04 added "$210 a year for your home", "about $100 a year for you", a FY2029 cliff of
+    "$743 a year on a home like yours", and TWELVE driver rows reading "$729/yr on your
+    home", "$131", "$78" and so on. Every one is $0 for that household, and two of them
+    printed onto the sheet a resident carries into a board meeting.
+
+    The previous gate asserted only that the strings "2,565" and "5,944" were absent, so
+    none of this was covered.
+    """
+    doms = _render([(w, f"index.html?home=500000&where={w}")
+                    for w in ("intown", "outoftown")])
+    # Comments are part of the DOM, and this file's own history says a guard that can be
+    # satisfied — or broken — by prose is not measuring the thing it names.
+    strip = lambda d: re.sub(r"<!--.*?-->", "", d, flags=re.S)
+    out, inn = strip(doms["outoftown"]), strip(doms["intown"])
+
+    present = [m for m in _TOWN_POLICY_MARKERS if m in out]
+    assert not present, (
+        f"OUT OF TOWN: {len(present)} town-policy surface(s) still quote a personalised "
+        f"dollar figure to a household the same page says pays the town nothing: "
+        f"{present}. The CENTS are a real town-policy fact and may stay; the "
+        f"'costs you' dollar column may not (finding F-01).")
+
+    # NEGATIVE CONTROL. Without this, deleting the rows outright would satisfy the
+    # assertion above — and a gate that a deletion passes is not measuring anything.
+    # In town every one of these figures is real and must still be published.
+    missing = [m for m in _TOWN_POLICY_MARKERS if m not in inn]
+    assert not missing, (
+        f"IN town these figures are real costs and must still appear; {missing} are "
+        f"gone. The fix is to withhold them outside the limits, not to remove them.")
+
+
+def _render_mutated(mutate, paths):
+    """Serve a COPY of the site with the published data altered, and dump the DOM.
+
+    Several findings are dormant: they fire when a dataset rolls forward, loses a field,
+    or fails to load. There is no way to observe those against the committed data, and
+    "argued from the source" is precisely the standard that let four surfaces keep their
+    own copy of a broken calculation. `mutate` is handed the temp data directory.
+
+    Only `data/` is copied; index.html, assets and docs are symlinked, so the code under
+    test is the code in the working tree and cannot drift from it.
+    """
+    import http.server
+    import socketserver
+    import threading
+    import tempfile
+
+    out = {}
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        for name in ("index.html", "assets", "docs"):
+            src = REPO / name
+            if src.exists():
+                (root / name).symlink_to(src)
+        shutil.copytree(REPO / "data", root / "data",
+                        ignore=shutil.ignore_patterns("exports"))
+        mutate(root / "data")
+
+        handler = functools.partial(http.server.SimpleHTTPRequestHandler,
+                                    directory=str(root))
+        with socketserver.TCPServer(("127.0.0.1", 0), handler) as httpd:
+            port = httpd.server_address[1]
+            threading.Thread(target=httpd.serve_forever, daemon=True).start()
+            try:
+                for label, path in paths:
+                    r = subprocess.run(
+                        [_chromium(), "--headless", "--disable-gpu", "--no-sandbox",
+                         "--force-prefers-reduced-motion",
+                         "--virtual-time-budget=15000", "--dump-dom",
+                         f"http://127.0.0.1:{port}/{path}"],
+                        capture_output=True, text=True, timeout=180)
+                    out[label] = r.stdout
+            finally:
+                httpd.shutdown()
+    return out
+
+
+@pytest.mark.skipif(_chromium() is None, reason="no chromium available")
+def test_a_missing_county_rate_withholds_the_total_instead_of_publishing_zero():
+    """F-10. `total = annualR + (countyR || 0)` turned an absent rate into a MEASURED zero.
+
+    `county_property_tax_rate` has exactly one fact in facts.json. Drop it — a rename, a
+    failed unit check in a rebuild — and with `?where=outoftown` the hero rendered $0 and
+    the snapshot headlined "$0 in property tax this year", while the callout two elements
+    above still said the county rise "adds $188 a year for a home like yours". The copied
+    text carried "Town property tax: $0/yr" off the page with the site's sources attached.
+    """
+    def drop_county_rate(data):
+        p = data / "datasets" / "facts.json"
+        d = json.loads(p.read_text())
+        before = len(d["facts"])
+        d["facts"] = [f for f in d["facts"] if f["metric"] != "county_property_tax_rate"]
+        assert len(d["facts"]) < before, "the fixture no longer removes anything"
+        p.write_text(json.dumps(d))
+
+    dom = _render_mutated(drop_county_rate,
+                          [("out", "index.html?home=500000&where=outoftown")])["out"]
+    m = re.search(r'id="heroV"[^>]*>([^<]*)', dom)
+    assert m, "the hero figure element is gone"
+    hero = m.group(1).strip()
+    assert hero == "—", (
+        f"with the county rate missing the hero must WITHHOLD, not publish a measured "
+        f"zero; got {hero!r}")
+    assert "$0 in property tax this year" not in dom, (
+        "the snapshot published a sourced-looking $0 for a rate the build does not hold")
+
+
+@pytest.mark.skipif(_chromium() is None, reason="no chromium available")
+def test_one_optional_dataset_failing_does_not_amputate_the_page():
+    """F-17. boot() lets non-CORE datasets fail alone; three renderers dereferenced them
+    unguarded, the throw escaped render(), and the catch handler THEN threw too because
+    `#loading` had already been removed.
+
+    Measured with requests.json 404ing: `id="you"` present; `coming`, `voice` and
+    `receipts` all absent; `#verifySlot` never replaced, so "How you can check this" was
+    gone; `#chipCount` still showing its static placeholder "Verified figures". A 40 KB
+    page that looks finished, still carrying the masthead's promise that every figure
+    names its document — with the entire receipts section that substantiates that promise
+    silently deleted. No wrong number is published; the worst-case failure for this
+    project's one rule is published instead.
+    """
+    def remove_requests(data):
+        (data / "datasets" / "requests.json").unlink()
+
+    dom = _render_mutated(remove_requests, [("x", "index.html")])["x"]
+    missing = [s for s in ("you", "paysfor", "health", "coming", "voice", "receipts")
+               if f'id="{s}"' not in dom]
+    assert not missing, (
+        f"a single optional dataset going missing removed section(s) {missing} with no "
+        f"error on screen — the receipts section is what substantiates the site's one "
+        f"promise, and losing it silently is the worst available failure")
+
+
+@pytest.mark.skipif(_chromium() is None, reason="no chromium available")
+def test_a_first_visit_leaves_no_memory_to_greet_the_reader_with():
+    """F-20. Two consecutive plain visits, one browser profile, nothing touched.
+
+    Reproduced with two fresh profiles before the fix: visit one showed no banner, visit
+    two said "Welcome back — showing figures for a home assessed at $400,000, inside town
+    limits." The reader had never typed a value and had never said they live in town.
+    `saveHome()` ran on every render and persisted the DEFAULTS; `loadHome()` then set
+    `state.returning` for any parseable stored value.
+
+    The page asserted a memory it did not have, on the one control the whole calculator
+    hangs off, and on the exact question whose mis-answer produced the 76% overstatement.
+    """
+    import http.server
+    import socketserver
+    import threading
+    import tempfile
+
+    os.chdir(REPO)
+    handler = functools.partial(http.server.SimpleHTTPRequestHandler,
+                                directory=str(REPO))
+    with tempfile.TemporaryDirectory() as profile:
+        with socketserver.TCPServer(("127.0.0.1", 0), handler) as httpd:
+            port = httpd.server_address[1]
+            threading.Thread(target=httpd.serve_forever, daemon=True).start()
+            doms = []
+            try:
+                # The SAME profile twice — localStorage has to survive between them or
+                # this test cannot see the defect at all.
+                for _ in range(2):
+                    r = subprocess.run(
+                        [_chromium(), "--headless", "--disable-gpu", "--no-sandbox",
+                         "--force-prefers-reduced-motion",
+                         f"--user-data-dir={profile}",
+                         "--virtual-time-budget=15000", "--dump-dom",
+                         f"http://127.0.0.1:{port}/index.html"],
+                        capture_output=True, text=True, timeout=180)
+                    doms.append(r.stdout)
+            finally:
+                httpd.shutdown()
+
+    assert "Welcome back" not in doms[0], "a FIRST visit cannot be a return visit"
+    assert "Welcome back" not in doms[1], (
+        "the second plain visit greeted a reader who has never entered anything. "
+        "Storage must record what the reader TOLD us, not the defaults they were shown.")
+
+
+def test_the_savings_floor_metric_matches_the_town_s_own_words():
+    """F-16. The floor drove a ✓/! verdict from a literal `50` in five places.
+
+    It existed in the archive only as a numeral inside the sentence the site quotes two
+    panels below that verdict. A board revising the aim to 60% would have had the page
+    print the new words in a blockquote and award a pass against the retired figure, on
+    the same screen — and draw the chart's reference line at the old one.
+
+    So the metric is read from that SAME sentence, and this is what keeps the two from
+    drifting: if the quotation says one number and the fact says another, the build fails.
+    """
+    hh = json.loads((REPO / "data" / "datasets" / "facts_household.json").read_text())
+    quote = next((q for q in hh["town_statements"] if q["key"] == "savings_floor"), None)
+    assert quote, "the savings_floor quotation is gone — the metric's provenance with it"
+
+    facts = json.loads((REPO / "data" / "datasets" / "facts.json").read_text())["facts"]
+    metric = [f for f in facts if f["metric"] == "fund_balance_floor_pct"]
+    assert metric, (
+        "fund_balance_floor_pct is not published. Without it assets/app.js has nothing "
+        "to read and the floor goes back to being hardcoded in five places (F-16)")
+    assert len(metric) == 1, f"expected one floor fact, got {len(metric)}"
+    fact = metric[0]
+
+    in_quote = re.search(r"no lower than\s+(\d+(?:\.\d+)?)\s*%", quote["text"])
+    assert in_quote, f"cannot find a percentage in the quotation: {quote['text']!r}"
+    assert float(in_quote.group(1)) == fact["value"], (
+        f"the town's own words say {in_quote.group(1)}% and the published metric says "
+        f"{fact['value']}% — the site would grade against one while quoting the other")
+    assert fact["source_doc"] == quote["source_doc"], "same document"
+    assert fact["source_page"] == quote["source_page"], "same page"
+
+
+def test_the_page_reads_its_fiscal_year_from_the_data():
+    """F-06, F-13, F-26, F-27. Six surfaces picked a year with the literal `2027`.
+
+    renderHealth already read index.headline_fiscal_year thirty lines below one of them,
+    so the page disagreed with itself about which year it was about. On the first roll
+    forward, section 04 "What's coming for you" would have opened with a closed, adopted
+    budget year LABELLED a projection, while section 03 correctly started at the next one.
+
+    The suite already carried this lesson, written next to a different fix: "the hardcoded
+    2027 this replaced would have kept testing FY2027 forever while the site auto-advanced".
+    """
+    js = _js_without_comments((REPO / "assets" / "app.js").read_text(encoding="utf-8"))
+    assert "const headlineYear = ()" in js, (
+        "headlineYear() is gone — the year literals have nowhere to route through")
+
+    # `2027` may appear ONLY inside the helper's own fallback. Anywhere else it is a
+    # surface deciding for itself what year the page is about.
+    js_without_helper = re.sub(
+        r"const headlineYear = \(\)[^;]+;", "", js, count=1)
+    literals = re.findall(r"\b20(2[6-9]|3\d)\b", js_without_helper)
+    assert not literals, (
+        f"{len(literals)} fiscal-year literal(s) are back in assets/app.js "
+        f"({sorted(set('20' + x for x in literals))}). Route them through "
+        f"headlineYear(), or the page will disagree with itself on the next roll "
+        f"forward (findings F-06, F-13, F-26, F-27)")
+
+
 def test_every_published_fact_cites_a_document_in_the_archive():
     """Both governments. The gate in s87 used to exempt Orange County because Amy's
     workbook carried her own register's keys, and 682 of 24,251 exported rows shipped

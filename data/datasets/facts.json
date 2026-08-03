@@ -6,7 +6,7 @@
     "facts_household.json",
     "facts_county.json"
   ],
-  "count": 83,
+  "count": 84,
   "facts": [
     {
       "jurisdiction": "Town of Hillsborough, NC",
@@ -970,6 +970,19 @@
       "source_detail": "stated in prose: …set the FY27 funding level at $110,000…",
       "extraction": "digital-text",
       "note": "Town funding for nonprofit partners, set after a public hearing."
+    },
+    {
+      "jurisdiction": "Town of Hillsborough, NC",
+      "fiscal_year": 2027,
+      "metric": "fund_balance_floor_pct",
+      "value": 50.0,
+      "unit": "percent",
+      "basis": "stated",
+      "source_doc": "fy27-budget-message",
+      "source_page": 2,
+      "source_detail": "stated in prose: …maintain fund balance levels no lower than 50%…",
+      "extraction": "stated",
+      "note": "The town's own stated minimum for fund balance, as a share of a year's spending. Read from the same sentence as the `savings_floor` quotation so the figure and the wording beside it cannot disagree."
     },
     {
       "jurisdiction": "Orange County, NC",
