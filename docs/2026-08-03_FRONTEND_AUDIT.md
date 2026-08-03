@@ -100,6 +100,29 @@ outranks a cosmetic one that is live today.
 
 ---
 
+## Status after the 2026-08-03 commits
+
+Four commits followed this audit. What they closed, and what they deliberately did not:
+
+| | Findings | State |
+|---|---|---|
+| **Closed** | **F-03** the gate sampled the hero mid count-up · **F-04** the gate never saw the takeaway or the copied text · **F-05** the two dead helpers and the body-less loop that policed one of them · **F-29** the a11y rescan missing from both toggle handlers | fixed, each with a test proven to fail on revert |
+| **Made one-line fixes** | **F-01**, **F-10**, **F-19**, **F-25** | the arithmetic now lives in one tested place (`assets/domain.js`), and `propertyTaxBill()` already distinguishes *does not apply* from *unknown* from *zero*. The remaining change at each site is a call and a word. |
+| **Untouched** | **F-02**, **F-06**–**F-09**, **F-11**–**F-18**, **F-20**–**F-24**, **F-26**–**F-28** | see below |
+
+Nothing in those commits changed a published figure. That was checked rather than
+asserted: both DOMs were dumped before and after, and all 676 in-town and 671
+out-of-town dollar, percent and cents strings are identical.
+
+**Why the rest were left.** Every one of them changes what a reader sees — a label, a
+verdict, a sentence, a suppressed row. The brief for this work was a structural
+refactor under an explicit rule that no published figure may move, and several of these
+sit on top of an editorial question that is not the engineer's to answer (see *Not
+closed by the stated sequence*, below). They are one-line changes on top of the
+extraction, and each needs a decision, not a technique.
+
+---
+
 ## The findings
 
 ### F-01 — Five ungated copies of the one-cent town-rate conversion
