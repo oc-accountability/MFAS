@@ -34,14 +34,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r etl/requirements.txt
 
-      - name: Integrity gates
-        run: python -m pytest tests/ -q
+      # `make test PY=python`, not a bare pytest call: the Makefile is where the gate is
+      # defined, and a second copy of the command here is a second thing to forget. When
+      # `make test` grew the JavaScript suite on 2026-08-03, this step picked it up
+      # without an edit — which is the whole point. PY is overridable precisely so CI can
+      # use the runner actions/setup-python put on PATH instead of the local .venv.
+      - name: Integrity gates — the calculator, then the data
+        run: make test PY=python
 
       - name: Every ETL stage compiles
         run: python -m compileall -q etl tests
 
       - name: Frontend syntax
         run: |
+          node --check assets/domain.js
           node --check assets/app.js
           node scripts/validate_palette.js
 

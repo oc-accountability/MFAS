@@ -1,12 +1,13 @@
 PY := ./.venv/bin/python
 PORT ?= 8771
 
-.PHONY: help venv etl test verify serve clean
+.PHONY: help venv etl test test-js verify serve clean
 
 help:
-	@echo "make venv   — create .venv and install etl/requirements.txt"
-	@echo "make etl    — rebuild data/ from sources/ (needs the archive unpacked there)"
-	@echo "make test   — run the data integrity gates"
+	@echo "make venv    — create .venv and install etl/requirements.txt"
+	@echo "make etl     — rebuild data/ from sources/ (needs the archive unpacked there)"
+	@echo "make test-js — run the calculator's unit tests (node, no install needed)"
+	@echo "make test    — run every gate: the calculator's, then the data's"
 	@echo "make verify — THE RELEASE GATE: full rebuild + every test. Use this before publishing."
 	@echo "make serve  — serve the site on http://127.0.0.1:$(PORT)/"
 
@@ -67,7 +68,23 @@ etl:
 	$(PY) etl/s103_tab_map.py
 	$(PY) etl/s105_acquisition_manifest.py   # how a third party assembles the sources
 
-test:
+# The JavaScript half of the gate, added 2026-08-03.
+#
+# Until then the frontend had ZERO tests, and that is precisely why the out-of-town
+# defect shipped: 111 Python tests passed while a $500,000 home outside the limits was
+# shown $5,944 instead of $3,379, because the suite validates DATA and never executes
+# the CALCULATOR. `assets/domain.js` exists to be runnable without a browser, and this
+# is what runs it.
+#
+# node's own test runner, deliberately: this repo has no package.json and no
+# node_modules, and a civic dataset anyone is invited to rebuild should not need a
+# toolchain installed to check its arithmetic.
+test-js:
+	node --test 'tests/js/*.test.js'
+
+# JS first: it is sub-second, and a broken calculation should not wait behind five
+# seconds of data gates to say so.
+test: test-js
 	$(PY) -m pytest tests/ -q
 
 # THE RELEASE GATE. `make etl` alone was the documented rebuild command and it never

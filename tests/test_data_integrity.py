@@ -1915,10 +1915,105 @@ def test_town_tax_is_conditional_on_being_in_town_in_the_source():
         "annualTax() is back. It was the unconditional town levy and every caller "
         "treated it as 'the town tax this household pays' — rename it or gate it, but "
         "do not reintroduce the name")
-    # townLevyIfInTown is the deliberate unconditional one, for town POLICY rows only.
-    for call in re.findall(r"\btownLevyIfInTown\(\)", js):
-        pass
-    assert js.count("townTax()") >= 4, "callers should route through townTax()"
+    code = _js_without_comments(js)
+    # Excluding the declaration line. `js.count("townTax()")` counted it, so the
+    # assertion held even if every caller had been ripped out and inlined.
+    callers = len(re.findall(r"(?<!function )\btownTax\(\)", code))
+    assert callers >= 3, (
+        f"only {callers} caller(s) route through townTax() — a surface has gone back "
+        f"to computing the town levy for itself, which is how the out-of-town defect "
+        f"survived in four places at once")
+
+    # This replaces a `for call in re.findall(...): pass` loop — a body-less loop that
+    # asserted NOTHING and reported the location rule as covered whether the helper it
+    # named was called twelve times or never. It was never called: townLevyIfInTown()
+    # and totalPropertyTax() were both dead code while five renderers each kept their
+    # own inline copy of the conversion. This is the assertion it should have been.
+    inline = re.findall(r"homeValue\s*/\s*100\s*\*\s*0?\.01", code)
+    assert not inline, (
+        f"{len(inline)} inline cost-per-cent formula(s) are back in assets/app.js. That "
+        f"expression belongs in assets/domain.js, where it is unit tested and where a "
+        f"location rule can be applied once — five ungated copies of it are finding "
+        f"F-01 of docs/2026-08-03_FRONTEND_AUDIT.md")
+
+
+def _js_without_comments(js: str) -> str:
+    """Strip comments before grepping for code.
+
+    Every assertion in this file that greps assets/app.js is otherwise satisfiable by a
+    comment that merely MENTIONS the thing — and this file's own history is a list of
+    guards that turned out to be looser than they read. Line comments are removed only
+    where the line has nothing else on it, so a `https://` inside a string survives.
+    """
+    js = re.sub(r"/\*.*?\*/", "", js, flags=re.S)
+    return "\n".join(
+        "" if ln.lstrip().startswith(("//", "*")) else ln for ln in js.splitlines())
+
+
+def test_the_calculator_is_loaded_before_the_page_that_uses_it():
+    """assets/app.js calls MFAS.* at module scope. If the script tag is missing, or is
+    ordered after app.js, EVERY figure on the site fails to render — not one section,
+    the whole page. There is no build step to catch that, so this is the gate."""
+    html = (REPO / "index.html").read_text(encoding="utf-8")
+    dom = html.find('src="assets/domain.js"')
+    app = html.find('src="assets/app.js"')
+    assert dom != -1, "assets/domain.js is not loaded by index.html — the page cannot compute"
+    assert app != -1, "assets/app.js is not loaded by index.html"
+    assert dom < app, (
+        "assets/domain.js must load BEFORE assets/app.js; app.js references MFAS at "
+        "module scope and would throw before rendering anything")
+    # Match the WHOLE tag, not the text after src=. The first version of this assertion
+    # searched `src="assets/domain.js"[^>]*(defer|async)` and so read only the
+    # attributes to the RIGHT of src — `<script defer src="assets/domain.js">` sailed
+    # through it. Caught by reverting the fix and finding the test still green, which is
+    # the only reason to bother reverting.
+    tag = re.search(r"<script\b[^>]*assets/domain\.js[^>]*>", html)
+    assert tag, "could not locate the domain.js script tag"
+    assert not re.search(r"\b(defer|async)\b", tag.group(0)), (
+        f"domain.js must not be deferred or async — app.js is a plain script and would "
+        f"run first, leaving MFAS undefined: {tag.group(0)}")
+
+
+def _render(paths):
+    """Serve the repo and return {name: dumped DOM} for each (name, path) given.
+
+    `--force-prefers-reduced-motion` is load-bearing, not tidiness. setFigure()
+    animates the hero over 620ms via requestAnimationFrame, and --dump-dom captures
+    whatever the count-up happens to be showing: successive runs of the ORIGINAL
+    version of this test read $4,968, $4,892 and $783 where the true figure is $5,944.
+    The string "5,944" appeared nowhere in the hero — every assertion below was in fact
+    resting on the snapshot card further down the page.
+
+    That is not a cosmetic flaw in a test. If an edit reinstated the out-of-town defect
+    in the hero ALONE, the dumped hero text would be some arbitrary intermediate, would
+    not contain "5,944", and this gate would pass while the 76% overstatement shipped.
+    With reduced motion, draw() passes animate=false, setFigure takes its early return,
+    and the hero is captured at its real value.
+    """
+    import http.server
+    import socketserver
+    import threading
+
+    os.chdir(REPO)
+    handler = functools.partial(http.server.SimpleHTTPRequestHandler,
+                                directory=str(REPO))
+    out = {}
+    with socketserver.TCPServer(("127.0.0.1", 0), handler) as httpd:
+        port = httpd.server_address[1]
+        t = threading.Thread(target=httpd.serve_forever, daemon=True)
+        t.start()
+        try:
+            for name, path in paths:
+                r = subprocess.run(
+                    [_chromium(), "--headless", "--disable-gpu", "--no-sandbox",
+                     "--force-prefers-reduced-motion",
+                     "--virtual-time-budget=15000", "--dump-dom",
+                     f"http://127.0.0.1:{port}/{path}"],
+                    capture_output=True, text=True, timeout=180)
+                out[name] = r.stdout
+        finally:
+            httpd.shutdown()
+    return out
 
 
 @pytest.mark.skipif(_chromium() is None, reason="no chromium available")
